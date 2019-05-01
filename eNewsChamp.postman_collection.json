@@ -1,0 +1,528 @@
+{
+	"info": {
+		"_postman_id": "bca48da8-1be3-4c19-bfbc-af817a9780fe",
+		"name": "eNewsChamp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Article Group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.environment.set(\"articleGroupId\", jsonData.newsArticleGroupId);",
+							"console.log('Article Group Id: ', pm.environment.get(\"articleGroupId\"));",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"editionId\": \"Edit1\",\n    \"genreId\": \"genreId\",\n    \"headline\": \"headline\",\n    \"credits\": \"credits\",\n    \"status\": \"Unassigned\",\n    \"url\": \"http://article-url\",\n    \"sourceText\": \"sourceText\",\n    \"hashTags\": \"hashTags\",\n    \"imagePathMobile\": \"imagePathMobile\",\n    \"imagePathTab\": \"imagePathTab\",\n    \"imagePathDesktop\": \"imagePathDesktop\",\n    \"editorId\": \"editorId\",\n    \"authorId\": \"authorId\",\n    \"targetCompletionDate\": \"2018-12-12\",\n    \"publicationDate\": \"2018-12-12\",\n    \"intendedPubMonth\": \"Jan\",\n    \"intendedPubDay\": \"Mon\",\n    \"comments\": \"comments\",\n    \"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayu\"\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/articleGroups",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"articleGroups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Article Group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"editionId\": \"Edit1\",\n    \"genreId\": \"genreId\",\n    \"headline\": \"headline updated\",\n    \"credits\": \"credits\",\n    \"status\": \"Unassigned\",\n    \"url\": \"http://article-url\",\n    \"sourceText\": \"sourceText\",\n    \"hashTags\": \"hashTags\",\n    \"imagePathMobile\": \"imagePathMobile\",\n    \"imagePathTab\": \"imagePathTab\",\n    \"imagePathDesktop\": \"imagePathDesktop\",\n    \"editorId\": \"editorId\",\n    \"authorId\": \"authorId\",\n    \"targetCompletionDate\": \"2018-12-12\",\n    \"publicationDate\": \"2018-12-12\",\n    \"intendedPubMonth\": \"Jan\",\n    \"intendedPubDay\": \"Mon\",\n    \"comments\": \"comments updated\",\n    \"recordInUse\": \"Y\",\n    \"operatorId\": \"deepak\"\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/articleGroups/{{articleGroupId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"articleGroups",
+						"{{articleGroupId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch Article Group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"headline\": \"headline patched\",\n    \"comments\": \"comments patched\",\n    \"operatorId\": \"mesmayu\"\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/articleGroups/{{articleGroupId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"articleGroups",
+						"{{articleGroupId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Article Group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/articleGroups/{{articleGroupId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"articleGroups",
+						"{{articleGroupId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get audit for article group",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/articleGroups/{{articleGroupId}}/audit",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"articleGroups",
+						"{{articleGroupId}}",
+						"audit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Article",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.environment.set(\"articleId\", jsonData.newsArticleId);",
+							"console.log('Article Id: ', pm.environment.get(\"articleId\"));",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"newsArticleGroupId\": {{articleGroupId}},\n\t\"readingLevel\": 2,\n\t\"content\": \"Sample Content 1\",\n\t\"rating\": \"Rating2\",\n\t\"likeLCount\": 0,\n\t\"likeHCount\": 0,\n\t\"likeOCount\": 0,\n\t\"likeWCount\": 0,\n\t\"likeSCount\": 0,\n\t\"recordInUse\":\"Y\",\n\t\"status\": \"Unassigned\",\n\t\"operatorId\": \"mesmayu\"\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/articles",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"articles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Article",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							"console.log('Article Id: ', pm.environment.get(\"articleId\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"newsArticleGroupId\": {{articleGroupId}},\n\t\"readingLevel\": 2,\n\t\"content\": \"Sample Content updated\",\n\t\"rating\": \"1\",\n\t\"likeLCount\": 0,\n\t\"likeHCount\": 0,\n\t\"likeOCount\": 0,\n\t\"likeWCount\": 0,\n\t\"likeSCount\": 0,\n\t\"recordInUse\":\"Y\",\n\t\"status\": \"Unassigned\",\n\t\"operatorId\": \"mesmayu\"\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/articles/{{articleId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"articles",
+						"{{articleId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch Article ",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							"console.log('Article Id: ', pm.environment.get(\"articleId\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"content\": \"Sample Content patched\"\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/articles/{{articleId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"articles",
+						"{{articleId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Article",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							"console.log('Article Id: ', pm.environment.get(\"articleId\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/articles/{{articleId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"articles",
+						"{{articleId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get audit for article",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/articles/{{articleId}}/audit",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"articles",
+						"{{articleId}}",
+						"audit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete article which does not exist",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							"console.log('Article Id: ', pm.environment.get(\"articleId\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"newsArticleGroupID\": 123,\n    \"readingLevel\": 2,\n    \"genreID\": 123,\n    \"content\": \"Sample Content3\",\n    \"headline\": \"HeadLine3\"\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/articles/100",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"articles",
+						"100"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "e887e0db-ea9c-4a60-a78e-592e321cb7c6",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "69b97921-bb05-4acd-b191-7c19b6a5ee50",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

@@ -26,5 +26,4 @@ public class AuditService {
 		changes.groupByCommit();
 		return javers.getJsonConverter().toJson(changes.groupByCommit());
 	}
-
 }
