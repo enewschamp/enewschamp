@@ -1,9 +1,7 @@
 package com.enewschamp.audit.domain;
 
-import java.util.List;
-
+import org.javers.core.Changes;
 import org.javers.core.Javers;
-import org.javers.core.diff.Change;
 import org.javers.repository.jql.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +22,9 @@ public class AuditService {
 	}
 
 	private String queryChanges(QueryBuilder jqlQuery) {
-		List<Change> changes = javers.findChanges(jqlQuery.build());
-		return javers.getJsonConverter().toJson(changes);
+		Changes changes = javers.findChanges(jqlQuery.build());
+		changes.groupByCommit();
+		return javers.getJsonConverter().toJson(changes.groupByCommit());
 	}
 
 }
