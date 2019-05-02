@@ -7,6 +7,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
+import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

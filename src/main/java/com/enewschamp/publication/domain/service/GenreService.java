@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
-import com.enewschamp.publication.domain.common.NewsArticleErrorCodes;
+import com.enewschamp.publication.domain.common.PublicationErrorCodes;
 import com.enewschamp.publication.domain.entity.Genre;
 
 @Service
@@ -57,7 +57,7 @@ public class GenreService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), NewsArticleErrorCodes.GENRE_NOT_FOUND, "Genre not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), PublicationErrorCodes.GENRE_NOT_FOUND, "Genre not found!");
 		}
 	}
 	

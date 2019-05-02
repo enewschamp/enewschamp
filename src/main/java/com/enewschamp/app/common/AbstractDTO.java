@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.enewschamp.domain.common.RecordInUseType;
-import com.enewschamp.publication.domain.entity.ForeignKeyColumnLength;
+import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
 import lombok.Data;
 

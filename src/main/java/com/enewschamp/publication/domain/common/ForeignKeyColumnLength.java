@@ -1,4 +1,4 @@
-package com.enewschamp.publication.domain.entity;
+package com.enewschamp.publication.domain.common;
 
 public interface ForeignKeyColumnLength {
 

@@ -9,7 +9,7 @@ import com.enewschamp.app.common.AbstractDTO;
 import com.enewschamp.domain.common.MonthType;
 import com.enewschamp.domain.common.WeekDayType;
 import com.enewschamp.publication.domain.common.ArticleGroupStatusType;
-import com.enewschamp.publication.domain.entity.ForeignKeyColumnLength;
+import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

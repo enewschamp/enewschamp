@@ -9,11 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.checkerframework.checker.units.qual.s;
-
-import com.enewschamp.domain.common.RecordInUseType;
-import com.enewschamp.publication.app.dto.NewsArticleGroupDTO;
+import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +20,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 public class JSONRequestCreator {
 
 	public static void main(String args[]) {
-		new JSONRequestCreator().getSampleJSONRequest(new NewsArticleGroupDTO());
+		new JSONRequestCreator().getSampleJSONRequest(new PublicationDTO());
 	}
 
 	public String getSampleJSONRequest(Object model) {
@@ -93,6 +91,10 @@ public class JSONRequestCreator {
 					if (Map.class.isAssignableFrom(clazz)) {
 						instantiateMap(clazz, field, instance);
 					}
+					
+					if (Set.class.isAssignableFrom(clazz)) {
+						instantiateSet(clazz, field, instance);
+					}
 
 					field.set(o, instance);
 					instantiateFields(instance);
@@ -122,6 +124,26 @@ public class JSONRequestCreator {
 
 		List<Object> list = (List<Object>) instance;
 		list.add(listTypeInstance);
+	}
+	
+	private void instantiateSet(Class<?> clazz, Field field, Object instance)
+			throws IllegalAccessException, InstantiationException {
+
+		ParameterizedType setType = (ParameterizedType) field.getGenericType();
+		Class<?> setClass = (Class<?>) setType.getActualTypeArguments()[0];
+
+		Object setTypeInstance = setClass.newInstance();
+
+		if (setClass.getName().equals("java.lang.Object")) {
+			setTypeInstance = new String("java.lang.Object");
+		} else if (setClass.getName().equals("java.lang.String")) {
+			setTypeInstance = new String(field.getName() + "-Item");
+		} else {
+			instantiateFields(setTypeInstance);
+		}
+
+		Set<Object> list = (Set<Object>) instance;
+		list.add(setTypeInstance);
 	}
 
 	private void instantiateMap(Class<?> clazz, Field field, Object instance)

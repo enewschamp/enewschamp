@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
-import com.enewschamp.publication.domain.common.NewsArticleErrorCodes;
+import com.enewschamp.publication.domain.common.PublicationErrorCodes;
 import com.enewschamp.publication.domain.entity.HashTag;
 
 @Service
@@ -57,7 +57,7 @@ public class HashTagService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), NewsArticleErrorCodes.HASH_TAG_NOT_FOUND, "HashTag not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), PublicationErrorCodes.HASH_TAG_NOT_FOUND, "HashTag not found!");
 		}
 	}
 	

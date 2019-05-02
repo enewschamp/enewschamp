@@ -1,6 +1,6 @@
 package com.enewschamp.publication.domain.common;
 
-public interface NewsArticleErrorCodes {
+public interface PublicationErrorCodes {
 
 	public static String ARTICLE_GROUP_NOT_FOUND = "PUB_001";
 	public static String ARTICLE_NOT_FOUND = "PUB_002";
@@ -8,4 +8,6 @@ public interface NewsArticleErrorCodes {
 	public static String GENRE_NOT_FOUND = "PUB_004";
 	public static String HASH_TAG_NOT_FOUND = "PUB_005";
 	public static String QUIZ_NOT_FOUND = "PUB_006";
+	public static String PUBLICATION_NOT_FOUND = "PUB_007";
+	public static String PUBLICATION_ART_LINK_NOT_FOUND = "PUB_008";
 }

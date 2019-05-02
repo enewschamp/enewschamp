@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
-import com.enewschamp.publication.domain.common.NewsArticleErrorCodes;
+import com.enewschamp.publication.domain.common.PublicationErrorCodes;
 import com.enewschamp.publication.domain.entity.NewsArticleQuiz;
 
 @Service
@@ -57,7 +57,7 @@ public class NewsArticleQuizService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), NewsArticleErrorCodes.EDITION_NOT_FOUND, "NewsArticleQuiz not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), PublicationErrorCodes.EDITION_NOT_FOUND, "NewsArticleQuiz not found!");
 		}
 	}
 	
