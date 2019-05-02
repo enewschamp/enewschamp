@@ -12,8 +12,8 @@ import java.util.Map;
 
 import org.checkerframework.checker.units.qual.s;
 
-import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
 import com.enewschamp.domain.common.RecordInUseType;
+import com.enewschamp.publication.app.dto.NewsArticleGroupDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

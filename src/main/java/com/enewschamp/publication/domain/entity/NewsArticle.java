@@ -1,4 +1,4 @@
-package com.enewschamp.article.domain.entity;
+package com.enewschamp.publication.domain.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,9 +12,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.enewschamp.article.domain.common.ArticleRatingType;
-import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.domain.common.BaseEntity;
+import com.enewschamp.publication.domain.common.ArticleRatingType;
+import com.enewschamp.publication.domain.common.ArticleStatusType;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

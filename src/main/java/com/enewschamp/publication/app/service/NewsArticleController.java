@@ -1,4 +1,4 @@
-package com.enewschamp.article.app.service;
+package com.enewschamp.publication.app.service;
 
 import javax.validation.Valid;
 
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enewschamp.article.app.dto.NewsArticleDTO;
-import com.enewschamp.article.domain.entity.NewsArticle;
-import com.enewschamp.article.domain.service.NewsArticleService;
+import com.enewschamp.publication.app.dto.NewsArticleDTO;
+import com.enewschamp.publication.domain.entity.NewsArticle;
+import com.enewschamp.publication.domain.service.NewsArticleService;
 
 import lombok.extern.java.Log;
 

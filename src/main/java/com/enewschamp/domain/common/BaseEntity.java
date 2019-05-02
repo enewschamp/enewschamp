@@ -9,7 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
-import com.enewschamp.article.domain.entity.ForeignKeyColumnLength;
+import com.enewschamp.publication.domain.entity.ForeignKeyColumnLength;
 
 import lombok.Data;
 

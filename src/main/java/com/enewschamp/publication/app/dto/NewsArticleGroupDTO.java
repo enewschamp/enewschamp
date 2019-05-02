@@ -1,17 +1,15 @@
-package com.enewschamp.article.app.dto;
+package com.enewschamp.publication.app.dto;
 
-import java.net.URI;
 import java.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.enewschamp.app.common.AbstractDTO;
-import com.enewschamp.article.domain.common.ArticleGroupStatusType;
-import com.enewschamp.article.domain.entity.ForeignKeyColumnLength;
 import com.enewschamp.domain.common.MonthType;
-import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.common.WeekDayType;
+import com.enewschamp.publication.domain.common.ArticleGroupStatusType;
+import com.enewschamp.publication.domain.entity.ForeignKeyColumnLength;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

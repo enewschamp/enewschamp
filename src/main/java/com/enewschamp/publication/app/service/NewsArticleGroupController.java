@@ -1,4 +1,4 @@
-package com.enewschamp.article.app.service;
+package com.enewschamp.publication.app.service;
 
 import javax.validation.Valid;
 
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
-import com.enewschamp.article.domain.entity.NewsArticleGroup;
-import com.enewschamp.article.domain.service.NewsArticleGroupService;
+import com.enewschamp.publication.app.dto.NewsArticleGroupDTO;
+import com.enewschamp.publication.domain.entity.NewsArticleGroup;
+import com.enewschamp.publication.domain.service.NewsArticleGroupService;
 
 @RestController
 @RequestMapping("/enewschamp-api/v1")

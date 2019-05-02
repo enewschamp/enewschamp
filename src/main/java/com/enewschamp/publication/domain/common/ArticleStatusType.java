@@ -1,4 +1,4 @@
-package com.enewschamp.article.domain.common;
+package com.enewschamp.publication.domain.common;
 
 public enum ArticleStatusType {
 

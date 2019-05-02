@@ -1,4 +1,4 @@
-package com.enewschamp.article.domain.service;
+package com.enewschamp.publication.domain.service;
 
 import java.util.Optional;
 
@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.article.domain.common.NewsArticleErrorCodes;
-import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.publication.domain.common.NewsArticleErrorCodes;
+import com.enewschamp.publication.domain.entity.NewsArticle;
 
 @Service
 public class NewsArticleService {
@@ -36,9 +36,9 @@ public class NewsArticleService {
 	
 	public NewsArticle update(NewsArticle article) {
 		Long articleId = article.getNewsArticleId();
-		NewsArticle existingArticle = get(articleId);
-		modelMapper.map(article, existingArticle);
-		return repository.save(existingArticle);
+		NewsArticle existingEntity = get(articleId);
+		modelMapper.map(article, existingEntity);
+		return repository.save(existingEntity);
 	}
 	
 	public NewsArticle patch(NewsArticle newsArticle) {
@@ -53,9 +53,9 @@ public class NewsArticleService {
 	}
 	
 	public NewsArticle get(Long articleId) {
-		Optional<NewsArticle> existingArticle = repository.findById(articleId);
-		if (existingArticle.isPresent()) {
-			return existingArticle.get();
+		Optional<NewsArticle> existingEntity = repository.findById(articleId);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
 		} else {
 			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), NewsArticleErrorCodes.ARTICLE_NOT_FOUND, "Article not found!");
 		}
