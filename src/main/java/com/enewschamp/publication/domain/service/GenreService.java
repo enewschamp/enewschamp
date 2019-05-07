@@ -1,5 +1,6 @@
 package com.enewschamp.publication.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -8,10 +9,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
-import com.enewschamp.publication.domain.common.PublicationErrorCodes;
+import com.enewschamp.publication.domain.common.LOVProjection;
 import com.enewschamp.publication.domain.entity.Genre;
 
 @Service
@@ -57,8 +59,12 @@ public class GenreService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), PublicationErrorCodes.GENRE_NOT_FOUND, "Genre not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.GENRE_NOT_FOUND, "Genre not found!");
 		}
+	}
+	
+	public List<LOVProjection> getLOV() {
+		return repository.getGenreLOV();
 	}
 	
 	public String getAudit(String genreId) {

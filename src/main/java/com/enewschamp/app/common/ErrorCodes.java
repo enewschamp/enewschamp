@@ -1,6 +1,6 @@
-package com.enewschamp.publication.domain.common;
+package com.enewschamp.app.common;
 
-public interface PublicationErrorCodes {
+public interface ErrorCodes {
 
 	public static String ARTICLE_GROUP_NOT_FOUND = "PUB_001";
 	public static String ARTICLE_NOT_FOUND = "PUB_002";
@@ -10,4 +10,5 @@ public interface PublicationErrorCodes {
 	public static String QUIZ_NOT_FOUND = "PUB_006";
 	public static String PUBLICATION_NOT_FOUND = "PUB_007";
 	public static String PUBLICATION_ART_LINK_NOT_FOUND = "PUB_008";
+	public static String MULTI_LANG_TEXT_NOT_FOUND = "FRW_001";
 }

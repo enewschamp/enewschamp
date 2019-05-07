@@ -1,5 +1,7 @@
 package com.enewschamp.publication.app.service;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.publication.app.dto.GenreDTO;
+import com.enewschamp.publication.domain.common.LOVProjection;
 import com.enewschamp.publication.domain.entity.Genre;
 import com.enewschamp.publication.domain.service.GenreService;
 
@@ -68,6 +71,12 @@ public class GenreController {
 		GenreDTO genreDTO = modelMapper.map(genre, GenreDTO.class);
 		genreService.get(genreId);
 		return new ResponseEntity<GenreDTO>(genreDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/genreLOV")
+	public ResponseEntity<List<LOVProjection>> getLOV() {
+		
+		return new ResponseEntity<List<LOVProjection>>(genreService.getLOV(), HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/genres/{genreId}/audit")

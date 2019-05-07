@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public abstract class AbstractPageDTO implements Serializable {
+public abstract class Page implements Serializable {
 	
 	@NotNull
 	private HeaderDTO header;

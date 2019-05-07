@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
-import com.enewschamp.publication.domain.common.PublicationErrorCodes;
 
 @Service
 public class NewsArticleService {
@@ -57,7 +57,7 @@ public class NewsArticleService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), PublicationErrorCodes.ARTICLE_NOT_FOUND, "Article not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.ARTICLE_NOT_FOUND, "Article not found!");
 		}
 	}
 	
