@@ -1,14 +1,14 @@
-package com.enewschamp.publication.app.dto;
+package com.enewschamp.article.app.dto;
 
 import java.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.app.common.MaintenanceDTO;
+import com.enewschamp.article.domain.common.ArticleGroupStatusType;
 import com.enewschamp.domain.common.MonthType;
 import com.enewschamp.domain.common.WeekDayType;
-import com.enewschamp.publication.domain.common.ArticleGroupStatusType;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
 import lombok.Data;
@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class NewsArticleGroupDTO extends AbstractDTO {	
+public class NewsArticleGroupDTO extends MaintenanceDTO {	
 	
 	private static final long serialVersionUID = -1650358898532968558L;
 

@@ -9,7 +9,7 @@ import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.app.common.MaintenanceDTO;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
 
@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class PublicationDTO extends AbstractDTO {
+public class PublicationDTO extends MaintenanceDTO {
 
 	private static final long serialVersionUID = -1938738416579485109L;
 

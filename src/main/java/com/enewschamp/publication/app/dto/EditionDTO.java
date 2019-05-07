@@ -3,14 +3,14 @@ package com.enewschamp.publication.app.dto;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.app.common.MaintenanceDTO;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class EditionDTO extends AbstractDTO {
+public class EditionDTO extends MaintenanceDTO {
 	
 	private static final long serialVersionUID = 1201220065078913195L;
 

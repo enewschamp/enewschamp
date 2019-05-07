@@ -1,15 +1,17 @@
-package com.enewschamp.publication.app.dto;
+package com.enewschamp.article.app.dto;
 
 import javax.validation.constraints.NotNull;
 
-import com.enewschamp.app.common.AbstractDTO;
-import com.enewschamp.publication.domain.common.ArticleRatingType;
-import com.enewschamp.publication.domain.common.ArticleStatusType;
+import com.enewschamp.app.common.MaintenanceDTO;
+import com.enewschamp.article.domain.common.ArticleRatingType;
+import com.enewschamp.article.domain.common.ArticleStatusType;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class NewsArticleDTO extends AbstractDTO {	
+@EqualsAndHashCode(callSuper=false)
+public class NewsArticleDTO extends MaintenanceDTO {	
 
 	private static final long serialVersionUID = 8445791416971982306L;
 

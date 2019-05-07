@@ -1,4 +1,4 @@
-package com.enewschamp.publication.domain.service;
+package com.enewschamp.article.domain.service;
 
 import java.util.Optional;
 
@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
 import com.enewschamp.publication.domain.common.PublicationErrorCodes;
-import com.enewschamp.publication.domain.entity.NewsArticle;
 
 @Service
 public class NewsArticleService {

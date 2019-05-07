@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enewschamp.publication.domain.entity.NewsArticle;
+import com.enewschamp.article.domain.entity.NewsArticle;
 
 @RestController
 @RequestMapping(value = "/audit")

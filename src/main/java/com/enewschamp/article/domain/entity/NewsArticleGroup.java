@@ -1,4 +1,4 @@
-package com.enewschamp.publication.domain.entity;
+package com.enewschamp.article.domain.entity;
 
 import java.time.LocalDate;
 
@@ -14,10 +14,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.article.domain.common.ArticleGroupStatusType;
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.domain.common.MonthType;
 import com.enewschamp.domain.common.WeekDayType;
-import com.enewschamp.publication.domain.common.ArticleGroupStatusType;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
 import lombok.Data;

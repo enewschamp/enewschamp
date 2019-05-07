@@ -1,4 +1,4 @@
-package com.enewschamp.publication.domain.common;
+package com.enewschamp.article.domain.common;
 
 public enum ArticleRatingType {
 

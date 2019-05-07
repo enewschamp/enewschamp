@@ -3,7 +3,7 @@ package com.enewschamp.publication.app.dto;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.app.common.MaintenanceDTO;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class HashTagDTO extends AbstractDTO {
+public class HashTagDTO extends MaintenanceDTO {
 	
 	private static final long serialVersionUID = 2844284287599966841L;
 
