@@ -1,14 +1,24 @@
 package com.enewschamp.subscription.domain.service;
 
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 
+import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
-import com.enewschamp.publication.domain.entity.Publication;
+import com.enewschamp.problem.Fault;
+import com.enewschamp.problem.HttpStatusAdapter;
 import com.enewschamp.subscription.domin.entity.StudentSubscription;
 
-public class StudentSubscriptionService implements IStudentSubscription {
+public class StudentSubscriptionService  {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Autowired
 	StudentSubscriptionRepository repository;
@@ -23,13 +33,13 @@ public class StudentSubscriptionService implements IStudentSubscription {
 	@Autowired
 	AuditService auditService;
 	
-	@Override
+	
 	public StudentSubscription create(StudentSubscription studentSubscription) {
 		return repository.save(studentSubscription);
 
 	}
 
-	@Override
+	
 	public StudentSubscription update(StudentSubscription studentSubscription) {
 		Long studentId = studentSubscription.getStudentID();
 		Long editionId = studentSubscription.getEditionID();
@@ -47,22 +57,20 @@ public class StudentSubscriptionService implements IStudentSubscription {
 		return repository.save(existingEntity);
 	}
 
-	@Override
-	public void delete(Long studenId, Long editionId) {
-
-		
+	public StudentSubscription get(Long studentId, Long editionId) {
+		Optional<StudentSubscription> existingEntity = repository.findById(studentId);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
+		} else {
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.STUDENT_DTLS_NOT_FOUND, "Publication not found!");
+		}
 	}
-
-	@Override
-	public StudentSubscription get(Long studenId, Long editionId) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public String getAudit(Long studentId) {
+		StudentSubscription StudentDetails = new StudentSubscription();
+		StudentDetails.setStudentID(studentId);
+		return auditService.getEntityAudit(StudentDetails);
 	}
-
-	@Override
-	public String getAudit(Long studenId, Long editionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 }

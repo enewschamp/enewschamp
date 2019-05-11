@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class StudentSubscriptionDTO extends AbstractDTO{
+public class StudentSubscriptionWorkDTO extends AbstractDTO{
 
 	/**
 	 * 

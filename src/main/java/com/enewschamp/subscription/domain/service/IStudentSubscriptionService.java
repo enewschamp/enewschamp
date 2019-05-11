@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.enewschamp.subscription.domin.entity.StudentSubscription;
 
-public interface IStudentSubscription extends Serializable {
+public interface IStudentSubscriptionService extends Serializable {
 
 	public StudentSubscription create(StudentSubscription ss);
 	public StudentSubscription update(StudentSubscription ss);

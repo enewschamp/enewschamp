@@ -3,7 +3,6 @@ package com.enewschamp.subscription.app.dto;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.PageData;
-import com.enewschamp.article.page.dto.NewsArticleSearchPageData;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
