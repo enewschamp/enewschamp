@@ -11,6 +11,6 @@ public class NewsArticleSearchPage extends Page {
 
 	private static final long serialVersionUID = -7757402617610969769L;	
 
-
+	private NewsArticleSearchPageData data;
 
 }

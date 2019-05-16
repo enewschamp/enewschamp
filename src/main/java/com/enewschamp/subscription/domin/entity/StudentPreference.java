@@ -2,6 +2,7 @@ package com.enewschamp.subscription.domin.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -19,6 +20,7 @@ public class StudentPreference extends BaseEntity{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	@Id
 	@NotNull
 	@Column(name="StudentID", length=10)
 	private Long studentID;

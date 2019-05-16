@@ -1,17 +1,14 @@
 package com.enewschamp.subscription.domin.entity;
 
-import java.math.BigDecimal;
 import java.sql.Date;
-import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.enewschamp.domain.common.BaseEntity;
-import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @Table(name="StudentSubscription_Work")
 public class StudentSubscriptionWork extends BaseEntity{
 	
-	
+	@Id
 	@NotNull
 	@Column(name = "StudentID", length=10)
 	private long studentID = 0L;

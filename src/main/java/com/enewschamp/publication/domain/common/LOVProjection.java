@@ -4,5 +4,5 @@ public interface LOVProjection {
 
 	String getName();
 
-	String getValue();
+	String getId();
 }

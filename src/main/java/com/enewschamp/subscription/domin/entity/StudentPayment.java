@@ -51,7 +51,7 @@ public class StudentPayment extends BaseEntity{
 	@Column(name="PayCurrency", length=4)
 	private String payCurrency;
 	
-	@Column(name="PayCurrency", length=9)
+	@Column(name="PayAmount", length=9)
 	private Double payAmount;
 	
 	

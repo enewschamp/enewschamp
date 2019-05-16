@@ -1,4 +1,4 @@
-package com.enewschamp.app.service;
+package com.enewschamp.app.dto;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

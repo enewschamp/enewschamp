@@ -25,7 +25,7 @@ import lombok.extern.java.Log;
 
 @Log
 @RestController
-@RequestMapping("/enewschamp-api/v1")
+@RequestMapping("/enewschamp-api/v1/bak")
 public class SubscriptionController_bak {
 	@Autowired
 	ModelMapper modelMapper;

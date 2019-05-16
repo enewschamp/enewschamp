@@ -12,7 +12,7 @@ import com.enewschamp.publication.domain.entity.Genre;
 @JaversSpringDataAuditable
 interface GenreRepository extends JpaRepository<Genre, String>{ 
 	 
-	@Query(value="select a.genreId as value, b.text as name "
+	@Query(value="select a.genreId as id, b.text as name "
 			+ "from Genre a, MultiLanguageText b "
 			+ "where a.nameId=b.multiLanguageTextId")
     public List<LOVProjection> getGenreLOV();

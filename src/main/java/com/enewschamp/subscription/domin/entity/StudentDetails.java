@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -19,6 +20,7 @@ import lombok.EqualsAndHashCode;
 @Table(name="StudentDetails")
 public class StudentDetails extends BaseEntity{
 
+	@Id
 	@NotNull
 	@Column(name = "StudentID", length=10)
 	private Long studentID= 0L;

@@ -1,14 +1,12 @@
 package com.enewschamp.subscription.domin.entity;
 
-import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
-import com.enewschamp.subscription.domin.entity.StudentSubscription;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +22,7 @@ public class StudentSchool extends BaseEntity{
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@Id
 	@NotNull
 	@Column(name = "StudentID", length=10)
 	private long studentID = 0L;

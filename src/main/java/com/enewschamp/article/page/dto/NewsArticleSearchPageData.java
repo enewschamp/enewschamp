@@ -1,7 +1,9 @@
 package com.enewschamp.article.page.dto;
 
+import java.util.List;
+
 import com.enewschamp.app.common.PageData;
-import com.enewschamp.page.dto.SelectOption;
+import com.enewschamp.page.dto.ListOfValuesItem;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,12 +14,12 @@ public class NewsArticleSearchPageData extends PageData {
 
 	private static final long serialVersionUID = 7566861143124839543L;
 	
-	private SelectOption[] editionsLOV;
-	private SelectOption[] daysLOV;
-	private SelectOption[] monthsLOV;
-	private SelectOption[] authorLOV;
-	private SelectOption[] editorLOV;
-	private SelectOption[] publisherLOV;
-	private SelectOption[] genreLOV;
+	private List<ListOfValuesItem> editionsLOV;
+	private List<ListOfValuesItem> daysLOV;
+	private List<ListOfValuesItem> monthsLOV;
+	private List<ListOfValuesItem> authorLOV;
+	private List<ListOfValuesItem> editorLOV;
+	private List<ListOfValuesItem> publisherLOV;
+	private List<ListOfValuesItem> genreLOV;
 
 }

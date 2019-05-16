@@ -11,13 +11,14 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.domain.service.AbstractDomainService;
+import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
-import com.enewschamp.publication.domain.common.LOVProjection;
 import com.enewschamp.publication.domain.entity.Genre;
 
 @Service
-public class GenreService {
+public class GenreService extends AbstractDomainService {
 
 	@Autowired
 	GenreRepository repository;
@@ -63,8 +64,8 @@ public class GenreService {
 		}
 	}
 	
-	public List<LOVProjection> getLOV() {
-		return repository.getGenreLOV();
+	public List<ListOfValuesItem> getLOV() {
+		return toListOfValuesItems(repository.getGenreLOV());
 	}
 	
 	public String getAudit(String genreId) {

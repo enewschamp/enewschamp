@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.publication.app.dto.GenreDTO;
-import com.enewschamp.publication.domain.common.LOVProjection;
 import com.enewschamp.publication.domain.entity.Genre;
 import com.enewschamp.publication.domain.service.GenreService;
 
@@ -74,9 +74,9 @@ public class GenreController {
 	}
 	
 	@GetMapping(value = "/genreLOV")
-	public ResponseEntity<List<LOVProjection>> getLOV() {
+	public ResponseEntity<List<ListOfValuesItem>> getLOV() {
 		
-		return new ResponseEntity<List<LOVProjection>>(genreService.getLOV(), HttpStatus.OK);
+		return new ResponseEntity<List<ListOfValuesItem>>(genreService.getLOV(), HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/genres/{genreId}/audit")
