@@ -1,6 +1,6 @@
 package com.enewschamp.article.app.dto;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -63,9 +63,9 @@ public class NewsArticleGroupDTO extends MaintenanceDTO {
 	@Size(max = ForeignKeyColumnLength.UserId)
 	private String authorId;
 	
-	private LocalDate targetCompletionDate;
+	private Date targetCompletionDate;
 	
-	private LocalDate publicationDate;
+	private Date publicationDate;
 	
 	private MonthType intendedPubMonth;
 	

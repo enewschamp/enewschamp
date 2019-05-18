@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
+import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.RequestStatusType;
-import com.enewschamp.domain.common.PageBuilderFactory;
+import com.enewschamp.domain.common.PageHandlerFactory;
 
 import lombok.extern.java.Log;
 
@@ -23,17 +25,24 @@ import lombok.extern.java.Log;
 public class PageController {
 
 	@Autowired
-	ModelMapper modelMapper;
+	private PageHandlerFactory pageHandlerFactory;
 	
 	@Autowired
-	private PageBuilderFactory pageBuilderFactory;
+	private EnewschampApplicationProperties appConfig;
 
+	@Autowired
+	ModelMapper modelMapper;
 	
 	@PostMapping(value = "/pages/{pageName}/{actionName}")
-	public ResponseEntity<PageDTO> get(@PathVariable String pageName, @PathVariable String actionName, @RequestBody PageDTO pageData) {
-		PageDTO page = pageBuilderFactory.getPageBuilder(pageName, actionName).buildPage();
-		addSuccessHeader(page);
-		return new ResponseEntity<PageDTO>(page, HttpStatus.OK);
+	public ResponseEntity<PageDTO> get(@PathVariable String pageName, @PathVariable String actionName, @RequestBody PageRequestDTO pageRequest) {
+		
+		//Process current page
+		PageDTO responsePage = pageHandlerFactory.getPageHandler(pageName).handleAction(actionName, pageRequest);
+		addSuccessHeader(responsePage);
+		
+		String nextPageName = appConfig.getPageNavigationConfig().get(pageName.toLowerCase()).get(actionName.toLowerCase());
+		responsePage.setPageName(nextPageName);
+		return new ResponseEntity<PageDTO>(responsePage, HttpStatus.OK);
 	}
 	
 	private void addSuccessHeader(PageDTO page) {

@@ -1,4 +1,4 @@
-package com.enewschamp.article.pagedata;
+package com.enewschamp.article.page.data;
 
 import java.util.List;
 

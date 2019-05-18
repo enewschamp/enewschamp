@@ -7,6 +7,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public abstract class PageData implements Serializable {
+public class PageData implements Serializable {
 	
 } 
