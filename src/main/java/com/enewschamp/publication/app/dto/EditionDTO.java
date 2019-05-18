@@ -15,7 +15,7 @@ public class EditionDTO extends MaintenanceDTO {
 	private static final long serialVersionUID = 1201220065078913195L;
 
 	@NotNull
-	@Size(max=6)
+	@Size(max=10)
 	private String editionId;
 	
 	@NotNull
@@ -23,6 +23,6 @@ public class EditionDTO extends MaintenanceDTO {
 	private String languageId;
 	
 	@NotNull
-	@Size(min=6, max=20)
+	@Size(min=6, max=255)
 	private String editionName;
 }

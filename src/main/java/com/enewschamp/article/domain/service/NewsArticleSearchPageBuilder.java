@@ -1,29 +1,32 @@
 package com.enewschamp.article.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import com.enewschamp.article.page.dto.NewsArticleSearchPage;
-import com.enewschamp.article.page.dto.NewsArticleSearchPageData;
+import com.enewschamp.app.common.PageDTO;
+import com.enewschamp.article.pagedata.NewsArticleSearchPageData;
+import com.enewschamp.domain.common.IPageBuilder;
 import com.enewschamp.domain.common.MonthType;
 import com.enewschamp.domain.common.WeekDayType;
+import com.enewschamp.publication.domain.service.EditionService;
 import com.enewschamp.publication.domain.service.GenreService;
 import com.enewschamp.user.domin.service.UserService;
 
-@Service
-public class NewsArticlePageService  {
+@Component(value="NewsArticleSearchPageBuilder")
+public class NewsArticleSearchPageBuilder implements IPageBuilder  {
 
 	@Autowired
 	GenreService genreService;
 
 	@Autowired
 	UserService userService;
-
 	
-	public NewsArticleSearchPage buildNewsArticleSearchPage() {
+	@Autowired
+	EditionService editionService;
+	
+	public PageDTO buildPage() {
 		
-		NewsArticleSearchPage page = new NewsArticleSearchPage();
-		
+		PageDTO page = new PageDTO();
 		NewsArticleSearchPageData data = new NewsArticleSearchPageData();
 		
 		data.setGenreLOV(genreService.getLOV());
@@ -32,7 +35,7 @@ public class NewsArticlePageService  {
 		data.setEditorLOV(userService.getEditorLOV());
 		data.setMonthsLOV(MonthType.getLOV());
 		data.setDaysLOV(WeekDayType.getLOV());
-		
+		data.setEditionsLOV(editionService.getLOV());
 		page.setData(data);
 		return page;
 	}

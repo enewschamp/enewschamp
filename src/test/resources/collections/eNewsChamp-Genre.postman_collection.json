@@ -1,0 +1,130 @@
+{
+	"info": {
+		"_postman_id": "dc101ce1-1e62-4f57-9c6d-2df9fc58628b",
+		"name": "eNewsChamp-Genre",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "MultiLangTexts",
+			"item": [
+				{
+					"name": "Create MultiLangTexts For Genre",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.environment.set(data.entityName + \"-\" + data.text, jsonData.multiLanguageTextId);",
+									"console.log(data.entityName + \"-\" + data.text, pm.environment.get(data.entityName + \"-\" + data.text));",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"locale\": \"{{locale}}\",\n    \"entityName\": \"{{entityName}}\",\n    \"entityColumn\": \"{{entityColumn}}\",\n    \"text\": \"{{text}}\",\n    \"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayu\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/{{base-path}}/multiLanguageTexts",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base-path}}",
+								"multiLanguageTexts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Genre",
+			"item": [
+				{
+					"name": "Create Genre",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"genreId\":\"{{text}}\",\n\t\"nameId\":\"{{Genre-SCIENCE}}\",\n\t\"imagePath\":\"http://images/genres/{{text}}.jpg\",\n\t\"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayu\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/{{base-path}}/genres",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base-path}}",
+								"genres"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "beeb0d5d-110a-43c8-a009-d5dfb9bd11ac",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "2b4be6f7-180d-43e5-b6bd-3c58412ded99",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

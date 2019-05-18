@@ -1,4 +1,4 @@
-package com.enewschamp.article.page.dto;
+package com.enewschamp.article.pagedata;
 
 import java.util.List;
 

@@ -21,7 +21,7 @@ public class Edition extends BaseEntity {
 
 	@Id
 	@NotNull
-	@Column(name = "EditionID", length=6)
+	@Column(name = "EditionID", length=10)
 	private String editionId;
 	
 	@NotNull
@@ -29,7 +29,7 @@ public class Edition extends BaseEntity {
 	private String languageId;
 	
 	@NotNull
-	@Column(name = "EditionName", length = 20)
+	@Column(name = "EditionName", length = 255)
 	private String editionName;
 	
 }

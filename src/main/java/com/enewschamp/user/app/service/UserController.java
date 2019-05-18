@@ -69,7 +69,8 @@ public class UserController {
 	public ResponseEntity<UserDTO> get(@PathVariable String userId) {
 		User user = userService.get(userId);
 		UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-		userService.get(userId);
+		user = userService.get(userId);
+		userDTO = modelMapper.map(user, UserDTO.class);
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
 	

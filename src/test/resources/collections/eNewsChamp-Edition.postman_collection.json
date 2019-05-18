@@ -1,0 +1,51 @@
+{
+	"info": {
+		"_postman_id": "07110563-6fdd-4606-92ff-15a141a4929b",
+		"name": "eNewsChamp-Edition",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Edition",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"editionId\":\"{{editionId}}\",\n\t\"languageId\":\"{{languageId}}\",\n\t\"editionName\":\"{{editionName}}\",\n\t\"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayu\"\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/editions",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"editions"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

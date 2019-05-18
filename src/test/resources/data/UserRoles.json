@@ -1,0 +1,17 @@
+[
+    {
+        "userId": "deepsem",
+        "roleId": "AUTHOR",
+        "day": "Mon"
+    },
+    {
+        "userId": "mesmayus",
+        "roleId": "EDITOR",
+        "day": "Tue"
+    },
+    {
+        "userId": "govisaxe",
+        "roleId": "PUBLISHER",
+        "day": "Wed"
+    }
+]

@@ -13,4 +13,5 @@ public interface ErrorCodes {
 	public static String MULTI_LANG_TEXT_NOT_FOUND = "FRW_001";
 	public static String STUDENT_DTLS_NOT_FOUND = "STUDDTLS_001";
 	public static String USER_NOT_FOUND = "USER_001";
+	public static String USER_ROLE_NOT_FOUND = "USER_002";
 }
