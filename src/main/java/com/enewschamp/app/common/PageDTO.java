@@ -17,7 +17,7 @@ public class PageDTO implements Serializable {
 	private HeaderDTO header;
 	
 	@JsonIgnore
-	protected String pageName;
+	private String pageName;
 	
 	private PageData data;
 } 

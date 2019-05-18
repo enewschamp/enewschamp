@@ -37,6 +37,7 @@ public class NewsArticleSearchPageBuilder implements IPageBuilder  {
 		data.setDaysLOV(WeekDayType.getLOV());
 		data.setEditionsLOV(editionService.getLOV());
 		page.setData(data);
+		page.setPageName("SearchNewsArticles");
 		return page;
 	}
 }

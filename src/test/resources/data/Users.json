@@ -31,5 +31,49 @@
         "contractEndDate": "2020-05-18",
         "mobile1": "1234567890",
         "email1": "mahendra.shetake@enewschamp.com"
+    },
+    {
+        "userId":"author1",
+        "title":"1234",
+        "name":"Author",
+        "surname":"One",
+        "gender": "M",
+        "contractStartDate": "2019-05-18",
+        "contractEndDate": "2020-05-18",
+        "mobile1": "1234567890",
+        "email1": "author.one@enewschamp.com"
+    },
+    {
+        "userId":"author2",
+        "title":"1234",
+        "name":"Author",
+        "surname":"Two",
+        "gender": "M",
+        "contractStartDate": "2019-05-18",
+        "contractEndDate": "2020-05-18",
+        "mobile1": "1234567890",
+        "email1": "author.two@enewschamp.com"
+    },
+    {
+        "userId":"editor1",
+        "title":"1234",
+        "name":"Editor",
+        "surname":"One",
+        "gender": "M",
+        "contractStartDate": "2019-05-18",
+        "contractEndDate": "2020-05-18",
+        "mobile1": "1234567890",
+        "email1": "editor.one@enewschamp.com"
+    },
+    {
+        "userId":"editor2",
+        "title":"1234",
+        "name":"Editor",
+        "surname":"Two",
+        "gender": "M",
+        "contractStartDate": "2019-05-18",
+        "contractEndDate": "2020-05-18",
+        "mobile1": "1234567890",
+        "email1": "editor.two@enewschamp.com"
     }
 ]
