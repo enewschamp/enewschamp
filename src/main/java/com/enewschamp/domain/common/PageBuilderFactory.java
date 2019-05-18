@@ -18,10 +18,16 @@ public class PageBuilderFactory {
 	public IPageBuilder getPageBuilder(String pageName, String actionName) {
 		IPageBuilder builder = null;
 		
+		// Read next page from properties file based on current page and action. 
+		// TODO: This needs to be read from database table which maintains the page navigation
 		String nextPageName = appConfig.getPageNavigationConfig().get(pageName.toLowerCase()).get(actionName.toLowerCase());
 		
+		// Read page builder class for the next page to be returned
 		String builderName = appConfig.getPageBuilderConfig().get(nextPageName.toLowerCase());
+		
+		// Read the bean for next page builder
 		builder = (IPageBuilder) context.getBean(builderName);
+		
 		return builder;
 	}
 }
