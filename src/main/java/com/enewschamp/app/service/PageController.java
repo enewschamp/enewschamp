@@ -4,8 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,8 +29,8 @@ public class PageController {
 	private PageBuilderFactory pageBuilderFactory;
 
 	
-	@GetMapping(value = "/pages/{pageName}/{actionName}")
-	public ResponseEntity<PageDTO> get(@PathVariable String pageName, @PathVariable String actionName) {
+	@PostMapping(value = "/pages/{pageName}/{actionName}")
+	public ResponseEntity<PageDTO> get(@PathVariable String pageName, @PathVariable String actionName, @RequestBody PageDTO pageData) {
 		PageDTO page = pageBuilderFactory.getPageBuilder(pageName, actionName).buildPage();
 		addSuccessHeader(page);
 		return new ResponseEntity<PageDTO>(page, HttpStatus.OK);
