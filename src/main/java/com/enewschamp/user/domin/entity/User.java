@@ -1,6 +1,6 @@
 package com.enewschamp.user.domin.entity;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,11 +48,11 @@ public class User extends BaseEntity {
 	
 	@NotNull
 	@Column(name = "ContractStartDate")
-	private LocalDate contractStartDate;
+	private Date contractStartDate;
 	
 	@NotNull
 	@Column(name = "ContractEndDate")
-	private LocalDate contractEndDate;
+	private Date contractEndDate;
 	
 	@NotNull
 	@Column(name = "Mobile1", length=12)

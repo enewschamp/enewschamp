@@ -42,7 +42,9 @@ public class NewsArticleRepositoryImpl implements NewsArticleRepositoryCustom {
 		TypedQuery<NewsArticleDTO> q = entityManager.createQuery(query);
 		
 		if(pageable.getPageSize() > 0) {
-			q.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+			int pageNumber = pageable.getPageNumber();
+			pageNumber = pageNumber > 0 ? (pageNumber - 1) : 0;
+			q.setFirstResult(pageNumber * pageable.getPageSize());
 			q.setMaxResults(pageable.getPageSize());
 		}
 		return new PageImpl<>(q.getResultList(), pageable, getAllCount(searchRequest));

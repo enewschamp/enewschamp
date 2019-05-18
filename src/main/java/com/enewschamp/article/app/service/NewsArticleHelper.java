@@ -61,7 +61,7 @@ public class NewsArticleHelper {
 	public NewsArticleDTO get(Long articleId) {
 		NewsArticle article = newsArticleService.get(articleId);
 		NewsArticleDTO articleDTO = modelMapper.map(article, NewsArticleDTO.class);
-		newsArticleService.get(articleId);
+		articleDTO = fillQuiz(articleDTO);
 		return articleDTO;
 	}
 	

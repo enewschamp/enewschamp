@@ -1,6 +1,7 @@
 package com.enewschamp.article.app.dto;
 
-import java.sql.Date;
+import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -72,4 +73,6 @@ public class NewsArticleGroupDTO extends MaintenanceDTO {
 	private WeekDayType intendedPubDay;
 	
 	private String comments;
+	
+	private List<NewsArticleDTO> newsArticles;
 }

@@ -57,7 +57,6 @@ public class NewsArticleListPageHandler implements IPageHandler  {
 		data.setEditionsLOV(editionService.getLOV());
 		
 		data.setNewsArticleGroup(newsArticleGroupHelper.getArticleGroup(articleGroupId));
-		data.setNewsArticles(newsArticleHelper.getByArticleGroupId(articleGroupId));
 		
 		pageDTO.setData(data);
 		return pageDTO;

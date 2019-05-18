@@ -72,7 +72,7 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 		searchResult.setNewsArticles(articleDTOs);
 		pageDTO.setData(searchResult);
 		
-		Pageable pageable = PageRequest.of(pageRequest.getHeader().getPageNumber() - 1, pageRequest.getHeader().getPageSize());
+		Pageable pageable = PageRequest.of(pageRequest.getHeader().getPageNumber(), pageRequest.getHeader().getPageSize());
 		Page<NewsArticleDTO> pageResult = newsArticleCustomRepository.findAllPage(searchRequestData, pageable);
 		
 		HeaderDTO header = new HeaderDTO();

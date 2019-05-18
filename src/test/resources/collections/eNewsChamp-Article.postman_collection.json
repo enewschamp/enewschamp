@@ -1,0 +1,232 @@
+{
+	"info": {
+		"_postman_id": "df9b0f32-d94d-458d-b650-6482f785b9bc",
+		"name": "eNewsChamp-Article",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Article Group with articles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.environment.set(\"articleGroupId\", jsonData.newsArticleGroupId);",
+							"console.log('Article Group Id: ', pm.environment.get(\"articleGroupId\"));",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"editionId\": \"Edit1\",\n    \"genreId\": \"genreId\",\n    \"headline\": \"headline\",\n    \"credits\": \"credits\",\n    \"status\": \"Unassigned\",\n    \"url\": \"http://article-url\",\n    \"sourceText\": \"sourceText\",\n    \"hashTags\": \"hashTags\",\n    \"imagePathMobile\": \"imagePathMobile\",\n    \"imagePathTab\": \"imagePathTab\",\n    \"imagePathDesktop\": \"imagePathDesktop\",\n    \"editorId\": \"editorId\",\n    \"authorId\": \"authorId\",\n    \"targetCompletionDate\": \"2018-12-12\",\n    \"publicationDate\": \"2018-12-12\",\n    \"intendedPubMonth\": \"Jan\",\n    \"intendedPubDay\": \"Mon\",\n    \"comments\": \"comments\",\n    \"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayu\",\n    \"newsArticles\": [\n        {\n            \"readingLevel\": 1,\n            \"content\": \"Sample Content 1\",\n            \"rating\": \"Rating2\",\n            \"likeLCount\": 0,\n            \"likeHCount\": 0,\n            \"likeOCount\": 0,\n            \"likeWCount\": 0,\n            \"likeSCount\": 0,\n            \"status\": \"Unassigned\",\n            \"newsArticleQuiz\": [\n                {\n                    \"question\": \"Question 1\",\n                    \"opt1\": \"Option 1\",\n                    \"opt2\": \"Option 2\",\n                    \"opt3\": \"Option 3\",\n                    \"opt4\": \"Option 4\",\n                    \"correctOpt\": 2\n                },\n                {\n                    \"question\": \"Question 2\",\n                    \"opt1\": \"Option 1\",\n                    \"opt2\": \"Option 2\",\n                    \"opt3\": \"Option 3\",\n                    \"opt4\": \"Option 4\",\n                    \"correctOpt\": 3\n                },\n                {\n                    \"question\": \"Question 3\",\n                    \"opt1\": \"Option 1\",\n                    \"opt2\": \"Option 2\",\n                    \"opt3\": \"Option 3\",\n                    \"opt4\": \"Option 4\",\n                    \"correctOpt\": 1\n                }\n            ]\n        },\n        {\n            \"readingLevel\": 2,\n            \"content\": \"Sample Content 2\",\n            \"rating\": \"Rating2\",\n            \"likeLCount\": 0,\n            \"likeHCount\": 0,\n            \"likeOCount\": 0,\n            \"likeWCount\": 0,\n            \"likeSCount\": 0,\n            \"status\": \"Unassigned\",\n            \"newsArticleQuiz\": [\n                {\n                    \"question\": \"Question 1\",\n                    \"opt1\": \"Option 1\",\n                    \"opt2\": \"Option 2\",\n                    \"opt3\": \"Option 3\",\n                    \"opt4\": \"Option 4\",\n                    \"correctOpt\": 2\n                },\n                {\n                    \"question\": \"Question 2\",\n                    \"opt1\": \"Option 1\",\n                    \"opt2\": \"Option 2\",\n                    \"opt3\": \"Option 3\",\n                    \"opt4\": \"Option 4\",\n                    \"correctOpt\": 3\n                },\n                {\n                    \"question\": \"Question 3\",\n                    \"opt1\": \"Option 1\",\n                    \"opt2\": \"Option 2\",\n                    \"opt3\": \"Option 3\",\n                    \"opt4\": \"Option 4\",\n                    \"correctOpt\": 1\n                }\n            ]\n        },\n        {\n            \"readingLevel\": 3,\n            \"content\": \"Sample Content 3\",\n            \"rating\": \"Rating2\",\n            \"likeLCount\": 0,\n            \"likeHCount\": 0,\n            \"likeOCount\": 0,\n            \"likeWCount\": 0,\n            \"likeSCount\": 0,\n            \"status\": \"Unassigned\",\n            \"newsArticleQuiz\": [\n                {\n                    \"question\": \"Question 1\",\n                    \"opt1\": \"Option 1\",\n                    \"opt2\": \"Option 2\",\n                    \"opt3\": \"Option 3\",\n                    \"opt4\": \"Option 4\",\n                    \"correctOpt\": 2\n                },\n                {\n                    \"question\": \"Question 2\",\n                    \"opt1\": \"Option 1\",\n                    \"opt2\": \"Option 2\",\n                    \"opt3\": \"Option 3\",\n                    \"opt4\": \"Option 4\",\n                    \"correctOpt\": 3\n                },\n                {\n                    \"question\": \"Question 3\",\n                    \"opt1\": \"Option 1\",\n                    \"opt2\": \"Option 2\",\n                    \"opt3\": \"Option 3\",\n                    \"opt4\": \"Option 4\",\n                    \"correctOpt\": 1\n                }\n            ]\n        },\n        {\n            \"readingLevel\": 4,\n            \"content\": \"Sample Content 4\",\n            \"rating\": \"Rating2\",\n            \"likeLCount\": 0,\n            \"likeHCount\": 0,\n            \"likeOCount\": 0,\n            \"likeWCount\": 0,\n            \"likeSCount\": 0,\n            \"status\": \"Unassigned\",\n            \"newsArticleQuiz\": [\n                {\n                    \"question\": \"Question 1\",\n                    \"opt1\": \"Option 1\",\n                    \"opt2\": \"Option 2\",\n                    \"opt3\": \"Option 3\",\n                    \"opt4\": \"Option 4\",\n                    \"correctOpt\": 2\n                },\n                {\n                    \"question\": \"Question 2\",\n                    \"opt1\": \"Option 1\",\n                    \"opt2\": \"Option 2\",\n                    \"opt3\": \"Option 3\",\n                    \"opt4\": \"Option 4\",\n                    \"correctOpt\": 3\n                },\n                {\n                    \"question\": \"Question 3\",\n                    \"opt1\": \"Option 1\",\n                    \"opt2\": \"Option 2\",\n                    \"opt3\": \"Option 3\",\n                    \"opt4\": \"Option 4\",\n                    \"correctOpt\": 1\n                }\n            ]\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/articleGroups",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"articleGroups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Article Search Page",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Menu\",\n        \"action\": \"ClickSearchNewsArticle\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/pages/menu/ClickSearchNewsArticle",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"pages",
+						"menu",
+						"ClickSearchNewsArticle"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Articles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"SearchNewsArticles\",\n        \"action\": \"ClickGetNewsArticles\",\n        \"pageNumber\": 1,\n        \"pageSize\": 99\n    },\n    \"data\": {\n        \"userId\": \"userId\",\n        \"authorId\": \"authorId\",\n        \"editorId\": \"editorId\",\n        \"publisherId\": \"publisherId\",\n        \"editionId\": \"editionId\",\n        \"genreId\": \"genreId\",\n        \"headline\": \"headline\",\n        \"credits\": \"credits\",\n        \"articleId\": \"articleId\",\n        \"articleGroupId\": \"articleGroupId\",\n        \"readingLevel1\": \"Y\",\n        \"readingLevel2\": \"Y\",\n        \"readingLevel3\": \"Y\",\n        \"readingLevel4\": \"Y\",\n        \"publicationDate\": \"2019-05-18\",\n        \"intendedPubMonth\": \"Jan\",\n        \"articleStatusList\": [\n            \"Unassigned\",\n            \"Assigned\",\n            \"ReadyToPublish\"\n        ]\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/pages/SearchNewsArticles/ClickGetNewsArticles",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"pages",
+						"SearchNewsArticles",
+						"ClickGetNewsArticles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Article Group",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							"console.log('Article Id: ', pm.environment.get(\"articleId\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": {\n    \t\"newsArticleGroupId\": 1\n    }\n    \n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/pages/ListNewsArticles/ClickNewsArticleGroupID",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"pages",
+						"ListNewsArticles",
+						"ClickNewsArticleGroupID"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save Article Group",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							"console.log('Article Id: ', pm.environment.get(\"articleId\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {},\n    \"data\": {\n    \t\"newsArticleGroupId\": 1,\n        \"editionId\": \"Edit1\",\n        \"genreId\": \"genreId\",\n        \"headline\": \"headline\",\n        \"credits\": \"credits\",\n        \"status\": \"Unassigned\",\n        \"url\": \"http://article-url\",\n        \"sourceText\": \"sourceText\",\n        \"hashTags\": \"hashTags\",\n        \"imagePathMobile\": \"imagePathMobile\",\n        \"imagePathTab\": \"imagePathTab\",\n        \"imagePathDesktop\": \"imagePathDesktop\",\n        \"editorId\": \"editorId\",\n        \"authorId\": \"authorId\",\n        \"targetCompletionDate\": \"2018-12-12\",\n        \"publicationDate\": \"2018-12-12\",\n        \"intendedPubMonth\": \"Jan\",\n        \"intendedPubDay\": \"Mon\",\n        \"comments\": \"comments\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"newsArticles\": [\n            {\n                \"readingLevel\": 1,\n                \"content\": \"Sample Content 1\",\n                \"rating\": \"Rating2\",\n                \"likeLCount\": 0,\n                \"likeHCount\": 0,\n                \"likeOCount\": 0,\n                \"likeWCount\": 0,\n                \"likeSCount\": 0,\n                \"status\": \"Unassigned\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    },\n                    {\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 3\n                    },\n                    {\n                        \"question\": \"Question 3\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    }\n                ]\n            },\n            {\n                \"readingLevel\": 2,\n                \"content\": \"Sample Content 2\",\n                \"rating\": \"Rating2\",\n                \"likeLCount\": 0,\n                \"likeHCount\": 0,\n                \"likeOCount\": 0,\n                \"likeWCount\": 0,\n                \"likeSCount\": 0,\n                \"status\": \"Unassigned\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    },\n                    {\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 3\n                    },\n                    {\n                        \"question\": \"Question 3\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    }\n                ]\n            },\n            {\n                \"readingLevel\": 3,\n                \"content\": \"Sample Content 3\",\n                \"rating\": \"Rating2\",\n                \"likeLCount\": 0,\n                \"likeHCount\": 0,\n                \"likeOCount\": 0,\n                \"likeWCount\": 0,\n                \"likeSCount\": 0,\n                \"status\": \"Unassigned\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    },\n                    {\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 3\n                    },\n                    {\n                        \"question\": \"Question 3\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    }\n                ]\n            },\n            {\n                \"readingLevel\": 4,\n                \"content\": \"Sample Content 4\",\n                \"rating\": \"Rating2\",\n                \"likeLCount\": 0,\n                \"likeHCount\": 0,\n                \"likeOCount\": 0,\n                \"likeWCount\": 0,\n                \"likeSCount\": 0,\n                \"status\": \"Unassigned\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    },\n                    {\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 3\n                    },\n                    {\n                        \"question\": \"Question 3\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    }\n                ]\n            }\n        ]\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/pages/NewsArticle/SaveNewsArticle",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"pages",
+						"NewsArticle",
+						"SaveNewsArticle"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
