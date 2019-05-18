@@ -1,5 +1,7 @@
 package com.enewschamp.article.domain.entity;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import com.enewschamp.article.domain.common.ArticleRatingType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.domain.common.BaseEntity;
+import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -69,4 +72,19 @@ public class NewsArticle extends BaseEntity {
 	@Column(name = "LikeSCount")
 	private int likeSCount = 0;
 
+	@Column(name = "PublishDate")
+	private Date publishDate;
+	
+	@Column(name = "PublisherId", length = ForeignKeyColumnLength.UserId)
+	private String publisherId;
+
+	@Column(name = "PublicationId")
+	private long publicationId;
+	
+	@Column(name = "EditorId", length = ForeignKeyColumnLength.UserId)
+	private String editorId;
+	
+	@Column(name = "AuthorId", length = ForeignKeyColumnLength.UserId)
+	private String authorId;
+	
 }

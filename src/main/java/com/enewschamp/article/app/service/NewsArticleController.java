@@ -32,12 +32,13 @@ public class NewsArticleController {
 	
 	@Autowired
 	private NewsArticleService newsArticleService;
+	
+	@Autowired
+	private NewsArticleHelper newsArticleHelper;
 
 	@PostMapping(value = "/articles")
 	public ResponseEntity<NewsArticleDTO> create(@RequestBody @Valid NewsArticleDTO articleDTO) {
-		NewsArticle article = modelMapper.map(articleDTO, NewsArticle.class);
-		article = newsArticleService.create(article);
-		articleDTO = modelMapper.map(article, NewsArticleDTO.class);
+		articleDTO = newsArticleHelper.create(articleDTO);
 		return new ResponseEntity<NewsArticleDTO>(articleDTO, HttpStatus.CREATED);
 	}
 
@@ -67,9 +68,7 @@ public class NewsArticleController {
 	
 	@GetMapping(value = "/articles/{articleId}")
 	public ResponseEntity<NewsArticleDTO> get(@PathVariable Long articleId) {
-		NewsArticle article = newsArticleService.get(articleId);
-		NewsArticleDTO articleDTO = modelMapper.map(article, NewsArticleDTO.class);
-		newsArticleService.get(articleId);
+		NewsArticleDTO articleDTO = newsArticleHelper.get(articleId);
 		return new ResponseEntity<NewsArticleDTO>(articleDTO, HttpStatus.OK);
 	}
 	

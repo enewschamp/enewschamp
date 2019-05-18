@@ -36,21 +36,25 @@ public class PageController {
 	@PostMapping(value = "/pages/{pageName}/{actionName}")
 	public ResponseEntity<PageDTO> get(@PathVariable String pageName, @PathVariable String actionName, @RequestBody PageRequestDTO pageRequest) {
 		
+		pageRequest.getHeader().setPageName(pageName);
+		pageRequest.getHeader().setAction(actionName);
+		
 		//Process current page
 		PageDTO responsePage = pageHandlerFactory.getPageHandler(pageName).handleAction(actionName, pageRequest);
-		addSuccessHeader(responsePage);
+		addSuccessHeader(pageName, actionName, responsePage);
 		
-		String nextPageName = appConfig.getPageNavigationConfig().get(pageName.toLowerCase()).get(actionName.toLowerCase());
-		responsePage.setPageName(nextPageName);
 		return new ResponseEntity<PageDTO>(responsePage, HttpStatus.OK);
 	}
 	
-	private void addSuccessHeader(PageDTO page) {
-		HeaderDTO header = new HeaderDTO();
-		page.setHeader(header);
+	private void addSuccessHeader(String currentPageName, String actionName, PageDTO page) {
+		if(page.getHeader() == null) {
+			page.setHeader(new HeaderDTO());
+		}
+		page.getHeader().setRequestStatus(RequestStatusType.S);
+		page.getHeader().setPageName(page.getPageName());
 		
-		header.setRequestStatus(RequestStatusType.S);
-		header.setPageName(page.getPageName());
+		String nextPageName = appConfig.getPageNavigationConfig().get(currentPageName.toLowerCase()).get(actionName.toLowerCase());
+		page.getHeader().setPageName(nextPageName);
 	}
 	
 }

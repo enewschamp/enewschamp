@@ -20,4 +20,11 @@ public class HeaderDTO implements Serializable {
 	private String operation;
 	private String editionId;
 	private Date publicationdate;
+	
+	private int pageNumber;
+	private int pageSize;
+	private int pageCount;
+	private int recordCount;
+	private boolean isLastPage;
+	
 }

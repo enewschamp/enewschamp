@@ -6,13 +6,18 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.article.app.dto.NewsArticleDTO;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.service.NewsArticleRepository;
+import com.enewschamp.article.domain.service.NewsArticleRepositoryCustom;
 import com.enewschamp.article.page.data.NewsArticleSearchRequest;
 import com.enewschamp.article.page.data.NewsArticleSearchResultData;
 import com.enewschamp.domain.common.IPageHandler;
@@ -27,6 +32,9 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 	
 	@Autowired
 	private NewsArticleRepository newsArticleRepository;
+	
+	@Autowired
+	private NewsArticleRepositoryCustom newsArticleCustomRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -64,6 +72,16 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 		searchResult.setNewsArticles(articleDTOs);
 		pageDTO.setData(searchResult);
 		
+		Pageable pageable = PageRequest.of(pageRequest.getHeader().getPageNumber() - 1, pageRequest.getHeader().getPageSize());
+		Page<NewsArticleDTO> pageResult = newsArticleCustomRepository.findAllPage(searchRequestData, pageable);
+		
+		HeaderDTO header = new HeaderDTO();
+		header.setLastPage(pageResult.isLast());
+		header.setPageCount(pageResult.getTotalPages());
+		header.setRecordCount(pageResult.getNumberOfElements());
+		pageDTO.setHeader(header);
+		
+		searchResult.setNewsArticles(pageResult.getContent());
 		return pageDTO;
 	}
 }
