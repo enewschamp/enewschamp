@@ -25,4 +25,6 @@ public class GenreDTO extends MaintenanceDTO {
 	@Size(min=1, max=200)
 	private String imagePath;
 	
+	private String genreName;
+	
 }

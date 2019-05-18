@@ -1,5 +1,6 @@
 package com.enewschamp.publication.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -10,12 +11,14 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.domain.service.AbstractDomainService;
+import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
 import com.enewschamp.publication.domain.entity.Edition;
 
 @Service
-public class EditionService {
+public class EditionService extends AbstractDomainService {
 
 	@Autowired
 	EditionRepository repository;
@@ -67,4 +70,7 @@ public class EditionService {
 		return auditService.getEntityAudit(edition);
 	}
 	
+	public List<ListOfValuesItem> getLOV() {
+		return toListOfValuesItems(repository.getEditionLOV());
+	}
 }
