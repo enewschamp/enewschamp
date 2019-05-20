@@ -1,6 +1,6 @@
 package com.enewschamp.article.domain.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -73,7 +73,7 @@ public class NewsArticle extends BaseEntity {
 	private int likeSCount = 0;
 
 	@Column(name = "PublishDate")
-	private Date publishDate;
+	private LocalDate publishDate;
 	
 	@Column(name = "PublisherId", length = ForeignKeyColumnLength.UserId)
 	private String publisherId;

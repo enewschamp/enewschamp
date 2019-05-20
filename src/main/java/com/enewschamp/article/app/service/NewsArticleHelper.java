@@ -38,18 +38,21 @@ public class NewsArticleHelper {
 	private NewsArticleQuizRepository newsArticleQuizRepository;
 
 	public NewsArticleDTO create(NewsArticleDTO articleDTO) {
+		
+		List<NewsArticleQuizDTO> newsArticleQuiz = articleDTO.getNewsArticleQuiz();
+		
 		NewsArticle article = modelMapper.map(articleDTO, NewsArticle.class);
 		article = newsArticleService.create(article);
-		articleDTO.setNewsArticleId(article.getNewsArticleId());
+		articleDTO = modelMapper.map(article, NewsArticleDTO.class);
 		
 		List<NewsArticleQuizDTO> quizSet = new ArrayList<NewsArticleQuizDTO>(); 
-		for(NewsArticleQuizDTO quizDTO: articleDTO.getNewsArticleQuiz()) {
+		for(NewsArticleQuizDTO quizDTO: newsArticleQuiz) {
 			quizDTO.setNewsArticleId(article.getNewsArticleId());
+			quizDTO.setRecordInUse(article.getRecordInUse());
+			quizDTO.setOperatorId(article.getOperatorId());
 			NewsArticleQuiz articleQuiz = modelMapper.map(quizDTO, NewsArticleQuiz.class);
-			articleQuiz.setRecordInUse(article.getRecordInUse());
-			articleQuiz.setOperatorId(article.getOperatorId());
 			articleQuiz = newsArticleQuizService.create(articleQuiz);
-			quizDTO.setNewsArticleQuizId(articleQuiz.getNewsArticleQuizId());
+			quizDTO = modelMapper.map(articleQuiz, NewsArticleQuizDTO.class);
 			
 			quizSet.add(quizDTO);
 		}

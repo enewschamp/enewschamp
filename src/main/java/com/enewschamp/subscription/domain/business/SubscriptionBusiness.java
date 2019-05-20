@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.subscription.app.dto.StudentSubscriptionPageDTO;
+import com.enewschamp.subscription.domain.entity.StudentSubscription;
+import com.enewschamp.subscription.domain.entity.StudentSubscriptionWork;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionService;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionWorkService;
-import com.enewschamp.subscription.domin.entity.StudentSubscription;
-import com.enewschamp.subscription.domin.entity.StudentSubscriptionWork;
 
 public class SubscriptionBusiness {
 

@@ -11,7 +11,8 @@ import com.enewschamp.domain.common.MonthType;
 import com.enewschamp.domain.common.WeekDayType;
 import com.enewschamp.publication.domain.service.EditionService;
 import com.enewschamp.publication.domain.service.GenreService;
-import com.enewschamp.user.domin.service.UserService;
+import com.enewschamp.publication.page.data.PublicationSearchPageData;
+import com.enewschamp.user.domain.service.UserService;
 
 @Component(value="MenuPageHandler")
 public class MenuPageHandler extends AbstractPageHandler  {
@@ -29,17 +30,27 @@ public class MenuPageHandler extends AbstractPageHandler  {
 	public PageDTO handlePageAction(String actionName, PageRequestDTO pageRequest) {
 		
 		PageDTO page = new PageDTO();
-		if(actionName.equals("ClickSearchNewsArticle")) {
-			NewsArticleSearchPageData data = new NewsArticleSearchPageData();
+		switch(actionName) {
+			case "ClickSearchNewsArticle":
+				NewsArticleSearchPageData newsArticleSearchPageData = new NewsArticleSearchPageData();
+				newsArticleSearchPageData.setGenreLOV(genreService.getLOV());
+				newsArticleSearchPageData.setPublisherLOV(userService.getPublisherLOV());
+				newsArticleSearchPageData.setAuthorLOV(userService.getAuthorLOV());
+				newsArticleSearchPageData.setEditorLOV(userService.getEditorLOV());
+				newsArticleSearchPageData.setMonthsLOV(MonthType.getLOV());
+				newsArticleSearchPageData.setDaysLOV(WeekDayType.getLOV());
+				newsArticleSearchPageData.setEditionsLOV(editionService.getLOV());
+				page.setData(newsArticleSearchPageData);
+			break;
 			
-			data.setGenreLOV(genreService.getLOV());
-			data.setPublisherLOV(userService.getPublisherLOV());
-			data.setAuthorLOV(userService.getAuthorLOV());
-			data.setEditorLOV(userService.getEditorLOV());
-			data.setMonthsLOV(MonthType.getLOV());
-			data.setDaysLOV(WeekDayType.getLOV());
-			data.setEditionsLOV(editionService.getLOV());
-			page.setData(data);
+			case "ClickSearchPublications":
+				PublicationSearchPageData publicationSearchPageData = new PublicationSearchPageData();
+				publicationSearchPageData.setPublisherLOV(userService.getPublisherLOV());
+				publicationSearchPageData.setAuthorLOV(userService.getAuthorLOV());
+				publicationSearchPageData.setEditorLOV(userService.getEditorLOV());
+				publicationSearchPageData.setEditionsLOV(editionService.getLOV());
+				page.setData(publicationSearchPageData);
+			break;
 		}
 		return page;
 	}

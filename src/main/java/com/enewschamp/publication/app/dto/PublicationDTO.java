@@ -1,8 +1,8 @@
 package com.enewschamp.publication.app.dto;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Lob;
@@ -23,6 +23,9 @@ public class PublicationDTO extends MaintenanceDTO {
 	private static final long serialVersionUID = -1938738416579485109L;
 
 	private long publicationId;
+	
+	@NotNull
+	private long publicationGroupId;
 
 	@NotNull
 	@Size(max = 6)
@@ -45,7 +48,24 @@ public class PublicationDTO extends MaintenanceDTO {
 	@Column(name = "Comments")
 	@Lob
 	private String comments;
+
+	private List<PublicationArticleLinkageDTO> articleLinkages = new ArrayList<PublicationArticleLinkageDTO>();
 	
-	private Set<PublicationArticleDTO> articles = new HashSet<PublicationArticleDTO>();
+	public PublicationDTO() {
+		super();
+	}
+
+	public PublicationDTO(long publicationId, long publicationGroupId, String editionId, int readingLevel, LocalDate publishDate,
+			PublicationStatusType status, String editorId, String publisherId) {
+		super();
+		this.publicationId = publicationId;
+		this.publicationGroupId = publicationGroupId;
+		this.editionId = editionId;
+		this.readingLevel = readingLevel;
+		this.publishDate = publishDate;
+		this.status = status;
+		this.editorId = editorId;
+		this.publisherId = publisherId;
+	}
 
 }

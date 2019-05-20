@@ -12,8 +12,8 @@ import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.subscription.domain.entity.StudentDetails;
 import com.enewschamp.subscription.domain.repository.StudentDetailsRepository;
-import com.enewschamp.subscription.domin.entity.StudentDetails;
 
 @Service
 public class StudentDetailsService {

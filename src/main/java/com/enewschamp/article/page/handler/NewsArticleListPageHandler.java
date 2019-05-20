@@ -14,7 +14,7 @@ import com.enewschamp.domain.common.MonthType;
 import com.enewschamp.domain.common.WeekDayType;
 import com.enewschamp.publication.domain.service.EditionService;
 import com.enewschamp.publication.domain.service.GenreService;
-import com.enewschamp.user.domin.service.UserService;
+import com.enewschamp.user.domain.service.UserService;
 
 @Component(value="NewsArticleListPageHandler")
 public class NewsArticleListPageHandler implements IPageHandler  {
@@ -22,9 +22,6 @@ public class NewsArticleListPageHandler implements IPageHandler  {
 	
 	@Autowired
 	private NewsArticleGroupHelper newsArticleGroupHelper;
-	
-	@Autowired
-	private NewsArticleHelper newsArticleHelper;
 	
 	@Autowired
 	ModelMapper modelMapper;

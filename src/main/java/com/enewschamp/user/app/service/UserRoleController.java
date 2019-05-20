@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.user.app.dto.UserRoleDTO;
 import com.enewschamp.user.app.dto.UserRoleKeyDTO;
-import com.enewschamp.user.domin.entity.UserRole;
-import com.enewschamp.user.domin.entity.UserRoleKey;
-import com.enewschamp.user.domin.service.UserRoleService;
+import com.enewschamp.user.domain.entity.UserRole;
+import com.enewschamp.user.domain.entity.UserRoleKey;
+import com.enewschamp.user.domain.service.UserRoleService;
 
 import lombok.extern.java.Log;
 

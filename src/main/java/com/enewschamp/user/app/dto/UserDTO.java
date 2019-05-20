@@ -1,7 +1,7 @@
 package com.enewschamp.user.app.dto;
 
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
@@ -40,10 +40,10 @@ public class UserDTO extends MaintenanceDTO {
 	private Gender gender;
 	
 	@NotNull
-	private Date contractStartDate;
+	private LocalDate contractStartDate;
 	
 	@NotNull
-	private Date contractEndDate;
+	private LocalDate contractEndDate;
 	
 	@NotNull
 	private long mobile1 = 0;

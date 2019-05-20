@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,7 +24,6 @@ import com.enewschamp.article.page.data.NewsArticleSearchRequest;
 import com.enewschamp.article.page.data.NewsArticleSearchResultData;
 import com.enewschamp.domain.common.IPageHandler;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -39,37 +40,25 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 	@Autowired
 	ModelMapper modelMapper;
 	
+	@Autowired
+	ObjectMapper objectMapper;
+	
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		
 		PageDTO pageDTO = new PageDTO();
-		ObjectMapper mapper = new ObjectMapper()
-			      .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
 		NewsArticleSearchRequest searchRequestData = null;
 		try {
-			searchRequestData = mapper.readValue(pageRequest.getData().toString(), NewsArticleSearchRequest.class);
+			searchRequestData = objectMapper.readValue(pageRequest.getData().toString(), NewsArticleSearchRequest.class);
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
 		NewsArticleSearchResultData searchResult = new NewsArticleSearchResultData();
-		
-		List<NewsArticle> articles = newsArticleRepository.findAll();
-		List<NewsArticleDTO> articleDTOs = new ArrayList<NewsArticleDTO>();
-		for(NewsArticle article: articles) {
-			NewsArticleDTO articleDTO = modelMapper.map(article, NewsArticleDTO.class);
-			articleDTOs.add(articleDTO);
-		}
-		
-		searchResult.setNewsArticles(articleDTOs);
 		pageDTO.setData(searchResult);
 		
 		Pageable pageable = PageRequest.of(pageRequest.getHeader().getPageNumber(), pageRequest.getHeader().getPageSize());

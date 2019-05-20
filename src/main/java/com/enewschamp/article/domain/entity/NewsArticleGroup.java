@@ -1,5 +1,6 @@
 package com.enewschamp.article.domain.entity;
 
+
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -46,7 +47,7 @@ public class NewsArticleGroup extends BaseEntity {
 	private String genreId;
 	
 	@NotNull
-	@Column(name = "Headline", length = 100)
+	@Column(name = "Headline", length = 100) 
 	private String headline;
 	
 	@NotNull

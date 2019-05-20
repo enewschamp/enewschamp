@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.user.app.dto.UserDTO;
-import com.enewschamp.user.domin.entity.User;
-import com.enewschamp.user.domin.service.UserService;
+import com.enewschamp.user.domain.entity.User;
+import com.enewschamp.user.domain.service.UserService;
 
 import lombok.extern.java.Log;
 

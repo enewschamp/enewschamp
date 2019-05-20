@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.subscription.app.dto.StudentSubscriptionDTO;
+import com.enewschamp.subscription.domain.entity.StudentSubscription;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionService;
-import com.enewschamp.subscription.domin.entity.StudentSubscription;
 
 import lombok.extern.java.Log;
 

@@ -7,6 +7,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
+import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,7 +22,7 @@ public class Edition extends BaseEntity {
 
 	@Id
 	@NotNull
-	@Column(name = "EditionID", length=10)
+	@Column(name = "EditionID", length=ForeignKeyColumnLength.EditionId)
 	private String editionId;
 	
 	@NotNull

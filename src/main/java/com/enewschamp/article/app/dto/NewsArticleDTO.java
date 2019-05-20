@@ -1,6 +1,6 @@
 package com.enewschamp.article.app.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -53,7 +53,7 @@ public class NewsArticleDTO extends MaintenanceDTO {
 	
 	private int likeSCount;
 
-	private Date publishDate;
+	private LocalDate publishDate;
 	
 	private String publisherId;
 

@@ -10,13 +10,8 @@ import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
 import com.enewschamp.article.app.service.NewsArticleGroupHelper;
-import com.enewschamp.article.app.service.NewsArticleHelper;
 import com.enewschamp.domain.common.IPageHandler;
-import com.enewschamp.publication.domain.service.EditionService;
-import com.enewschamp.publication.domain.service.GenreService;
-import com.enewschamp.user.domin.service.UserService;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,34 +26,22 @@ public class NewsArticleGroupPageHandler implements IPageHandler  {
 	ModelMapper modelMapper;
 	
 	@Autowired
-	GenreService genreService;
-
-	@Autowired
-	UserService userService;
-	
-	@Autowired
-	EditionService editionService;
+	ObjectMapper objectMapper;
 	
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		
 		PageDTO pageDTO = new PageDTO();
 
-		ObjectMapper mapper = new ObjectMapper()
-			      .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
 		NewsArticleGroupDTO articleGroupDTO = null;
 		try {
-			articleGroupDTO = mapper.readValue(pageRequest.getData().toString(), NewsArticleGroupDTO.class);
+			articleGroupDTO = objectMapper.readValue(pageRequest.getData().toString(), NewsArticleGroupDTO.class);
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
 		newsArticleGroupHelper.createArticleGroup(articleGroupDTO);

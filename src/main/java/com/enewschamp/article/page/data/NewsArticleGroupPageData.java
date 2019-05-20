@@ -16,6 +16,8 @@ public class NewsArticleGroupPageData extends PageData {
 
 	private static final long serialVersionUID = 4569801004564082142L;
 
+	private NewsArticleGroupDTO newsArticleGroup;
+	
 	private List<ListOfValuesItem> editionsLOV;
 	private List<ListOfValuesItem> daysLOV;
 	private List<ListOfValuesItem> monthsLOV;
@@ -23,7 +25,4 @@ public class NewsArticleGroupPageData extends PageData {
 	private List<ListOfValuesItem> editorLOV;
 	private List<ListOfValuesItem> publisherLOV;
 	private List<ListOfValuesItem> genreLOV;
-
-	private NewsArticleGroupDTO newsArticleGroup;
-
 }

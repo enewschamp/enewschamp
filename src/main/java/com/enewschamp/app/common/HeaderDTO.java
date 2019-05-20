@@ -1,7 +1,7 @@
 package com.enewschamp.app.common;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,7 +19,7 @@ public class HeaderDTO implements Serializable {
 	private String action;
 	private String operation;
 	private String editionId;
-	private Date publicationdate;
+	private LocalDate publicationdate;
 	
 	private int pageNumber;
 	private int pageSize;
