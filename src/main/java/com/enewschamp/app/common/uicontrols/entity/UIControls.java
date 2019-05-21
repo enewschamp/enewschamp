@@ -10,7 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 import com.enewschamp.domain.common.BaseEntity;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

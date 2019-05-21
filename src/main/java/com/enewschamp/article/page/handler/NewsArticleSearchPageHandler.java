@@ -13,7 +13,6 @@ import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.article.app.dto.NewsArticleDTO;
-import com.enewschamp.article.domain.service.NewsArticleRepository;
 import com.enewschamp.article.domain.service.NewsArticleRepositoryCustom;
 import com.enewschamp.article.page.data.NewsArticleSearchPageData;
 import com.enewschamp.article.page.data.NewsArticleSearchRequest;

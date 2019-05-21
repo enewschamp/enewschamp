@@ -25,6 +25,7 @@ public class PublicationArticleLinkageHelper {
 	@Autowired
 	private PublicationArticleLinkageService publicationArticleLinkageService;
 	
+	@Autowired
 	private PublicationArticleLinkageRepository publicationArticleLinkageRepository;
 	
 	public PublicationArticleLinkageDTO create(PublicationArticleLinkageDTO articleLinkageDTO) {
@@ -53,6 +54,10 @@ public class PublicationArticleLinkageHelper {
 			articleDTOs.add(articleDTO);
 		}
 		return articleDTOs;
+	}
+	
+	public void deleteByPublicationId(long publicationId) {
+		publicationArticleLinkageRepository.deleteByPublicationId(publicationId);
 	}
 	
 }

@@ -3,7 +3,6 @@ package com.enewschamp.article.page.data;
 import java.util.List;
 
 import com.enewschamp.app.common.PageData;
-import com.enewschamp.article.app.dto.NewsArticleDTO;
 import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
 import com.enewschamp.page.dto.ListOfValuesItem;
 

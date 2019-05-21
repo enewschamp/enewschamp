@@ -45,6 +45,9 @@ public class NewsArticleHelper {
 		article = newsArticleService.create(article);
 		articleDTO = modelMapper.map(article, NewsArticleDTO.class);
 		
+		//Delete existing records, if any
+		newsArticleQuizRepository.deleteByArticleId(article.getNewsArticleId());
+		
 		List<NewsArticleQuizDTO> quizSet = new ArrayList<NewsArticleQuizDTO>(); 
 		for(NewsArticleQuizDTO quizDTO: newsArticleQuiz) {
 			quizDTO.setNewsArticleId(article.getNewsArticleId());
@@ -89,6 +92,8 @@ public class NewsArticleHelper {
 		articleDTO.setNewsArticleQuiz(quizDTOs);
 		return articleDTO;
 	}
-	
 
+	public void deleteByArticleGroupId(long articleGroupId) {
+		newsArticleRepository.deleteByArticleGroupId(articleGroupId);
+	}
 }

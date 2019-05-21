@@ -28,10 +28,10 @@ public class PublicationHelper {
 	private PublicationRepository publicationRepository;
 	
 	@Autowired
-	PublicationArticleLinkageRepository publicationPublicationLinkageRepository;
+	PublicationArticleLinkageRepository publicationLinkageRepository;
 	
 	@Autowired
-	private PublicationArticleLinkageHelper publicationPublicationLinkageHelper;
+	private PublicationArticleLinkageHelper publicationLinkageHelper;
 	
 	public PublicationDTO createPublication(PublicationDTO publicationDTO) {
 		
@@ -41,12 +41,15 @@ public class PublicationHelper {
 		publication = publicationService.create(publication);
 		publicationDTO = modelMapper.map(publication, PublicationDTO.class);
 		
+		// Delete existing linkages
+		publicationLinkageHelper.deleteByPublicationId(publication.getPublicationId());
+		
 		List<PublicationArticleLinkageDTO> articleLinkageList = new ArrayList<PublicationArticleLinkageDTO>(); 
 		for(PublicationArticleLinkageDTO articleLinkageDTO: articleLinkages) {
 			articleLinkageDTO.getPublicationArticleLinkageKey().setPublicationId(publication.getPublicationId());
 			articleLinkageDTO.setRecordInUse(publication.getRecordInUse());
 			articleLinkageDTO.setOperatorId(publication.getOperatorId());
-			articleLinkageDTO = publicationPublicationLinkageHelper.create(articleLinkageDTO);
+			articleLinkageDTO = publicationLinkageHelper.create(articleLinkageDTO);
 			articleLinkageList.add(articleLinkageDTO);
 		}
 		publicationDTO.setArticleLinkages(articleLinkageList);
@@ -58,7 +61,7 @@ public class PublicationHelper {
 		Publication publication = publicationService.get(publicationId);
 		PublicationDTO publicationDTO = modelMapper.map(publication, PublicationDTO.class);
 		
-		List<PublicationArticleLinkageDTO> articles = publicationPublicationLinkageHelper.getByPublicationId(publicationId);
+		List<PublicationArticleLinkageDTO> articles = publicationLinkageHelper.getByPublicationId(publicationId);
 		publicationDTO.setArticleLinkages(articles);
 		return publicationDTO;
 	}
@@ -75,7 +78,7 @@ public class PublicationHelper {
 	}
 	
 	private PublicationDTO fillArticleLinkages(PublicationDTO publicationDTO) {
-		List<PublicationArticleLinkage> articleLinkageList = publicationPublicationLinkageRepository.findByPublicationId(publicationDTO.getPublicationId());
+		List<PublicationArticleLinkage> articleLinkageList = publicationLinkageRepository.findByPublicationId(publicationDTO.getPublicationId());
 		List<PublicationArticleLinkageDTO> linkageDTOs = new ArrayList<PublicationArticleLinkageDTO>();
 		for(PublicationArticleLinkage linkage: articleLinkageList) {
 			PublicationArticleLinkageDTO linkageDTO = modelMapper.map(linkage, PublicationArticleLinkageDTO.class);
@@ -83,6 +86,10 @@ public class PublicationHelper {
 		}
 		publicationDTO.setArticleLinkages(linkageDTOs);
 		return publicationDTO;
+	}
+	
+	public void deleteByPublicationGroupId(long publicationGroupId) {
+		publicationRepository.deleteByPublicationGroupId(publicationGroupId);
 	}
 	
 }

@@ -12,18 +12,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name="PublicationArticles")
-public class PublicationArticleLinkage  {
+@Table(name = "PublicationArticles")
+public class PublicationArticleLinkage extends BaseEntity {
 
 	private static final long serialVersionUID = -6183606960645724096L;
-	
+
 	@EmbeddedId
-	private PublicationArticleLinkageKey publicationArticleLinkageKey; 
-	
+	private PublicationArticleLinkageKey publicationArticleLinkageKey;
+
 	@NotNull
 	@Column(name = "Sequence")
 	private int sequence;
-	
+
 }

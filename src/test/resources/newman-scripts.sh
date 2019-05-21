@@ -13,3 +13,6 @@ newman run collections/eNewsChamp-Edition.postman_collection.json  -e eNewsChamp
 
 # Create articles
 newman run collections/eNewsChamp-Article.postman_collection.json  -e eNewsChamp.postman_environment.json -d data/Articles.json
+
+# Create publications
+newman run collections/eNewsChamp-Publication.postman_collection.json  -e eNewsChamp.postman_environment.json -d data/Publications.json
