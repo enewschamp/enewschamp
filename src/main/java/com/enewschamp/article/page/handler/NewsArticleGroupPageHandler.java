@@ -11,6 +11,7 @@ import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
 import com.enewschamp.article.app.service.NewsArticleGroupHelper;
 import com.enewschamp.domain.common.IPageHandler;
+import com.enewschamp.domain.common.PageNavigationContext;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,5 +48,10 @@ public class NewsArticleGroupPageHandler implements IPageHandler  {
 		newsArticleGroupHelper.createArticleGroup(articleGroupDTO);
 		
 		return pageDTO;
+	}
+
+	@Override
+	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
+		return pageNavigationContext.getPreviousPageResponse();
 	}
 }

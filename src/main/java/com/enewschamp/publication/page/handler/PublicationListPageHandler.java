@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.domain.common.IPageHandler;
+import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.publication.app.service.PublicationGroupHelper;
 import com.enewschamp.publication.domain.service.EditionService;
 import com.enewschamp.publication.domain.service.GenreService;
@@ -47,5 +48,10 @@ public class PublicationListPageHandler implements IPageHandler  {
 		data.setPublicationGroup(publicationGroupHelper.getPublicationGroup(publicationGroupId));		
 		pageDTO.setData(data);
 		return pageDTO;
+	}
+	
+	@Override
+	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
+		return pageNavigationContext.getPreviousPageResponse();
 	}
 }

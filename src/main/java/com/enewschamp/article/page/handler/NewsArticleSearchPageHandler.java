@@ -1,10 +1,6 @@
 package com.enewschamp.article.page.handler;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.management.RuntimeErrorException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +13,12 @@ import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.article.app.dto.NewsArticleDTO;
-import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.service.NewsArticleRepository;
 import com.enewschamp.article.domain.service.NewsArticleRepositoryCustom;
 import com.enewschamp.article.page.data.NewsArticleSearchRequest;
 import com.enewschamp.article.page.data.NewsArticleSearchResultData;
 import com.enewschamp.domain.common.IPageHandler;
+import com.enewschamp.domain.common.PageNavigationContext;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,5 +68,10 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 		
 		searchResult.setNewsArticles(pageResult.getContent());
 		return pageDTO;
+	}
+	
+	@Override
+	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
+		return pageNavigationContext.getPreviousPageResponse();
 	}
 }

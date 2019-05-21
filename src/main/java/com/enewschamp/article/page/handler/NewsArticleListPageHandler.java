@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.article.app.service.NewsArticleGroupHelper;
-import com.enewschamp.article.app.service.NewsArticleHelper;
 import com.enewschamp.article.page.data.NewsArticleGroupPageData;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.MonthType;
+import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.WeekDayType;
 import com.enewschamp.publication.domain.service.EditionService;
 import com.enewschamp.publication.domain.service.GenreService;
@@ -57,5 +57,10 @@ public class NewsArticleListPageHandler implements IPageHandler  {
 		
 		pageDTO.setData(data);
 		return pageDTO;
+	}
+	
+	@Override
+	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
+		return pageNavigationContext.getPreviousPageResponse();
 	}
 }

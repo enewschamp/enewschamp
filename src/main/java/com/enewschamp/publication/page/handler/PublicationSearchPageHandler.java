@@ -13,6 +13,7 @@ import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.domain.common.IPageHandler;
+import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.enewschamp.publication.domain.service.PublicationRepositoryCustom;
 import com.enewschamp.publication.page.data.PublicationSearchRequest;
@@ -62,5 +63,10 @@ public class PublicationSearchPageHandler implements IPageHandler  {
 		
 		searchResult.setPublications(pageResult.getContent());
 		return pageDTO;
+	}
+	
+	@Override
+	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
+		return pageNavigationContext.getPreviousPageResponse();
 	}
 }

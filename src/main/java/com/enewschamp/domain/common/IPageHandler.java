@@ -8,4 +8,6 @@ public interface IPageHandler {
 	// Method to process the data based on action take on the page
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest);
 	
+	public PageDTO loadPage(PageNavigationContext pageNavigationContext);
+	
 }

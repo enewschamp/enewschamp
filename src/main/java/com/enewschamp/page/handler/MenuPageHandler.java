@@ -8,6 +8,7 @@ import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.article.page.data.NewsArticleSearchPageData;
 import com.enewschamp.domain.common.AbstractPageHandler;
 import com.enewschamp.domain.common.MonthType;
+import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.WeekDayType;
 import com.enewschamp.publication.domain.service.EditionService;
 import com.enewschamp.publication.domain.service.GenreService;
@@ -55,5 +56,9 @@ public class MenuPageHandler extends AbstractPageHandler  {
 		return page;
 	}
 	
-	
+
+	@Override
+	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
+		return pageNavigationContext.getPreviousPageResponse();
+	}
 }
