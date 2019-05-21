@@ -6,7 +6,7 @@ import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.enewschamp.subscription.domin.entity.StudentSubscriptionWork;
+import com.enewschamp.subscription.domain.entity.StudentSubscriptionWork;
 
 @JaversSpringDataAuditable
 public interface StudentSubscriptionWorkRepository extends JpaRepository<StudentSubscriptionWork, Long>{

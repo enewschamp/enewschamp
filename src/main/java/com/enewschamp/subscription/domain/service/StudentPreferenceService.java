@@ -11,8 +11,8 @@ import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.subscription.domain.entity.StudentPreference;
 import com.enewschamp.subscription.domain.repository.StudentPreferenceRepository;
-import com.enewschamp.subscription.domin.entity.StudentPreference;
 
 public class StudentPreferenceService {
 

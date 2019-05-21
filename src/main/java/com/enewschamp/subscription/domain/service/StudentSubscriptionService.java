@@ -12,7 +12,7 @@ import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
-import com.enewschamp.subscription.domin.entity.StudentSubscription;
+import com.enewschamp.subscription.domain.entity.StudentSubscription;
 
 @Service
 public class StudentSubscriptionService  {

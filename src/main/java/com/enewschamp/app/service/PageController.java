@@ -4,15 +4,18 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
+import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.RequestStatusType;
-import com.enewschamp.domain.common.PageBuilderFactory;
+import com.enewschamp.domain.common.PageHandlerFactory;
 
 import lombok.extern.java.Log;
 
@@ -22,25 +25,36 @@ import lombok.extern.java.Log;
 public class PageController {
 
 	@Autowired
-	ModelMapper modelMapper;
+	private PageHandlerFactory pageHandlerFactory;
 	
 	@Autowired
-	private PageBuilderFactory pageBuilderFactory;
+	private EnewschampApplicationProperties appConfig;
 
+	@Autowired
+	ModelMapper modelMapper;
 	
-	@GetMapping(value = "/pages/{pageName}/{actionName}")
-	public ResponseEntity<PageDTO> get(@PathVariable String pageName, @PathVariable String actionName) {
-		PageDTO page = pageBuilderFactory.getPageBuilder(pageName, actionName).buildPage();
-		addSuccessHeader(page);
-		return new ResponseEntity<PageDTO>(page, HttpStatus.OK);
+	@PostMapping(value = "/pages/{pageName}/{actionName}")
+	public ResponseEntity<PageDTO> get(@PathVariable String pageName, @PathVariable String actionName, @RequestBody PageRequestDTO pageRequest) {
+		
+		pageRequest.getHeader().setPageName(pageName);
+		pageRequest.getHeader().setAction(actionName);
+		
+		//Process current page
+		PageDTO responsePage = pageHandlerFactory.getPageHandler(pageName).handleAction(actionName, pageRequest);
+		addSuccessHeader(pageName, actionName, responsePage);
+		
+		return new ResponseEntity<PageDTO>(responsePage, HttpStatus.OK);
 	}
 	
-	private void addSuccessHeader(PageDTO page) {
-		HeaderDTO header = new HeaderDTO();
-		page.setHeader(header);
+	private void addSuccessHeader(String currentPageName, String actionName, PageDTO page) {
+		if(page.getHeader() == null) {
+			page.setHeader(new HeaderDTO());
+		}
+		page.getHeader().setRequestStatus(RequestStatusType.S);
+		page.getHeader().setPageName(page.getPageName());
 		
-		header.setRequestStatus(RequestStatusType.S);
-		header.setPageName(page.getPageName());
+		String nextPageName = appConfig.getPageNavigationConfig().get(currentPageName.toLowerCase()).get(actionName.toLowerCase());
+		page.getHeader().setPageName(nextPageName);
 	}
 	
 }

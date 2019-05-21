@@ -1,11 +1,21 @@
 package com.enewschamp;
 
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.zalando.problem.ProblemModule;
+
+import com.enewschamp.domain.common.LocalDateDeserializer;
+import com.enewschamp.domain.common.LocalDateSerializer;
+import com.enewschamp.domain.common.LocalDateTimeSerializer;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 @Configuration
 public class EnewschampApplicationConfig {
@@ -25,8 +35,18 @@ public class EnewschampApplicationConfig {
 	}
 	
 	@Bean
-    public ProblemModule problemModule() {
-        return new ProblemModule();
-    }
+	public ObjectMapper objectMapper() {
+		ObjectMapper mapper = new ObjectMapper()
+			      .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SimpleModule module = new SimpleModule();
+		module.addSerializer(LocalDate.class, new LocalDateSerializer());
+		module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
+		module.addDeserializer(LocalDate.class, new LocalDateDeserializer());
+		mapper.registerModule(module);
+		
+		mapper.registerModule(new ProblemModule());
+		
+		return mapper;
+	}
     
 }

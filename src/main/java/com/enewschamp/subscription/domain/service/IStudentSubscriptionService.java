@@ -2,7 +2,7 @@ package com.enewschamp.subscription.domain.service;
 
 import java.io.Serializable;
 
-import com.enewschamp.subscription.domin.entity.StudentSubscription;
+import com.enewschamp.subscription.domain.entity.StudentSubscription;
 
 public interface IStudentSubscriptionService extends Serializable {
 

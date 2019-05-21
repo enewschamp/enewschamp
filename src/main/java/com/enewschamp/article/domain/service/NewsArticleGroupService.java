@@ -58,7 +58,7 @@ public class NewsArticleGroupService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else { 
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.ARTICLE_GROUP_NOT_FOUND, "Article not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.ARTICLE_GROUP_NOT_FOUND, "Article group not found!");
 		}
 	}
 	

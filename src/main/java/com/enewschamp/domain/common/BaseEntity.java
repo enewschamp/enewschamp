@@ -1,12 +1,16 @@
 package com.enewschamp.domain.common;
 
+
+
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
@@ -24,10 +28,18 @@ public abstract class BaseEntity implements Serializable{
 
 	@NotNull
 	@Column(name = "OperationDateTime")
-	protected Timestamp operationDateTime = new Timestamp(System.currentTimeMillis());
+	protected LocalDateTime operationDateTime;
 
 	@NotNull
 	@Column(name = "RecordInUse", length = 1)
 	@Enumerated(EnumType.STRING)
 	private RecordInUseType recordInUse;
+	
+	@PrePersist
+	@PreUpdate
+	public void prePersist() {
+		if(operationDateTime == null) {
+			operationDateTime = LocalDateTime.now();
+		}
+	}
 }

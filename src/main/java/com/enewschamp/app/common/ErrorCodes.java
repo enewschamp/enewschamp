@@ -10,8 +10,13 @@ public interface ErrorCodes {
 	public static String QUIZ_NOT_FOUND = "PUB_006";
 	public static String PUBLICATION_NOT_FOUND = "PUB_007";
 	public static String PUBLICATION_ART_LINK_NOT_FOUND = "PUB_008";
+	public static String PUBLICATION_GRP_NOT_FOUND = "PUB_009";
+
+	
 	public static String MULTI_LANG_TEXT_NOT_FOUND = "FRW_001";
 	public static String STUDENT_DTLS_NOT_FOUND = "STUDDTLS_001";
+	
+	
 	public static String USER_NOT_FOUND = "USER_001";
 	public static String USER_ROLE_NOT_FOUND = "USER_002";
 }

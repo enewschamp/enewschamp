@@ -16,14 +16,14 @@ public class EnewschampApplicationProperties {
 
 
 	@Data
-	public static class PageBuilderMapping {
+	public static class PageHandlerMapping {
 		@NotNull
 		private String pageName;
 		@NotNull
-		private String builderName;
+		private String handlerName;
 	}
 	
-	private Map<String, String> pageBuilderConfig;
+	private Map<String, String> pageHandlerConfig;
 	
 	private Map<String, Map<String, String>> pageNavigationConfig;
 }

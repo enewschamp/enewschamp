@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enewschamp.article.app.service.NewsArticleGroupHelper;
 import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.domain.service.PublicationService;
@@ -32,12 +33,13 @@ public class PublicationController {
 	
 	@Autowired
 	private PublicationService publicationService;
+	
+	@Autowired
+	private PublicationHelper publicationHelper;
 
 	@PostMapping(value = "/publications")
 	public ResponseEntity<PublicationDTO> create(@RequestBody @Valid PublicationDTO publicationDTO) {
-		Publication publication = modelMapper.map(publicationDTO, Publication.class);
-		publication = publicationService.create(publication);
-		publicationDTO = modelMapper.map(publication, PublicationDTO.class);
+		publicationDTO = publicationHelper.createPublication(publicationDTO);
 		return new ResponseEntity<PublicationDTO>(publicationDTO, HttpStatus.CREATED);
 	}
 
@@ -67,9 +69,7 @@ public class PublicationController {
 	
 	@GetMapping(value = "/publications/{publicationId}")
 	public ResponseEntity<PublicationDTO> get(@PathVariable Long publicationId) {
-		Publication publication = publicationService.get(publicationId);
-		PublicationDTO publicationDTO = modelMapper.map(publication, PublicationDTO.class);
-		publicationService.get(publicationId);
+		PublicationDTO publicationDTO = publicationHelper.getPublication(publicationId);
 		return new ResponseEntity<PublicationDTO>(publicationDTO, HttpStatus.OK);
 	}
 	

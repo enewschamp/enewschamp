@@ -1,10 +1,57 @@
 {
 	"info": {
-		"_postman_id": "1e8f888a-d3f8-4113-8b06-8a214c8a3d66",
+		"_postman_id": "387abe6c-2176-4842-b503-61ca8232aa6a",
 		"name": "eNewsChamp-Users",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"userId\":\"{{userId}}\",\n\t\"title\":\"{{title}}\",\n\t\"name\":\"{{name}}\",\n\t\"surname\":\"{{surname}}\",\n\t\"gender\":\"{{gender}}\",\n\t\"contractStartDate\":\"{{contractStartDate}}\",\n\t\"contractEndDate\":\"{{contractEndDate}}\",\n\t\"mobile1\":\"{{mobile1}}\",\n\t\"email1\":\"{{email1}}\",\n\t\"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayu\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/{{base-path}}/users",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base-path}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "Roles",
 			"item": [
@@ -47,53 +94,6 @@
 								"users",
 								"{{userId}}",
 								"roles"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Users",
-			"item": [
-				{
-					"name": "Create User",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"userId\":\"{{userId}}\",\n\t\"title\":\"{{title}}\",\n\t\"name\":\"{{name}}\",\n\t\"surname\":\"{{surname}}\",\n\t\"gender\": \"{{gender}}\",\n\t\"contractStartDate\": \"{{contractStartDate}}\",\n\t\"contractEndDate\": \"{{contractEndDate}}\",\n\t\"mobile1\": \"{{mobile1}}\",\n\t\"email1\": \"{{email1}}\",\n\t\"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayu\"\n}"
-						},
-						"url": {
-							"raw": "http://{{host}}:{{port}}/{{base-path}}/users",
-							"protocol": "http",
-							"host": [
-								"{{host}}"
-							],
-							"port": "{{port}}",
-							"path": [
-								"{{base-path}}",
-								"users"
 							]
 						}
 					},

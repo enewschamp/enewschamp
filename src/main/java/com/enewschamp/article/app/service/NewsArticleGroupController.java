@@ -30,12 +30,13 @@ public class NewsArticleGroupController {
 	
 	@Autowired
 	private NewsArticleGroupService newsArticleGroupService;
+	
+	@Autowired
+	private NewsArticleGroupHelper newsArticleGroupHelper;
 
 	@PostMapping(value = "/articleGroups")
 	public ResponseEntity<NewsArticleGroupDTO> createArticleGroup(@RequestBody @Valid NewsArticleGroupDTO articleGroupDTO) {
-		NewsArticleGroup articleGroup = modelMapper.map(articleGroupDTO, NewsArticleGroup.class);
-		articleGroup = newsArticleGroupService.create(articleGroup);
-		articleGroupDTO = modelMapper.map(articleGroup, NewsArticleGroupDTO.class);
+		articleGroupDTO = newsArticleGroupHelper.createArticleGroup(articleGroupDTO);
 		return new ResponseEntity<NewsArticleGroupDTO>(articleGroupDTO, HttpStatus.CREATED);
 	}
 

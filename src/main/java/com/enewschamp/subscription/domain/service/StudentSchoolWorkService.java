@@ -11,8 +11,8 @@ import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.subscription.domain.entity.StudentSchoolWork;
 import com.enewschamp.subscription.domain.repository.StudentSchoolWorkRepository;
-import com.enewschamp.subscription.domin.entity.StudentSchoolWork;
 
 public class StudentSchoolWorkService {
 	@Autowired

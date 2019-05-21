@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.enewschamp.app.common.MaintenanceDTO;
+import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +16,7 @@ public class EditionDTO extends MaintenanceDTO {
 	private static final long serialVersionUID = 1201220065078913195L;
 
 	@NotNull
-	@Size(max=10)
+	@Size(max=ForeignKeyColumnLength.EditionId)
 	private String editionId;
 	
 	@NotNull

@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
+import com.enewschamp.article.page.data.NewsArticleSearchRequest;
 import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,7 +22,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 public class JSONRequestCreator {
 
 	public static void main(String args[]) {
-		new JSONRequestCreator().getSampleJSONRequest(new PublicationDTO());
+		new JSONRequestCreator().getSampleJSONRequest(new NewsArticleGroupDTO());
 	}
 
 	public String getSampleJSONRequest(Object model) {
@@ -50,7 +52,7 @@ public class JSONRequestCreator {
 		Field[] fields = o.getClass().getDeclaredFields();
 
 		for (Field field : fields) {
-			System.out.println("Processing field: " + field.getName() + " -- Type: " + field.getType());
+			//System.out.println("Processing field: " + field.getName() + " -- Type: " + field.getType());
 			field.setAccessible(true);
 
 			if (field.get(o) == null) {
@@ -65,8 +67,9 @@ public class JSONRequestCreator {
 						clazz = HashMap.class;
 					}
 					Object instance = null;
+					
 					if(type.getTypeName().equals("java.lang.String")) {
-						instance = field.getName();
+						instance = "{{" + field.getName() + "}}";
 					} else if(type.getTypeName().equals("java.net.URI")) {
 						try {
 							instance = new URI("http://article-url");

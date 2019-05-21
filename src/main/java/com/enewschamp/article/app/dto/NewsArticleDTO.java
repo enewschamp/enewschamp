@@ -1,5 +1,8 @@
 package com.enewschamp.article.app.dto;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.MaintenanceDTO;
@@ -15,6 +18,16 @@ public class NewsArticleDTO extends MaintenanceDTO {
 
 	private static final long serialVersionUID = 8445791416971982306L;
 
+	public NewsArticleDTO() {
+		
+	}
+	
+	public NewsArticleDTO(Long newsArticleId, Long newsArticleGroupId, int readingLevel) {
+		this.newsArticleId = newsArticleId;
+		this.newsArticleGroupId = newsArticleGroupId;
+		this.readingLevel = readingLevel;
+	}
+	
 	private Long newsArticleId;
 	
 	@NotNull
@@ -39,5 +52,17 @@ public class NewsArticleDTO extends MaintenanceDTO {
 	private int likeWCount;
 	
 	private int likeSCount;
+
+	private LocalDate publishDate;
+	
+	private String publisherId;
+
+	private long publicationId;
+	
+	private String editorId;
+	
+	private String authorId;
+	
+	private List<NewsArticleQuizDTO> newsArticleQuiz;
 
 }

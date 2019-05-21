@@ -11,8 +11,12 @@ import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
+<<<<<<< HEAD
 import com.enewschamp.subscription.app.dto.StudentSubscriptionWorkDTO;
 import com.enewschamp.subscription.domin.entity.StudentSubscriptionWork;
+=======
+import com.enewschamp.subscription.domain.entity.StudentSubscriptionWork;
+>>>>>>> edf698a24cf2147e5536b3c58b98b69fdfb0c3ec
 
 public class StudentSubscriptionWorkService  {
 
