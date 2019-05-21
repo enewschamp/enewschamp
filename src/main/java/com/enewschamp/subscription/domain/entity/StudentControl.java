@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper=false)
-@Table(name="StudentControl_Work")
+@Table(name="StudentControl")
 public class StudentControl extends BaseEntity{
 
 	/**

@@ -1,4 +1,4 @@
-package com.enewschamp.subscription.domin.entity;
+package com.enewschamp.subscription.domain.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

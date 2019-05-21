@@ -5,25 +5,20 @@ import java.util.Date;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.subscription.app.dto.StudentSubscriptionPageDTO;
-<<<<<<< HEAD
 import com.enewschamp.subscription.app.dto.StudentSubscriptionWorkDTO;
+import com.enewschamp.subscription.domain.entity.StudentControlWork;
+import com.enewschamp.subscription.domain.entity.StudentSubscription;
+import com.enewschamp.subscription.domain.entity.StudentSubscriptionWork;
 import com.enewschamp.subscription.domain.repository.StudentControlWorkRepository;
 import com.enewschamp.subscription.domain.service.StudentControlWorkService;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionService;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionWorkService;
-import com.enewschamp.subscription.domin.entity.StudentControlWork;
-import com.enewschamp.subscription.domin.entity.StudentSubscription;
-import com.enewschamp.subscription.domin.entity.StudentSubscriptionWork;
-=======
-import com.enewschamp.subscription.domain.entity.StudentSubscription;
-import com.enewschamp.subscription.domain.entity.StudentSubscriptionWork;
-import com.enewschamp.subscription.domain.service.StudentSubscriptionService;
-import com.enewschamp.subscription.domain.service.StudentSubscriptionWorkService;
->>>>>>> edf698a24cf2147e5536b3c58b98b69fdfb0c3ec
 
+@Service
 public class SubscriptionBusiness {
 
 	@Autowired
@@ -42,7 +37,7 @@ public class SubscriptionBusiness {
 	StudentControlWorkService StudentControlWorkService; 
 	
 	public StudentSubscriptionWorkDTO existInWork(StudentSubscriptionPageDTO subscriptionDto) {
-		String eMaildId = subscriptionDto.getData().getEmailId();
+		String eMaildId = subscriptionDto.getData().getEmailID();
 		StudentSubscriptionWorkDTO dto = studentWorkSubscription.ifExist(eMaildId);
 		return dto;
 	}
@@ -50,10 +45,11 @@ public class SubscriptionBusiness {
 	public void saveAsWork(StudentSubscriptionPageDTO subscriptionDto)
 	{
 		HeaderDTO header = subscriptionDto.getHeader(); 
-		StudentSubscription subscripionDto =  modelMapper.map(subscriptionDto.getData(),StudentSubscription.class);
-		String emailId = subscriptionDto.getData().getEmailId();
+		//StudentSubscription subscripionDto =  modelMapper.map(subscriptionDto.getData(),StudentSubscription.class);
+		StudentSubscription subscripionDto = new StudentSubscription();
+		String emailId = subscriptionDto.getData().getEmailID();
 		String subsType = subscriptionDto.getData().getSubscriptionSelected();
-		
+		String editionId = subscriptionDto.getHeader().getEditionId();
 		StudentControlWork existingEntity = repository.searchByEmail(emailId);
 		subscripionDto.setEditionID(header.getEditionId());
 		
@@ -66,7 +62,7 @@ public class SubscriptionBusiness {
 			StudentControlWork created = StudentControlWorkService.create(StudentControlWork);
 			Long studentId = created.getStudentID();
 			subscripionDto.setStudentID(studentId);
-			
+			subscripionDto.setEditionID(editionId);
 			if("S".contentEquals(subsType)) {
 			int evalDays = 10;
 			//set the evaluation type as E
@@ -101,6 +97,7 @@ public class SubscriptionBusiness {
 				
 			}
 		}
+		subscripionDto.setAutoRenewal("N");
 		//create student subscription
 		studentSubscription.create(subscripionDto);
 		

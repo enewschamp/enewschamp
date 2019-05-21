@@ -17,7 +17,7 @@ public class StudentSubscriptionPageData extends PageData{
 	private static final long serialVersionUID = 1L;
 
 	@NotNull
-	private String emailId;
+	private String emailID;
 	
 	@NotNull
 	private String terms;

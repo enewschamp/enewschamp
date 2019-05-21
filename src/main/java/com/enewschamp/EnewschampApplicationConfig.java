@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 @Configuration
 public class EnewschampApplicationConfig {
 
-	@Bean
+	@Bean(name="modelMapper")
 	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
 		return modelMapper;

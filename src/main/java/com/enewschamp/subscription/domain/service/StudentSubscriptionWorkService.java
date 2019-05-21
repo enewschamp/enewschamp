@@ -6,18 +6,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
-<<<<<<< HEAD
 import com.enewschamp.subscription.app.dto.StudentSubscriptionWorkDTO;
-import com.enewschamp.subscription.domin.entity.StudentSubscriptionWork;
-=======
 import com.enewschamp.subscription.domain.entity.StudentSubscriptionWork;
->>>>>>> edf698a24cf2147e5536b3c58b98b69fdfb0c3ec
 
+@Service
 public class StudentSubscriptionWorkService  {
 
 	/**
@@ -38,6 +36,8 @@ public class StudentSubscriptionWorkService  {
 	@Autowired
 	AuditService auditService;
 	
+	@Autowired
+	StudentControlService studentControlService;
 	
 	public StudentSubscriptionWork create(StudentSubscriptionWork StudentSubscriptionWork) {
 		return repository.save(StudentSubscriptionWork);
@@ -80,7 +80,8 @@ public class StudentSubscriptionWorkService  {
 
 	public StudentSubscriptionWorkDTO ifExist(String eMailId)
 	{
-		Optional<StudentSubscriptionWork> Dto = repository.getStudentByEmail(eMailId);
+		Optional<StudentSubscriptionWork> Dto=null ;// studentControlService.g
+		//		repository.getStudentByEmail(eMailId);
 		StudentSubscriptionWorkDTO workDto = modelMapper.map(Dto, StudentSubscriptionWorkDTO.class);
 		return workDto;
 	}

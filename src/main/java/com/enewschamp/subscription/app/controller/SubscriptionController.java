@@ -39,11 +39,11 @@ public class SubscriptionController {
 	
 	@PostMapping(value = "/page/subscription/action/next")
 	public ResponseEntity<StudentSubscriptionPageDTO> processNext(@RequestBody @Valid StudentSubscriptionPageDTO subscriptionDto) {
-		String eMailId  = subscriptionDto.getData().getEmailId();
+		String eMailId  = subscriptionDto.getData().getEmailID();
 		String subscriptionType = subscriptionDto.getData().getSubscriptionSelected();
 		String fromScreenName = subscriptionDto.getHeader().getPageName();
 		String action = subscriptionDto.getHeader().getAction();
-		if(!studentControlService.studentExist(eMailId) && "S".contentEquals(subscriptionType))
+		if(!studentControlService.studentExist(eMailId) && "S".equals(subscriptionType))
 		{
 			subscriptionBusiness.saveAsWork(subscriptionDto);
 		}
@@ -57,7 +57,7 @@ public class SubscriptionController {
 	
 	@PostMapping(value = "/page/subscription/action/previous")
 	public ResponseEntity<StudentSubscriptionPageDTO> processPrev(@RequestBody @Valid StudentSubscriptionPageDTO subscriptionDto) {
-		String eMailId  = subscriptionDto.getData().getEmailId();
+		String eMailId  = subscriptionDto.getData().getEmailID();
 		String subscriptionType = subscriptionDto.getData().getSubscriptionSelected();
 		String fromScreenName = subscriptionDto.getHeader().getPageName();
 		if(!studentControlService.studentExist(eMailId) && "S".contentEquals(subscriptionType))

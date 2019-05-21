@@ -32,11 +32,11 @@ public class StudentSchool extends BaseEntity{
 	private long schoolId = 0L;
 	
 	@NotNull
-	@Column(name="Grade, length=10")
+	@Column(name="Grade", length=10)
 	private String grade;
 	
 	@NotNull
-	@Column(name="Section, length=20")
+	@Column(name="Section", length=20)
 	private String section;
 	
 	

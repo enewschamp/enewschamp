@@ -11,11 +11,11 @@ import com.enewschamp.subscription.domain.entity.StudentSubscriptionWork;
 @JaversSpringDataAuditable
 public interface StudentSubscriptionWorkRepository extends JpaRepository<StudentSubscriptionWork, Long>{
 
-	@Query("Select * from StudentSubscrition_work where studentId= :studentId and EditionID = :edition")
+	@Query("Select s from StudentSubscriptionWork s where s.studentID= :studentId and s.editionID = :edition")
 	public Optional<StudentSubscriptionWork> getByStudentAndEdition(Long studentId, String edition);
 	
-	@Query("Select * from StudentSubscrition_work where emailid= :eMailId")
+	/*@Query("Select ss from StudentSubscriptionWork ss where ss.emailid= :eMailId")
 	public Optional<StudentSubscriptionWork> getStudentByEmail(String eMailId);
-	
+	*/
 	
 }

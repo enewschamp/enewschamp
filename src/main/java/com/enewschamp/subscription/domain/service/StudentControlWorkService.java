@@ -6,14 +6,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.subscription.domain.entity.StudentControlWork;
 import com.enewschamp.subscription.domain.repository.StudentControlWorkRepository;
-import com.enewschamp.subscription.domin.entity.StudentControlWork;
 
+@Service
 public class StudentControlWorkService {
 	@Autowired
 	ModelMapper modelMapper;
