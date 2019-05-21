@@ -1,7 +1,7 @@
 package com.enewschamp.domain.common;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,20 +9,20 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-public class LocalDateDeserializer extends StdDeserializer<LocalDate> { 
+public class LocalDateTimeDeserializer extends StdDeserializer<LocalDateTime> { 
  
-    public LocalDateDeserializer() { 
+    public LocalDateTimeDeserializer() { 
         this(null); 
     } 
  
-    public LocalDateDeserializer(Class<?> vc) { 
+    public LocalDateTimeDeserializer(Class<?> vc) { 
         super(vc); 
     }
  
     @Override
-    public LocalDate deserialize(JsonParser jp, DeserializationContext ctxt) 
+    public LocalDateTime deserialize(JsonParser jp, DeserializationContext ctxt) 
       throws IOException, JsonProcessingException {
         JsonNode node = jp.getCodec().readTree(jp);
-        return LocalDate.parse(node.textValue());
+        return LocalDateTime.parse(node.textValue());
     }
 } 
