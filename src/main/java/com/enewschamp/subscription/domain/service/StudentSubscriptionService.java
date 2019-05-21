@@ -44,7 +44,7 @@ public class StudentSubscriptionService  {
 	
 	public StudentSubscription update(StudentSubscription studentSubscription) {
 		Long studentId = studentSubscription.getStudentID();
-		Long editionId = studentSubscription.getEditionID();
+		String editionId = studentSubscription.getEditionID();
 		
 		StudentSubscription existingEntity = get(studentId,editionId);
 		modelMapper.map(studentSubscription, existingEntity);
@@ -52,14 +52,14 @@ public class StudentSubscriptionService  {
 	}
 	public StudentSubscription patch(StudentSubscription studentSubscription) {
 		Long studentId = studentSubscription.getStudentID();
-		Long editionId = studentSubscription.getEditionID();
+		String editionId = studentSubscription.getEditionID();
 
 		StudentSubscription existingEntity = get(studentId,editionId);
 		modelMapperForPatch.map(studentSubscription, existingEntity);
 		return repository.save(existingEntity);
 	}
 
-	public StudentSubscription get(Long studentId, Long editionId) {
+	public StudentSubscription get(Long studentId, String editionId) {
 		Optional<StudentSubscription> existingEntity = repository.findById(studentId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();

@@ -10,13 +10,9 @@ import com.enewschamp.subscription.app.dto.StudentSubscriptionPageDTO;
 
 @Service
 public class SubscriptionService {
-	@Autowired
-	ModelMapper modelMapper;
 	
 	
 	public void createStudentSubscription(StudentSubscriptionPageDTO subscriptionDto)
 	{
-		HeaderDTO header = subscriptionDto.getHeader();
-		StudentSubscriptionDTO subscripionDto =  modelMapper.map(subscriptionDto.getData(),StudentSubscriptionDTO.class);
 	}
 }

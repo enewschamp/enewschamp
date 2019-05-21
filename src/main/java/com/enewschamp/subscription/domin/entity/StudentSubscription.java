@@ -1,6 +1,6 @@
 package com.enewschamp.subscription.domin.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +27,7 @@ public class StudentSubscription extends BaseEntity{
 	
 	@NotNull
 	@Column(name = "EditionID", length=6)
-	private long editionID = 0L;
+	private String editionID ;
 	
 	@NotNull
 	@Column(name = "SubscriptionType",length=1)

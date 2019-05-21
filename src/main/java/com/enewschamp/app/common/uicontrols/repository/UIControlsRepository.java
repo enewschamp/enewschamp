@@ -12,4 +12,7 @@ public interface UIControlsRepository extends JpaRepository<UIControls, Long>{
 
 	public List<UIControls> findByScreenName(String screenName);
 	public UIControls save(UIControls uicontrols);
+	public List<UIControls> findByScreenAndAction(String screenName, String action);
+
+	
 }

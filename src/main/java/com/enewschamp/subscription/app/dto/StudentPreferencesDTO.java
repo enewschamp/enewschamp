@@ -1,5 +1,7 @@
 package com.enewschamp.subscription.app.dto;
 
+import java.sql.Timestamp;
+
 import com.enewschamp.app.common.AbstractDTO;
 
 import lombok.Data;
@@ -7,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class StudentPreferences extends AbstractDTO{
+public class StudentPreferencesDTO extends AbstractDTO{
 	
 	/**
 	 * 
@@ -25,4 +27,6 @@ public class StudentPreferences extends AbstractDTO{
 	private String notificationsOverEmail;
 	
 	private String emailForComms;
+	
+
 }

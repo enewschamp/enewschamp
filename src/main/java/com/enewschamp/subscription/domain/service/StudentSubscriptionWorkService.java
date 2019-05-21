@@ -11,6 +11,7 @@ import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.subscription.app.dto.StudentSubscriptionWorkDTO;
 import com.enewschamp.subscription.domin.entity.StudentSubscriptionWork;
 
 public class StudentSubscriptionWorkService  {
@@ -42,7 +43,7 @@ public class StudentSubscriptionWorkService  {
 	
 	public StudentSubscriptionWork update(StudentSubscriptionWork StudentSubscriptionWork) {
 		Long studentId = StudentSubscriptionWork.getStudentID();
-		Long editionId = StudentSubscriptionWork.getEditionID();
+		String editionId = StudentSubscriptionWork.getEditionID();
 		
 		StudentSubscriptionWork existingEntity = get(studentId,editionId);
 		modelMapper.map(StudentSubscriptionWork, existingEntity);
@@ -50,15 +51,15 @@ public class StudentSubscriptionWorkService  {
 	}
 	public StudentSubscriptionWork patch(StudentSubscriptionWork StudentSubscriptionWork) {
 		Long studentId = StudentSubscriptionWork.getStudentID();
-		Long editionId = StudentSubscriptionWork.getEditionID();
+		String editionId = StudentSubscriptionWork.getEditionID();
 
 		StudentSubscriptionWork existingEntity = get(studentId,editionId);
 		modelMapperForPatch.map(StudentSubscriptionWork, existingEntity);
 		return repository.save(existingEntity);
 	}
 
-	public StudentSubscriptionWork get(Long studentId, Long editionId) {
-		Optional<StudentSubscriptionWork> existingEntity = repository.findById(studentId);
+	public StudentSubscriptionWork get(Long studentId, String editionId) {
+		Optional<StudentSubscriptionWork> existingEntity = repository.getByStudentAndEdition(studentId,editionId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
@@ -66,6 +67,19 @@ public class StudentSubscriptionWorkService  {
 		}
 	}
 	
+	public void delete(Long StudentId, String editionId) {
+		Optional<StudentSubscriptionWork> existingEntity = repository.getByStudentAndEdition(StudentId,editionId);
+		StudentSubscriptionWork studentSubscriptionWork  = existingEntity.get();
+		
+		 repository.delete(studentSubscriptionWork);
+	}
+
+	public StudentSubscriptionWorkDTO ifExist(String eMailId)
+	{
+		Optional<StudentSubscriptionWork> Dto = repository.getStudentByEmail(eMailId);
+		StudentSubscriptionWorkDTO workDto = modelMapper.map(Dto, StudentSubscriptionWorkDTO.class);
+		return workDto;
+	}
 	public String getAudit(Long studentId) {
 		StudentSubscriptionWork StudentDetails = new StudentSubscriptionWork();
 		StudentDetails.setStudentID(studentId);

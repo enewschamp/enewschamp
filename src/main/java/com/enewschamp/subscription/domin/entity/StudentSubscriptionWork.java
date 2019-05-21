@@ -26,7 +26,7 @@ public class StudentSubscriptionWork extends BaseEntity{
 	
 	@NotNull
 	@Column(name = "EditionID", length=6)
-	private long editionID = 0L;
+	private String editionID ;
 	
 	@NotNull
 	@Column(name = "SubscriptionType",length=1)

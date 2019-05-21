@@ -25,7 +25,7 @@ public class StudentSubscriptionWorkDTO extends AbstractDTO{
 	
 	@NotNull
 	@Size(max=6)
-	private long editionID = 0L;
+	private String editionID;
 	
 	@NotNull
 	@Size(max=1)
