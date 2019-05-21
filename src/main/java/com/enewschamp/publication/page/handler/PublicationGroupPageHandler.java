@@ -12,6 +12,8 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.publication.app.dto.PublicationGroupDTO;
 import com.enewschamp.publication.app.service.PublicationGroupHelper;
+import com.enewschamp.publication.page.data.PublicationGroupPageData;
+import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +30,9 @@ public class PublicationGroupPageHandler implements IPageHandler  {
 	
 	@Autowired
 	ObjectMapper objectMapper;
+	
+	@Autowired
+	UserService userService;
 	
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
@@ -52,6 +57,17 @@ public class PublicationGroupPageHandler implements IPageHandler  {
 	
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
-		return pageNavigationContext.getPreviousPageResponse();
+		PageDTO pageDTO = new PageDTO();
+
+		Long publicationGroupId = pageNavigationContext.getPageRequest().getData().get("publicationGroupId").asLong();
+		
+		PublicationGroupPageData data = new PublicationGroupPageData();
+		
+		data.setPublisherLOV(userService.getPublisherLOV());
+		data.setEditorLOV(userService.getEditorLOV());
+		
+		data.setPublicationGroup(publicationGroupHelper.getPublicationGroup(publicationGroupId));		
+		pageDTO.setData(data);
+		return pageDTO;
 	}
 }

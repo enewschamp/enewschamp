@@ -33,7 +33,7 @@
 					"raw": "{\n    \"header\": {\n        \"pageName\": \"Menu\",\n        \"action\": \"ClickSearchNewsArticle\"\n    }\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/pages/menu/ClickSearchNewsArticle",
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -41,9 +41,7 @@
 					"port": "{{port}}",
 					"path": [
 						"{{base-path}}",
-						"pages",
-						"menu",
-						"ClickSearchNewsArticle"
+						"{{publisherAppPath}}"
 					]
 				}
 			},
@@ -77,7 +75,7 @@
 					"raw": "{\n    \"header\": {\n        \"pageName\": \"SearchNewsArticles\",\n        \"action\": \"ClickGetNewsArticles\",\n        \"pageNumber\": 1,\n        \"pageSize\": 99\n    },\n    \"data\": {\n        \"userId\": \"userId\",\n        \"authorId\": \"authorId\",\n        \"editorId\": \"editorId\",\n        \"publisherId\": \"publisherId\",\n        \"editionId\": \"editionId\",\n        \"genreId\": \"genreId\",\n        \"headline\": \"headline\",\n        \"credits\": \"credits\",\n        \"articleId\": \"articleId\",\n        \"articleGroupId\": \"articleGroupId\",\n        \"readingLevel1\": \"Y\",\n        \"readingLevel2\": \"Y\",\n        \"readingLevel3\": \"Y\",\n        \"readingLevel4\": \"Y\",\n        \"publicationDate\": \"2019-05-18\",\n        \"intendedPubMonth\": \"Jan\",\n        \"articleStatusList\": [\n            \"Unassigned\",\n            \"Assigned\",\n            \"ReadyToPublish\"\n        ]\n    }\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/pages/SearchNewsArticles/ClickGetNewsArticles",
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -85,9 +83,7 @@
 					"port": "{{port}}",
 					"path": [
 						"{{base-path}}",
-						"pages",
-						"SearchNewsArticles",
-						"ClickGetNewsArticles"
+						"{{publisherAppPath}}"
 					]
 				}
 			},
@@ -118,10 +114,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"data\": {\n    \t\"newsArticleGroupId\": 1\n    }\n    \n}"
+					"raw": "{\n    \"header\": {\n    \t\"pageName\": \"ListNewsArticles\",\n        \"action\": \"ClickNewsArticleGroupID\"\n    },\n    \"data\": {\n    \t\"newsArticleGroupId\": 1\n    }\n    \n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/pages/ListNewsArticles/ClickNewsArticleGroupID",
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -129,9 +125,7 @@
 					"port": "{{port}}",
 					"path": [
 						"{{base-path}}",
-						"pages",
-						"ListNewsArticles",
-						"ClickNewsArticleGroupID"
+						"{{publisherAppPath}}"
 					]
 				}
 			},

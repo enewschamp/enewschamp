@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b15bf1e1-c5ca-4b97-8f30-21414b20e60b",
+		"_postman_id": "2aea0d51-217f-42bb-8c33-8a18e4ae0b3f",
 		"name": "eNewsChamp-Publication",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -30,10 +30,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {},\n    \"data\": {\n        \"editionId\": \"Edit1\",\n        \"publicationDate\": \"2019-05-20\",\n        \"status\": \"ReadyToPublish\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n                \"editionId\": \"Edit1\",\n                \"readingLevel\": 1,\n                \"publishDate\": \"2018-12-12\",\n                \"status\": \"Assigned\",\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication comments\",\n                \"articleLinkages\": [\n                    {\n                        \"publicationArticleLinkageKey\": {\n                            \"newsArticleId\": 1\n                        },\n                        \"sequence\": 1\n                    },\n                    {\n                        \"publicationArticleLinkageKey\": {\n                            \"newsArticleId\": 2\n                        },\n                        \"sequence\": 2\n                    }\n                ]\n            },\n            {\n                \"editionId\": \"Edit1\",\n                \"readingLevel\": 2,\n                \"publishDate\": \"2018-12-12\",\n                \"status\": \"Assigned\",\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication comments\",\n                \"articleLinkages\": [\n                    {\n                        \"publicationArticleLinkageKey\": {\n                            \"newsArticleId\": 3\n                        },\n                        \"sequence\": 1\n                    },\n                    {\n                        \"publicationArticleLinkageKey\": {\n                            \"newsArticleId\": 4\n                        },\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
+					"raw": "{\n    \"header\": {\n    \t\"pageName\":\"Publication\",\n    \t\"action\": \"SavePublication\"\n    },\n    \"data\": {\n        \"editionId\": \"Edit1\",\n        \"publicationDate\": \"2019-05-20\",\n        \"status\": \"ReadyToPublish\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n                \"editionId\": \"Edit1\",\n                \"readingLevel\": 1,\n                \"publishDate\": \"2018-12-12\",\n                \"status\": \"Assigned\",\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication comments\",\n                \"articleLinkages\": [\n                    {\n                        \"publicationArticleLinkageKey\": {\n                            \"newsArticleId\": 1\n                        },\n                        \"sequence\": 1\n                    },\n                    {\n                        \"publicationArticleLinkageKey\": {\n                            \"newsArticleId\": 2\n                        },\n                        \"sequence\": 2\n                    }\n                ]\n            },\n            {\n                \"editionId\": \"Edit1\",\n                \"readingLevel\": 2,\n                \"publishDate\": \"2018-12-12\",\n                \"status\": \"Assigned\",\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication comments\",\n                \"articleLinkages\": [\n                    {\n                        \"publicationArticleLinkageKey\": {\n                            \"newsArticleId\": 3\n                        },\n                        \"sequence\": 1\n                    },\n                    {\n                        \"publicationArticleLinkageKey\": {\n                            \"newsArticleId\": 4\n                        },\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/pages/Publication/SavePublication",
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -41,9 +41,7 @@
 					"port": "{{port}}",
 					"path": [
 						"{{base-path}}",
-						"pages",
-						"Publication",
-						"SavePublication"
+						"{{publisherAppPath}}"
 					]
 				}
 			},
@@ -77,7 +75,7 @@
 					"raw": "{\n    \"header\": {\n        \"pageName\": \"Menu\",\n        \"action\": \"ClickSearchPublications\"\n    }\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/pages/menu/ClickSearchPublications",
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -85,9 +83,7 @@
 					"port": "{{port}}",
 					"path": [
 						"{{base-path}}",
-						"pages",
-						"menu",
-						"ClickSearchPublications"
+						"{{publisherAppPath}}"
 					]
 				}
 			},
@@ -121,7 +117,7 @@
 					"raw": "{\n    \"header\": {\n        \"pageName\": \"SearchPublications\",\n        \"action\": \"ClickGetPublications\",\n        \"pageNumber\": 1,\n        \"pageSize\": 99\n    },\n    \"data\": {\n        \"editorId\": \"editorId\",\n        \"publisherId\": \"publisherId\",\n        \"readingLevel1\": \"Y\",\n        \"readingLevel2\": \"Y\",\n        \"readingLevel3\": \"Y\",\n        \"readingLevel4\": \"Y\",\n        \"publicationDate\": \"2019-05-18\",\n        \"articleStatusList\": [\n            \"Closed\",\n            \"Assigned\",\n            \"ReadyToPublish\"\n        ]\n    }\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/pages/SearchPublications/ClickGetPublications",
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -129,9 +125,7 @@
 					"port": "{{port}}",
 					"path": [
 						"{{base-path}}",
-						"pages",
-						"SearchPublications",
-						"ClickGetPublications"
+						"{{publisherAppPath}}"
 					]
 				}
 			},
@@ -162,10 +156,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"data\": {\n    \t\"publicationGroupId\": 1\n    }\n    \n}"
+					"raw": "{\n    \"header\": {\n    \t\"pageName\":\"ListPublications\",\n    \t\"action\": \"ClickPublicationID\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": 1\n    }\n    \n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/pages/ListPublications/ClickPublicationID",
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -173,9 +167,7 @@
 					"port": "{{port}}",
 					"path": [
 						"{{base-path}}",
-						"pages",
-						"ListPublications",
-						"ClickPublicationID"
+						"{{publisherAppPath}}"
 					]
 				}
 			},
