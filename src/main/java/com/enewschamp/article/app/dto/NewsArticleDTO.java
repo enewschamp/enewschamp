@@ -1,6 +1,7 @@
 package com.enewschamp.article.app.dto;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import com.enewschamp.app.common.MaintenanceDTO;
 import com.enewschamp.article.domain.common.ArticleRatingType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
+import com.enewschamp.publication.app.dto.PublicationArticleLinkageDTO;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,7 +30,7 @@ public class NewsArticleDTO extends MaintenanceDTO {
 		this.readingLevel = readingLevel;
 	}
 	
-	private Long newsArticleId;
+	private long newsArticleId;
 	
 	@NotNull
 	private long newsArticleGroupId;
@@ -64,5 +66,5 @@ public class NewsArticleDTO extends MaintenanceDTO {
 	private String authorId;
 	
 	private List<NewsArticleQuizDTO> newsArticleQuiz;
-
+	
 }

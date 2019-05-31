@@ -15,6 +15,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.javers.core.metamodel.annotation.TypeName;
+
 import com.enewschamp.article.domain.common.ArticleGroupStatusType;
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.domain.common.MonthType;

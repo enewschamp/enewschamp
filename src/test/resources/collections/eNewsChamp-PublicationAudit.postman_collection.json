@@ -1,0 +1,169 @@
+{
+	"info": {
+		"_postman_id": "06cb56c4-ba1d-41f2-8a4e-507e3b50ce3d",
+		"name": "eNewsChamp-PublicationAudit",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Publication",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"status\": \"ReadyToPublish\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n                \"readingLevel\": 1,\n                \"status\": \"Assigned\",\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 comments\",\n                \"articleLinkages\": [\n                    {\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": 21,\n                        \"sequence\": 1\n                    },\n                    {\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": 22,\n                        \"sequence\": 2\n                    },\n                    {\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": 23,\n                        \"sequence\": 3\n                    },\n                    {\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": 24,\n                        \"sequence\": 4\n                    }\n                ]\n            }\n        ]\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Publication update-1 article removed-1 article added",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n        \"publicationGroupId\": 1,\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"status\": \"ReadyToPublish\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n                \"publicationId\": 1,\n                \"readingLevel\": 1,\n                \"status\": \"Assigned\",\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 comments - updated\",\n                \"articleLinkages\": [\n                    {\n                        \"id\": 1,\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": 21,\n                        \"sequence\": 1\n                    },\n                    {\n                        \"id\": 2,\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": 22,\n                        \"sequence\": 2\n                    },\n                    {\n                        \"id\": 3,\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": 23,\n                        \"sequence\": 3\n                    },\n                    {\n                        \"id\": 5,\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": 25,\n                        \"sequence\": 5\n                    }\n                ]\n            }\n        ]\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "1 article sequence updated",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n        \"publicationGroupId\": 1,\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"status\": \"ReadyToPublish\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n                \"publicationId\": 1,\n                \"readingLevel\": 1,\n                \"status\": \"Assigned\",\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 comments - updated\",\n                \"articleLinkages\": [\n                    {\n                        \"id\": 1,\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": 21,\n                        \"sequence\": 1\n                    },\n                    {\n                        \"id\": 2,\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": 22,\n                        \"sequence\": 2\n                    },\n                    {\n                        \"id\": 3,\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": 23,\n                        \"sequence\": 3\n                    },\n                    {\n                        \"id\": 5,\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": 25,\n                        \"sequence\": 4\n                    }\n                ]\n            }\n        ]\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Publication Audit",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/publications/1/audit",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"publications",
+						"1",
+						"audit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Audit for entity",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/audit/entity/",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"audit",
+						"entity",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

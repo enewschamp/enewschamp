@@ -4,6 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,6 +61,8 @@ public class PageController {
 	
 	@PostMapping(value = "/publisher")
 	public ResponseEntity<PageDTO> processPublisherAppRequest(@RequestBody PageRequestDTO pageRequest) {
+		
+		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("deepak", "welcome"));
 		
 		String pageName = pageRequest.getHeader().getPageName();
 		String actionName = pageRequest.getHeader().getAction();

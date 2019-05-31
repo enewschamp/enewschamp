@@ -37,7 +37,7 @@ public class NewsArticleGroupHelper {
 		articleGroupDTO = modelMapper.map(articleGroup, NewsArticleGroupDTO.class);
 		
 		//Delete existing records, if any
-		newsArticleHelper.deleteByArticleGroupId(articleGroup.getNewsArticleGroupId());
+//		newsArticleHelper.deleteByArticleGroupId(articleGroup.getNewsArticleGroupId());
 		
 		List<NewsArticleDTO> articleList = new ArrayList<NewsArticleDTO>(); 
 		for(NewsArticleDTO articleDTO: newsArticles) {

@@ -8,27 +8,37 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.article.domain.entity.NewsArticle;
+import com.enewschamp.article.domain.entity.NewsArticleQuiz;
+import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class NewsArticleService {
 
 	@Autowired
-	NewsArticleRepository repository;
+	private NewsArticleRepository repository;
 	
 	@Autowired
-	ModelMapper modelMapper;
+	private ModelMapper modelMapper;
 	
 	@Autowired
 	@Qualifier("modelPatcher")
-	ModelMapper modelMapperForPatch;
+	private ModelMapper modelMapperForPatch;
 	
 	@Autowired
 	AuditService auditService;
+	
+	@Autowired
+	ObjectMapper objectMapper;
+	
+	@Autowired
+	private EnewschampApplicationProperties appConfig;
 	
 	public NewsArticle create(NewsArticle article) {
 		return repository.save(article);
@@ -36,14 +46,14 @@ public class NewsArticleService {
 	
 	public NewsArticle update(NewsArticle article) {
 		Long articleId = article.getNewsArticleId();
-		NewsArticle existingEntity = get(articleId);
+		NewsArticle existingEntity = load(articleId);
 		modelMapper.map(article, existingEntity);
 		return repository.save(existingEntity);
 	}
 	
 	public NewsArticle patch(NewsArticle newsArticle) {
 		Long articleId = newsArticle.getNewsArticleId();
-		NewsArticle existingEntity = get(articleId);
+		NewsArticle existingEntity = load(articleId);
 		modelMapperForPatch.map(newsArticle, existingEntity);
 		return repository.save(existingEntity);
 	}
@@ -52,7 +62,7 @@ public class NewsArticleService {
 		repository.deleteById(articleId);
 	}
 	
-	public NewsArticle get(Long articleId) {
+	public NewsArticle load(Long articleId) {
 		Optional<NewsArticle> existingEntity = repository.findById(articleId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
@@ -61,10 +71,34 @@ public class NewsArticleService {
 		}
 	}
 	
+	public NewsArticle get(Long articleId) {
+		Optional<NewsArticle> existingEntity = repository.findById(articleId);
+		if(existingEntity.isPresent()) {
+			return existingEntity.get();
+		}
+		return null;
+	}
+	
 	public String getAudit(Long articleId) {
 		NewsArticle article = new NewsArticle();
 		article.setNewsArticleId(articleId);
-		return auditService.getEntityAudit(article);
+		
+//		NewsArticle article1 = repository.getOne(articleId);
+//		NewsArticle article2 = repository.getOne(articleId + 1);
+//		
+//		auditService.findDifference(article1, article2);
+		
+		
+		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig).forParentObject(article);
+		
+		// Fetch article quiz changes
+		article = load(articleId);
+		for(NewsArticleQuiz quiz: article.getNewsArticleQuiz()) {
+			auditBuilder.forChildObject(quiz);
+		}
+		return auditBuilder.build();
 	}
+
+	
 	
 }

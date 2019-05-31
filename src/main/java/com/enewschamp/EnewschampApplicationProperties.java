@@ -26,4 +26,12 @@ public class EnewschampApplicationProperties {
 	private Map<String, String> pageHandlerConfig;
 	
 	private Map<String, Map<String, String>> pageNavigationConfig;
+	
+	
+	@Data
+	public static class AuditConfig {
+		private boolean includeSnapShots;
+	}
+	
+	private AuditConfig audit;
 }

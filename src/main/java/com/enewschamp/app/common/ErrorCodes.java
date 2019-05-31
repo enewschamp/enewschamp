@@ -19,4 +19,5 @@ public interface ErrorCodes {
 	
 	public static String USER_NOT_FOUND = "USER_001";
 	public static String USER_ROLE_NOT_FOUND = "USER_002";
+	
 }

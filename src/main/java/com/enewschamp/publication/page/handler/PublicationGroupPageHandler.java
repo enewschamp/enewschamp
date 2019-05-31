@@ -50,7 +50,7 @@ public class PublicationGroupPageHandler implements IPageHandler  {
 			throw new RuntimeException(e);
 		}
 		
-		publicationGroupHelper.createPublicationGroup(publicationGroupDTO);
+		publicationGroupDTO = publicationGroupHelper.createPublicationGroup(publicationGroupDTO);
 		
 		return pageDTO;
 	}

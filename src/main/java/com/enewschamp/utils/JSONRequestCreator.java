@@ -11,16 +11,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
+import com.enewschamp.article.domain.entity.NewsArticle;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class JSONRequestCreator {
 
 	public static void main(String args[]) {
-		new JSONRequestCreator().getSampleJSONRequest(new NewsArticleGroupDTO());
+		new JSONRequestCreator().getSampleJSONRequest(new NewsArticle());
 	}
 
 	public String getSampleJSONRequest(Object model) {
@@ -28,22 +27,51 @@ public class JSONRequestCreator {
 		ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.ALWAYS);
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
+		
 		try {
-			instantiateFields(model);
+			//instantiateFields(model);
+			
+			listCollectionProperties(model);
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		try {
-			response = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(model);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			response = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(model);
+//		} catch (JsonProcessingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 		System.out.println(response);
 		return response;
+	}
+	
+	private void listCollectionProperties(Object o) throws IllegalAccessException {
+		Field[] fields = o.getClass().getDeclaredFields();
+
+		for (Field field : fields) {
+			//System.out.println("Processing field: " + field.getName() + " -- Type: " + field.getType());
+			field.setAccessible(true);
+
+			if (field.get(o) == null) {
+				Type type = field.getType();
+
+//				try {
+					Class<?> clazz = (Class<?>) type;
+					if (clazz == List.class) {
+						
+						ParameterizedType listType = (ParameterizedType) field.getGenericType();
+						Class<?> listClass = (Class<?>) listType.getActualTypeArguments()[0];
+						
+						System.out.println(field.getName() + " : " + List.class.getName() + " : + " + listClass.getName());
+					}
+//				} catch (ClassCastException ) {
+//					// Handle this or leave field null
+//				}
+			}
+		}
 	}
 
 	private void instantiateFields(Object o) throws IllegalAccessException {
@@ -101,7 +129,7 @@ public class JSONRequestCreator {
 					instantiateFields(instance);
 
 				} catch (ClassCastException | InstantiationException e) {
-					// Handle this or leave field null
+					e.printStackTrace();
 				}
 			}
 		}

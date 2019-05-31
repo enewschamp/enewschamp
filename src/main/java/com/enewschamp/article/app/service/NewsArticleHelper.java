@@ -40,28 +40,52 @@ public class NewsArticleHelper {
 	public NewsArticleDTO create(NewsArticleDTO articleDTO) {
 		
 		List<NewsArticleQuizDTO> newsArticleQuiz = articleDTO.getNewsArticleQuiz();
+		for(NewsArticleQuizDTO quizDTO: newsArticleQuiz) {
+			quizDTO.setOperatorId(articleDTO.getOperatorId());
+			quizDTO.setRecordInUse(articleDTO.getRecordInUse());
+		}
+		
+		// Remove questions which have been deleted on the UI
+		removeDelinkedQuestions(articleDTO.getNewsArticleId(), newsArticleQuiz);
 		
 		NewsArticle article = modelMapper.map(articleDTO, NewsArticle.class);
 		article = newsArticleService.create(article);
 		articleDTO = modelMapper.map(article, NewsArticleDTO.class);
 		
-		//Delete existing records, if any
-		newsArticleQuizRepository.deleteByArticleId(article.getNewsArticleId());
-		
-		List<NewsArticleQuizDTO> quizSet = new ArrayList<NewsArticleQuizDTO>(); 
+		newsArticleQuiz = articleDTO.getNewsArticleQuiz(); 
 		for(NewsArticleQuizDTO quizDTO: newsArticleQuiz) {
-			quizDTO.setNewsArticleId(article.getNewsArticleId());
-			quizDTO.setRecordInUse(article.getRecordInUse());
-			quizDTO.setOperatorId(article.getOperatorId());
-			NewsArticleQuiz articleQuiz = modelMapper.map(quizDTO, NewsArticleQuiz.class);
-			articleQuiz = newsArticleQuizService.create(articleQuiz);
-			quizDTO = modelMapper.map(articleQuiz, NewsArticleQuizDTO.class);
-			
-			quizSet.add(quizDTO);
+			quizDTO.setNewsArticleId(articleDTO.getNewsArticleId());
 		}
-		articleDTO.setNewsArticleQuiz(quizSet);
 		
 		return articleDTO;
+	}
+	
+	private void removeDelinkedQuestions(long articleId, List<NewsArticleQuizDTO> questions) {
+		if(articleId <= 0) {
+			return;
+		}
+		NewsArticle article = newsArticleService.get(articleId);
+		if (article == null) {
+			return;
+		}
+
+		for (NewsArticleQuiz question : article.getNewsArticleQuiz()) {
+			if (!isExistingLinkageFound(question.getNewsArticleQuizId(), questions)) {
+				System.out.println("Delete linkage for id: " + question.getNewsArticleQuizId());
+				newsArticleQuizRepository.deleteById(question.getNewsArticleQuizId());
+			}
+		}
+	}
+
+	private boolean isExistingLinkageFound(long questionId, List<NewsArticleQuizDTO> existingQuestions) {
+
+		for (NewsArticleQuizDTO question : existingQuestions) {
+			if (question.getNewsArticleQuizId() == questionId) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public NewsArticleDTO get(Long articleId) {

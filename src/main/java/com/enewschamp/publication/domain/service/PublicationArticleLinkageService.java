@@ -13,7 +13,6 @@ import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
 import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
-import com.enewschamp.publication.domain.entity.PublicationArticleLinkageKey;
 
 @Service
 public class PublicationArticleLinkageService {
@@ -36,25 +35,23 @@ public class PublicationArticleLinkageService {
 	}
 	
 	public PublicationArticleLinkage update(PublicationArticleLinkage publicationArticleLinkage) {
-		PublicationArticleLinkageKey publicationArticleLinkageId = publicationArticleLinkage.getPublicationArticleLinkageKey();
-		PublicationArticleLinkage existingPublicationArticleLinkage = get(publicationArticleLinkageId);
+		PublicationArticleLinkage existingPublicationArticleLinkage = get(publicationArticleLinkage.getId());
 		modelMapper.map(publicationArticleLinkage, existingPublicationArticleLinkage);
 		return repository.save(existingPublicationArticleLinkage);
 	}
 	
 	public PublicationArticleLinkage patch(PublicationArticleLinkage publicationArticleLinkage) {
-		PublicationArticleLinkageKey publicationArticleLinkageKey = publicationArticleLinkage.getPublicationArticleLinkageKey();
-		PublicationArticleLinkage existingEntity = get(publicationArticleLinkageKey);
+		PublicationArticleLinkage existingEntity = get(publicationArticleLinkage.getId());
 		modelMapperForPatch.map(publicationArticleLinkage, existingEntity);
 		return repository.save(existingEntity);
 	}
 	
-	public void delete(PublicationArticleLinkageKey publicationArticleLinkageKey) {
-		repository.deleteById(publicationArticleLinkageKey);
+	public void delete(Long linkageId) {
+		repository.deleteById(linkageId);
 	}
 	
-	public PublicationArticleLinkage get(PublicationArticleLinkageKey publicationArticleLinkageKey) {
-		Optional<PublicationArticleLinkage> existingEntity = repository.findById(publicationArticleLinkageKey);
+	public PublicationArticleLinkage get(Long linkageId) {
+		Optional<PublicationArticleLinkage> existingEntity = repository.findById(linkageId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
@@ -62,9 +59,9 @@ public class PublicationArticleLinkageService {
 		}
 	}
 	
-	public String getAudit(PublicationArticleLinkageKey publicationArticleLinkageKey) {
+	public String getAudit(Long linkageId) {
 		PublicationArticleLinkage publicationArticleLinkage = new PublicationArticleLinkage();
-		publicationArticleLinkage.setPublicationArticleLinkageKey(publicationArticleLinkageKey);
+		publicationArticleLinkage.setId(linkageId);
 		return auditService.getEntityAudit(publicationArticleLinkage);
 	}
 	
