@@ -37,31 +37,6 @@ public class PageController {
 	@Autowired
 	ModelMapper modelMapper;
 	
-//	@PostMapping(value = "/pages/{pageName}/{actionName}")
-//	public ResponseEntity<PageDTO> get(@PathVariable String pageName, @PathVariable String actionName, @RequestBody PageRequestDTO pageRequest) {
-//		
-//		pageRequest.getHeader().setPageName(pageName);
-//		pageRequest.getHeader().setAction(actionName);
-//		
-//		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest);
-//		
-//		return new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
-//	}
-	
-	@PostMapping(value = "/app")
-	@Transactional
-	public ResponseEntity<PageDTO> processAppRequest(@RequestBody PageRequestDTO pageRequest) {
-		
-		String pageName = pageRequest.getHeader().getPageName();
-		String actionName = pageRequest.getHeader().getAction();
-		pageRequest.getHeader().setPageName(pageName);
-		pageRequest.getHeader().setAction(actionName);
-		
-		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest);
-		
-		return new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
-	}
-	
 	@PostMapping(value = "/publisher")	
 	@Transactional
 	public ResponseEntity<PageDTO> processPublisherAppRequest(@RequestBody PageRequestDTO pageRequest) {

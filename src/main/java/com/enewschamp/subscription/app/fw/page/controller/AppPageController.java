@@ -57,19 +57,6 @@ public class AppPageController {
 		return new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/publisher")
-	public ResponseEntity<PageDTO> processPublisherAppRequest(@RequestBody PageRequestDTO pageRequest) {
-		
-		String pageName = pageRequest.getHeader().getPageName();
-		String actionName = pageRequest.getHeader().getAction();
-		pageRequest.getHeader().setPageName(pageName);
-		pageRequest.getHeader().setAction(actionName);
-		
-		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest);
-		
-		return new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
-	}
-
 	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest) {
 		String operation = pageRequest.getHeader().getOperation();
 
