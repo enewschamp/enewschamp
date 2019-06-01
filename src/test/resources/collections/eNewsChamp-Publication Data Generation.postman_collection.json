@@ -1,0 +1,51 @@
+{
+	"info": {
+		"_postman_id": "98ab50fe-e576-4eb1-9d23-09bc51b196fb",
+		"name": "eNewsChamp-Publication Data Generation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Publication Group",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							"console.log('Article Id: ', pm.environment.get(\"articleId\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n        \"editionId\": \"{{editionId}}\",\n        \"publicationDate\": \"{{publicationDate}}\",\n        \"status\": \"{{status}}\",\n        \"recordInUse\": \"{{recordInUse}}\",\n        \"operatorId\": \"{{operatorId}}\",\n        \"publications\": [\n            {\n                \"readingLevel\": {{publication1-readingLevel}},\n                \"status\": \"{{publication1-status}}\",\n                \"editorId\": \"{{publication1-editorId}}\",\n                \"publisherId\": \"{{publication1-publisherId}}\",\n                \"comments\": \"{{publication1-comments}}\",\n                \"articleLinkages\": [\n                    {\n                            \"newsArticleId\": {{publication1-article1-id}},\n                        \"sequence\": {{publication1-article1-sequence}}\n                    },\n                    {\n                            \"newsArticleId\": {{publication1-article2-id}},\n                        \"sequence\": {{publication1-article2-sequence}}\n                    }\n                ]\n            },\n            {\n                \"readingLevel\": {{publication2-readingLevel}},\n                \"status\": \"{{publication2-status}}\",\n                \"editorId\": \"{{publication2-editorId}}\",\n                \"publisherId\": \"{{publication2-publisherId}}\",\n                \"comments\": \"{{publication2-comments}}\",\n                \"articleLinkages\": [\n                    {\n                        \"newsArticleId\": {{publication2-article1-id}},\n                        \"sequence\": {{publication2-article1-sequence}}\n                    },\n                    {\n                            \"newsArticleId\": {{publication2-article2-id}},\n                        \"sequence\": {{publication2-article2-sequence}}\n                    }\n                ]\n            },\n            {\n                \"readingLevel\": {{publication3-readingLevel}},\n                \"status\": \"{{publication3-status}}\",\n                \"editorId\": \"{{publication3-editorId}}\",\n                \"publisherId\": \"{{publication3-publisherId}}\",\n                \"comments\": \"{{publication3-comments}}\",\n                \"articleLinkages\": [\n                    {\n                            \"newsArticleId\": {{publication3-article1-id}},\n                        \"sequence\": {{publication3-article1-sequence}}\n                    },\n                    {\n                            \"newsArticleId\": {{publication3-article2-id}},\n                        \"sequence\": {{publication3-article2-sequence}}\n                    }\n                ]\n            },\n            {\n                \"readingLevel\": {{publication4-readingLevel}},\n                \"status\": \"{{publication4-status}}\",\n                \"editorId\": \"{{publication4-editorId}}\",\n                \"publisherId\": \"{{publication4-publisherId}}\",\n                \"comments\": \"{{publication4-comments}}\",\n                \"articleLinkages\": [\n                    {\n                            \"newsArticleId\": {{publication4-article1-id}},\n                        \"sequence\": {{publication4-article1-sequence}}\n                    },\n                    {\n                            \"newsArticleId\": {{publication4-article2-id}},\n                        \"sequence\": {{publication4-article2-sequence}}\n                    }\n                ]\n            }\n        ]\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

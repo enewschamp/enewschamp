@@ -13,6 +13,8 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotNull;
 
+import org.javers.core.metamodel.annotation.DiffIgnore;
+
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
 import lombok.Data;
@@ -24,15 +26,18 @@ public abstract class BaseEntity implements Serializable{
 
 	@NotNull
 	@Column(name = "OperatorId", length=ForeignKeyColumnLength.UserId)
+	@DiffIgnore
 	protected String operatorId;
 
 	@NotNull
 	@Column(name = "OperationDateTime")
+	@DiffIgnore
 	protected LocalDateTime operationDateTime;
 
 	@NotNull
 	@Column(name = "RecordInUse", length = 1)
 	@Enumerated(EnumType.STRING)
+	@DiffIgnore
 	private RecordInUseType recordInUse;
 	
 	@PrePersist

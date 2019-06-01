@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.enewschamp.publication.app.dto.PublicationArticleLinkageDTO;
 import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
-import com.enewschamp.publication.domain.entity.PublicationArticleLinkageKey;
 import com.enewschamp.publication.domain.service.PublicationArticleLinkageRepository;
 import com.enewschamp.publication.domain.service.PublicationArticleLinkageService;
 
@@ -37,11 +36,8 @@ public class PublicationArticleLinkageHelper {
 		return articleLinkageDTO;
 	}
 
-	public PublicationArticleLinkageDTO get(long publicationId, long articleId) {
-		PublicationArticleLinkageKey publicationArticleLinkageKey = new PublicationArticleLinkageKey();
-		publicationArticleLinkageKey.setNewsArticleId(articleId);
-		publicationArticleLinkageKey.setPublicationId(publicationId);
-		PublicationArticleLinkage articleLinkage = publicationArticleLinkageService.get(publicationArticleLinkageKey);
+	public PublicationArticleLinkageDTO get(long articleLinkageId) {
+		PublicationArticleLinkage articleLinkage = publicationArticleLinkageService.get(articleLinkageId);
 		PublicationArticleLinkageDTO articleDTO = modelMapper.map(articleLinkage, PublicationArticleLinkageDTO.class);
 		return articleDTO;
 	}

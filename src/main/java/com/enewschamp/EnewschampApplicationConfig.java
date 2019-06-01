@@ -14,6 +14,7 @@ import com.enewschamp.domain.common.LocalDateDeserializer;
 import com.enewschamp.domain.common.LocalDateSerializer;
 import com.enewschamp.domain.common.LocalDateTimeDeserializer;
 import com.enewschamp.domain.common.LocalDateTimeSerializer;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -45,10 +46,28 @@ public class EnewschampApplicationConfig {
 		module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
 		module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer());
 		mapper.registerModule(module);
-		
 		mapper.registerModule(new ProblemModule());
+		
+		mapper.setSerializationInclusion(Include.NON_NULL);
 		
 		return mapper;
 	}
     
+//	@Bean(name = "javers")
+//	@ConditionalOnMissingBean
+//	public Javers javers(JaversSqlRepository sqlRepository, PlatformTransactionManager transactionManager) {
+//	    return TransactionalJaversBuilder
+//	            .javers()
+//	            .withTxManager(transactionManager)
+//	            .registerJaversRepository(sqlRepository)
+//	            .withObjectAccessHook(new HibernateUnproxyObjectAccessHook())
+//	            .withNewObjectsSnapshot(false)
+//	            .withPrettyPrint(true)
+//	            .build();
+//	}
+	
+//	@Bean
+//    public AuthorProvider authorProvider() {
+//        return new OperatorIdProvider();
+//    }
 }

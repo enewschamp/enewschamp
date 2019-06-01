@@ -61,8 +61,35 @@ public class NewsArticleGroupPageHandler implements IPageHandler  {
 			throw new RuntimeException(e);
 		}
 		
-		newsArticleGroupHelper.createArticleGroup(articleGroupDTO);
+		articleGroupDTO = newsArticleGroupHelper.createArticleGroup(articleGroupDTO);
+
+		NewsArticleGroupPageData data = new NewsArticleGroupPageData();
+		data.setNewsArticleGroup(articleGroupDTO);
+		pageDTO.setData(data);
 		
+		return pageDTO;
+	}
+
+	@Override
+	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
+		PageDTO pageDTO = new PageDTO();
+
+		Long articleGroupId = null;
+		articleGroupId = pageNavigationContext.getPageRequest().getData().get("newsArticleGroupId").asLong();
+		
+		NewsArticleGroupPageData data = new NewsArticleGroupPageData();
+		
+		data.setGenreLOV(genreService.getLOV());
+		data.setPublisherLOV(userService.getPublisherLOV());
+		data.setAuthorLOV(userService.getAuthorLOV());
+		data.setEditorLOV(userService.getEditorLOV());
+		data.setMonthsLOV(MonthType.getLOV());
+		data.setDaysLOV(WeekDayType.getLOV());
+		data.setEditionsLOV(editionService.getLOV());
+		
+		data.setNewsArticleGroup(newsArticleGroupHelper.getArticleGroup(articleGroupId));
+		
+		pageDTO.setData(data);
 		return pageDTO;
 	}
 

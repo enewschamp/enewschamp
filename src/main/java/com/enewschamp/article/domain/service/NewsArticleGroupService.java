@@ -36,14 +36,14 @@ public class NewsArticleGroupService {
 	
 	public NewsArticleGroup update(NewsArticleGroup newsArticleGroup) {
 		Long articleGroupId = newsArticleGroup.getNewsArticleGroupId();
-		NewsArticleGroup existingEntity = get(articleGroupId);
+		NewsArticleGroup existingEntity = load(articleGroupId);
 		modelMapper.map(newsArticleGroup, existingEntity);
 		return repository.save(existingEntity);
 	}
 	
 	public NewsArticleGroup patch(NewsArticleGroup newsArticleGroup) {
 		Long articleGroupId = newsArticleGroup.getNewsArticleGroupId();
-		NewsArticleGroup existingEntity = get(articleGroupId);
+		NewsArticleGroup existingEntity = load(articleGroupId);
 		modelMapperForPatch.map(newsArticleGroup, existingEntity);
 		return repository.save(existingEntity);
 	}
@@ -52,12 +52,21 @@ public class NewsArticleGroupService {
 		repository.deleteById(articleId);
 	}
 	
-	public NewsArticleGroup get(Long articleGroupId) {
+	public NewsArticleGroup load(Long articleGroupId) {
 		Optional<NewsArticleGroup> existingEntity = repository.findById(articleGroupId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else { 
 			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.ARTICLE_GROUP_NOT_FOUND, "Article group not found!");
+		}
+	}
+	
+	public NewsArticleGroup get(Long articleGroupId) {
+		Optional<NewsArticleGroup> existingEntity = repository.findById(articleGroupId);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
+		} else {
+			return null;
 		}
 	}
 	

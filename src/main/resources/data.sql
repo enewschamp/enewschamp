@@ -1,3 +1,9 @@
+
+delete FROM enewschamp.jv_snapshot where 1 = 1;
+delete FROM enewschamp.jv_commit where 1 = 1;
+delete FROM enewschamp.jv_global_id where 1 = 1;
+delete FROM enewschamp.jv_commit_property where 1 = 1;
+
 INSERT INTO Country (countryId,name_Id,description,isd,currency_id, language,operator_Id,operation_Date_Time,record_In_Use) values (1,'IN','India','11','INR','EN','SYSTEM', CURRENT_DATE, 'Y');
 INSERT INTO Country (countryId,name_Id,description,isd,currency_id, language,Operator_Id,operation_Date_Time,record_In_Use) values (2,'US','United States','12','USD','EN','SYSTEM', CURRENT_DATE, 'Y');
 
@@ -177,3 +183,9 @@ values (54, 'MyProfile','get','MyProfile','MyProfile','MyProfile','Y','N','SYSTE
 
 
 commit;
+=======
+delete FROM enewschamp.jv_snapshot where 1 = 1;
+delete FROM enewschamp.jv_commit where 1 = 1;
+delete FROM enewschamp.jv_global_id where 1 = 1;
+delete FROM enewschamp.jv_commit_property where 1 = 1;
+>>>>>>> 5308d1573cf9afb51cf9aadb9da8674d80c4a668

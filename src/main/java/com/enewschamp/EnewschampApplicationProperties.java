@@ -32,4 +32,10 @@ public class EnewschampApplicationProperties {
 	private Map<String, String> studentDetailsPageText;
 	private int evalDays;
 	private String incompleteFormText;
+	@Data
+	public static class AuditConfig {
+		private boolean includeSnapShots;
+	}
+	
+	private AuditConfig audit;
 }

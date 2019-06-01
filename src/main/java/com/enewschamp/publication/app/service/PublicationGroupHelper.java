@@ -36,8 +36,8 @@ public class PublicationGroupHelper {
 		publicationGroup = publicationGroupService.create(publicationGroup);
 		publicationGroupDTO = modelMapper.map(publicationGroup, PublicationGroupDTO.class);
 		
-		// Delete existing records, if any
-		publicationHelper.deleteByPublicationGroupId(publicationGroup.getPublicationGroupId());
+//		// Delete existing records, if any
+//		publicationHelper.deleteByPublicationGroupId(publicationGroup.getPublicationGroupId());
 		
 		List<PublicationDTO> publicationList = new ArrayList<PublicationDTO>(); 
 		for(PublicationDTO publicationDTO: publications) {

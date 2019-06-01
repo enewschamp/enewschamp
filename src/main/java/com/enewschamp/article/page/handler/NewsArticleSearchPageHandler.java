@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
-import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.article.app.dto.NewsArticleDTO;
 import com.enewschamp.article.domain.service.NewsArticleRepositoryCustom;
 import com.enewschamp.article.page.data.NewsArticleSearchPageData;
@@ -94,17 +93,5 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 		newsArticleSearchPageData.setEditionsLOV(editionService.getLOV());
 		page.setData(newsArticleSearchPageData);
 		return page;
-	}
-
-	@Override
-	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

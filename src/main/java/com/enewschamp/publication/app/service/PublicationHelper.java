@@ -3,6 +3,8 @@ package com.enewschamp.publication.app.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,28 +35,58 @@ public class PublicationHelper {
 	@Autowired
 	private PublicationArticleLinkageHelper publicationLinkageHelper;
 	
+	@Transactional
 	public PublicationDTO createPublication(PublicationDTO publicationDTO) {
 		
 		List<PublicationArticleLinkageDTO> articleLinkages = publicationDTO.getArticleLinkages();
+		for (PublicationArticleLinkageDTO articleLinkageDTO : articleLinkages) {
+			articleLinkageDTO.setRecordInUse(publicationDTO.getRecordInUse());
+			articleLinkageDTO.setOperatorId(publicationDTO.getOperatorId());
+		}
 		
-		Publication publication = modelMapper.map(publicationDTO, Publication.class);
+		Publication publication;
+		
+		// Remove articles which have been deleted on the UI
+		removeDelinkedArticles(publicationDTO.getPublicationId(), articleLinkages);
+		
+		publication = modelMapper.map(publicationDTO, Publication.class);
 		publication = publicationService.create(publication);
 		publicationDTO = modelMapper.map(publication, PublicationDTO.class);
 		
-		// Delete existing linkages
-		publicationLinkageHelper.deleteByPublicationId(publication.getPublicationId());
-		
-		List<PublicationArticleLinkageDTO> articleLinkageList = new ArrayList<PublicationArticleLinkageDTO>(); 
+		articleLinkages = publicationDTO.getArticleLinkages(); 
 		for(PublicationArticleLinkageDTO articleLinkageDTO: articleLinkages) {
-			articleLinkageDTO.getPublicationArticleLinkageKey().setPublicationId(publication.getPublicationId());
-			articleLinkageDTO.setRecordInUse(publication.getRecordInUse());
-			articleLinkageDTO.setOperatorId(publication.getOperatorId());
-			articleLinkageDTO = publicationLinkageHelper.create(articleLinkageDTO);
-			articleLinkageList.add(articleLinkageDTO);
+			articleLinkageDTO.setPublicationId(publicationDTO.getPublicationId());
 		}
-		publicationDTO.setArticleLinkages(articleLinkageList);
 		
 		return publicationDTO;
+	}
+
+	private void removeDelinkedArticles(Long publicationId,
+										List<PublicationArticleLinkageDTO> articleLinkages) {
+		if(publicationId == null || publicationId <= 0) {
+			return;
+		}
+		Publication publication = publicationService.get(publicationId);
+		if(publication == null) {
+			return;
+		}
+//		for (PublicationArticleLinkage existingArticleLinkage : publication.getArticleLinkages()) {
+			if (!isExistingLinkageFound(existingArticleLinkage.getId(), articleLinkages)) {
+				System.out.println("Delete linkage for id: " + existingArticleLinkage.getId());
+				publicationLinkageRepository.deleteById(existingArticleLinkage.getId());
+			}
+		}
+	}
+	
+	private boolean isExistingLinkageFound(long linkageId, List<PublicationArticleLinkageDTO> existingLinkages) {
+		
+		for(PublicationArticleLinkageDTO articleLinkage: existingLinkages) {
+			if(articleLinkage.getId() == linkageId) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	public PublicationDTO getPublication(Long publicationId) {
@@ -71,7 +103,7 @@ public class PublicationHelper {
 		List<PublicationDTO> publicationDTOs = new ArrayList<PublicationDTO>();
 		for(Publication publication: publications) {
 			PublicationDTO publicationDTO = modelMapper.map(publication, PublicationDTO.class);
-			publicationDTO = fillArticleLinkages(publicationDTO);
+			//publicationDTO = fillArticleLinkages(publicationDTO);
 			publicationDTOs.add(publicationDTO);
 		}
 		return publicationDTOs;

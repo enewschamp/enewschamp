@@ -11,7 +11,9 @@ public interface ErrorCodes {
 	public static String PUBLICATION_NOT_FOUND = "PUB_007";
 	public static String PUBLICATION_ART_LINK_NOT_FOUND = "PUB_008";
 	public static String PUBLICATION_GRP_NOT_FOUND = "PUB_009";
-
+	public static String INVALID_ARTICLE_ID = "PUB_010";
+	public static String ARTICLE_ID_CHANGED = "PUB_011";
+	
 	
 	public static String MULTI_LANG_TEXT_NOT_FOUND = "FRW_001";
 	public static String STUDENT_DTLS_NOT_FOUND = "STUDDTLS_001";

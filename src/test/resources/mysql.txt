@@ -1,0 +1,2 @@
+CREATE USER 'mesmayus'@'%' IDENTIFIED BY 'welcome1';
+GRANT ALL PRIVILEGES ON * . * TO 'mesmayus'@'%';

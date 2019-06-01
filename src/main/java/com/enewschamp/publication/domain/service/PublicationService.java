@@ -8,11 +8,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
 import com.enewschamp.publication.domain.entity.Publication;
+import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class PublicationService {
@@ -30,20 +34,26 @@ public class PublicationService {
 	@Autowired
 	AuditService auditService;
 	
+	@Autowired
+	ObjectMapper objectMapper;
+	
+	@Autowired
+	private EnewschampApplicationProperties appConfig;
+	
 	public Publication create(Publication publication) {
 		return repository.save(publication);
 	}
 	
 	public Publication update(Publication publication) {
 		Long publicationId = publication.getPublicationId();
-		Publication existingEntity = get(publicationId);
+		Publication existingEntity = load(publicationId);
 		modelMapper.map(publication, existingEntity);
 		return repository.save(existingEntity);
 	}
 	
 	public Publication patch(Publication publication) {
 		Long publicationId = publication.getPublicationId();
-		Publication existingEntity = get(publicationId);
+		Publication existingEntity = load(publicationId);
 		modelMapperForPatch.map(publication, existingEntity);
 		return repository.save(existingEntity);
 	}
@@ -52,7 +62,7 @@ public class PublicationService {
 		repository.deleteById(publicationId);
 	}
 	
-	public Publication get(Long publicationId) {
+	public Publication load(Long publicationId) {
 		Optional<Publication> existingEntity = repository.findById(publicationId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
@@ -61,10 +71,26 @@ public class PublicationService {
 		}
 	}
 	
+	public Publication get(Long publicationId) {
+		Optional<Publication> existingEntity = repository.findById(publicationId);
+		if(existingEntity.isPresent()) {
+			return existingEntity.get();
+		}
+		return null;
+	}
+	
 	public String getAudit(Long publicationId) {
 		Publication publication = new Publication();
 		publication.setPublicationId(publicationId);
-		return auditService.getEntityAudit(publication);
+		
+		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig).forParentObject(publication);
+		
+		// Fetch article linkage changes
+		publication = load(publicationId);
+		for(PublicationArticleLinkage articleLinkage: publication.getArticleLinkages()) {
+			auditBuilder.forChildObject(articleLinkage);
+		}
+		return auditBuilder.build();
 	}
 	
 }

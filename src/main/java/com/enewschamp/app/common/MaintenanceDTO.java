@@ -3,10 +3,13 @@ package com.enewschamp.app.common;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.enewschamp.app.dto.FieldChangeDTO;
+import com.enewschamp.domain.common.OperationType;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 

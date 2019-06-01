@@ -13,7 +13,13 @@ public class PublicationArticleLinkageDTO extends MaintenanceDTO {
 
 	private static final long serialVersionUID = -2930184093115840741L;
 
-	private PublicationArticleLinkageKeyDTO publicationArticleLinkageKey; 
+
+	private long id;
+	
+	private long publicationId = 0L;
+	
+	@NotNull
+	private long newsArticleId = 0L; 
 	
 	@NotNull
 	private int sequence;
