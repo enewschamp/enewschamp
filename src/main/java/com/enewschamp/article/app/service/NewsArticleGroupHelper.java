@@ -2,16 +2,23 @@ package com.enewschamp.article.app.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.article.app.dto.NewsArticleDTO;
 import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
+import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
 import com.enewschamp.article.domain.service.NewsArticleGroupRepository;
 import com.enewschamp.article.domain.service.NewsArticleGroupService;
+import com.enewschamp.article.domain.service.NewsArticleRepository;
+import com.enewschamp.problem.Fault;
+import com.enewschamp.problem.HttpStatusAdapter;
 
 @Component
 public class NewsArticleGroupHelper {
@@ -28,16 +35,19 @@ public class NewsArticleGroupHelper {
 	@Autowired
 	private NewsArticleHelper newsArticleHelper;
 	
+	@Autowired
+	private NewsArticleRepository newsArticleRepository;
+	
 	public NewsArticleGroupDTO createArticleGroup(NewsArticleGroupDTO articleGroupDTO) {
+		
+		checkForArticleIds(articleGroupDTO);
 		
 		List<NewsArticleDTO> newsArticles = articleGroupDTO.getNewsArticles();
 		
 		NewsArticleGroup articleGroup = modelMapper.map(articleGroupDTO, NewsArticleGroup.class);
+		
 		articleGroup = newsArticleGroupService.create(articleGroup);
 		articleGroupDTO = modelMapper.map(articleGroup, NewsArticleGroupDTO.class);
-		
-		//Delete existing records, if any
-//		newsArticleHelper.deleteByArticleGroupId(articleGroup.getNewsArticleGroupId());
 		
 		List<NewsArticleDTO> articleList = new ArrayList<NewsArticleDTO>(); 
 		for(NewsArticleDTO articleDTO: newsArticles) {
@@ -60,6 +70,31 @@ public class NewsArticleGroupHelper {
 		articleGroupDTO.setNewsArticles(articles);
 		
 		return articleGroupDTO;
+	}
+	
+	private void checkForArticleIds(NewsArticleGroupDTO articleGroupDTO) {
+		
+		NewsArticleGroup articleGroup = newsArticleGroupService.get(articleGroupDTO.getNewsArticleGroupId());
+		if(articleGroup != null) {
+			
+			List<Long> newArticleIds = new ArrayList<Long>();
+			for(NewsArticleDTO newsArticle : articleGroupDTO.getNewsArticles()) {
+				if(newsArticle.getNewsArticleId() <= 0) {
+					throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.INVALID_ARTICLE_ID, "Invalid article id for existing article group");
+				}
+				newArticleIds.add(newsArticle.getNewsArticleId());
+			}
+			
+			List<NewsArticle> existingArticles = newsArticleRepository.findByNewsArticleGroupId(articleGroupDTO.getNewsArticleGroupId());
+			
+			existingArticles.forEach(existingArticle -> {
+				if(!newArticleIds.contains(existingArticle.getNewsArticleId())) {
+					throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.ARTICLE_ID_CHANGED, "Article id cannot change for existing article group");
+				}
+			});
+			
+		}
+		
 	}
 	
 }

@@ -3,7 +3,6 @@ package com.enewschamp.article.domain.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,9 +19,8 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-
-import org.javers.core.metamodel.annotation.TypeName;
 
 import com.enewschamp.article.domain.common.ArticleRatingType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
@@ -35,7 +33,10 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Entity
-@Table(name="NewsArticle")
+@Table(name="NewsArticle",
+	   uniqueConstraints= {
+	    @UniqueConstraint(columnNames = {"newsArticleGroupId", "readingLevel"})
+	})
 public class NewsArticle extends BaseEntity {	
 	
 	private static final long serialVersionUID = 4067120832023693933L;

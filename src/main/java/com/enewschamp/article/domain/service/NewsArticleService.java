@@ -83,12 +83,6 @@ public class NewsArticleService {
 		NewsArticle article = new NewsArticle();
 		article.setNewsArticleId(articleId);
 		
-//		NewsArticle article1 = repository.getOne(articleId);
-//		NewsArticle article2 = repository.getOne(articleId + 1);
-//		
-//		auditService.findDifference(article1, article2);
-		
-		
 		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig).forParentObject(article);
 		
 		// Fetch article quiz changes
@@ -98,7 +92,5 @@ public class NewsArticleService {
 		}
 		return auditBuilder.build();
 	}
-
-	
 	
 }

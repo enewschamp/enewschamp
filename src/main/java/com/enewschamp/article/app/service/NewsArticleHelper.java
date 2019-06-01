@@ -12,7 +12,6 @@ import com.enewschamp.article.app.dto.NewsArticleQuizDTO;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleQuiz;
 import com.enewschamp.article.domain.service.NewsArticleQuizRepository;
-import com.enewschamp.article.domain.service.NewsArticleQuizService;
 import com.enewschamp.article.domain.service.NewsArticleRepository;
 import com.enewschamp.article.domain.service.NewsArticleService;
 
@@ -30,9 +29,6 @@ public class NewsArticleHelper {
 	
 	@Autowired
 	private NewsArticleRepository newsArticleRepository;
-	
-	@Autowired
-	private NewsArticleQuizService newsArticleQuizService;
 	
 	@Autowired
 	private NewsArticleQuizRepository newsArticleQuizRepository;

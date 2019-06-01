@@ -1,12 +1,12 @@
 {
 	"info": {
-		"_postman_id": "3daedb91-167a-442a-8930-cb04d062c710",
-		"name": "eNewsChamp-ArticleAudit",
+		"_postman_id": "408a2448-2674-458e-98b2-5c96ee43aeba",
+		"name": "eNewsChamp-Article Pages",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Create Article Group with 1 article",
+			"name": "Create Article Group with 1 article and 1 quiz",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -305,12 +305,12 @@
 			"response": []
 		},
 		{
-			"name": "Audit for quiz",
+			"name": "Get Article Search Page",
 			"event": [
 				{
-					"listen": "prerequest",
+					"listen": "test",
 					"script": {
-						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
 						"exec": [
 							""
 						],
@@ -318,11 +318,8 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
@@ -332,10 +329,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": ""
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Menu\",\n        \"action\": \"ClickSearchNewsArticle\"\n    }\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/audit/entity/com.enewschamp.article.domain.entity.NewsArticleQuiz",
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -343,9 +340,91 @@
 					"port": "{{port}}",
 					"path": [
 						"{{base-path}}",
-						"audit",
-						"entity",
-						"com.enewschamp.article.domain.entity.NewsArticleQuiz"
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Articles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"SearchNewsArticles\",\n        \"action\": \"ClickGetNewsArticles\",\n        \"pageNumber\": 1,\n        \"pageSize\": 99\n    },\n    \"data\": {\n        \"userId\": \"userId\",\n        \"authorId\": \"authorId\",\n        \"editorId\": \"editorId\",\n        \"publisherId\": \"publisherId\",\n        \"editionId\": \"editionId\",\n        \"genreId\": \"genreId\",\n        \"headline\": \"headline\",\n        \"credits\": \"credits\",\n        \"articleId\": \"articleId\",\n        \"articleGroupId\": \"articleGroupId\",\n        \"readingLevel1\": \"Y\",\n        \"readingLevel2\": \"Y\",\n        \"readingLevel3\": \"Y\",\n        \"readingLevel4\": \"Y\",\n        \"publicationDate\": \"2019-05-18\",\n        \"intendedPubMonth\": \"Jan\",\n        \"articleStatusList\": [\n            \"Unassigned\",\n            \"Assigned\",\n            \"ReadyToPublish\"\n        ]\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Article Group",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							"console.log('Article Id: ', pm.environment.get(\"articleId\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n    \t\"pageName\": \"ListNewsArticles\",\n        \"action\": \"ClickNewsArticleGroupID\"\n    },\n    \"data\": {\n    \t\"newsArticleGroupId\": 1\n    }\n    \n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
 					]
 				}
 			},

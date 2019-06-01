@@ -60,7 +60,11 @@ public class NewsArticleGroupPageHandler implements IPageHandler  {
 			throw new RuntimeException(e);
 		}
 		
-		newsArticleGroupHelper.createArticleGroup(articleGroupDTO);
+		articleGroupDTO = newsArticleGroupHelper.createArticleGroup(articleGroupDTO);
+
+		NewsArticleGroupPageData data = new NewsArticleGroupPageData();
+		data.setNewsArticleGroup(articleGroupDTO);
+		pageDTO.setData(data);
 		
 		return pageDTO;
 	}
