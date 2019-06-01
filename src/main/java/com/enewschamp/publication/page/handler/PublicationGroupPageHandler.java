@@ -55,23 +55,7 @@ public class PublicationGroupPageHandler implements IPageHandler  {
 		
 		return pageDTO;
 	}
-	
-	@Override
-	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
-		PageDTO pageDTO = new PageDTO();
-
-		Long publicationGroupId = pageNavigationContext.getPageRequest().getData().get("publicationGroupId").asLong();
 		
-		PublicationGroupPageData data = new PublicationGroupPageData();
-		
-		data.setPublisherLOV(userService.getPublisherLOV());
-		data.setEditorLOV(userService.getEditorLOV());
-		
-		data.setPublicationGroup(publicationGroupHelper.getPublicationGroup(publicationGroupId));		
-		pageDTO.setData(data);
-		return pageDTO;
-	}
-	
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDTO = new PageDTO();

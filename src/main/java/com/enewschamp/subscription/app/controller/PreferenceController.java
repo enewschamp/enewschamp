@@ -47,19 +47,19 @@ public class PreferenceController {
 		String operation = preferenceDto.getHeader().getOperation();
 		String fromScreen = preferenceDto.getHeader().getPageName();
 		String action= preferenceDto.getHeader().getAction();
-		String editionId = preferenceDto.getHeader().getEditionId();
+		//String editionId = preferenceDto.getHeader().getEditionId();
 		if(!studentControlService.studentExist(studentId) && "subscription".equals(operation) )
 		{
 			
 			//save in master of subscription and student control
-			subscriptionBusiness.workToMaster(studentId, editionId);
-			preferenceBusiness.saveAsMaster(preferenceDto);
-			subscriptionBusiness.deleteFromWork(studentId,editionId);
+			//subscriptionBusiness.workToMaster(studentId, editionId);
+			//preferenceBusiness.saveAsMaster(preferenceDto);
+			//subscriptionBusiness.deleteFromWork(studentId,editionId);
 			
 		}
-		List<UIControlsDTO> uiControls = uiControlService.getByScreenAndAction(fromScreen,action);
-		preferenceDto.setScreenProperties(uiControls);
-		preferenceDto.getHeader().setRequestStatus(RequestStatusType.S);
+		//List<UIControlsDTO> uiControls = uiControlService.getByScreenAndAction(fromScreen,action);
+		//preferenceDto.setScreenProperties(uiControls);
+		//preferenceDto.getHeader().setRequestStatus(RequestStatusType.S);
 		return new ResponseEntity<StudentPreferencePageDTO>(preferenceDto, HttpStatus.CREATED);	
 	}
 	
@@ -70,9 +70,9 @@ public class PreferenceController {
 		String fromScreen = preferenceDto.getHeader().getPageName();
 		String action= preferenceDto.getHeader().getAction();
 		
-		List<UIControlsDTO> uiControls = uiControlService.getByScreenAndAction(fromScreen,action);
-		preferenceDto.setScreenProperties(uiControls);
-		preferenceDto.getHeader().setRequestStatus(RequestStatusType.S);
+		//List<UIControlsDTO> uiControls = uiControlService.getByScreenAndAction(fromScreen,action);
+		//preferenceDto.setScreenProperties(uiControls);
+		//preferenceDto.getHeader().setRequestStatus(RequestStatusType.S);
 		return new ResponseEntity<StudentPreferencePageDTO>(preferenceDto, HttpStatus.CREATED);	
 	}
 }

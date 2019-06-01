@@ -70,7 +70,7 @@ public class PublicationHelper {
 		if(publication == null) {
 			return;
 		}
-//		for (PublicationArticleLinkage existingArticleLinkage : publication.getArticleLinkages()) {
+		for (PublicationArticleLinkage existingArticleLinkage : publication.getArticleLinkages()) {
 			if (!isExistingLinkageFound(existingArticleLinkage.getId(), articleLinkages)) {
 				System.out.println("Delete linkage for id: " + existingArticleLinkage.getId());
 				publicationLinkageRepository.deleteById(existingArticleLinkage.getId());
