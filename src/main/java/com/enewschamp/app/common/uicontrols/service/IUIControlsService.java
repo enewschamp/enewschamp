@@ -9,6 +9,4 @@ public interface IUIControlsService {
 	
 	public List<UIControlsDTO> get(String screenName);
 	public UIControlsDTO create(UIControlsDTO uiDto);
-	public List<UIControlsDTO> getByScreenAndAction(String screenName,String action);
-
 }

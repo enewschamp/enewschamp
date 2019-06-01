@@ -8,6 +8,27 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class StudentControlDTO extends AbstractDTO {
+	private static final long serialVersionUID = 1L;
 
+	private Long studentID= 0L;
+	
+	private String emailID;
+	
+	private String studentDetails;
+	
+	private String studentPhoto;
+	private String schoolDetails;
+	
+	private String subscriptionType;
+	
+	private String preferences;
+	
+	private String emailVerified;
+	
+	private String evalAvailed;
+	
+	private Long boUserComments;
+	
+	private Long boAuthComments;
 	
 }

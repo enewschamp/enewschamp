@@ -12,6 +12,7 @@ import org.zalando.problem.ProblemModule;
 
 import com.enewschamp.domain.common.LocalDateDeserializer;
 import com.enewschamp.domain.common.LocalDateSerializer;
+import com.enewschamp.domain.common.LocalDateTimeDeserializer;
 import com.enewschamp.domain.common.LocalDateTimeSerializer;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +21,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 @Configuration
 public class EnewschampApplicationConfig {
 
-	@Bean(name="modelMapper")
+	@Bean
 	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
 		return modelMapper;
@@ -40,8 +41,9 @@ public class EnewschampApplicationConfig {
 			      .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		SimpleModule module = new SimpleModule();
 		module.addSerializer(LocalDate.class, new LocalDateSerializer());
-		module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
 		module.addDeserializer(LocalDate.class, new LocalDateDeserializer());
+		module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
+		module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer());
 		mapper.registerModule(module);
 		
 		mapper.registerModule(new ProblemModule());

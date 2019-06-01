@@ -19,4 +19,17 @@ public interface ErrorCodes {
 	
 	public static String USER_NOT_FOUND = "USER_001";
 	public static String USER_ROLE_NOT_FOUND = "USER_002";
+	
+	public static String PAGE_NOT_FOUND= "PAGE_001";
+	
+	public static String COUNTRY_NOT_FOUND ="COU_001";
+	public static String SCHOOL_PRICING_NOT_FOUND ="SPOU_001";
+	public static String STUDENT_SHARE_ACHIEVEMENTS_NOT_FOUND ="SSANF_001";
+
+	public static String INDIVIDUAL_PRICING_NOT_FOUND ="IPOU_001";
+
+	public static String STATE_NOT_FOUND ="STATE_001";
+	public static String CITY_NOT_FOUND ="CITY_001";
+	public static String SCHOOL_NOT_FOUND ="CITY_001";
+	public static String SREVER_ERROR="SERVER_ERROR";
 }

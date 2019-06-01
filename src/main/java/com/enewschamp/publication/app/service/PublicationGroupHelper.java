@@ -36,11 +36,16 @@ public class PublicationGroupHelper {
 		publicationGroup = publicationGroupService.create(publicationGroup);
 		publicationGroupDTO = modelMapper.map(publicationGroup, PublicationGroupDTO.class);
 		
+		// Delete existing records, if any
+		publicationHelper.deleteByPublicationGroupId(publicationGroup.getPublicationGroupId());
+		
 		List<PublicationDTO> publicationList = new ArrayList<PublicationDTO>(); 
 		for(PublicationDTO publicationDTO: publications) {
 			publicationDTO.setPublicationGroupId(publicationGroup.getPublicationGroupId());
 			publicationDTO.setRecordInUse(publicationGroup.getRecordInUse());
 			publicationDTO.setOperatorId(publicationGroup.getOperatorId());
+			publicationDTO.setEditionId(publicationGroup.getEditionId());
+			publicationDTO.setPublishDate(publicationGroup.getPublicationDate());
 			publicationDTO = publicationHelper.createPublication(publicationDTO);
 			publicationList.add(publicationDTO);
 		}

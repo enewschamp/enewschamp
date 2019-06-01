@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
-import lombok.Delegate;
 import lombok.EqualsAndHashCode;
 
 @Data

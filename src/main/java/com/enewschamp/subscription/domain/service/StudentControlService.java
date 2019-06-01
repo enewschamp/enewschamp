@@ -67,6 +67,12 @@ public class StudentControlService {
 			return false;
 			}
 	}
+	public StudentControl getStudentByEmail(String emailId)
+	{
+		StudentControl existingEntity = repository.searchByEmail(emailId);
+		return existingEntity;
+		
+	}
 	public boolean studentExist(Long studentId)
 	{
 		return repository.existsById(studentId);

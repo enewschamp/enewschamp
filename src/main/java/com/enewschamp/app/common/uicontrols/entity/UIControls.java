@@ -10,7 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 import com.enewschamp.domain.common.BaseEntity;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -39,8 +41,8 @@ public class UIControls extends BaseEntity{
 		private String controlName;
 		
 		@NotNull
-		@Column(name = "contrrolType",length=50)
-		private String contrrolType;
+		@Column(name = "controlType",length=50)
+		private String controlType;
 		
 		@NotNull
 		@Column(name = "DataSize", length=4)
@@ -53,6 +55,13 @@ public class UIControls extends BaseEntity{
 		@NotNull
 		@Column(name="creationDateTime")
 		private Date creationTime;
-
+		
+		@NotNull
+		@Column(name="visible")
+		private Boolean visible;
+		
+		@NotNull
+		@Column(name="enable")
+		private Boolean enable;
 		
 }

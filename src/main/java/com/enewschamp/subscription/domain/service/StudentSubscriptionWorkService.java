@@ -12,7 +12,6 @@ import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
-import com.enewschamp.subscription.app.dto.StudentSubscriptionWorkDTO;
 import com.enewschamp.subscription.domain.entity.StudentSubscriptionWork;
 
 @Service
@@ -36,8 +35,6 @@ public class StudentSubscriptionWorkService  {
 	@Autowired
 	AuditService auditService;
 	
-	@Autowired
-	StudentControlService studentControlService;
 	
 	public StudentSubscriptionWork create(StudentSubscriptionWork StudentSubscriptionWork) {
 		return repository.save(StudentSubscriptionWork);
@@ -63,28 +60,14 @@ public class StudentSubscriptionWorkService  {
 	}
 
 	public StudentSubscriptionWork get(Long studentId, String editionId) {
-		Optional<StudentSubscriptionWork> existingEntity = repository.getByStudentAndEdition(studentId,editionId);
+		Optional<StudentSubscriptionWork> existingEntity = repository.getStudentByIdAndEdition(studentId, editionId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.STUDENT_DTLS_NOT_FOUND, "Publication not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.STUDENT_DTLS_NOT_FOUND, "Student not found!");
 		}
 	}
 	
-	public void delete(Long StudentId, String editionId) {
-		Optional<StudentSubscriptionWork> existingEntity = repository.getByStudentAndEdition(StudentId,editionId);
-		StudentSubscriptionWork studentSubscriptionWork  = existingEntity.get();
-		
-		 repository.delete(studentSubscriptionWork);
-	}
-
-	public StudentSubscriptionWorkDTO ifExist(String eMailId)
-	{
-		Optional<StudentSubscriptionWork> Dto=null ;// studentControlService.g
-		//		repository.getStudentByEmail(eMailId);
-		StudentSubscriptionWorkDTO workDto = modelMapper.map(Dto, StudentSubscriptionWorkDTO.class);
-		return workDto;
-	}
 	public String getAudit(Long studentId) {
 		StudentSubscriptionWork StudentDetails = new StudentSubscriptionWork();
 		StudentDetails.setStudentID(studentId);

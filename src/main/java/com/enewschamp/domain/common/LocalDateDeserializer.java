@@ -22,15 +22,7 @@ public class LocalDateDeserializer extends StdDeserializer<LocalDate> {
     @Override
     public LocalDate deserialize(JsonParser jp, DeserializationContext ctxt) 
       throws IOException, JsonProcessingException {
-    	
         JsonNode node = jp.getCodec().readTree(jp);
-//        
-//        int id = (Integer) ((IntNode) node.get("id")).numberValue();
-//        String itemName = node.get("itemName").asText();
-//        int userId = (Integer) ((IntNode) node.get("createdBy")).numberValue();
-        
-        
- 
-        return LocalDate.parse("2018-11-12");
+        return LocalDate.parse(node.textValue());
     }
-}
+} 

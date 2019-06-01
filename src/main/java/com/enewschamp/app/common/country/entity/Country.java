@@ -1,0 +1,60 @@
+package com.enewschamp.app.common.country.entity;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import com.enewschamp.app.common.uicontrols.entity.UIControls;
+import com.enewschamp.domain.common.BaseEntity;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper=false)
+@Entity
+@Table(name="Country")
+public class Country extends BaseEntity{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "country_id_generator")
+	@SequenceGenerator(name="country_id_generator", sequenceName = "countryid_seq", allocationSize=1)
+	@Column(name = "COUNTRYID", updatable = false, nullable = false)
+	private Long countryId;
+	
+	@NotNull
+	@Column(name = "nameId", length=10)
+	private String nameId;
+
+	@NotNull
+	@Column(name = "description", length=50)
+	private String description;
+	
+	@NotNull
+	@Column(name = "isd", length=4)
+	private int isd;
+	
+	@NotNull
+	@Column(name = "currencyId", length=3)
+	private String currencyId;
+	
+	@NotNull
+	@Column(name = "language", length=3)
+	private String language;
+	
+	
+	
+	
+}

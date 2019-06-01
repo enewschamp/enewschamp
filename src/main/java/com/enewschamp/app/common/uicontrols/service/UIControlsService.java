@@ -32,16 +32,6 @@ public class UIControlsService implements IUIControlsService{
 	}
 
 	@Override
-	public List<UIControlsDTO> getByScreenAndAction(String screenName,String action) {
-		
-		List<UIControls> existingEntity = repository.findByScreenName(screenName);
-		java.lang.reflect.Type listType = new TypeToken<List<UIControlsDTO>>(){}.getType();
-
-		List<UIControlsDTO> uicontrolList = modelMapper.map(existingEntity,listType);
-	
-		return uicontrolList;
-	}
-	@Override
 	public UIControlsDTO create(UIControlsDTO uiDto) {
 		UIControls entity  = modelMapper.map(uiDto, UIControls.class);
 		UIControls uicontrols = repository.save(entity);

@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
-import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.Fault;

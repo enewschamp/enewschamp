@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enewschamp.article.app.service.NewsArticleGroupHelper;
 import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.domain.service.PublicationService;

@@ -1,6 +1,7 @@
 package com.enewschamp.subscription.domain.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,17 +31,15 @@ public class StudentSubscriptionWork extends BaseEntity{
 	
 	@NotNull
 	@Column(name = "SubscriptionType",length=1)
-	private String subscriptionType;
+	private String subscriptionSelected;
 	
 	@NotNull
 	@Column(name = "StartDate")
-	private Date startDate;
+	private LocalDate startDate;
 	
-	@NotNull
 	@Column(name = "EndDate")
-	private Date endDate;
+	private LocalDate endDate;
 	
-	@NotNull
 	@Column(name = "AutoRenewal",length=1)
 	private String autoRenewal;
 	

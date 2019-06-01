@@ -83,4 +83,10 @@ public class StudentControlWorkService {
 		StudentControlWork.setStudentID(studentId);
 		return auditService.getEntityAudit(StudentControlWork);
 	}
+	public StudentControlWork getStudentByEmail(String emailId)
+	{
+		StudentControlWork existingEntity = repository.searchByEmail(emailId);
+		return existingEntity;
+	}
+	
 }

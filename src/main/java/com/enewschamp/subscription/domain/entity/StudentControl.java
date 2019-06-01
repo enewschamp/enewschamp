@@ -26,49 +26,35 @@ public class StudentControl extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "StudentControlWork_id_generator")
-	@SequenceGenerator(name="StudentControlWork_id_generator", sequenceName = "StudentControlWork_seq", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "StudentControl_id_generator")
+	@SequenceGenerator(name="StudentControl_id_generator", sequenceName = "StudentControl_seq", allocationSize=1)
 	@Column(name = "StudentID", length=10)
 	private Long studentID= 0L;
 	
 	@NotNull
 	@Column(name = "eMail", length=99)
-	private String eMail;
+	private String emailID;
+	
 	
 	@Column(name = "StudentDetails", length=1)
 	private String studentDetails;
-
-	@Column(name = "StudentDetailsW", length=1)
-	private String studentDetailsW;
-
+	
 	@Column(name = "StudentPhoto", length=1)
 	private String studentPhoto;
-
-	@Column(name = "StudentPhotoW", length=1)
-	private String studentPhotoW;
-
 	@Column(name = "SchoolDetails", length=1)
 	private String schoolDetails;
 	
-	@Column(name = "SchoolDetailsW", length=1)
-	private String schoolDetailsW;
-	
 	@Column(name = "SubscriptionType", length=1)
 	private String subscriptionType;
-	
-	@Column(name = "SubscriptionTypeW", length=1)
-	private String subscriptionTypeW;
 	
 	@Column(name = "Preferences", length=1)
 	private String preferences;
 	
 	@Column(name = "eMailVerified", length=1)
-	private String eMailVerified;
+	private String emailVerified;
 	
 	@Column(name = "EvalAvailed", length=1)
 	private String evalAvailed;
-	
-	
 	
 	@Column(name = "BOUserComments", length=999)
 	private Long boUserComments;

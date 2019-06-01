@@ -26,4 +26,10 @@ public class EnewschampApplicationProperties {
 	private Map<String, String> pageHandlerConfig;
 	
 	private Map<String, Map<String, String>> pageNavigationConfig;
+	
+	
+	private Map<String, String> subscriptionText;
+	private Map<String, String> studentDetailsPageText;
+	private int evalDays;
+	private String incompleteFormText;
 }

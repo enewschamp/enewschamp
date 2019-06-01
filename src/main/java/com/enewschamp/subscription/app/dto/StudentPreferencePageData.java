@@ -18,12 +18,7 @@ public class StudentPreferencePageData  extends PageData {
 	
 	private String readingLevel;
 	
-	private String newsPDFoverEmail;
-	
-	private String scoresOverEmail;
-	
-	private String notificationsOverEmail;
-	
-	private String emailForComms;
+	private StudentPreferenceCommPageData communications;
+	private String incompleteFormText;
 
 }

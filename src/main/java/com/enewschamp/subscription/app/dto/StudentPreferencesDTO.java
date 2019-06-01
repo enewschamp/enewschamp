@@ -1,7 +1,5 @@
 package com.enewschamp.subscription.app.dto;
 
-import java.sql.Timestamp;
-
 import com.enewschamp.app.common.AbstractDTO;
 
 import lombok.Data;
@@ -20,13 +18,6 @@ public class StudentPreferencesDTO extends AbstractDTO{
 	
 	private String readingLevel;
 	
-	private String newsPDFoverEmail;
-	
-	private String scoresOverEmail;
-	
-	private String notificationsOverEmail;
-	
-	private String emailForComms;
-	
+	private StudentPreferencesCommDTO communications;
 
 }

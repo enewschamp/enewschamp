@@ -8,6 +8,6 @@ import com.enewschamp.subscription.domain.entity.StudentControl;
 
 public interface StudentControlRepository extends JpaRepository<StudentControl, Long>{
 
-	@Query("Select s from StudentControl s where s.eMail = :eMail")
-	public StudentControl searchByEmail(@Param("eMail")String eMail);
+	@Query("Select s from StudentControl s where s.emailID = :emailID")
+	public StudentControl searchByEmail(@Param("emailID")String eMail);
 }

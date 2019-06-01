@@ -1,6 +1,6 @@
 package com.enewschamp.subscription.app.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.enewschamp.app.common.AbstractDTO;
 
@@ -17,15 +17,16 @@ public class StudentDetailsDTO extends AbstractDTO{
 	private static final long serialVersionUID = 1L;
 
 	private Long studentID= 0L;
-	
+	private String emailId;
+
 	private String name;
 	private String surname;
 	
 	private String otherName;
 	private String gender;
-	private Date dob;
+	private LocalDate dob;
 	
-	private Long mobileNumber;
+	private String mobileNumber;
 	
 	private String photo;
 	

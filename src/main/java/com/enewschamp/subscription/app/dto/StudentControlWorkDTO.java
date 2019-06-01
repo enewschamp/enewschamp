@@ -17,7 +17,7 @@ public class StudentControlWorkDTO extends AbstractDTO{
 
 	private Long studentID= 0L;
 	
-	private String eMail;
+	private String emailID;
 	
 	private String studentDetails;
 	
@@ -28,7 +28,7 @@ public class StudentControlWorkDTO extends AbstractDTO{
 	
 	private String preferences;
 	
-	private String eMailVerified;
+	private String emailVerified;
 	
 	private String evalAvailed;
 	

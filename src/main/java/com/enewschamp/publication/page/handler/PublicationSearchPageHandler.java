@@ -12,11 +12,17 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
+import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.publication.app.dto.PublicationDTO;
+import com.enewschamp.publication.domain.service.EditionService;
+import com.enewschamp.publication.domain.service.GenreService;
 import com.enewschamp.publication.domain.service.PublicationRepositoryCustom;
+import com.enewschamp.publication.page.data.PublicationSearchPageData;
 import com.enewschamp.publication.page.data.PublicationSearchRequest;
 import com.enewschamp.publication.page.data.PublicationSearchResultData;
+import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +38,15 @@ public class PublicationSearchPageHandler implements IPageHandler  {
 	
 	@Autowired
 	ObjectMapper objectMapper;
+	
+	@Autowired
+	GenreService genreService;
+
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	EditionService editionService;
 	
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
@@ -62,5 +77,29 @@ public class PublicationSearchPageHandler implements IPageHandler  {
 		
 		searchResult.setPublications(pageResult.getContent());
 		return pageDTO;
+	}
+	
+	@Override
+	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
+		PageDTO page = new PageDTO();
+		PublicationSearchPageData publicationSearchPageData = new PublicationSearchPageData();
+		publicationSearchPageData.setPublisherLOV(userService.getPublisherLOV());
+		publicationSearchPageData.setAuthorLOV(userService.getAuthorLOV());
+		publicationSearchPageData.setEditorLOV(userService.getEditorLOV());
+		publicationSearchPageData.setEditionsLOV(editionService.getLOV());
+		page.setData(publicationSearchPageData);
+		return page;
+	}
+
+	@Override
+	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

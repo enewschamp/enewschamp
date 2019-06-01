@@ -29,7 +29,7 @@ public class StudentSubscriptionWorkDTO extends AbstractDTO{
 	
 	@NotNull
 	@Size(max=1)
-	private String subscriptionType;
+	private String subscriptionSelected;
 	
 	@NotNull
 	private LocalDate startDate;

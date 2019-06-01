@@ -56,7 +56,7 @@ public class StudentDetailsWorkService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.STUDENT_DTLS_NOT_FOUND, "Publication not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.STUDENT_DTLS_NOT_FOUND, "student not found!");
 		}
 	}
 	

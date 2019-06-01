@@ -8,6 +8,6 @@ import com.enewschamp.subscription.domain.entity.StudentControlWork;
 
 public interface StudentControlWorkRepository extends JpaRepository<StudentControlWork, Long>{
 
-	@Query("Select c from StudentControlWork c where c.eMail = :eMail")
-	public StudentControlWork searchByEmail(@Param("eMail")String eMail);
+	@Query("Select c from StudentControlWork c where c.emailID = :emailID")
+	public StudentControlWork searchByEmail(@Param("emailID")String eMail);
 }

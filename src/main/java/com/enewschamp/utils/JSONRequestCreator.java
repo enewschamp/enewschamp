@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
-import com.enewschamp.article.page.data.NewsArticleSearchRequest;
-import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

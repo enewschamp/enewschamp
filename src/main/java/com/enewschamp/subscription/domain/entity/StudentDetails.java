@@ -1,6 +1,6 @@
 package com.enewschamp.subscription.domain.entity;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +19,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 @Table(name="StudentDetails")
 public class StudentDetails extends BaseEntity{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@NotNull
@@ -39,11 +44,11 @@ public class StudentDetails extends BaseEntity{
 	private String gender;
 	@NotNull
 	@Column(name = "DoB")
-	private Date dob;
+	private LocalDate dob;
 	
 	@NotNull
-	@Column(name = "MobileNumer", length=12)
-	private Long mobileNumber;
+	@Column(name = "MobileNumer", length=15)
+	private String mobileNumber;
 	
 	@Lob
 	@Column(name = "Photo")

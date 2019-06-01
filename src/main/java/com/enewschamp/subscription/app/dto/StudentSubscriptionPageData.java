@@ -17,11 +17,22 @@ public class StudentSubscriptionPageData extends PageData{
 	private static final long serialVersionUID = 1L;
 
 	@NotNull
-	private String emailID;
+	private String eMailID;
 	
 	@NotNull
 	private String terms;
 	
 	@NotNull
 	private String subscriptionSelected;
+	
+	@NotNull
+	private String eMailId;
+	@NotNull
+	private String emailID;
+	private String incompeleteFormText;
+	private String whatYouGetTextStandard;
+	private String whatYouGetTextPremium;
+	private String TermsOfUseText;
+	private String PrivacyPolicy;
+	
 }

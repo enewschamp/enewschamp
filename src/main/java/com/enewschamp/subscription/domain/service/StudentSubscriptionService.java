@@ -64,7 +64,7 @@ public class StudentSubscriptionService  {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.STUDENT_DTLS_NOT_FOUND, "Publication not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.STUDENT_DTLS_NOT_FOUND, "Student not found!");
 		}
 	}
 	
