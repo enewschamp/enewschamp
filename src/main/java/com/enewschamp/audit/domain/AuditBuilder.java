@@ -49,8 +49,6 @@ public class AuditBuilder  {
 	
 	private List<Object> childObjects;
 	
-	private boolean includeCollectionPropertyInSnapshot;
-	
 	private Map<String, String> childCollectionProperties;
 	
 	private List<CommitId> processedCommitIds;
@@ -83,11 +81,6 @@ public class AuditBuilder  {
 		return this;
 	}
 	
-	public AuditBuilder includeChildPropertiesInSnapshot(boolean includeCollectionPropertyInSnapshot) {
-		this.includeCollectionPropertyInSnapshot = includeCollectionPropertyInSnapshot;
-		return this;
-	}
-
 	private void deriveCollectionProperties(Class objectClass) {
 		Field[] fields = objectClass.getDeclaredFields();
 
@@ -178,21 +171,24 @@ public class AuditBuilder  {
 			if(change instanceof NewObject) {
 				
 				NewObject newObjectChange = (NewObject) change;
+				CommitMetadata commitMetadata = newObjectChange.getCommitMetadata().get();
 				InstanceId instanceId = (InstanceId)newObjectChange.getAffectedGlobalId();
 				newObjectAuditDTO.addObjectProperties(instanceId, getIdPropertyName(instanceId.getTypeName()));
-				newObjectAuditDTO.addCommitInfo(newObjectChange.getCommitMetadata().get());
+				newObjectAuditDTO.addCommitInfo(commitMetadata);
 				newObjectAuditDTO.setAction(OperationType.Add);
 				
-				System.out.println("Processing audit for object: " + instanceId.getTypeName() + " Commit Id: " + newObjectChange.getCommitMetadata().get().getId());
+				System.out.println("Processing audit for object: " + instanceId.getTypeName() + " Commit Id: " + commitMetadata.getId());
 
 				AuditQueryCriteria snapshotQueryCriteria = new AuditQueryCriteria();
-				snapshotQueryCriteria.setCommitId(newObjectChange.getCommitMetadata().get().getId());
+				snapshotQueryCriteria.setCommitId(commitMetadata.getId());
 				snapshotQueryCriteria.setSnapshotType(SnapshotType.INITIAL);
 				snapshotQueryCriteria.setVersion(Long.valueOf(1));
 				CdoSnapshot snapshot = getEntitySnapshot(instanceId, snapshotQueryCriteria);
 				newObjectAuditDTO.setSnapshot(buildSnapShotNode(snapshot));
 				
-				getChildAuditForSameCommitId(newObjectChange.getCommitMetadata().get(), newObjectAuditDTO, true);
+				getChildAuditForSameCommitId(commitMetadata, newObjectAuditDTO, true);
+				
+				processedCommitIds.add(commitMetadata.getId());
 			}
 		});
 		
@@ -337,39 +333,15 @@ public class AuditBuilder  {
 		}
 	}
 
-	private void getChildAuditForSameCommitId_old(CommitMetadata commitMetadata, AuditDTO auditDTO, boolean isForNewObject) {
-		for(Object childObject: childObjects) {
-			AuditQueryCriteria queryCriteria = new AuditQueryCriteria();
-			queryCriteria.setCommitId(commitMetadata.getId());
-			Changes changes = auditService.getEntityChangesByCriteria(childObject, queryCriteria);
-			changes.groupByObject().forEach(byChildObject -> {
-				byChildObject.get().forEach(change -> {
-					if (change instanceof ValueChange && !isForNewObject) {
-						handleItemModification(commitMetadata, auditDTO, 
-											   getChildCollectionPropertyName(change.getAffectedGlobalId().getTypeName()), 
-											   (InstanceId)change.getAffectedGlobalId(), 
-											   (ValueChange) change);
-					}
-					
-					if (change instanceof NewObject && isForNewObject) {
-						handleItemAddition(commitMetadata, auditDTO, 
-										   getChildCollectionPropertyName(change.getAffectedGlobalId().getTypeName()), 
-										   (InstanceId) change.getAffectedGlobalId());	
-					}
-				});
-			});
-		}
-	}
-	
-	private void buildChildChangeAuditDTO(CommitMetadata commitMetadata, AuditDTO childAuditDTO, ChangesByObject byObject,
-			String typeName) {
+	private void buildChildChangeAuditDTO(CommitMetadata commitMetadata, 
+										  AuditDTO childAuditDTO, 
+										  ChangesByObject byObject,
+										  String typeName) {
 		byObject.get().forEach(change -> {
-			// Value change
 			if (change instanceof ValueChange) {
 				handleValueChange(childAuditDTO, (ValueChange) change);
 			}
 		});
-		
 	}
 
 	private void handleValueChange(AuditDTO auditDTO, ValueChange valueChange) {
@@ -524,19 +496,6 @@ public class AuditBuilder  {
 			});
 			auditMap.remove("additionalProperties");
 		}
-	}
-	
-	private Map<CommitMetadata, List<ChangesByCommit>> groupByCommitId(List<ChangesByCommit> allChangesByCommit) {
-		Map<CommitMetadata, List<ChangesByCommit>> commitIdWiseChanges = new HashMap<CommitMetadata, List<ChangesByCommit>>();
-		
-		for(ChangesByCommit changesByCommit: allChangesByCommit) {
-			CommitMetadata commitMetadata = changesByCommit.getCommit();
-			if(commitIdWiseChanges.get(commitMetadata) == null) {
-				commitIdWiseChanges.put(commitMetadata, new ArrayList<ChangesByCommit>());
-			}
-			commitIdWiseChanges.get(commitMetadata).add(changesByCommit);
-		}
-		return commitIdWiseChanges;
 	}
 	
 	private CdoSnapshot getEntitySnapshot(InstanceId instanceId, AuditQueryCriteria snapshotQuery) {
