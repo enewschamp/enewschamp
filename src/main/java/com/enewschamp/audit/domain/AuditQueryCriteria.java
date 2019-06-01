@@ -17,6 +17,8 @@ public class AuditQueryCriteria extends AbstractDTO {
 	private CommitId commitId;
 	private SnapshotType snapshotType;
 	private Long version;
+	private boolean withNewObjectChanges;
+	private String objectName;
 
 	
 }

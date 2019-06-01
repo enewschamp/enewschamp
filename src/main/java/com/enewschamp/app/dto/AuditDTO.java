@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.javers.core.commit.CommitId;
+import org.javers.core.commit.CommitMetadata;
 import org.javers.core.metamodel.object.InstanceId;
 
 import com.enewschamp.app.common.AbstractDTO;
@@ -91,6 +93,12 @@ public class AuditDTO extends AbstractDTO {
 		this.objectId = instance.getCdoId().toString();
 		addAdditionalProperty(idPropertyName, this.objectId);
 		
+	}
+	
+	public void addCommitInfo(CommitMetadata commitMetadata) {
+		this.operatorId = commitMetadata.getAuthor();
+		this.operationDateTime = commitMetadata.getCommitDate();
+		this.commitId = commitMetadata.getId().valueAsNumber();
 	}
 	
 }

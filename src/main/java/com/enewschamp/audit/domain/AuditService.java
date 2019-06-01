@@ -54,13 +54,31 @@ public class AuditService {
 	}
 	
 	public Changes getEntityChangesByCriteria(Object entityInstance, AuditQueryCriteria queryCriteria) {
-		QueryBuilder jqlQuery = QueryBuilder.byInstance(entityInstance).withChildValueObjects(true);
-		if(queryCriteria.getCommitId() != null) {
-			jqlQuery.withCommitId(queryCriteria.getCommitId());
+		QueryBuilder jqlQuery = null;
+		if(entityInstance != null) {
+			jqlQuery = QueryBuilder.byInstance(entityInstance).withChildValueObjects(true);
+		} else {
+			Class clazz = null;
+			try {
+				clazz = Class.forName(queryCriteria.getObjectName());
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			}
+			jqlQuery = QueryBuilder.byClass(clazz).withChildValueObjects(true);
 		}
-		if(queryCriteria.getSnapshotType() != null) {
-			jqlQuery.withSnapshotType(queryCriteria.getSnapshotType());
+		if(queryCriteria != null) {
+			if(queryCriteria.getCommitId() != null) {
+				jqlQuery.withCommitId(queryCriteria.getCommitId());
+			}
+			if(queryCriteria.getSnapshotType() != null) {
+				jqlQuery.withSnapshotType(queryCriteria.getSnapshotType());
+			}
+			jqlQuery.withNewObjectChanges(queryCriteria.isWithNewObjectChanges());
+			if(queryCriteria.getVersion() != null) {
+				jqlQuery.withVersion(queryCriteria.getVersion());
+			}
 		}
+		
 		return javers.findChanges(jqlQuery.build());
 	}
 

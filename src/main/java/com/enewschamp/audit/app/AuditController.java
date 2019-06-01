@@ -35,7 +35,7 @@ public class AuditController {
     	NewsArticle article = new NewsArticle();
     	article.setNewsArticleId(articleId);
     	
-        QueryBuilder jqlQuery = QueryBuilder.byInstance(article).withChildValueObjects();
+        QueryBuilder jqlQuery = QueryBuilder.byInstance(article).withChildValueObjects().withNewObjectChanges();
         return queryChanges(jqlQuery);
     }
     
