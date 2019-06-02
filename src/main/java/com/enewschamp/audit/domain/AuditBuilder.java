@@ -502,7 +502,7 @@ public class AuditBuilder  {
 	}
 	
 	private void printDebugLine(String line) {
-		printDebugLine(line);
+		System.out.println(line);
 	}
 	
 }

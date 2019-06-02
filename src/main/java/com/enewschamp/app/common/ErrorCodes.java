@@ -13,6 +13,7 @@ public interface ErrorCodes {
 	public static String PUBLICATION_GRP_NOT_FOUND = "PUB_009";
 	public static String INVALID_ARTICLE_ID = "PUB_010";
 	public static String ARTICLE_ID_CHANGED = "PUB_011";
+	public static String PUBLICATION_DATE_SHOULD_BE_FUTURE = "PUB_012";
 	
 	
 	public static String MULTI_LANG_TEXT_NOT_FOUND = "FRW_001";
@@ -34,4 +35,8 @@ public interface ErrorCodes {
 	public static String CITY_NOT_FOUND ="CITY_001";
 	public static String SCHOOL_NOT_FOUND ="SPOU_002";
 	public static String SREVER_ERROR="SERVER_ERROR";
+	
+	public static String BUS_POLICY_FAILED="BUS_POLICY_FAILURE";
+	
+	
 }

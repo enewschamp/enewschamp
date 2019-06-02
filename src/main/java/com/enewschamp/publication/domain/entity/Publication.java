@@ -24,6 +24,7 @@ import javax.validation.constraints.NotNull;
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
+import com.enewschamp.publication.domain.service.PublicationBusinessPolicy;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -81,6 +82,7 @@ public class Publication extends BaseEntity {
 	@PrePersist
 	@PreUpdate
 	public void prePersist() {
+		new PublicationBusinessPolicy(this).validateAndThrow();
 		if(operationDateTime == null) {
 			operationDateTime = LocalDateTime.now();
 		}

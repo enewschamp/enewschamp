@@ -84,11 +84,21 @@ public class ExceptionHandling implements ProblemHandling, ApplicationContextAwa
 		
 		if( entity.getBody() != null && entity.getBody() instanceof Fault) {
 			Fault fault = (Fault) entity.getBody();
-			String errorMessage = errorMessagesConfig.getErrorMessagesConfig().get(fault.getTitle());
-			fault.setErrorMessage(errorMessage);
+			setErrorMessages(fault);
 		}
         return entity;
     }
+	
+	private void setErrorMessages(Fault fault) {
+		if(fault.getErrorCode() != null) {
+			fault.setErrorMessage(errorMessagesConfig.getErrorMessagesConfig().get(fault.getTitle()));
+		}
+		if(fault.getValidationErrors() != null) {
+			fault.getValidationErrors().forEach(validationError -> {
+				validationError.setErrorMessage(errorMessagesConfig.getErrorMessagesConfig().get(validationError.getErrorCode()));
+			});
+		}
+	}
 
 	
 }

@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.common.ErrorCodes;
@@ -17,7 +16,6 @@ import com.enewschamp.article.domain.service.NewsArticleGroupRepository;
 import com.enewschamp.article.domain.service.NewsArticleGroupService;
 import com.enewschamp.article.domain.service.NewsArticleRepository;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.problem.HttpStatusAdapter;
 
 @Component
 public class NewsArticleGroupHelper {

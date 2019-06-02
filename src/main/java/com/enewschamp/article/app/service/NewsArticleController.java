@@ -83,7 +83,7 @@ public class NewsArticleController {
 			String audit = newsArticleService.getAudit(articleId);
 			response = new ResponseEntity<String>(audit, HttpStatus.OK);
 		}catch(BusinessException e) {
-			Fault fault = new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e.getErrorCode()); 
+			Fault fault = new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e); 
 			throw fault;
 		}
 		return response;

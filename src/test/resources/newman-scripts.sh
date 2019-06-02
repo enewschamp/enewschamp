@@ -12,7 +12,7 @@ newman run collections/eNewsChamp-Genre.postman_collection.json  -e eNewsChamp.p
 newman run collections/eNewsChamp-Edition.postman_collection.json  -e eNewsChamp.postman_environment.json -d data/Editions.json
 
 # Create articles
-newman run collections/eNewsChamp-Article Data Generation.postman_collection.json  -e eNewsChamp.postman_environment.json -d data/Articles.json
+newman run collections/eNewsChamp-Article-Data-Generation.postman_collection.json  -e eNewsChamp.postman_environment.json -d data/Articles.json
 
 # Create publications
-newman run collections/eNewsChamp-Publication Data Generation.postman_collection.json  -e eNewsChamp.postman_environment.json -d data/Publications.json
+newman run collections/eNewsChamp-Publication-Data-Generation.postman_collection.json  -e eNewsChamp.postman_environment.json -d data/Publications.json
