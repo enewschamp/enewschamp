@@ -63,6 +63,9 @@ public final class Fault extends ThrowableProblem {
 	
 	public void setErrorMessage(String errorMessage) {
 		this.title = errorMessage;
+		if(header != null) {
+			header.setFailureMessage(errorMessage);
+		}
 	}
 	
 }
