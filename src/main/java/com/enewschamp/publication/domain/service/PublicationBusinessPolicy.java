@@ -11,7 +11,6 @@ public class PublicationBusinessPolicy extends AbstractBusinessPolicy {
 	private Publication publication;
 	
 	public PublicationBusinessPolicy(Publication publication) {
-		this.policyCode = "PUB_POLICY";
 		this.publication = publication;
 	}
 	

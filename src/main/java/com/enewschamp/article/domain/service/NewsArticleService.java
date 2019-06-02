@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.EnewschampApplicationProperties;
@@ -15,7 +14,6 @@ import com.enewschamp.article.domain.entity.NewsArticleQuiz;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.problem.HttpStatusAdapter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -41,6 +39,7 @@ public class NewsArticleService {
 	private EnewschampApplicationProperties appConfig;
 	
 	public NewsArticle create(NewsArticle article) {
+		new ArticleBusinessPolicy(article).validateAndThrow();
 		return repository.save(article);
 	}
 	

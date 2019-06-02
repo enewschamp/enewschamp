@@ -1,7 +1,6 @@
 package com.enewschamp.article.domain.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -19,11 +18,14 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.article.domain.common.ArticleActionType;
 import com.enewschamp.article.domain.common.ArticleRatingType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
+import com.enewschamp.article.domain.service.ArticleBusinessPolicy;
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
@@ -58,7 +60,7 @@ public class NewsArticle extends BaseEntity {
 	@NotNull
 	@Column(name = "Status")
 	@Enumerated(EnumType.STRING)
-	private ArticleStatusType status;
+	private ArticleStatusType status = ArticleStatusType.Unassigned;
 	
 	@Column(name = "Content")
 	@Lob
@@ -98,6 +100,10 @@ public class NewsArticle extends BaseEntity {
 	@Column(name = "AuthorId", length = ForeignKeyColumnLength.UserId)
 	private String authorId;
 	
+	@Transient
+	@NotNull
+	private ArticleActionType currentAction;
+	
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "article_Id")
 	private List<NewsArticleQuiz> newsArticleQuiz;
@@ -105,13 +111,40 @@ public class NewsArticle extends BaseEntity {
 	@PrePersist
 	@PreUpdate
 	public void prePersist() {
-		if(operationDateTime == null) {
-			operationDateTime = LocalDateTime.now();
-		}
+		super.prePersist();
 		if(newsArticleQuiz != null && newsArticleId != 0) {
 			for(NewsArticleQuiz question: newsArticleQuiz) {
 				question.setNewsArticleId(newsArticleId);
 			}
 		}
+	}
+	
+	public ArticleStatusType deriveStatus() {
+		if(this.currentAction != null) {
+			switch(this.currentAction) {
+				case SaveAsDraft:
+					if(this.status.equals(ArticleStatusType.Rework)) {
+						break;
+					}
+					if(this.authorId != null) {
+						this.status = ArticleStatusType.Assigned;
+					} else {
+						this.status = ArticleStatusType.Unassigned;
+					}
+					break;
+				case SubmitForReview:
+					this.status = ArticleStatusType.UnderReview;
+					break;
+				case Rework:
+					this.status = ArticleStatusType.Rework;
+					break;
+				case ReadyToPublish:
+					this.status = ArticleStatusType.ReadyToPublish;
+					break;
+				default:
+					
+			}
+		}
+		return this.status;
 	}
 }

@@ -1,15 +1,14 @@
 package com.enewschamp.article.app.dto;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.MaintenanceDTO;
+import com.enewschamp.article.domain.common.ArticleActionType;
 import com.enewschamp.article.domain.common.ArticleRatingType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
-import com.enewschamp.publication.app.dto.PublicationArticleLinkageDTO;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -64,6 +63,9 @@ public class NewsArticleDTO extends MaintenanceDTO {
 	private String editorId;
 	
 	private String authorId;
+	
+	@NotNull
+	private ArticleActionType currentAction;
 	
 	private List<NewsArticleQuizDTO> newsArticleQuiz;
 	

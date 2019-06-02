@@ -2,6 +2,7 @@ package com.enewschamp.article.domain.entity;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,11 +12,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-
-import org.javers.core.metamodel.annotation.TypeName;
 
 import com.enewschamp.article.domain.common.ArticleGroupStatusType;
 import com.enewschamp.domain.common.BaseEntity;
@@ -103,5 +105,22 @@ public class NewsArticleGroup extends BaseEntity {
 	@Column(name = "Comments")
 	@Lob
 	private String comments;
+	
+	@Transient
+	List<NewsArticle> newsArticles;
 		
+	@PrePersist
+	@PreUpdate
+	public void prePersist() {
+		super.prePersist();
+		deriveStatus();
+	}
+	
+	public void deriveStatus() {
+		if(this.newsArticles != null) {
+			newsArticles.forEach(article -> {
+				
+			});
+		}
+	}
 }

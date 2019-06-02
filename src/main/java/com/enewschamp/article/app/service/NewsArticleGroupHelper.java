@@ -40,8 +40,13 @@ public class NewsArticleGroupHelper {
 		checkForArticleIds(articleGroupDTO);
 		
 		List<NewsArticleDTO> newsArticles = articleGroupDTO.getNewsArticles();
-		
 		NewsArticleGroup articleGroup = modelMapper.map(articleGroupDTO, NewsArticleGroup.class);
+
+		List<NewsArticle> articles = new ArrayList<NewsArticle>();
+		for(NewsArticleDTO articleDTO: newsArticles) {
+			articles.add(modelMapper.map(articleDTO, NewsArticle.class));
+		}
+		articleGroup.setNewsArticles(articles);
 		
 		articleGroup = newsArticleGroupService.create(articleGroup);
 		articleGroupDTO = modelMapper.map(articleGroup, NewsArticleGroupDTO.class);

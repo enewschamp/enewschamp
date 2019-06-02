@@ -14,6 +14,7 @@ public interface ErrorCodes {
 	public static String INVALID_ARTICLE_ID = "PUB_010";
 	public static String ARTICLE_ID_CHANGED = "PUB_011";
 	public static String PUBLICATION_DATE_SHOULD_BE_FUTURE = "PUB_012";
+	public static String INVALID_ARTICLE_ACTION = "PUB_013";
 	
 	
 	public static String MULTI_LANG_TEXT_NOT_FOUND = "FRW_001";
