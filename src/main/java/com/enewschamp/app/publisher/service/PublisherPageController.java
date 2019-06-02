@@ -62,7 +62,6 @@ public class PublisherPageController {
 				header = new HeaderDTO();
 			}
 			header.setRequestStatus(RequestStatusType.F);
-			
 			throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e.getErrorCode());
 		}
 		 

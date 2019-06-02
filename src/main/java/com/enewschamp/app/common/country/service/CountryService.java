@@ -6,15 +6,13 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.country.dto.CountryDTO;
 import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.app.common.country.repository.CountryRepository;
-import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.problem.BusinessException;
 import com.google.common.reflect.TypeToken;
 
 @Service
@@ -57,7 +55,7 @@ public class CountryService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.COUNTRY_NOT_FOUND);
+			throw new BusinessException(ErrorCodes.COUNTRY_NOT_FOUND);
 		}
 	}
 	public List<CountryDTO> getAll()

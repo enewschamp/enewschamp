@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
@@ -14,8 +13,7 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.fw.page.navigation.entity.PageNavigator;
 import com.enewschamp.app.fw.page.navigation.repository.PageNavigatorRepository;
 import com.enewschamp.audit.domain.AuditService;
-import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.problem.BusinessException;
 import com.google.common.reflect.TypeToken;
 
 @Service
@@ -63,7 +61,7 @@ public class PageNavigationService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.PAGE_NOT_FOUND);
+			throw new BusinessException(ErrorCodes.PAGE_NOT_FOUND);
 		}
 	}
 
@@ -73,8 +71,7 @@ public class PageNavigationService {
 		}.getType();
 		List<PageNavigatorDTO> pageNavList = modelMapper.map(existingEntity, listType);
 		if (pageNavList.size() == 0) {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.PAGE_NOT_FOUND);
-
+			throw new BusinessException(ErrorCodes.PAGE_NOT_FOUND);
 		}
 		return pageNavList;
 	}
@@ -82,8 +79,7 @@ public class PageNavigationService {
 	public PageNavigatorDTO getNavPage(String action, String operation, String currentPage) {
 		PageNavigator existingEntity = pageNavigatorRepository.getNavPage(action, operation, currentPage);
 		if (existingEntity == null) {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.PAGE_NOT_FOUND);
-
+			throw new BusinessException(ErrorCodes.PAGE_NOT_FOUND);
 		}
 		PageNavigatorDTO pageNav = modelMapper.map(existingEntity, PageNavigatorDTO.class);
 		

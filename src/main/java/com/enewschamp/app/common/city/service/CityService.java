@@ -6,14 +6,12 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.city.repository.CityRepository;
-import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.problem.BusinessException;
 
 @Service
 public class CityService {
@@ -55,7 +53,7 @@ public class CityService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.CITY_NOT_FOUND);
+			throw new BusinessException(ErrorCodes.CITY_NOT_FOUND);
 		}
 	}
 	
