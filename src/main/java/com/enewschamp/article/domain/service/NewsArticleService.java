@@ -14,7 +14,7 @@ import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleQuiz;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditService;
-import com.enewschamp.problem.Fault;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.HttpStatusAdapter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -67,7 +67,7 @@ public class NewsArticleService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.ARTICLE_NOT_FOUND, "Article not found!");
+			throw new BusinessException(ErrorCodes.ARTICLE_NOT_FOUND);
 		}
 	}
 	

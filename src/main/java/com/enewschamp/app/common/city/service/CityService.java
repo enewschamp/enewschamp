@@ -55,8 +55,7 @@ public class CityService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.CITY_NOT_FOUND,
-					"City not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.CITY_NOT_FOUND);
 		}
 	}
 	

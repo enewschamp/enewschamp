@@ -57,8 +57,7 @@ public class CountryService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.COUNTRY_NOT_FOUND,
-					"Country not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.COUNTRY_NOT_FOUND);
 		}
 	}
 	public List<CountryDTO> getAll()

@@ -5,13 +5,11 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
-import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
 
 @Service
@@ -55,7 +53,7 @@ public class PublicationArticleLinkageService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.PUBLICATION_ART_LINK_NOT_FOUND, "Publication Article Linkage not found!");
+			throw new BusinessException(ErrorCodes.PUBLICATION_ART_LINK_NOT_FOUND);
 		}
 	}
 	

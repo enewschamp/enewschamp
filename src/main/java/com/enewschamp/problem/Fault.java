@@ -7,6 +7,8 @@ import javax.annotation.concurrent.Immutable;
 import org.zalando.problem.StatusType;
 import org.zalando.problem.ThrowableProblem;
 
+import com.enewschamp.app.common.HeaderDTO;
+
 @Immutable
 public final class Fault extends ThrowableProblem {
 
@@ -16,18 +18,24 @@ public final class Fault extends ThrowableProblem {
 
 	private final URI type;
 	private final StatusType status;
-	private final String occursWhen;
-	private final String title;
+	private String errorCode;
+	private String title;
+	private HeaderDTO header;
 
-	public Fault(final StatusType status, final String title, final String occursWhen) {
-		this(TYPE, status, title, occursWhen);
+	public Fault(final StatusType status, final String errorCode, final HeaderDTO header) {
+		this(TYPE, status, errorCode, header);
+	}
+	
+	public Fault(final StatusType status, final String errorCode) {
+		this(TYPE, status, errorCode, null);
 	}
 
-	Fault(final URI type, final StatusType status, final String title, final String occursWhen) {
+	Fault(final URI type, final StatusType status, final String errorCode, final HeaderDTO header) {
 		this.type = type;
 		this.status = status;
-		this.title = title;
-		this.occursWhen = occursWhen;
+		this.title = errorCode;
+		this.errorCode = errorCode;
+		this.header = header;
 	}
 
 	@Override
@@ -45,8 +53,16 @@ public final class Fault extends ThrowableProblem {
 		return status;
 	}
 
-	public String getOCccursWhen() {
-		return occursWhen;
+	public String getErrorCode() {
+		return errorCode;
 	}
-
+	
+	public HeaderDTO getHeader() {
+		return header;
+	}
+	
+	public void setErrorMessage(String errorMessage) {
+		this.title = errorMessage;
+	}
+	
 }

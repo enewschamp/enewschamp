@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
 import com.enewschamp.subscription.pricing.entity.IndividualPricing;
@@ -57,8 +58,7 @@ public class IndividualPricingService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.SCHOOL_PRICING_NOT_FOUND,
-					"School Pricing not found!");
+			throw new BusinessException(ErrorCodes.SCHOOL_PRICING_NOT_FOUND);
 		}
 	}
 	
@@ -72,8 +72,7 @@ public class IndividualPricingService {
 			return individualPrice.get();
 		}
 		else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.INDIVIDUAL_PRICING_NOT_FOUND,
-					"Individual Pricing not found!");
+			throw new BusinessException(ErrorCodes.INDIVIDUAL_PRICING_NOT_FOUND);
 		}
 	}
 }

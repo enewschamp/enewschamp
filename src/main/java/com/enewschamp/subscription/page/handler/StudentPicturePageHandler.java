@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.common.ErrorCodes;
@@ -15,8 +14,7 @@ import com.enewschamp.app.fw.page.navigation.common.PageSaveTable;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
-import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.StudentPictDetailsPageData;
 import com.enewschamp.subscription.app.dto.StudentPicturePageData;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
@@ -117,9 +115,7 @@ public class StudentPicturePageHandler implements IPageHandler {
 			studentPicturePageData = objectMapper.readValue(pageRequest.getData().toString(),
 					StudentPicturePageData.class);
 		} catch (IOException e) {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), ErrorCodes.SREVER_ERROR,
-					"Error in mapping Preference Page Data fields. Contact System administrator!");
-
+			throw new BusinessException(ErrorCodes.SREVER_ERROR);
 		}
 		return studentPicturePageData;
 	}

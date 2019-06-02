@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.common.ErrorCodes;
@@ -15,7 +14,6 @@ import com.enewschamp.app.common.city.service.CityService;
 import com.enewschamp.app.common.country.dto.CountryDTO;
 import com.enewschamp.app.common.country.service.CountryService;
 import com.enewschamp.app.common.state.service.StateService;
-import com.enewschamp.app.fw.page.navigation.common.CommonConstants;
 import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.common.PageSaveTable;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
@@ -23,19 +21,12 @@ import com.enewschamp.app.fw.page.navigation.service.PageNavigationService;
 import com.enewschamp.app.school.service.SchoolService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
-import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
-import com.enewschamp.subscription.app.dto.StudentControlDTO;
-import com.enewschamp.subscription.app.dto.StudentControlWorkDTO;
-import com.enewschamp.subscription.app.dto.StudentPreferencePageData;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.StudentSchoolDTO;
 import com.enewschamp.subscription.app.dto.StudentSchoolPageData;
 import com.enewschamp.subscription.app.dto.StudentSchoolWorkDTO;
-import com.enewschamp.subscription.app.dto.SubscriptionPeriodPageData;
 import com.enewschamp.subscription.domain.business.SchoolDetailsBusiness;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "SchoolDetailsPageHandler")
@@ -205,8 +196,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 			studentSchoolPageData = objectMapper.readValue(pageRequest.getData().toString(),
 					StudentSchoolPageData.class);
 		} catch (IOException e) {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), ErrorCodes.SREVER_ERROR,
-					"Error in mapping Subscription Period Page Data fields. Contact System administrator!");
+			throw new BusinessException(ErrorCodes.SREVER_ERROR);
 
 		}
 		return studentSchoolPageData;

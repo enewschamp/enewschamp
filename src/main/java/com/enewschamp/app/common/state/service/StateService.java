@@ -55,8 +55,7 @@ public class StateService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.STATE_NOT_FOUND,
-					"State not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.STATE_NOT_FOUND);
 		}
 	}
 	

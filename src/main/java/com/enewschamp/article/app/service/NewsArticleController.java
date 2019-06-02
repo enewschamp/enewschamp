@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enewschamp.EnewschampApplicationErrorProperties;
 import com.enewschamp.article.app.dto.NewsArticleDTO;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.service.NewsArticleService;
+import com.enewschamp.problem.BusinessException;
+import com.enewschamp.problem.Fault;
+import com.enewschamp.problem.HttpStatusAdapter;
 
 import lombok.extern.java.Log;
 
@@ -74,8 +78,15 @@ public class NewsArticleController {
 	
 	@GetMapping(value = "/articles/{articleId}/audit")
 	public ResponseEntity<String> getAudit(@PathVariable Long articleId) {
-		String audit = newsArticleService.getAudit(articleId);
-		return new ResponseEntity<String>(audit, HttpStatus.OK);
+		ResponseEntity<String> response = null;
+		try {
+			String audit = newsArticleService.getAudit(articleId);
+			response = new ResponseEntity<String>(audit, HttpStatus.OK);
+		}catch(BusinessException e) {
+			Fault fault = new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e.getErrorCode()); 
+			throw fault;
+		}
+		return response;
 	}
 	
 	

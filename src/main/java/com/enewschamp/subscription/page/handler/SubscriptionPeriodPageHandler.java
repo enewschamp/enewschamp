@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.EnewschampApplicationProperties;
@@ -25,8 +24,7 @@ import com.enewschamp.app.school.entity.SchoolPricing;
 import com.enewschamp.app.school.service.SchoolPricingService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
-import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.app.dto.StudentControlWorkDTO;
 import com.enewschamp.subscription.app.dto.StudentSchoolDTO;
@@ -294,10 +292,8 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 		SubscriptionPeriodPageData subscriptionPeriodPageData=null;
 		try {
 			subscriptionPeriodPageData = objectMapper.readValue(pageRequest.getData().toString(),SubscriptionPeriodPageData.class);
-		}catch(IOException e)
-		{
-			throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), ErrorCodes.SREVER_ERROR, "Error in mapping Subscription Period Page Data fields. Contact System administrator!");
-
+		}catch(IOException e) {
+			throw new BusinessException(ErrorCodes.SREVER_ERROR);
 		}
 		return subscriptionPeriodPageData;
 	}

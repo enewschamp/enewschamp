@@ -4,22 +4,19 @@ import java.io.IOException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
-import com.enewschamp.app.fw.page.navigation.common.CommonConstants;
 import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.common.PageSaveTable;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.fw.page.navigation.service.PageNavigationService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
-import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.app.dto.StudentControlWorkDTO;
 import com.enewschamp.subscription.app.dto.StudentDetailsDTO;
@@ -192,8 +189,7 @@ public class StudentDetailsPageHandler implements IPageHandler {
 			studentDetailsPageData = objectMapper.readValue(pageRequest.getData().toString(),
 					StudentDetailsPageData.class);
 		} catch (IOException e) {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), ErrorCodes.SREVER_ERROR,
-					"Error in mapping Student Details Page Data fields. Contact System administrator!");
+			throw new BusinessException(ErrorCodes.SREVER_ERROR);
 
 		}
 		return studentDetailsPageData;
@@ -204,9 +200,7 @@ public class StudentDetailsPageHandler implements IPageHandler {
 		try {
 			studentDetailsDTO = objectMapper.readValue(pageRequest.getData().toString(), StudentDetailsDTO.class);
 		} catch (IOException e) {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), ErrorCodes.SREVER_ERROR,
-					"Error in mapping Student Details Page Data fields. Contact System administrator!");
-
+			throw new BusinessException(ErrorCodes.SREVER_ERROR);
 		}
 		return studentDetailsDTO;
 	}
@@ -216,9 +210,7 @@ public class StudentDetailsPageHandler implements IPageHandler {
 		try {
 			studentDetailsDTO = objectMapper.readValue(pageRequest.getData().toString(), StudentDetailsWorkDTO.class);
 		} catch (IOException e) {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), ErrorCodes.SREVER_ERROR,
-					"Error in mapping Student Details Page Data fields. Contact System administrator!");
-
+			throw new BusinessException(ErrorCodes.SREVER_ERROR);
 		}
 		return studentDetailsDTO;
 	}

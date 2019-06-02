@@ -1,4 +1,4 @@
-package com.enewschamp.app.service;
+package com.enewschamp.app.publisher.service;
 
 import javax.transaction.Transactional;
 
@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.header.Header;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +21,16 @@ import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.domain.common.PageNavigationContext;
+import com.enewschamp.problem.BusinessException;
+import com.enewschamp.problem.Fault;
+import com.enewschamp.problem.HttpStatusAdapter;
 
 import lombok.extern.java.Log;
 
 @Log
 @RestController
 @RequestMapping("/enewschamp-api/v1")
-public class PageController {
+public class PublisherPageController {
 
 	@Autowired
 	private PageHandlerFactory pageHandlerFactory;
@@ -41,16 +45,28 @@ public class PageController {
 	@Transactional
 	public ResponseEntity<PageDTO> processPublisherAppRequest(@RequestBody PageRequestDTO pageRequest) {
 		
-		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("deepak", "welcome"));
-		
-		String pageName = pageRequest.getHeader().getPageName();
-		String actionName = pageRequest.getHeader().getAction();
-		pageRequest.getHeader().setPageName(pageName);
-		pageRequest.getHeader().setAction(actionName);
-		
-		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest);
-		
-		return new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
+		ResponseEntity<PageDTO> response = null;
+		try {
+			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("deepak", "welcome"));
+			
+			String pageName = pageRequest.getHeader().getPageName();
+			String actionName = pageRequest.getHeader().getAction();
+			pageRequest.getHeader().setPageName(pageName);
+			pageRequest.getHeader().setAction(actionName);
+			
+			PageDTO pageResponse = processRequest(pageName, actionName, pageRequest);
+			response = new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
+		}catch(BusinessException e) {
+			HeaderDTO header = pageRequest.getHeader();
+			if(header == null) {
+				header = new HeaderDTO();
+			}
+			header.setRequestStatus(RequestStatusType.F);
+			
+			throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e.getErrorCode());
+		}
+		 
+		return response;
 	}
 
 	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest) {

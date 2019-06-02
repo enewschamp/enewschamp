@@ -54,8 +54,7 @@ public class SchoolPricingService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.SCHOOL_PRICING_NOT_FOUND,
-					"School Pricing not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.SCHOOL_PRICING_NOT_FOUND);
 		}
 	}
 	
@@ -67,8 +66,7 @@ public class SchoolPricingService {
 			return schoolPrice.get();
 		}
 		else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.SCHOOL_PRICING_NOT_FOUND,
-					"School Pricing not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.SCHOOL_PRICING_NOT_FOUND);
 		}
 	}
 }

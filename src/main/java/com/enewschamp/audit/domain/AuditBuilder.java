@@ -15,7 +15,6 @@ import org.javers.core.ChangesByCommit;
 import org.javers.core.ChangesByObject;
 import org.javers.core.commit.CommitId;
 import org.javers.core.commit.CommitMetadata;
-import org.javers.core.diff.Change;
 import org.javers.core.diff.changetype.NewObject;
 import org.javers.core.diff.changetype.ValueChange;
 import org.javers.core.diff.changetype.container.ContainerElementChange;
@@ -177,7 +176,7 @@ public class AuditBuilder  {
 				newObjectAuditDTO.addCommitInfo(commitMetadata);
 				newObjectAuditDTO.setAction(OperationType.Add);
 				
-				System.out.println("Processing audit for object: " + instanceId.getTypeName() + " Commit Id: " + commitMetadata.getId());
+				printDebugLine("Processing audit for object: " + instanceId.getTypeName() + " Commit Id: " + commitMetadata.getId());
 
 				AuditQueryCriteria snapshotQueryCriteria = new AuditQueryCriteria();
 				snapshotQueryCriteria.setCommitId(commitMetadata.getId());
@@ -229,7 +228,7 @@ public class AuditBuilder  {
 				
 				auditDTO.addObjectProperties(instanceId, getIdPropertyName(instanceId.getTypeName()));
 				
-				System.out.println("Processing audit for object: " + instanceId.getTypeName() + " Commit Id: " + commitMetadata.getId());
+				printDebugLine("Processing audit for object: " + instanceId.getTypeName() + " Commit Id: " + commitMetadata.getId());
 				
 				AuditQueryCriteria snapshotQueryCriteria = new AuditQueryCriteria();
 				snapshotQueryCriteria.setCommitId(commitMetadata.getId());
@@ -304,7 +303,7 @@ public class AuditBuilder  {
 	
 	private void getChildAuditForSameCommitId(CommitMetadata commitMetadata, AuditDTO auditDTO, boolean isForNewObject) {
 		
-		System.out.println("Checking for child audit records for commit id: " + commitMetadata.getId().valueAsNumber());
+		printDebugLine("Checking for child audit records for commit id: " + commitMetadata.getId().valueAsNumber());
 		if(childCollectionProperties != null) {
 			childCollectionProperties.forEach((propertyTypeName, propertyName) -> {
 				AuditQueryCriteria queryCriteria = new AuditQueryCriteria();
@@ -500,6 +499,10 @@ public class AuditBuilder  {
 	
 	private CdoSnapshot getEntitySnapshot(InstanceId instanceId, AuditQueryCriteria snapshotQuery) {
 		return auditService.getEntitySnapshot(instanceId, snapshotQuery);
+	}
+	
+	private void printDebugLine(String line) {
+		printDebugLine(line);
 	}
 	
 }

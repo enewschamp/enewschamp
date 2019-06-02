@@ -32,6 +32,6 @@ public interface ErrorCodes {
 
 	public static String STATE_NOT_FOUND ="STATE_001";
 	public static String CITY_NOT_FOUND ="CITY_001";
-	public static String SCHOOL_NOT_FOUND ="CITY_001";
+	public static String SCHOOL_NOT_FOUND ="SPOU_002";
 	public static String SREVER_ERROR="SERVER_ERROR";
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.domain.common.RecordInUseType;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
 import com.enewschamp.subscription.app.dto.StudentShareAchievementsDTO;
@@ -39,8 +40,7 @@ public class StudentShareAchievementsBusiness {
 		List<StudentShareAchievements> studentShareAchievements = studentShareAchievementsService
 				.getStudentAchievements(studentId);
 		if (studentShareAchievements.isEmpty()) {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND),
-					ErrorCodes.STUDENT_SHARE_ACHIEVEMENTS_NOT_FOUND, "Student's shared achievements not found!");
+			throw new BusinessException(ErrorCodes.STUDENT_SHARE_ACHIEVEMENTS_NOT_FOUND);
 		}
 		java.lang.reflect.Type listType = new TypeToken<List<StudentShareAchievementsDTO>>() {
 		}.getType();

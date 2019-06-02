@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.common.ErrorCodes;
@@ -17,8 +16,7 @@ import com.enewschamp.app.fw.page.navigation.common.PageSaveTable;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
-import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.StudentShareAchievementsDTO;
 import com.enewschamp.subscription.app.dto.StudentShareAchievementsPageData;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
@@ -121,9 +119,7 @@ public class StudentShareAchievementsPageHandler implements IPageHandler {
 			StudentShareAchievementsPageData = objectMapper.readValue(pageRequest.getData().toString(),
 					StudentShareAchievementsPageData.class);
 		} catch (IOException e) {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), ErrorCodes.SREVER_ERROR,
-					"Error in mapping Student Share Achievements Page Data fields. Contact System administrator!");
-
+			throw new BusinessException(ErrorCodes.SREVER_ERROR);
 		}
 		return StudentShareAchievementsPageData;
 	}

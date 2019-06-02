@@ -63,8 +63,7 @@ public class PageNavigationService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.PAGE_NOT_FOUND,
-					"PageNavigator not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.PAGE_NOT_FOUND);
 		}
 	}
 
@@ -74,7 +73,7 @@ public class PageNavigationService {
 		}.getType();
 		List<PageNavigatorDTO> pageNavList = modelMapper.map(existingEntity, listType);
 		if (pageNavList.size() == 0) {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.PAGE_NOT_FOUND, "Page not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.PAGE_NOT_FOUND);
 
 		}
 		return pageNavList;
@@ -83,7 +82,7 @@ public class PageNavigationService {
 	public PageNavigatorDTO getNavPage(String action, String operation, String currentPage) {
 		PageNavigator existingEntity = pageNavigatorRepository.getNavPage(action, operation, currentPage);
 		if (existingEntity == null) {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.PAGE_NOT_FOUND, "Page not found!");
+			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.PAGE_NOT_FOUND);
 
 		}
 		PageNavigatorDTO pageNav = modelMapper.map(existingEntity, PageNavigatorDTO.class);

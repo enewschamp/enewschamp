@@ -2,7 +2,6 @@ package com.enewschamp.article.app.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import com.enewschamp.article.domain.entity.NewsArticleGroup;
 import com.enewschamp.article.domain.service.NewsArticleGroupRepository;
 import com.enewschamp.article.domain.service.NewsArticleGroupService;
 import com.enewschamp.article.domain.service.NewsArticleRepository;
-import com.enewschamp.problem.Fault;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.HttpStatusAdapter;
 
 @Component
@@ -63,7 +62,7 @@ public class NewsArticleGroupHelper {
 	}
 
 	public NewsArticleGroupDTO getArticleGroup(Long articleGroupId) {
-		NewsArticleGroup articleGroup = newsArticleGroupService.get(articleGroupId);
+		NewsArticleGroup articleGroup = newsArticleGroupService.load(articleGroupId);
 		NewsArticleGroupDTO articleGroupDTO = modelMapper.map(articleGroup, NewsArticleGroupDTO.class);
 		
 		List<NewsArticleDTO> articles = newsArticleHelper.getByArticleGroupId(articleGroupId);
@@ -80,7 +79,7 @@ public class NewsArticleGroupHelper {
 			List<Long> newArticleIds = new ArrayList<Long>();
 			for(NewsArticleDTO newsArticle : articleGroupDTO.getNewsArticles()) {
 				if(newsArticle.getNewsArticleId() <= 0) {
-					throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.INVALID_ARTICLE_ID, "Invalid article id for existing article group");
+					throw new BusinessException(ErrorCodes.INVALID_ARTICLE_ID);
 				}
 				newArticleIds.add(newsArticle.getNewsArticleId());
 			}
@@ -89,7 +88,7 @@ public class NewsArticleGroupHelper {
 			
 			existingArticles.forEach(existingArticle -> {
 				if(!newArticleIds.contains(existingArticle.getNewsArticleId())) {
-					throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.ARTICLE_ID_CHANGED, "Article id cannot change for existing article group");
+					throw new BusinessException(ErrorCodes.ARTICLE_ID_CHANGED);
 				}
 			});
 			

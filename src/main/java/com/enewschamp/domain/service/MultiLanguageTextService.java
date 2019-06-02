@@ -5,14 +5,12 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.entity.MultiLanguageText;
-import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.problem.BusinessException;
 
 @Service
 public class MultiLanguageTextService {
@@ -57,7 +55,7 @@ public class MultiLanguageTextService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.MULTI_LANG_TEXT_NOT_FOUND, "MultiLanguageText not found!");
+			throw new BusinessException(ErrorCodes.MULTI_LANG_TEXT_NOT_FOUND);
 		}
 	}
 	

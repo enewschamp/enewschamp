@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
 import com.enewschamp.audit.domain.AuditService;
-import com.enewschamp.problem.Fault;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.HttpStatusAdapter;
 
 @Service
@@ -57,7 +57,7 @@ public class NewsArticleGroupService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else { 
-			throw new Fault(new HttpStatusAdapter(HttpStatus.NOT_FOUND), ErrorCodes.ARTICLE_GROUP_NOT_FOUND, "Article group not found!");
+			throw new BusinessException(ErrorCodes.ARTICLE_GROUP_NOT_FOUND);
 		}
 	}
 	

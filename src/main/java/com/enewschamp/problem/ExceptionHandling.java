@@ -7,21 +7,29 @@ import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.zalando.problem.Problem;
 import org.zalando.problem.spring.web.advice.ProblemHandling;
 import org.zalando.problem.spring.web.advice.validation.Violation;
+
+import com.enewschamp.EnewschampApplicationErrorProperties;
 
 @ControllerAdvice
 public class ExceptionHandling implements ProblemHandling, ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
+	
+	@Autowired
+	EnewschampApplicationErrorProperties errorMessagesConfig;
 
 	public Violation createViolation(final FieldError error) {
 		final String fieldName = formatFieldName(error.getField());
@@ -65,4 +73,22 @@ public class ExceptionHandling implements ProblemHandling, ApplicationContextAwa
 		}
 		return contentType;
 	}
+	
+	public ResponseEntity<Problem> process(
+            final ResponseEntity<Problem> entity,
+            @SuppressWarnings("UnusedParameters") final NativeWebRequest request) {
+        return process(entity);
+    }
+	
+	public ResponseEntity<Problem> process(final ResponseEntity<Problem> entity) {
+		
+		if( entity.getBody() != null && entity.getBody() instanceof Fault) {
+			Fault fault = (Fault) entity.getBody();
+			String errorMessage = errorMessagesConfig.getErrorMessagesConfig().get(fault.getTitle());
+			fault.setErrorMessage(errorMessage);
+		}
+        return entity;
+    }
+
+	
 }
