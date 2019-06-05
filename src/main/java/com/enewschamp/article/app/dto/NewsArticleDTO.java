@@ -29,13 +29,13 @@ public class NewsArticleDTO extends MaintenanceDTO {
 		this.readingLevel = readingLevel;
 	}
 	
-	private long newsArticleId;
+	private Long newsArticleId;
 	
 	@NotNull
-	private long newsArticleGroupId;
+	private Long newsArticleGroupId;
 	
 	@NotNull
-	private int readingLevel;
+	private Integer readingLevel;
 	
 	@NotNull
 	private ArticleStatusType status;
@@ -44,21 +44,21 @@ public class NewsArticleDTO extends MaintenanceDTO {
 	
 	private ArticleRatingType rating;
 	
-	private int likeLCount;
+	private Integer likeLCount;
 	
-	private int likeHCount;
+	private Integer likeHCount;
 	
-	private int likeOCount;
+	private Integer likeOCount;
 	
-	private int likeWCount;
+	private Integer likeWCount;
 	
-	private int likeSCount;
+	private Integer likeSCount;
 
 	private LocalDate publishDate;
 	
 	private String publisherId;
 
-	private long publicationId;
+	private Long publicationId;
 	
 	private String editorId;
 	

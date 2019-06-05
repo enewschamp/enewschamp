@@ -1,7 +1,9 @@
 package com.enewschamp.article.domain.service;
 
+import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.publication.domain.service.AbstractBusinessPolicy;
+import com.enewschamp.publication.domain.service.ValidationError;
 
 public class ArticleBusinessPolicy extends AbstractBusinessPolicy {
 	
@@ -13,21 +15,14 @@ public class ArticleBusinessPolicy extends AbstractBusinessPolicy {
 	
 	@Override
 	protected void validatePolicy() {
-		validateCurrentAction(article);
+		validateQuiz(article);
 	}
 	
-	private void validateCurrentAction(NewsArticle article) {
-		if(article.getCurrentAction() == null) {
-			return;
-		}
-		switch(article.getCurrentAction()) {
-//			case SaveAsDraft:
-//				if(article.getStatus().isLockedForEdit()) {
-//					addValidationError(new ValidationError(ErrorCodes.INVALID_ARTICLE_ACTION, "NewsArticle.currentAction"));
-//				}
-//			break;
-			
+	private void validateQuiz(NewsArticle article) {
+		if(article.getNewsArticleQuiz() != null && article.getNewsArticleQuiz().size() > 9) {
+			addValidationError(new ValidationError(ErrorCodes.QUIZ_LIMIT_EXCEEDED, "NewsArticle.newsArticleQuiz"));
 		}
 	}
+	
 		
 }

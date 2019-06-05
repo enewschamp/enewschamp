@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.header.Header;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +18,7 @@ import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.RequestStatusType;
+import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
@@ -70,7 +70,8 @@ public class PublisherPageController {
 
 	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest) {
 		//Process current page
-		PageDTO pageResponse = pageHandlerFactory.getPageHandler(pageName).handleAction(actionName, pageRequest);
+		IPageHandler pageHandler = pageHandlerFactory.getPageHandler(pageName);
+		PageDTO pageResponse = pageHandler.handleAction(actionName, pageRequest);
 		
 		//Load next page
 		String nextPageName = appConfig.getPageNavigationConfig().get(pageName.toLowerCase()).get(actionName.toLowerCase());

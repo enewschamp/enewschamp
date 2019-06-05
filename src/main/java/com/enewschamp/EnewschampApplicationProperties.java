@@ -7,9 +7,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import com.enewschamp.article.domain.common.ArticleActionType;
-import com.enewschamp.article.domain.common.ArticleStatusType;
-
 import lombok.Data;
 
 @Data
@@ -42,5 +39,5 @@ public class EnewschampApplicationProperties {
 	
 	private AuditConfig audit;
 	
-	private Map<String, Map<ArticleStatusType, Map<ArticleActionType, ArticleStatusType>>> statusTransitionConfig;
+	private Map<String, Map<String, Map<String, String>>> statusTransitionConfig;
 }

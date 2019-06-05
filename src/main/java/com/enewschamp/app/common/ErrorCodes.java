@@ -15,7 +15,7 @@ public interface ErrorCodes {
 	public static String ARTICLE_ID_CHANGED = "PUB_011";
 	public static String PUBLICATION_DATE_SHOULD_BE_FUTURE = "PUB_012";
 	public static String INVALID_ARTICLE_ACTION = "PUB_013";
-	
+	public static String QUIZ_LIMIT_EXCEEDED = "PUB_014";
 	
 	public static String MULTI_LANG_TEXT_NOT_FOUND = "FRW_001";
 	public static String STUDENT_DTLS_NOT_FOUND = "STUDDTLS_001";
@@ -37,7 +37,8 @@ public interface ErrorCodes {
 	public static String SCHOOL_NOT_FOUND ="SPOU_002";
 	public static String SREVER_ERROR="SERVER_ERROR";
 	
-	public static String BUS_POLICY_FAILED="BUS_POLICY_FAILURE";
+	public static String BUS_POLICY_FAILED="FRW_001";
+	public static String STATUS_TRANSITION_NOT_FOUND="FRW_002";
 	
 	
 }

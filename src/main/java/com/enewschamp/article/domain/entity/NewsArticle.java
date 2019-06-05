@@ -22,11 +22,14 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.enewschamp.article.domain.common.ArticleActionType;
 import com.enewschamp.article.domain.common.ArticleRatingType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
-import com.enewschamp.article.domain.service.ArticleBusinessPolicy;
 import com.enewschamp.domain.common.BaseEntity;
+import com.enewschamp.domain.common.StatusTransitionDTO;
+import com.enewschamp.domain.common.StatusTransitionHandler;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
 import lombok.Data;
@@ -42,6 +45,10 @@ import lombok.EqualsAndHashCode;
 public class NewsArticle extends BaseEntity {	
 	
 	private static final long serialVersionUID = 4067120832023693933L;
+	
+	@Autowired
+	@Transient
+	private StatusTransitionHandler stateTransitionHandler;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "article_id_generator")
@@ -51,11 +58,11 @@ public class NewsArticle extends BaseEntity {
 	
 	@NotNull
 	@Column(name = "NewsArticleGroupID", length=10)
-	private long newsArticleGroupId = 0L;
+	private Long newsArticleGroupId = 0L;
 	
 	@NotNull
 	@Column(name = "ReadingLevel")
-	private int readingLevel = 0;
+	private Integer readingLevel = 0;
 	
 	@NotNull
 	@Column(name = "Status")
@@ -71,19 +78,19 @@ public class NewsArticle extends BaseEntity {
 	private ArticleRatingType rating;
 	
 	@Column(name = "LikeLCount")
-	private int likeLCount = 0;
+	private Integer likeLCount = 0;
 	
 	@Column(name = "LikeHCount")
-	private int likeHCount = 0;
+	private Integer likeHCount = 0;
 	
 	@Column(name = "LikeOCount")
-	private int likeOCount = 0;
+	private Integer likeOCount = 0;
 	
 	@Column(name = "LikeWCount")
-	private int likeWCount = 0;
+	private Integer likeWCount = 0;
 	
 	@Column(name = "LikeSCount")
-	private int likeSCount = 0;
+	private Integer likeSCount = 0;
 
 	@Column(name = "PublishDate")
 	private LocalDate publishDate;
@@ -92,7 +99,7 @@ public class NewsArticle extends BaseEntity {
 	private String publisherId;
 
 	@Column(name = "PublicationId")
-	private long publicationId;
+	private Long publicationId;
 	
 	@Column(name = "EditorId", length = ForeignKeyColumnLength.UserId)
 	private String editorId;
@@ -100,8 +107,7 @@ public class NewsArticle extends BaseEntity {
 	@Column(name = "AuthorId", length = ForeignKeyColumnLength.UserId)
 	private String authorId;
 	
-	@Transient
-	@NotNull
+	@Enumerated(EnumType.STRING)
 	private ArticleActionType currentAction;
 	
 	@OneToMany(cascade = CascadeType.ALL)
@@ -119,32 +125,4 @@ public class NewsArticle extends BaseEntity {
 		}
 	}
 	
-	public ArticleStatusType deriveStatus() {
-		if(this.currentAction != null) {
-			switch(this.currentAction) {
-				case SaveAsDraft:
-					if(this.status.equals(ArticleStatusType.Rework)) {
-						break;
-					}
-					if(this.authorId != null) {
-						this.status = ArticleStatusType.Assigned;
-					} else {
-						this.status = ArticleStatusType.Unassigned;
-					}
-					break;
-				case SubmitForReview:
-					this.status = ArticleStatusType.UnderReview;
-					break;
-				case Rework:
-					this.status = ArticleStatusType.Rework;
-					break;
-				case ReadyToPublish:
-					this.status = ArticleStatusType.ReadyToPublish;
-					break;
-				default:
-					
-			}
-		}
-		return this.status;
-	}
 }

@@ -1,18 +1,20 @@
 package com.enewschamp.article.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.article.domain.common.ArticleGroupStatusType;
+import com.enewschamp.article.domain.common.ArticleStatusType;
+import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.problem.HttpStatusAdapter;
 
 @Service
 public class NewsArticleGroupService {
@@ -30,7 +32,11 @@ public class NewsArticleGroupService {
 	@Autowired
 	AuditService auditService;
 	
+	@Autowired 
+	private NewsArticleService newsArticleService;
+	
 	public NewsArticleGroup create(NewsArticleGroup articleGroup) {
+		deriveStatus(articleGroup);
 		return repository.save(articleGroup);
 	}
 	
@@ -62,6 +68,9 @@ public class NewsArticleGroupService {
 	}
 	
 	public NewsArticleGroup get(Long articleGroupId) {
+		if(articleGroupId == null) {
+			return null;
+		}
 		Optional<NewsArticleGroup> existingEntity = repository.findById(articleGroupId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
@@ -75,5 +84,39 @@ public class NewsArticleGroupService {
 		articleGroup.setNewsArticleGroupId(articleGroupId);
 		return auditService.getEntityAudit(articleGroup);
 	}
-
+	
+	public ArticleGroupStatusType deriveStatus(NewsArticleGroup articleGroup) {
+		ArticleGroupStatusType newStatus = deriveStatus(articleGroup.getNewsArticles());
+		articleGroup.setStatus(newStatus);
+		return newStatus;
+	}
+	
+	private ArticleGroupStatusType deriveStatus(List<NewsArticle> articles) {
+		ArticleGroupStatusType newStatus = null;
+		if(articles != null) {
+			for(NewsArticle article: articles) {
+				ArticleStatusType articleStatus = newsArticleService.deriveArticleStatus(article);
+				if(articleStatus != null) {
+					if(newStatus == null) {
+						newStatus = ArticleGroupStatusType.fromArticleStatus(articleStatus);
+						continue;
+					}
+					ArticleGroupStatusType status = ArticleGroupStatusType.fromArticleStatus(articleStatus);
+					if(status.getOrder() < newStatus.getOrder()) {
+						newStatus = status;
+					}
+				}
+			}
+		}
+		return newStatus;
+	}
+	
+	public NewsArticleGroup assignAuthor(Long articleGroupId, String authorId) {
+		NewsArticleGroup articleGroup = load(articleGroupId);
+		articleGroup.setAuthorId(authorId);
+		List<NewsArticle> articles = newsArticleService.assignAuthor(articleGroupId, authorId);
+		articleGroup.setStatus(deriveStatus(articles));
+		repository.save(articleGroup);
+		return articleGroup;
+	}
 }

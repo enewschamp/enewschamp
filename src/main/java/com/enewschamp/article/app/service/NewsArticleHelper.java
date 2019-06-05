@@ -36,21 +36,24 @@ public class NewsArticleHelper {
 	public NewsArticleDTO create(NewsArticleDTO articleDTO) {
 		
 		List<NewsArticleQuizDTO> newsArticleQuiz = articleDTO.getNewsArticleQuiz();
-		for(NewsArticleQuizDTO quizDTO: newsArticleQuiz) {
-			quizDTO.setOperatorId(articleDTO.getOperatorId());
-			quizDTO.setRecordInUse(articleDTO.getRecordInUse());
+		if(newsArticleQuiz != null) {
+			for(NewsArticleQuizDTO quizDTO: newsArticleQuiz) {
+				quizDTO.setOperatorId(articleDTO.getOperatorId());
+				quizDTO.setRecordInUse(articleDTO.getRecordInUse());
+			}
+			// Remove questions which have been deleted on the UI
+			removeDelinkedQuestions(articleDTO.getNewsArticleId(), newsArticleQuiz);
 		}
-		
-		// Remove questions which have been deleted on the UI
-		removeDelinkedQuestions(articleDTO.getNewsArticleId(), newsArticleQuiz);
 		
 		NewsArticle article = modelMapper.map(articleDTO, NewsArticle.class);
 		article = newsArticleService.create(article);
 		articleDTO = modelMapper.map(article, NewsArticleDTO.class);
 		
-		newsArticleQuiz = articleDTO.getNewsArticleQuiz(); 
-		for(NewsArticleQuizDTO quizDTO: newsArticleQuiz) {
-			quizDTO.setNewsArticleId(articleDTO.getNewsArticleId());
+		newsArticleQuiz = articleDTO.getNewsArticleQuiz();
+		if(newsArticleQuiz != null) {
+			for(NewsArticleQuizDTO quizDTO: newsArticleQuiz) {
+				quizDTO.setNewsArticleId(articleDTO.getNewsArticleId());
+			}
 		}
 		
 		return articleDTO;

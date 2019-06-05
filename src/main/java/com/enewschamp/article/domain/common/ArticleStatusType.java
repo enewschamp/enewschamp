@@ -22,5 +22,14 @@ public enum ArticleStatusType {
 	public boolean isLockedForEdit() {
 		return this.isLockedForEdit;
 	}
+	
+	public static ArticleStatusType fromValue(String status) {
+		for(ArticleStatusType statusType : ArticleStatusType.values()) {
+			if(statusType.toString().equals(status)) {
+				return statusType;
+			}
+		}
+		return null;
+	}
 }
 

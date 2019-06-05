@@ -21,7 +21,7 @@ public class NewsArticleGroupDTO extends MaintenanceDTO {
 	
 	private static final long serialVersionUID = -1650358898532968558L;
 
-	private long newsArticleGroupId;
+	private Long newsArticleGroupId;
 	
 	@NotNull
 	@Size(max=ForeignKeyColumnLength.EditionId)
@@ -74,5 +74,14 @@ public class NewsArticleGroupDTO extends MaintenanceDTO {
 	
 	private String comments;
 	
+	private Boolean readingLevel1;
+	
+	private Boolean readingLevel2;
+	
+	private Boolean readingLevel3;
+	
+	private Boolean readingLevel4;
+	
 	private List<NewsArticleDTO> newsArticles;
+	
 }

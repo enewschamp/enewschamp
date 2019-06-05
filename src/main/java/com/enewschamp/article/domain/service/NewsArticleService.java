@@ -1,5 +1,6 @@
 package com.enewschamp.article.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -9,10 +10,16 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.article.domain.common.ArticleActionType;
+import com.enewschamp.article.domain.common.ArticleRatingType;
+import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.article.domain.entity.NewsArticle;
+import com.enewschamp.article.domain.entity.NewsArticleGroup;
 import com.enewschamp.article.domain.entity.NewsArticleQuiz;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.domain.common.StatusTransitionDTO;
+import com.enewschamp.domain.common.StatusTransitionHandler;
 import com.enewschamp.problem.BusinessException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,8 +45,12 @@ public class NewsArticleService {
 	@Autowired
 	private EnewschampApplicationProperties appConfig;
 	
+	@Autowired
+	private StatusTransitionHandler statusTransitionHandler;
+	
 	public NewsArticle create(NewsArticle article) {
 		new ArticleBusinessPolicy(article).validateAndThrow();
+		deriveArticleStatus(article);
 		return repository.save(article);
 	}
 	
@@ -92,4 +103,30 @@ public class NewsArticleService {
 		return auditBuilder.build();
 	}
 	
+	public ArticleStatusType deriveArticleStatus(NewsArticle article) {
+		ArticleStatusType status = ArticleStatusType.Unassigned;
+		if(article.getCurrentAction() != null) {
+			ArticleStatusType existingStatus = repository.getArticleStatusType(article.getNewsArticleId());
+			existingStatus = existingStatus == null ? ArticleStatusType.Unassigned : existingStatus;
+			StatusTransitionDTO transition = new StatusTransitionDTO(NewsArticle.class.getSimpleName(), 
+																	 existingStatus.toString(),
+																     article.getCurrentAction().toString(), 
+																     null);
+			status = ArticleStatusType.fromValue(statusTransitionHandler.findNextStatus(transition));
+		}
+		article.setStatus(status);
+		return status;
+	}
+	
+	public List<NewsArticle> assignAuthor(Long articleGroupId, String authorId) {
+		
+		List<NewsArticle> existingArticles = repository.findByNewsArticleGroupId(articleGroupId);
+		for(NewsArticle article: existingArticles) {
+			article.setAuthorId(authorId);
+			article.setCurrentAction(ArticleActionType.AssignAuthor);
+			deriveArticleStatus(article);
+			repository.save(article);
+		}
+		return existingArticles;
+	}
 }
