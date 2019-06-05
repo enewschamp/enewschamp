@@ -22,13 +22,13 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.enewschamp.article.domain.common.ArticleActionType;
 import com.enewschamp.article.domain.common.ArticleRatingType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.domain.common.BaseEntity;
-import com.enewschamp.domain.common.StatusTransitionDTO;
 import com.enewschamp.domain.common.StatusTransitionHandler;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
@@ -108,6 +108,7 @@ public class NewsArticle extends BaseEntity {
 	private String authorId;
 	
 	@Enumerated(EnumType.STRING)
+	@DiffIgnore
 	private ArticleActionType currentAction;
 	
 	@OneToMany(cascade = CascadeType.ALL)

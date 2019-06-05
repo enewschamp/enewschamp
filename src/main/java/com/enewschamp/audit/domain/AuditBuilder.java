@@ -140,8 +140,10 @@ public class AuditBuilder  {
 		// Get audit for all parent objects. While fetching audit for parent object, audit for Added and Removed Child object also comes as part of
 		// collection change audit. Same applies for all levels of object hierarchy.
 		allAudit.addAll(getAuditForParentObject(this.parentObject));
-		for(Object childObject: childObjects) {
-			allAudit.addAll(getAuditForChildObject(childObject));
+		if(childObjects != null) {
+			for(Object childObject: childObjects) {
+				allAudit.addAll(getAuditForChildObject(childObject));
+			}
 		}
 		return buildOutput(allAudit);
 	}

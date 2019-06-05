@@ -97,11 +97,15 @@ public class NewsArticleGroupService {
 			for(NewsArticle article: articles) {
 				ArticleStatusType articleStatus = newsArticleService.deriveArticleStatus(article);
 				if(articleStatus != null) {
+					ArticleGroupStatusType status = ArticleGroupStatusType.fromArticleStatus(articleStatus);
+					if(status.equals(ArticleGroupStatusType.WIP)) {
+						newStatus = status;
+						break;
+					}
 					if(newStatus == null) {
-						newStatus = ArticleGroupStatusType.fromArticleStatus(articleStatus);
+						newStatus = status;
 						continue;
 					}
-					ArticleGroupStatusType status = ArticleGroupStatusType.fromArticleStatus(articleStatus);
 					if(status.getOrder() < newStatus.getOrder()) {
 						newStatus = status;
 					}
