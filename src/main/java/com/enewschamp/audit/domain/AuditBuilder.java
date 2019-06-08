@@ -281,6 +281,14 @@ public class AuditBuilder  {
 				ListChange listChange = (ListChange) change;
 				List<ContainerElementChange> collectionChanges = listChange.getChanges();
 				auditDTO.addChildItemPropertyName(listChange.getPropertyName());
+				
+//				List<ValueRemoved> removedItems = new ArrayList<ValueRemoved>();
+//				// Collect removed items - Special handling for element exchange done by Javers
+//				collectionChanges.forEach(collectionChange -> {
+//					if (collectionChange instanceof ValueRemoved) {
+//						removedItems.add((ValueRemoved) collectionChange);
+//					}
+//				});
 
 				collectionChanges.forEach(collectionChange -> {
 					if (collectionChange instanceof ValueAdded) {
@@ -292,7 +300,9 @@ public class AuditBuilder  {
 						handleChildItemRemoval(auditDTO, listChange.getPropertyName(), ((InstanceId) itemRemoved.getValue()));
 					}
 					if (collectionChange instanceof ElementValueChange) {
-						handleChildElementValueChange(commitMetadata, auditDTO, listChange.getPropertyName(), (ElementValueChange) collectionChange);
+						handleChildElementValueChange(commitMetadata, auditDTO, 
+													  listChange.getPropertyName(), 
+													  (ElementValueChange) collectionChange);
 					}
 				});
 			}

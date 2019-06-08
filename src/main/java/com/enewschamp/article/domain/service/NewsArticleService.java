@@ -109,6 +109,7 @@ public class NewsArticleService {
 			ArticleStatusType existingStatus = repository.getArticleStatusType(article.getNewsArticleId());
 			existingStatus = existingStatus == null ? ArticleStatusType.Unassigned : existingStatus;
 			StatusTransitionDTO transition = new StatusTransitionDTO(NewsArticle.class.getSimpleName(), 
+																	 String.valueOf(article.getNewsArticleId()),
 																	 existingStatus.toString(),
 																     article.getCurrentAction().toString(), 
 																     null);

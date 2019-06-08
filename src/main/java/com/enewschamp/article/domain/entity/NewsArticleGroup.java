@@ -107,6 +107,22 @@ public class NewsArticleGroup extends BaseEntity {
 	@Lob
 	private String comments;
 	
+	@Column(name = "ReadingLevel1")
+	@NotNull
+	private Boolean readingLevel1;
+	
+	@Column(name = "ReadingLevel2")
+	@NotNull
+	private Boolean readingLevel2;
+	
+	@Column(name = "ReadingLevel3")
+	@NotNull
+	private Boolean readingLevel3;
+	
+	@Column(name = "ReadingLevel4")
+	@NotNull
+	private Boolean readingLevel4;
+	
 	@Transient
 	private List<NewsArticle> newsArticles;
 		

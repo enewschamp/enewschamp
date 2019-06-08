@@ -25,25 +25,27 @@ public final class Fault extends ThrowableProblem {
 	private HeaderDTO header;
 	
 	private List<ValidationError> validationErrors;
+	private String[] errorMessageParams;
 
 	public Fault(final StatusType status, final BusinessException e, final HeaderDTO header) {
-		this(TYPE, status, e.getErrorCode(), e.getValidationErrors(), header);
+		this(TYPE, status, e.getErrorCode(), e.getErrorMessageParams(), e.getValidationErrors(), header);
 	}
 	
 	public Fault(final StatusType status, final String errorCode, final HeaderDTO header) {
-		this(TYPE, status, errorCode, null, header);
+		this(TYPE, status, errorCode, null, null, header);
 	}
 	
 	public Fault(final StatusType status, final BusinessException e) {
-		this(TYPE, status, e.getErrorCode(), e.getValidationErrors(), null);
+		this(TYPE, status, e.getErrorCode(), e.getErrorMessageParams(), e.getValidationErrors(), null);
 	}
 
-	Fault(final URI type, final StatusType status, final String errorCode, 
+	Fault(final URI type, final StatusType status, final String errorCode, final String[] errorMessageParams,
 		  List<ValidationError> validationErrors, final HeaderDTO header) {
 		this.type = type;
 		this.status = status;
 		this.title = errorCode;
 		this.errorCode = errorCode;
+		this.errorMessageParams = errorMessageParams;
 		this.header = header;
 		this.validationErrors = validationErrors;
 	}
@@ -80,6 +82,10 @@ public final class Fault extends ThrowableProblem {
 	
 	public List<ValidationError> getValidationErrors() {
 		return this.validationErrors;
+	}
+	
+	public String[] getErrorMessageParams() {
+		return this.errorMessageParams;
 	}
 	
 }

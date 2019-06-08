@@ -8,6 +8,7 @@ import lombok.Data;
 public class StatusTransitionDTO {
 
 	private String entityName;
+	private String entityId;
 	private String fromStatus;
 	private String action;
 	private String toStatus;

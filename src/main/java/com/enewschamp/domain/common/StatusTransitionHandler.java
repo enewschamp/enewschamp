@@ -29,7 +29,10 @@ public class StatusTransitionHandler {
 			}
 		}
 		if(toStatus == null) {
-			throw new BusinessException(ErrorCodes.STATUS_TRANSITION_NOT_FOUND);
+			throw new BusinessException(ErrorCodes.STATUS_TRANSITION_NOT_FOUND, 
+										transition.getEntityName() +  "#" + transition.getEntityId(),
+										transition.getFromStatus(),
+										transition.getAction());
 		}
 		return toStatus;
 	}

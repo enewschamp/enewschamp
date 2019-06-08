@@ -1,5 +1,6 @@
 package com.enewschamp.audit.app;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.javers.core.Javers;
@@ -56,4 +57,12 @@ public class AuditController {
         
         return queryChanges(jqlQuery);
     }
+    
+    @GetMapping("/commits/{commitId}")
+    public String getAuditByCommitId(@PathVariable BigDecimal commitId) {
+        QueryBuilder jqlQuery = QueryBuilder.anyDomainObject().withCommitId(commitId);
+        return queryChanges(jqlQuery);
+    }
+    
+    
 }

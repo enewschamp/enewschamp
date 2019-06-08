@@ -84,4 +84,23 @@ public class NewsArticleGroupDTO extends MaintenanceDTO {
 	
 	private List<NewsArticleDTO> newsArticles;
 	
+	public boolean isReadingLevelPresent(int readingLevel) {
+		boolean isPresent = false;
+		switch(readingLevel) {
+			case 1:
+				isPresent = this.readingLevel1 != null ? this.readingLevel1 : false;
+			break;
+			case 2:
+				isPresent = this.readingLevel2 != null ? this.readingLevel2 : false;
+			break;
+			case 3:
+				isPresent = this.readingLevel3 != null ? this.readingLevel3 : false;
+			break;
+			case 4:
+				isPresent = this.readingLevel4 != null ? this.readingLevel4 : false;
+			break;
+		}
+		return isPresent;
+	}
+	
 }

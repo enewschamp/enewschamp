@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.article.app.dto.NewsArticleDTO;
 import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
+import com.enewschamp.article.domain.common.ArticleActionType;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
 import com.enewschamp.article.domain.service.NewsArticleGroupRepository;
@@ -42,7 +43,7 @@ public class NewsArticleGroupHelper {
 		List<NewsArticleDTO> newsArticles = null;
 		NewsArticleGroup existingArticleGroup = newsArticleGroupService.get(articleGroupDTO.getNewsArticleGroupId());
 		if(existingArticleGroup != null) {
-			checkForArticleIds(articleGroupDTO, existingArticleGroup);
+			//checkForArticleIds(articleGroupDTO, existingArticleGroup);
 			newsArticles = articleGroupDTO.getNewsArticles();
 		} else {
 			newsArticles = createDefaultNewsArticles(articleGroupDTO);
@@ -61,8 +62,13 @@ public class NewsArticleGroupHelper {
 		List<NewsArticleDTO> articleList = new ArrayList<NewsArticleDTO>(); 
 		for(NewsArticleDTO articleDTO: newsArticles) {
 			articleDTO.setNewsArticleGroupId(articleGroup.getNewsArticleGroupId());
-			articleDTO.setRecordInUse(articleGroup.getRecordInUse());
 			articleDTO.setOperatorId(articleGroup.getOperatorId());
+			if(articleGroupDTO.isReadingLevelPresent(articleDTO.getReadingLevel()) ) {
+				articleDTO.setRecordInUse(articleGroup.getRecordInUse());
+			} else {
+				articleDTO.setRecordInUse(RecordInUseType.N);
+				articleDTO.setCurrentAction(ArticleActionType.Close);
+			}
 			articleDTO = newsArticleHelper.create(articleDTO);
 			articleList.add(articleDTO);
 		}
@@ -70,6 +76,7 @@ public class NewsArticleGroupHelper {
 		
 		return articleGroupDTO;
 	}
+	
 	
 	private List<NewsArticleDTO> createDefaultNewsArticles(NewsArticleGroupDTO articleGroupDTO) {
 		
@@ -108,22 +115,22 @@ public class NewsArticleGroupHelper {
 		return articleGroupDTO;
 	}
 	
-	private void checkForArticleIds(NewsArticleGroupDTO articleGroupDTO, NewsArticleGroup articleGroup) {
-		List<Long> newArticleIds = new ArrayList<Long>();
-		for(NewsArticleDTO newsArticle : articleGroupDTO.getNewsArticles()) {
-			if(newsArticle.getNewsArticleId() <= 0) {
-				throw new BusinessException(ErrorCodes.INVALID_ARTICLE_ID);
-			}
-			newArticleIds.add(newsArticle.getNewsArticleId());
-		}
-		
-		List<NewsArticle> existingArticles = newsArticleRepository.findByNewsArticleGroupId(articleGroupDTO.getNewsArticleGroupId());
-		
-		existingArticles.forEach(existingArticle -> {
-			if(!newArticleIds.contains(existingArticle.getNewsArticleId())) {
-				throw new BusinessException(ErrorCodes.ARTICLE_ID_CHANGED);
-			}
-		});
-	}
+//	private void checkForArticleIds(NewsArticleGroupDTO articleGroupDTO, NewsArticleGroup articleGroup) {
+//		List<Long> newArticleIds = new ArrayList<Long>();
+//		for(NewsArticleDTO newsArticle : articleGroupDTO.getNewsArticles()) {
+//			if(newsArticle.getNewsArticleId() <= 0) {
+//				throw new BusinessException(ErrorCodes.INVALID_ARTICLE_ID);
+//			}
+//			newArticleIds.add(newsArticle.getNewsArticleId());
+//		}
+//		
+//		List<NewsArticle> existingArticles = newsArticleRepository.findByNewsArticleGroupId(articleGroupDTO.getNewsArticleGroupId());
+//		
+//		existingArticles.forEach(existingArticle -> {
+//			if(!newArticleIds.contains(existingArticle.getNewsArticleId())) {
+//				throw new BusinessException(ErrorCodes.ARTICLE_ID_CHANGED);
+//			}
+//		});
+//	}
 	
 }

@@ -154,7 +154,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"SaveNewsArticle\"\n    },\n    \"data\": {\n        \"operatorId\": \"mesmayus\",\n        \"recordInUse\": \"Y\",\n        \"newsArticleGroupId\": {{newsArticleGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"genreId\": \"SCIENCE\",\n        \"headline\": \"Article Group 1-Headline\",\n        \"credits\": \"Article Group 1-Credit\",\n        \"url\": \"http://Article Group 1-url\",\n        \"sourceText\": \"Article Group 1-SourceText\",\n        \"hashTags\": \"#Article Group 1\",\n        \"imagePathMobile\": \"Article Group 1-imagePathMobile\",\n        \"imagePathTab\": \"Article Group 1-imagePathTab\",\n        \"imagePathDesktop\": \"Article Group 1-imagePathDesktop\",\n        \"authorId\": \"deepaksem\",\n        \"targetCompletionDate\": \"2019-06-29\",\n        \"publicationDate\": \"2019-06-29\",\n        \"intendedPubMonth\": \"Jan\",\n        \"intendedPubDay\": \"Fri\",\n        \"comments\": \"Article Group 1-Comment1\",\n        \"newsArticles\": [\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId1}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 1,\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"content\": \"Article Group 1 - Article 1 Content\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId2}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 2,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": []\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId3}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 3,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": []\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId4}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 4,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": []\n            }\n        ]\n    }\n}"
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"SaveNewsArticle\"\n    },\n    \"data\": {\n        \"operatorId\": \"mesmayus\",\n        \"recordInUse\": \"Y\",\n        \"newsArticleGroupId\": {{newsArticleGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"genreId\": \"SCIENCE\",\n        \"headline\": \"Article Group 1-Headline\",\n        \"credits\": \"Article Group 1-Credit\",\n        \"url\": \"http://Article Group 1-url\",\n        \"sourceText\": \"Article Group 1-SourceText\",\n        \"hashTags\": \"#Article Group 1\",\n        \"imagePathMobile\": \"Article Group 1-imagePathMobile\",\n        \"imagePathTab\": \"Article Group 1-imagePathTab\",\n        \"imagePathDesktop\": \"Article Group 1-imagePathDesktop\",\n        \"authorId\": \"deepaksem\",\n        \"targetCompletionDate\": \"2019-06-29\",\n        \"publicationDate\": \"2019-06-29\",\n        \"intendedPubMonth\": \"Jan\",\n        \"intendedPubDay\": \"Fri\",\n        \"comments\": \"Article Group 1-Comment1\",\n        \"readingLevel1\": true,\n        \"readingLevel2\": true,\n        \"readingLevel3\": true,\n        \"readingLevel4\": true,\n        \"newsArticles\": [\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId1}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 1,\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"content\": \"Article Group 1 - Article 1 Content\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId2}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 2,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": []\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId3}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 3,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": []\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId4}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 4,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": []\n            }\n        ]\n    }\n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -195,7 +195,16 @@
 							"pm.environment.set(\"newsArticleQuizId3-2\", jsonData.data.newsArticleGroup.newsArticles[2].newsArticleQuiz[1].newsArticleQuizId);",
 							"",
 							"console.log('newsArticleQuizId3-1: ', pm.environment.get(\"newsArticleQuizId3-1\"));",
-							"console.log('newsArticleQuizId3-2: ', pm.environment.get(\"newsArticleQuizId3-2\"));"
+							"console.log('newsArticleQuizId3-2: ', pm.environment.get(\"newsArticleQuizId3-2\"));",
+							"",
+							"var article = jsonData.data.newsArticleGroup.newsArticles[0];",
+							"console.log('Article 1 Status: ', article.newsArticleId + \"#\" + article.status);",
+							"article = jsonData.data.newsArticleGroup.newsArticles[1];",
+							"console.log('Article 2 Status: ', article.newsArticleId + \"#\" + article.status);",
+							"article = jsonData.data.newsArticleGroup.newsArticles[2];",
+							"console.log('Article 3 Status: ', article.newsArticleId + \"#\" + article.status);",
+							"article = jsonData.data.newsArticleGroup.newsArticles[3];",
+							"console.log('Article 4 Status: ', article.newsArticleId + \"#\" + article.status);"
 						],
 						"type": "text/javascript"
 					}
@@ -212,7 +221,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"SaveNewsArticle\"\n    },\n    \"data\": {\n        \"operatorId\": \"mesmayus\",\n        \"recordInUse\": \"Y\",\n        \"newsArticleGroupId\": {{newsArticleGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"genreId\": \"SCIENCE\",\n        \"headline\": \"Article Group 1-Headline\",\n        \"credits\": \"Article Group 1-Credit\",\n        \"url\": \"http://Article Group 1-url\",\n        \"sourceText\": \"Article Group 1-SourceText\",\n        \"hashTags\": \"#Article Group 1\",\n        \"imagePathMobile\": \"Article Group 1-imagePathMobile\",\n        \"imagePathTab\": \"Article Group 1-imagePathTab\",\n        \"imagePathDesktop\": \"Article Group 1-imagePathDesktop\",\n        \"authorId\": \"deepaksem\",\n        \"targetCompletionDate\": \"2019-06-29\",\n        \"publicationDate\": \"2019-06-29\",\n        \"intendedPubMonth\": \"Jan\",\n        \"intendedPubDay\": \"Fri\",\n        \"comments\": \"Article Group 1-Comment1\",\n        \"newsArticles\": [\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId1}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 1,\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"content\": \"Article Group 1 - Article 1 Content\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId1-1}},\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId1-2}},\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId2}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 2,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": []\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId3}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 3,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId4}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 4,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": []\n            }\n        ]\n    }\n}"
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"SaveNewsArticle\"\n    },\n    \"data\": {\n        \"operatorId\": \"mesmayus\",\n        \"recordInUse\": \"Y\",\n        \"newsArticleGroupId\": {{newsArticleGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"genreId\": \"SCIENCE\",\n        \"headline\": \"Article Group 1-Headline\",\n        \"credits\": \"Article Group 1-Credit\",\n        \"url\": \"http://Article Group 1-url\",\n        \"sourceText\": \"Article Group 1-SourceText\",\n        \"hashTags\": \"#Article Group 1\",\n        \"imagePathMobile\": \"Article Group 1-imagePathMobile\",\n        \"imagePathTab\": \"Article Group 1-imagePathTab\",\n        \"imagePathDesktop\": \"Article Group 1-imagePathDesktop\",\n        \"authorId\": \"deepaksem\",\n        \"targetCompletionDate\": \"2019-06-29\",\n        \"publicationDate\": \"2019-06-29\",\n        \"intendedPubMonth\": \"Jan\",\n        \"intendedPubDay\": \"Fri\",\n        \"comments\": \"Article Group 1-Comment1\",\n        \"readingLevel1\": true,\n        \"readingLevel2\": true,\n        \"readingLevel3\": true,\n        \"readingLevel4\": true,\n        \"newsArticles\": [\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId1}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 1,\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"content\": \"Article Group 1 - Article 1 Content\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId1-1}},\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId1-2}},\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId2}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 2,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": []\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId3}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 3,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId4}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 4,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": []\n            }\n        ]\n    }\n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -262,48 +271,18 @@
 							"console.log('newsArticleQuizId4-3: ', pm.environment.get(\"newsArticleQuizId4-3\"));",
 							"",
 							"console.log('newsArticleQuizId3-1: ', pm.environment.get(\"newsArticleQuizId3-1\"));",
-							"console.log('newsArticleQuizId3-2: ', pm.environment.get(\"newsArticleQuizId3-2\"));"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"SaveNewsArticle\"\n    },\n    \"data\": {\n        \"operatorId\": \"mesmayus\",\n        \"recordInUse\": \"Y\",\n        \"newsArticleGroupId\": {{newsArticleGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"genreId\": \"SCIENCE\",\n        \"headline\": \"Article Group 1-Headline\",\n        \"credits\": \"Article Group 1-Credit\",\n        \"url\": \"http://Article Group 1-url\",\n        \"sourceText\": \"Article Group 1-SourceText\",\n        \"hashTags\": \"#Article Group 1\",\n        \"imagePathMobile\": \"Article Group 1-imagePathMobile\",\n        \"imagePathTab\": \"Article Group 1-imagePathTab\",\n        \"imagePathDesktop\": \"Article Group 1-imagePathDesktop\",\n        \"authorId\": \"deepaksem\",\n        \"targetCompletionDate\": \"2019-06-29\",\n        \"publicationDate\": \"2019-06-29\",\n        \"intendedPubMonth\": \"Jan\",\n        \"intendedPubDay\": \"Fri\",\n        \"comments\": \"Article Group 1-Comment1\",\n        \"newsArticles\": [\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId1}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 1,\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SubmitForReview\",\n                \"content\": \"Article Group 1 - Article 1 Content\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId1-1}},\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId1-2}},\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId2}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 2,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": []\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId3}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 3,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": [\n                    {\n                    \t\"newsArticleId\": {{newsArticleId3}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId3-2}},\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId4}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 4,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    },\n                    {\n                        \"question\": \"Question 3\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 3\n                    }\n                ]\n            }\n        ]\n    }\n}"
-				},
-				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
-					"protocol": "http",
-					"host": [
-						"{{host}}"
-					],
-					"port": "{{port}}",
-					"path": [
-						"{{base-path}}",
-						"{{publisherAppPath}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update Article content-add 1 quiz-remove 1quiz-update 1 quiz",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
-						"exec": [
+							"console.log('newsArticleQuizId3-2: ', pm.environment.get(\"newsArticleQuizId3-2\"));",
+							"",
+							"console.log('Article Group Status: ', jsonData.data.newsArticleGroup.status);",
+							"var article = jsonData.data.newsArticleGroup.newsArticles[0];",
+							"console.log('Article 1 Status: ', article.newsArticleId + \"#\" + article.status);",
+							"article = jsonData.data.newsArticleGroup.newsArticles[1];",
+							"console.log('Article 2 Status: ', article.newsArticleId + \"#\" + article.status);",
+							"article = jsonData.data.newsArticleGroup.newsArticles[2];",
+							"console.log('Article 3 Status: ', article.newsArticleId + \"#\" + article.status);",
+							"article = jsonData.data.newsArticleGroup.newsArticles[3];",
+							"console.log('Article 4 Status: ', article.newsArticleId + \"#\" + article.status);",
+							"",
 							""
 						],
 						"type": "text/javascript"
@@ -321,7 +300,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"SaveNewsArticle\"\n    },\n    \"data\": {\n        \"newsArticleGroupId\": 1,\n        \"operatorId\": \"mesmayus\",\n        \"recordInUse\": \"Y\",\n        \"editionId\": \"INDIAN\",\n        \"genreId\": \"SCIENCE\",\n        \"headline\": \"Article Group 1-Headline - updated\",\n        \"credits\": \"Article Group 1-Credit\",\n        \"status\": \"Unassigned\",\n        \"url\": \"http://Article Group 1-url\",\n        \"sourceText\": \"Article Group 1-SourceText\",\n        \"hashTags\": \"#Article Group 1\",\n        \"imagePathMobile\": \"Article Group 1-imagePathMobile\",\n        \"imagePathTab\": \"Article Group 1-imagePathTab\",\n        \"imagePathDesktop\": \"Article Group 1-imagePathDesktop\",\n        \"editorId\": \"mesmayus\",\n        \"authorId\": \"deepsem\",\n        \"targetCompletionDate\": \"2019-06-30\",\n        \"publicationDate\": \"2019-06-30\",\n        \"intendedPubMonth\": \"Jan\",\n        \"intendedPubDay\": \"Fri\",\n        \"comments\": \"Article Group 1-Comment1\",\n        \"newsArticles\": [\n            {\n                \"newsArticleId\": 1,\n                \"newsArticleGroupId\": 1,\n                \"readingLevel\": 1,\n                \"status\": \"Unassigned\",\n                \"content\": \"Article Group 1-Reading Level 1-Sample Content - updated again\",\n                \"rating\": \"Rating2\",\n                \"likeLCount\": 0,\n                \"likeHCount\": 0,\n                \"likeOCount\": 0,\n                \"likeWCount\": 0,\n                \"likeSCount\": 0,\n                \"newsArticleQuiz\": [\n                    {\n                        \"newsArticleId\": 1,\n                        \"newsArticleQuizId\": 1,\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"newsArticleId\": 1,\n                        \"newsArticleQuizId\": 2,\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 3\n                    },\n                    {\n                        \"newsArticleId\": 1,\n                        \"newsArticleQuizId\": 4,\n                        \"question\": \"Question 3\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 4\n                    }\n                ]\n            }\n        ]\n    }\n}"
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"SaveNewsArticle\"\n    },\n    \"data\": {\n        \"operatorId\": \"mesmayus\",\n        \"recordInUse\": \"Y\",\n        \"newsArticleGroupId\": {{newsArticleGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"genreId\": \"SCIENCE\",\n        \"headline\": \"Article Group 1-Headline\",\n        \"credits\": \"Article Group 1-Credit\",\n        \"url\": \"http://Article Group 1-url\",\n        \"sourceText\": \"Article Group 1-SourceText\",\n        \"hashTags\": \"#Article Group 1\",\n        \"imagePathMobile\": \"Article Group 1-imagePathMobile\",\n        \"imagePathTab\": \"Article Group 1-imagePathTab\",\n        \"imagePathDesktop\": \"Article Group 1-imagePathDesktop\",\n        \"authorId\": \"deepaksem\",\n        \"targetCompletionDate\": \"2019-06-29\",\n        \"publicationDate\": \"2019-06-29\",\n        \"intendedPubMonth\": \"Jan\",\n        \"intendedPubDay\": \"Fri\",\n        \"comments\": \"Article Group 1-Comment1\",\n        \"readingLevel1\": true,\n        \"readingLevel2\": true,\n        \"readingLevel3\": true,\n        \"readingLevel4\": true,\n        \"newsArticles\": [\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId1}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 1,\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SubmitForReview\",\n                \"content\": \"Article Group 1 - Article 1 Content\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId1-1}},\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId1-2}},\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId2}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 2,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": []\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId3}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 3,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": [\n                    {\n                    \t\"newsArticleId\": {{newsArticleId3}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId3-2}},\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId4}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 4,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    },\n                    {\n                        \"question\": \"Question 3\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 3\n                    }\n                ]\n            }\n        ]\n    }\n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -339,7 +318,7 @@
 			"response": []
 		},
 		{
-			"name": "Remove 1 quiz-update 1 quiz",
+			"name": "Remove article for reading level 2",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -350,44 +329,21 @@
 						],
 						"type": "text/javascript"
 					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"SaveNewsArticle\"\n    },\n    \"data\": {\n        \"newsArticleGroupId\": 1,\n        \"operatorId\": \"mesmayus\",\n        \"recordInUse\": \"Y\",\n        \"editionId\": \"INDIAN\",\n        \"genreId\": \"SCIENCE\",\n        \"headline\": \"Article Group 1-Headline - updated\",\n        \"credits\": \"Article Group 1-Credit\",\n        \"status\": \"Unassigned\",\n        \"url\": \"http://Article Group 1-url\",\n        \"sourceText\": \"Article Group 1-SourceText\",\n        \"hashTags\": \"#Article Group 1\",\n        \"imagePathMobile\": \"Article Group 1-imagePathMobile\",\n        \"imagePathTab\": \"Article Group 1-imagePathTab\",\n        \"imagePathDesktop\": \"Article Group 1-imagePathDesktop\",\n        \"editorId\": \"mesmayus\",\n        \"authorId\": \"deepsem\",\n        \"targetCompletionDate\": \"2019-06-30\",\n        \"publicationDate\": \"2019-06-30\",\n        \"intendedPubMonth\": \"Jan\",\n        \"intendedPubDay\": \"Fri\",\n        \"comments\": \"Article Group 1-Comment1\",\n        \"newsArticles\": [\n            {\n                \"newsArticleId\": 1,\n                \"newsArticleGroupId\": 1,\n                \"readingLevel\": 1,\n                \"status\": \"Unassigned\",\n                \"content\": \"Article Group 1-Reading Level 1-Sample Content - updated again\",\n                \"rating\": \"Rating2\",\n                \"likeLCount\": 0,\n                \"likeHCount\": 0,\n                \"likeOCount\": 0,\n                \"likeWCount\": 0,\n                \"likeSCount\": 0,\n                \"newsArticleQuiz\": [\n                    {\n                        \"newsArticleId\": 1,\n                        \"newsArticleQuizId\": 1,\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 4\n                    },\n                    {\n                        \"newsArticleId\": 1,\n                        \"newsArticleQuizId\": 2,\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 3\n                    }\n                ]\n            }\n        ]\n    }\n}"
 				},
-				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
-					"protocol": "http",
-					"host": [
-						"{{host}}"
-					],
-					"port": "{{port}}",
-					"path": [
-						"{{base-path}}",
-						"{{publisherAppPath}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update Article - rating change",
-			"event": [
 				{
-					"listen": "prerequest",
+					"listen": "test",
 					"script": {
-						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"id": "a8994854-664d-46a7-a263-1478415e7a1c",
 						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"console.log('Number of articles: ', jsonData.data.newsArticleGroup.newsArticles.length);",
+							"var article = jsonData.data.newsArticleGroup.newsArticles[0];",
+							"console.log('Article 1 Status: ', article.newsArticleId + \"#\" + article.status);",
+							"article = jsonData.data.newsArticleGroup.newsArticles[1];",
+							"console.log('Article 2 Status: ', article.newsArticleId + \"#\" + article.status);",
+							"article = jsonData.data.newsArticleGroup.newsArticles[2];",
+							"console.log('Article 3 Status: ', article.newsArticleId + \"#\" + article.status);",
 							""
 						],
 						"type": "text/javascript"
@@ -405,49 +361,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"SaveNewsArticle\"\n    },\n    \"data\": {\n        \"newsArticleGroupId\": 1,\n        \"operatorId\": \"mesmayus\",\n        \"recordInUse\": \"Y\",\n        \"editionId\": \"INDIAN\",\n        \"genreId\": \"SCIENCE\",\n        \"headline\": \"Article Group 1-Headline - updated\",\n        \"credits\": \"Article Group 1-Credit\",\n        \"status\": \"Unassigned\",\n        \"url\": \"http://Article Group 1-url\",\n        \"sourceText\": \"Article Group 1-SourceText\",\n        \"hashTags\": \"#Article Group 1\",\n        \"imagePathMobile\": \"Article Group 1-imagePathMobile\",\n        \"imagePathTab\": \"Article Group 1-imagePathTab\",\n        \"imagePathDesktop\": \"Article Group 1-imagePathDesktop\",\n        \"editorId\": \"mesmayus\",\n        \"authorId\": \"deepsem\",\n        \"targetCompletionDate\": \"2019-06-30\",\n        \"publicationDate\": \"2019-06-30\",\n        \"intendedPubMonth\": \"Jan\",\n        \"intendedPubDay\": \"Fri\",\n        \"comments\": \"Article Group 1-Comment1\",\n        \"newsArticles\": [\n            {\n                \"newsArticleId\": 1,\n                \"newsArticleGroupId\": 1,\n                \"readingLevel\": 1,\n                \"status\": \"Unassigned\",\n                \"content\": \"Article Group 1-Reading Level 1-Sample Content - updated again\",\n                \"rating\": \"Rating1\",\n                \"likeLCount\": 0,\n                \"likeHCount\": 0,\n                \"likeOCount\": 0,\n                \"likeWCount\": 0,\n                \"likeSCount\": 0,\n                \"newsArticleQuiz\": [\n                    {\n                        \"newsArticleId\": 1,\n                        \"newsArticleQuizId\": 1,\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 4\n                    },\n                    {\n                        \"newsArticleId\": 1,\n                        \"newsArticleQuizId\": 2,\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 3\n                    }\n                ]\n            }\n        ]\n    }\n}"
-				},
-				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
-					"protocol": "http",
-					"host": [
-						"{{host}}"
-					],
-					"port": "{{port}}",
-					"path": [
-						"{{base-path}}",
-						"{{publisherAppPath}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update 1 quiz only",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"SaveNewsArticle\"\n    },\n    \"data\": {\n        \"newsArticleGroupId\": 1,\n        \"operatorId\": \"mesmayus\",\n        \"recordInUse\": \"Y\",\n        \"editionId\": \"INDIAN\",\n        \"genreId\": \"SCIENCE\",\n        \"headline\": \"Article Group 1-Headline - updated\",\n        \"credits\": \"Article Group 1-Credit\",\n        \"status\": \"Unassigned\",\n        \"url\": \"http://Article Group 1-url\",\n        \"sourceText\": \"Article Group 1-SourceText\",\n        \"hashTags\": \"#Article Group 1\",\n        \"imagePathMobile\": \"Article Group 1-imagePathMobile\",\n        \"imagePathTab\": \"Article Group 1-imagePathTab\",\n        \"imagePathDesktop\": \"Article Group 1-imagePathDesktop\",\n        \"editorId\": \"mesmayus\",\n        \"authorId\": \"deepsem\",\n        \"targetCompletionDate\": \"2019-06-30\",\n        \"publicationDate\": \"2019-06-30\",\n        \"intendedPubMonth\": \"Jan\",\n        \"intendedPubDay\": \"Fri\",\n        \"comments\": \"Article Group 1-Comment1\",\n        \"newsArticles\": [\n            {\n                \"newsArticleId\": 1,\n                \"newsArticleGroupId\": 1,\n                \"readingLevel\": 1,\n                \"status\": \"Unassigned\",\n                \"content\": \"Article Group 1-Reading Level 1-Sample Content - updated again\",\n                \"rating\": \"Rating1\",\n                \"likeLCount\": 0,\n                \"likeHCount\": 0,\n                \"likeOCount\": 0,\n                \"likeWCount\": 0,\n                \"likeSCount\": 0,\n                \"newsArticleQuiz\": [\n                    {\n                        \"newsArticleId\": 1,\n                        \"newsArticleQuizId\": 1,\n                        \"question\": \"Question 1 - updated\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"newsArticleId\": 1,\n                        \"newsArticleQuizId\": 2,\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 3\n                    }\n                ]\n            }\n        ]\n    }\n}"
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"SaveNewsArticle\"\n    },\n    \"data\": {\n        \"operatorId\": \"mesmayus\",\n        \"recordInUse\": \"Y\",\n        \"newsArticleGroupId\": {{newsArticleGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"genreId\": \"SCIENCE\",\n        \"headline\": \"Article Group 1-Headline\",\n        \"credits\": \"Article Group 1-Credit\",\n        \"url\": \"http://Article Group 1-url\",\n        \"sourceText\": \"Article Group 1-SourceText\",\n        \"hashTags\": \"#Article Group 1\",\n        \"imagePathMobile\": \"Article Group 1-imagePathMobile\",\n        \"imagePathTab\": \"Article Group 1-imagePathTab\",\n        \"imagePathDesktop\": \"Article Group 1-imagePathDesktop\",\n        \"authorId\": \"deepaksem\",\n        \"targetCompletionDate\": \"2019-06-29\",\n        \"publicationDate\": \"2019-06-29\",\n        \"intendedPubMonth\": \"Jan\",\n        \"intendedPubDay\": \"Fri\",\n        \"comments\": \"Article Group 1-Comment1\",\n        \"readingLevel1\": true,\n        \"readingLevel2\": false,\n        \"readingLevel3\": true,\n        \"readingLevel4\": true,\n        \"newsArticles\": [\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId1}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 1,\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SubmitForReview\",\n                \"content\": \"Article Group 1 - Article 1 Content\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId1-1}},\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId1-2}},\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId3}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 3,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": [\n                    {\n                    \t\"newsArticleId\": {{newsArticleId3}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId3-2}},\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId4}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 4,\n                \"status\": \"Assigned\",\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"newsArticleQuiz\": [\n                    {\n                    \t\"newsArticleId\": {{newsArticleId4}},\n                    \t\"newsArticleQuizId\": {{newsArticleQuizId4-1}},\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                    \t\"newsArticleId\": {{newsArticleId4}},\n                    \t\"newsArticleQuizId\": {{newsArticleQuizId4-2}},\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    },\n                    {\n                    \t\"newsArticleId\": {{newsArticleId4}},\n                    \t\"newsArticleQuizId\": {{newsArticleQuizId4-3}},\n                        \"question\": \"Question 3\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 3\n                    }\n                ]\n            }\n        ]\n    }\n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -506,132 +420,6 @@
 						"articles",
 						"1",
 						"audit"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Article Search Page",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"Menu\",\n        \"action\": \"ClickSearchNewsArticle\"\n    }\n}"
-				},
-				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
-					"protocol": "http",
-					"host": [
-						"{{host}}"
-					],
-					"port": "{{port}}",
-					"path": [
-						"{{base-path}}",
-						"{{publisherAppPath}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Search Articles",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "7d8b9f3f-3881-4fed-b5b7-98e64895f00f",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"SearchNewsArticles\",\n        \"action\": \"ClickGetNewsArticles\",\n        \"pageNumber\": 1,\n        \"pageSize\": 99\n    },\n    \"data\": {\n        \"userId\": \"userId\",\n        \"authorId\": \"authorId\",\n        \"editorId\": \"editorId\",\n        \"publisherId\": \"publisherId\",\n        \"editionId\": \"editionId\",\n        \"genreId\": \"genreId\",\n        \"headline\": \"headline\",\n        \"credits\": \"credits\",\n        \"articleId\": \"articleId\",\n        \"articleGroupId\": \"articleGroupId\",\n        \"readingLevel1\": \"Y\",\n        \"readingLevel2\": \"Y\",\n        \"readingLevel3\": \"Y\",\n        \"readingLevel4\": \"Y\",\n        \"publicationDate\": \"2019-05-18\",\n        \"intendedPubMonth\": \"Jan\",\n        \"articleStatusList\": [\n            \"Unassigned\",\n            \"Assigned\",\n            \"ReadyToPublish\"\n        ]\n    }\n}"
-				},
-				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
-					"protocol": "http",
-					"host": [
-						"{{host}}"
-					],
-					"port": "{{port}}",
-					"path": [
-						"{{base-path}}",
-						"{{publisherAppPath}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Article Group",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
-						"exec": [
-							"console.log('Article Id: ', pm.environment.get(\"articleId\"));"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"header\": {\n    \t\"pageName\": \"ListNewsArticles\",\n        \"action\": \"ClickNewsArticleGroupID\"\n    },\n    \"data\": {\n    \t\"newsArticleGroupId\": 1\n    }\n    \n}"
-				},
-				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
-					"protocol": "http",
-					"host": [
-						"{{host}}"
-					],
-					"port": "{{port}}",
-					"path": [
-						"{{base-path}}",
-						"{{publisherAppPath}}"
 					]
 				}
 			},

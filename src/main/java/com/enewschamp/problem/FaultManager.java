@@ -3,7 +3,7 @@ package com.enewschamp.problem;
 import javax.annotation.concurrent.Immutable;
 
 @Immutable
-public final class FaultManager extends RuntimeException {
+public final class FaultManager {
 
 
 	private static final long serialVersionUID = 2017344958429707915L;
@@ -18,6 +18,7 @@ public final class FaultManager extends RuntimeException {
 	public String getErrorCode() {
 		return errorCode;
 	}
+	
 
 
 }

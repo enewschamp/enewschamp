@@ -11,6 +11,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.javers.core.metamodel.annotation.TypeName;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -35,6 +36,7 @@ public class NewsArticleQuiz extends BaseEntity {
 	
 	@NotNull
 	@Column(name = "NewsArticleID", length=10)
+	@DiffIgnore
 	private long newsArticleId = 0L;
 	
 	@Column(name = "Question", length = 99)
