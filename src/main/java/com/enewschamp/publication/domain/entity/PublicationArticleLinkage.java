@@ -36,5 +36,9 @@ public class PublicationArticleLinkage extends BaseEntity {
 	@NotNull
 	@Column(name = "Sequence")
 	private int sequence;
+	
+	public String getKeyAsString() {
+		return String.valueOf(this.id);
+	}
 
 }

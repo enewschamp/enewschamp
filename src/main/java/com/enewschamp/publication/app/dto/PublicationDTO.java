@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.enewschamp.app.common.MaintenanceDTO;
+import com.enewschamp.article.domain.common.PublicationActionType;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
 
@@ -48,6 +49,9 @@ public class PublicationDTO extends MaintenanceDTO {
 	@Column(name = "Comments")
 	@Lob
 	private String comments;
+	
+	@NotNull
+	private PublicationActionType currentAction;
 
 	private List<PublicationArticleLinkageDTO> articleLinkages = new ArrayList<PublicationArticleLinkageDTO>();
 	

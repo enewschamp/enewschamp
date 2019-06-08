@@ -21,6 +21,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.article.domain.common.PublicationActionType;
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
@@ -75,6 +76,9 @@ public class Publication extends BaseEntity {
 	@Lob
 	private String comments;
 	
+	@Enumerated(EnumType.STRING)
+	private PublicationActionType currentAction;
+	
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "publication_Id")
 	private List<PublicationArticleLinkage> articleLinkages;
@@ -91,5 +95,9 @@ public class Publication extends BaseEntity {
 				linkage.setPublicationId(publicationId);
 			}
 		}
+	}
+	
+	public String getKeyAsString() {
+		return String.valueOf(this.publicationId);
 	}
 }

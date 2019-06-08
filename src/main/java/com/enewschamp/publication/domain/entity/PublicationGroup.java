@@ -45,5 +45,8 @@ public class PublicationGroup extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private PublicationStatusType status;
 	
+	public String getKeyAsString() {
+		return String.valueOf(this.publicationGroupId);
+	}
 	
 }
