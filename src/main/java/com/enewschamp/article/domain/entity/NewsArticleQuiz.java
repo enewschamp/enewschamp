@@ -60,4 +60,7 @@ public class NewsArticleQuiz extends BaseEntity {
 	@Column(name = "CorrectOpt", length=1)
 	private int correctOpt = 0;
 
+	public String getKeyAsString() {
+		return String.valueOf(this.newsArticleQuizId);
+	}
 }

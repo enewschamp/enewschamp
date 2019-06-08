@@ -126,4 +126,8 @@ public class NewsArticle extends BaseEntity {
 		}
 	}
 	
+	public String getKeyAsString() {
+		return String.valueOf(this.newsArticleId);
+	}
+	
 }

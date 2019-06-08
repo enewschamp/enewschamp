@@ -3,7 +3,6 @@ package com.enewschamp.audit.domain;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +15,7 @@ import org.javers.core.ChangesByCommit;
 import org.javers.core.ChangesByObject;
 import org.javers.core.commit.CommitId;
 import org.javers.core.commit.CommitMetadata;
-import org.javers.core.diff.Change;
-import org.javers.core.diff.changetype.ObjectRemoved;
+import org.javers.core.diff.changetype.NewObject;
 import org.javers.core.diff.changetype.ValueChange;
 import org.javers.core.diff.changetype.container.ContainerElementChange;
 import org.javers.core.diff.changetype.container.ElementValueChange;
@@ -32,24 +30,25 @@ import org.javers.core.metamodel.object.SnapshotType;
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.dto.AuditDTO;
 import com.enewschamp.app.dto.FieldChangeDTO;
-import com.enewschamp.domain.common.IEntity;
+import com.enewschamp.article.domain.common.ArticleActionType;
+import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.domain.common.OperationType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class AuditBuilder  {
+public class AuditBuilderOld  {
 
 	private ObjectMapper objectMapper;
 	
 	private AuditService auditService;
 
-	private IEntity parentObject;
+	private Object parentObject;
 	
 	private String parentObjectId;
 	
-	private List<IEntity> childObjects;
+	private List<Object> childObjects;
 	
 	private Map<String, String> childCollectionProperties;
 	
@@ -59,39 +58,28 @@ public class AuditBuilder  {
 	
 	private EnewschampApplicationProperties appConfig;
 	
-	private Map<BigDecimal, AuditDTO> commitWiseParentAudit;
-	
-	private AuditBuilder(AuditService auditService, ObjectMapper objectMapper, EnewschampApplicationProperties appConfig) {
+	private AuditBuilderOld(AuditService auditService, ObjectMapper objectMapper, EnewschampApplicationProperties appConfig) {
 		this.auditService = auditService;
 		this.objectMapper = objectMapper;
 		this.appConfig = appConfig;
 	}
 	
-	public static AuditBuilder getInstance(AuditService auditService, ObjectMapper objectMapper, EnewschampApplicationProperties appConfig) {
-		return new AuditBuilder(auditService, objectMapper, appConfig);
+	public static AuditBuilderOld getInstance(AuditService auditService, ObjectMapper objectMapper, EnewschampApplicationProperties appConfig) {
+		return new AuditBuilderOld(auditService, objectMapper, appConfig);
 	}
 	
-	public AuditBuilder forParentObject(IEntity parentObjectInstance) {
+	public AuditBuilderOld forParentObject(Object parentObjectInstance) {
 		this.parentObject = parentObjectInstance;
 		deriveCollectionProperties(this.parentObject.getClass());
 		return this;
 	}
 	
-	public AuditBuilder forChildObject(IEntity chidObjectInstance) {
+	public AuditBuilderOld forChildObject(Object chidObjectInstance) {
 		if(childObjects == null) {
-			childObjects = new ArrayList<IEntity>();
+			childObjects = new ArrayList<Object>();
 		}
 		childObjects.add(chidObjectInstance);
 		return this;
-	}
-	
-	private void addCommitWiseParentAudit(List<AuditDTO> audits) {
-		if(commitWiseParentAudit == null) {
-			commitWiseParentAudit = new HashMap<BigDecimal, AuditDTO>();
-		}
-		audits.forEach(audit -> {
-			commitWiseParentAudit.put(audit.getCommitId(), audit);
-		});
 	}
 	
 	private void deriveCollectionProperties(Class objectClass) {
@@ -151,25 +139,71 @@ public class AuditBuilder  {
 		
 		// Get audit for all parent objects. While fetching audit for parent object, audit for Added and Removed Child object also comes as part of
 		// collection change audit. Same applies for all levels of object hierarchy.
-		allAudit.addAll(getAuditForObject(this.parentObject));
-		addCommitWiseParentAudit(allAudit);
-		
+		allAudit.addAll(getAuditForParentObject(this.parentObject));
 		if(childObjects != null) {
 			for(Object childObject: childObjects) {
-				allAudit.addAll(getAuditForObject(childObject));
+				allAudit.addAll(getAuditForChildObject(childObject));
 			}
 		}
 		return buildOutput(allAudit);
 	}
 	
-	private List<AuditDTO> getAuditForObject(Object entityInstance) {
+	private List<AuditDTO> getAuditForParentObject(Object entityInstance) {
 		List<AuditDTO> allAudit = new ArrayList<AuditDTO>();
 		
+		// Build for new object addition
+		allAudit.add(getAuditForNewObjectCreation(entityInstance));
+				
 		AuditQueryCriteria queryCriteria = new AuditQueryCriteria();
-		queryCriteria.setWithNewObjectChanges(true);
 		Changes changes = auditService.getEntityChangesByCriteria(entityInstance, queryCriteria);
 		allAudit.addAll(getAuditForChanges(changes));
 
+		return allAudit;
+	}
+	
+	private AuditDTO getAuditForNewObjectCreation(Object entityInstance) {
+		AuditDTO newObjectAuditDTO = new AuditDTO();
+		AuditQueryCriteria queryCriteria = new AuditQueryCriteria();
+		queryCriteria.setVersion(Long.valueOf(1));
+		queryCriteria.setSnapshotType(SnapshotType.INITIAL);
+		queryCriteria.setWithNewObjectChanges(true);
+		Changes changes = auditService.getEntityChangesByCriteria(entityInstance, queryCriteria);
+		
+		changes.forEach(change -> {
+			
+			if(change instanceof NewObject) {
+				
+				NewObject newObjectChange = (NewObject) change;
+				CommitMetadata commitMetadata = newObjectChange.getCommitMetadata().get();
+				InstanceId instanceId = (InstanceId)newObjectChange.getAffectedGlobalId();
+				newObjectAuditDTO.addObjectProperties(instanceId, getIdPropertyName(instanceId.getTypeName()));
+				newObjectAuditDTO.addCommitInfo(commitMetadata);
+				newObjectAuditDTO.setAction(OperationType.Add);
+				
+				printDebugLine("Processing audit for object: " + instanceId.getTypeName() + " Commit Id: " + commitMetadata.getId());
+
+				AuditQueryCriteria snapshotQueryCriteria = new AuditQueryCriteria();
+				snapshotQueryCriteria.setCommitId(commitMetadata.getId());
+				snapshotQueryCriteria.setSnapshotType(SnapshotType.INITIAL);
+				snapshotQueryCriteria.setVersion(Long.valueOf(1));
+				CdoSnapshot snapshot = getEntitySnapshot(instanceId, snapshotQueryCriteria);
+				newObjectAuditDTO.setSnapshot(buildSnapShotNode(snapshot));
+				
+				getChildAuditForSameCommitId(commitMetadata, newObjectAuditDTO, true);
+				
+				processedCommitIds.add(commitMetadata.getId());
+			}
+		});
+		
+		return newObjectAuditDTO;
+	}
+	
+	private List<AuditDTO> getAuditForChildObject(Object entityInstance) {
+		List<AuditDTO> allAudit = new ArrayList<AuditDTO>();
+		AuditQueryCriteria queryCriteria = new AuditQueryCriteria();
+		queryCriteria.setSnapshotType(SnapshotType.UPDATE);
+		Changes changes = auditService.getEntityChangesByCriteria(entityInstance, queryCriteria);
+		allAudit =  getAuditForChanges(changes);
 		return allAudit;
 	}
 	
@@ -186,14 +220,14 @@ public class AuditBuilder  {
 		allChangesByCommit.forEach(byCommit -> {
 
 			CommitMetadata commitMetadata = byCommit.getCommit();
-//			if(processedCommitIds.contains(commitMetadata.getId())) {
-//				return;
-//			}
+			if(processedCommitIds.contains(commitMetadata.getId())) {
+				return;
+			}
+			AuditDTO auditDTO = new AuditDTO();
 
 			processedCommitIds.add(commitMetadata.getId());
 			
 			byCommit.groupByObject().forEach(byObject -> {
-				AuditDTO auditDTO = new AuditDTO();
 				InstanceId instanceId = (InstanceId) byObject.getGlobalId();
 				
 				auditDTO.addObjectProperties(instanceId, getIdPropertyName(instanceId.getTypeName()));
@@ -214,26 +248,19 @@ public class AuditBuilder  {
 					auditDTO.addCommitInfo(commitMetadata);
 					
 					this.parentObjectId = instanceId.getCdoId().toString();
-					if(!auditDTO.getAction().equals(OperationType.Add)) {
-						buildParentChangeAuditDTO(commitMetadata, auditDTO, byObject, instanceId.getTypeName());
-					}
+					buildParentChangeAuditDTO(commitMetadata, auditDTO, byObject, instanceId.getTypeName());
 					audits.add(auditDTO);
 				} else {
-					AuditDTO parentAuditDTO = getParentAuditForCommitId(commitMetadata.getId().valueAsNumber());
-					if(parentAuditDTO == null) {
-						parentAuditDTO = new AuditDTO();
-						parentAuditDTO.addCommitInfo(commitMetadata);
-						parentAuditDTO.setAction(auditDTO.getAction());
-						parentAuditDTO.setObjectName(this.parentObject.getClass().getName());
-						parentAuditDTO.addAdditionalProperty(getIdPropertyName(this.parentObject.getClass().getName()), this.parentObjectId);
-						audits.add(parentAuditDTO);
-					}
+					AuditDTO parentAuditDTO = new AuditDTO();
+					parentAuditDTO.addCommitInfo(commitMetadata);
+					parentAuditDTO.setAction(auditDTO.getAction());
+					parentAuditDTO.setObjectName(this.parentObject.getClass().getName());
+					parentAuditDTO.addAdditionalProperty(getIdPropertyName(this.parentObject.getClass().getName()), this.parentObjectId);
 					
 					parentAuditDTO.addChildObject(getChildCollectionPropertyName(byObject.getGlobalId().getTypeName()), auditDTO);
 					
-					if(!auditDTO.getAction().equals(OperationType.Add)) {
-						buildChildChangeAuditDTO(commitMetadata, auditDTO, byObject, instanceId.getTypeName());
-					}
+					buildChildChangeAuditDTO(commitMetadata, auditDTO, byObject, instanceId.getTypeName());
+					audits.add(parentAuditDTO);
 				}
 		        
 		    });
@@ -243,57 +270,52 @@ public class AuditBuilder  {
 
 	private void buildParentChangeAuditDTO(CommitMetadata commitMetadata, AuditDTO auditDTO, ChangesByObject byObject,
 			String typeName) {
+
 		byObject.get().forEach(change -> {
 			// Value change
 			if (change instanceof ValueChange) {
 				handleValueChange(auditDTO, (ValueChange) change);
 			}
-			
 			// Child object change
 			if (change instanceof ListChange) {
 				ListChange listChange = (ListChange) change;
 				List<ContainerElementChange> collectionChanges = listChange.getChanges();
 				auditDTO.addChildItemPropertyName(listChange.getPropertyName());
 				
-				// In case of collection change, only removed objects are considered here as different commit id is created for object removal
-				// Added objects get considered as part of getChildAuditForSameParentCommitId method call which is made at the end of this method
+//				List<ValueRemoved> removedItems = new ArrayList<ValueRemoved>();
+//				// Collect removed items - Special handling for element exchange done by Javers
+//				collectionChanges.forEach(collectionChange -> {
+//					if (collectionChange instanceof ValueRemoved) {
+//						removedItems.add((ValueRemoved) collectionChange);
+//					}
+//				});
+
 				collectionChanges.forEach(collectionChange -> {
+					if (collectionChange instanceof ValueAdded) {
+						ValueAdded itemAdded = (ValueAdded) collectionChange;
+						handleItemAddition(commitMetadata, auditDTO, listChange.getPropertyName(), ((InstanceId) itemAdded.getValue()));
+					}
 					if (collectionChange instanceof ValueRemoved) {
 						ValueRemoved itemRemoved = (ValueRemoved) collectionChange;
-						if(childObjectExists(((InstanceId) itemRemoved.getValue()))) {
-							return;
-						}
 						handleChildItemRemoval(auditDTO, listChange.getPropertyName(), ((InstanceId) itemRemoved.getValue()));
 					}
 					if (collectionChange instanceof ElementValueChange) {
-						// In case of element change, left value is the removed item
-						ElementValueChange itemExchanged = (ElementValueChange) collectionChange;
-						InstanceId removedItemInstanceDetails = (InstanceId) itemExchanged.getLeftValue();
-						if(childObjectExists(removedItemInstanceDetails)) {
-							return;
-						}
-						handleChildItemRemoval(auditDTO, listChange.getPropertyName(), removedItemInstanceDetails);
+						handleChildElementValueChange(commitMetadata, auditDTO, 
+													  listChange.getPropertyName(), 
+													  (ElementValueChange) collectionChange);
 					}
 				});
 			}
-						
 		});
 		
 		// For the same commit id, check if there are any modifications done to child objects
-		getChildAuditForSameParentCommitId(commitMetadata, auditDTO);
+		if(this.parentObject.getClass().getName().equals(typeName)) {
+			getChildAuditForSameCommitId(commitMetadata, auditDTO, false);
+		}
+		
 	}
 	
-	private void buildChildChangeAuditDTO(CommitMetadata commitMetadata, AuditDTO auditDTO, ChangesByObject byObject,
-			String typeName) {
-		byObject.get().forEach(change -> {
-			// Value change
-			if (change instanceof ValueChange) {
-				handleValueChange(auditDTO, (ValueChange) change);
-			}
-		});
-	}
-	
-	private void getChildAuditForSameParentCommitId(CommitMetadata commitMetadata, AuditDTO auditDTO) {
+	private void getChildAuditForSameCommitId(CommitMetadata commitMetadata, AuditDTO auditDTO, boolean isForNewObject) {
 		
 		printDebugLine("Checking for child audit records for commit id: " + commitMetadata.getId().valueAsNumber());
 		if(childCollectionProperties != null) {
@@ -301,72 +323,51 @@ public class AuditBuilder  {
 				AuditQueryCriteria queryCriteria = new AuditQueryCriteria();
 				queryCriteria.setCommitId(commitMetadata.getId());
 				queryCriteria.setObjectName(propertyTypeName);
-				queryCriteria.setWithNewObjectChanges(true);
+				queryCriteria.setWithNewObjectChanges(isForNewObject);
 				Changes changes = auditService.getEntityChangesByCriteria(null, queryCriteria);
 					
 				changes.groupByObject().forEach(byChildObject -> {
-					
-					//Ignore the changes for those child objects which are still present
-					InstanceId objectInstance = (InstanceId)byChildObject.getGlobalId();
-					if(childObjectExists(objectInstance)) {
-						System.out.println("Skipping audit for " + objectInstance.getTypeName() + "#" + objectInstance.getCdoId());
-						return;
-					}
-					if(byChildObject.getNewObjects() != null && byChildObject.getNewObjects().size() > 0) {
-						Change change = byChildObject.getNewObjects().get(0);
-						handleItemAddition(commitMetadata, 
-								   		   auditDTO, 
-								   		   propertyName, 
-								   		   (InstanceId) change.getAffectedGlobalId());
-						return;
-					}
 					byChildObject.get().forEach(change -> {
-						InstanceId instance = (InstanceId) change.getAffectedGlobalId();
-						if (change instanceof ValueChange) {
-							handleItemModification(commitMetadata, 
-												   auditDTO, 
-												   propertyName, 
-												   instance, 
+						if (change instanceof ValueChange && !isForNewObject) {
+							handleItemModification(commitMetadata, auditDTO, 
+												   getChildCollectionPropertyName(change.getAffectedGlobalId().getTypeName()), 
+												   (InstanceId)change.getAffectedGlobalId(), 
 												   (ValueChange) change);
 						}
-						if (change instanceof ObjectRemoved) {
-							handleChildItemRemoval(auditDTO, propertyName, instance);
+						
+						if (change instanceof NewObject && isForNewObject) {
+							handleItemAddition(commitMetadata, auditDTO, 
+											   getChildCollectionPropertyName(change.getAffectedGlobalId().getTypeName()), 
+											   (InstanceId) change.getAffectedGlobalId());	
 						}
 					});
 				});
 			});
 		}
 	}
-	
-	private boolean childObjectExists(InstanceId instance) {
-		if(this.childObjects != null && this.childObjects.size() > 0) {
-			for(IEntity childObject: this.childObjects) {
-				String key = null;
-				if(childObject != null) {
-					key = childObject.getKeyAsString();
-				}
-				String instanceKey = String.valueOf(instance.getCdoId());
-				if(key != null && key.equals(instanceKey)) {
-					return true;
-				}
-			}
-		}
 
-		return false;
+	private void buildChildChangeAuditDTO(CommitMetadata commitMetadata, 
+										  AuditDTO childAuditDTO, 
+										  ChangesByObject byObject,
+										  String typeName) {
+		byObject.get().forEach(change -> {
+			if (change instanceof ValueChange) {
+				handleValueChange(childAuditDTO, (ValueChange) change);
+			}
+		});
 	}
-	
+
 	private void handleValueChange(AuditDTO auditDTO, ValueChange valueChange) {
 		FieldChangeDTO fieldChange = new FieldChangeDTO(valueChange.getPropertyNameWithPath(), valueChange.getLeft(),
 				valueChange.getRight());
 		auditDTO.addFieldChange(fieldChange);
 	}
-	
-	private void handleItemAddition(CommitMetadata commitMetadata, 
-									AuditDTO auditDTO, 
-									String propertyName,
-									InstanceId addedItemInstanceDetails) {
 
-		System.out.println("Adding item for " + addedItemInstanceDetails.getTypeName() + "#" + addedItemInstanceDetails.getCdoId());
+	private void handleItemAddition(CommitMetadata commitMetadata, 
+								    AuditDTO auditDTO, 
+								    String propertyName,
+								    InstanceId addedItemInstanceDetails) {
+
 		AuditDTO childObjectAudit = new AuditDTO();
 		childObjectAudit.setAction(OperationType.Add);
 		childObjectAudit.addObjectProperties(addedItemInstanceDetails, getIdPropertyName(addedItemInstanceDetails.getTypeName()));
@@ -378,30 +379,25 @@ public class AuditBuilder  {
 		auditDTO.addChildObject(propertyName, childObjectAudit);
 	}
 
-	private void handleItemModification(CommitMetadata commitMetadata, 
-										AuditDTO auditDTO, 
-										String propertyName,
-										InstanceId modifiedItemInstanceDetails, 
-										ValueChange valueChange) {
+	private void handleItemModification(CommitMetadata commitMetadata, AuditDTO auditDTO, String propertyName,
+			InstanceId modifiedItemInstanceDetails, ValueChange valueChange) {
 
-		System.out.println("Modifying item for " + modifiedItemInstanceDetails.getTypeName() + "#" + modifiedItemInstanceDetails.getCdoId());
 		AuditDTO childObjectAudit = new AuditDTO();
 		childObjectAudit.setAction(OperationType.Modify);
 		childObjectAudit.addObjectProperties(modifiedItemInstanceDetails, getIdPropertyName(modifiedItemInstanceDetails.getTypeName()));
 		handleValueChange(childObjectAudit, valueChange);
-
+		
 		AuditQueryCriteria snapshotQueryCriteria = new AuditQueryCriteria();
 		snapshotQueryCriteria.setCommitId(commitMetadata.getId());
 		snapshotQueryCriteria.setSnapshotType(SnapshotType.UPDATE);
 		snapshotQueryCriteria.setCommitId(commitMetadata.getId());
 		CdoSnapshot snapShot = getEntitySnapshot(modifiedItemInstanceDetails, snapshotQueryCriteria);
 		childObjectAudit.setSnapshot(buildSnapShotNode(snapShot));
-
+		
 		auditDTO.addChildObject(propertyName, childObjectAudit);
 	}
 	
 	private void handleChildItemRemoval(AuditDTO auditDTO, String propertyName, InstanceId removedItemInstanceDetails) {
-		System.out.println("Removing item for " + removedItemInstanceDetails.getTypeName() + "#" + removedItemInstanceDetails.getCdoId());
 		AuditDTO childObjectAudit = new AuditDTO();
 		childObjectAudit.setAction(OperationType.Remove);
 		childObjectAudit.addObjectProperties(removedItemInstanceDetails, getIdPropertyName(removedItemInstanceDetails.getTypeName()));
@@ -420,6 +416,18 @@ public class AuditBuilder  {
 		auditDTO.addChildObject(propertyName, childObjectAudit);
 	}
 	
+	private void handleChildElementValueChange(CommitMetadata commitMetadata, AuditDTO auditDTO, String propertyName,
+			ElementValueChange itemExchanged) {
+
+		// In case of element change, left value is the removed item
+		InstanceId removedItemInstanceDetails = (InstanceId) itemExchanged.getLeftValue();
+		handleChildItemRemoval(auditDTO, propertyName, removedItemInstanceDetails);
+
+		// In case of element change, right value is added item
+		InstanceId addedItemInstanceDetails = (InstanceId) itemExchanged.getRightValue();
+		handleItemAddition(commitMetadata, auditDTO, propertyName, addedItemInstanceDetails);
+	}
+
 	private JsonNode buildSnapShotNode(CdoSnapshot snapshot) {
 		JsonNode node = null;
 		if (snapshot != null) {
@@ -447,9 +455,6 @@ public class AuditBuilder  {
 		return node;
 	}
 	
-	private AuditDTO getParentAuditForCommitId(BigDecimal commitId) {
-		return commitWiseParentAudit.get(commitId);
-	}
 
 	private String buildOutput(List<AuditDTO> auditList) {
 		String response = null;

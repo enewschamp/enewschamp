@@ -21,7 +21,7 @@ import lombok.Data;
 
 @MappedSuperclass
 @Data
-public abstract class BaseEntity implements Serializable{
+public abstract class BaseEntity implements IEntity, Serializable{
 	private static final long serialVersionUID = 1459589314540791967L;
 
 	@NotNull
@@ -47,4 +47,8 @@ public abstract class BaseEntity implements Serializable{
 			operationDateTime = LocalDateTime.now();
 		}
 	}
+	
+	public String getKeyAsString() {
+		return "";
+	};
 }

@@ -131,4 +131,8 @@ public class NewsArticleGroup extends BaseEntity {
 	public void prePersist() {
 		super.prePersist();
 	}
+	
+	public String getKeyAsString() {
+		return String.valueOf(this.newsArticleGroupId);
+	}
 }
