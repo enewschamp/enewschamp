@@ -21,4 +21,10 @@ public interface NewsArticleQuizRepository extends JpaRepository<NewsArticleQuiz
 	@Query(value = "DELETE FROM NewsArticleQuiz a"
 			+ " where a.newsArticleId = :articleId")
 	public void deleteByArticleId(long articleId);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "DELETE FROM NewsArticleQuiz a"
+			+ " where a.newsArticleQuizId = :articleQuizId")
+	public void deleteById(long articleQuizId);
 } 
