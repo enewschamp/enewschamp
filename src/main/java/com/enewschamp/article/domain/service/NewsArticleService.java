@@ -55,16 +55,18 @@ public class NewsArticleService {
 	}
 	
 	public NewsArticle update(NewsArticle article) {
+		deriveArticleStatus(article);
 		Long articleId = article.getNewsArticleId();
 		NewsArticle existingEntity = load(articleId);
 		modelMapper.map(article, existingEntity);
 		return repository.save(existingEntity);
 	}
 	
-	public NewsArticle patch(NewsArticle newsArticle) {
-		Long articleId = newsArticle.getNewsArticleId();
+	public NewsArticle patch(NewsArticle article) {
+		deriveArticleStatus(article);
+		Long articleId = article.getNewsArticleId();
 		NewsArticle existingEntity = load(articleId);
-		modelMapperForPatch.map(newsArticle, existingEntity);
+		modelMapperForPatch.map(article, existingEntity);
 		return repository.save(existingEntity);
 	}
 	
@@ -106,15 +108,24 @@ public class NewsArticleService {
 	public ArticleStatusType deriveArticleStatus(NewsArticle article) {
 		ArticleStatusType status = ArticleStatusType.Unassigned;
 		if(article.getCurrentAction() != null) {
-			ArticleStatusType existingStatus = repository.getArticleStatusType(article.getNewsArticleId());
+			ArticleStatusType existingStatus = repository.getCurrentStatus(article.getNewsArticleId());
 			existingStatus = existingStatus == null ? ArticleStatusType.Unassigned : existingStatus;
 			StatusTransitionDTO transition = new StatusTransitionDTO(NewsArticle.class.getSimpleName(), 
 																	 String.valueOf(article.getNewsArticleId()),
 																	 existingStatus.toString(),
 																     article.getCurrentAction().toString(), 
 																     null);
-			status = ArticleStatusType.fromValue(statusTransitionHandler.findNextStatus(transition));
+			
+			String nextStatus = statusTransitionHandler.findNextStatus(transition);
+			if(nextStatus.equals(StatusTransitionDTO.REVERSE_STATE)) {
+				ArticleStatusType previousStatus = repository.getCurrentStatus(article.getNewsArticleId());
+				nextStatus = previousStatus.toString();
+			}
+			
+			status = ArticleStatusType.fromValue(nextStatus);
 		}
+		
+		
 		article.setStatus(status);
 		return status;
 	}

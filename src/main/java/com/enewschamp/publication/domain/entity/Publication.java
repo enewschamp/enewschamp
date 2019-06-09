@@ -21,9 +21,11 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.enewschamp.article.domain.common.PublicationActionType;
+import org.javers.core.metamodel.annotation.DiffIgnore;
+
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
+import com.enewschamp.publication.domain.common.PublicationActionType;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
 import com.enewschamp.publication.domain.service.PublicationBusinessPolicy;
 
@@ -60,9 +62,14 @@ public class Publication extends BaseEntity {
 	@Column(name = "PublishDate")
 	private LocalDate publishDate;
 
-	@Column(name = "Status", length = 25)
+	@Column(name = "Status")
 	@Enumerated(EnumType.STRING)
 	private PublicationStatusType status;
+	
+	@Column(name = "PreviousStatus")
+	@Enumerated(EnumType.STRING)
+	@DiffIgnore
+	private PublicationStatusType previousStatus;
 
 	@NotNull
 	@Column(name = "EditorId", length = ForeignKeyColumnLength.UserId)
@@ -99,5 +106,10 @@ public class Publication extends BaseEntity {
 	
 	public String getKeyAsString() {
 		return String.valueOf(this.publicationId);
+	}
+	
+	public void setStatus(PublicationStatusType status) {
+		this.previousStatus = this.status;
+		this.status = status;
 	}
 }

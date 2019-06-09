@@ -53,6 +53,11 @@ public class PublicationGroupPageHandler implements IPageHandler  {
 		
 		publicationGroupDTO = publicationGroupHelper.createPublicationGroup(publicationGroupDTO);
 		
+		PublicationGroupPageData data = new PublicationGroupPageData();
+		data.setPublicationGroup(publicationGroupDTO);
+		
+		pageDTO.setData(data);
+		
 		return pageDTO;
 	}
 		

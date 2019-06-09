@@ -69,6 +69,11 @@ public class NewsArticle extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private ArticleStatusType status = ArticleStatusType.Unassigned;
 	
+	@Column(name = "PreviousStatus")
+	@Enumerated(EnumType.STRING)
+	@DiffIgnore
+	private ArticleStatusType previousStatus;
+	
 	@Column(name = "Content")
 	@Lob
 	private String content;
@@ -127,6 +132,11 @@ public class NewsArticle extends BaseEntity {
 	
 	public String getKeyAsString() {
 		return String.valueOf(this.newsArticleId);
+	}
+	
+	public void setStatus(ArticleStatusType status) {
+		this.previousStatus = this.status;
+		this.status = status;
 	}
 	
 }

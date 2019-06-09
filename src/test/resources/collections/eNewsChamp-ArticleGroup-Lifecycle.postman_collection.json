@@ -519,6 +519,91 @@
 			"response": []
 		},
 		{
+			"name": "Mark all articles ready for publish",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a8994854-664d-46a7-a263-1478415e7a1c",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.environment.set(\"newsArticleQuizId1-1\", jsonData.data.newsArticleGroup.newsArticles[0].newsArticleQuiz[0].newsArticleQuizId);",
+							"pm.environment.set(\"newsArticleQuizId1-2\", jsonData.data.newsArticleGroup.newsArticles[0].newsArticleQuiz[1].newsArticleQuizId);",
+							"",
+							"pm.environment.set(\"newsArticleQuizId3-1\", jsonData.data.newsArticleGroup.newsArticles[2].newsArticleQuiz[0].newsArticleQuizId);",
+							"pm.environment.set(\"newsArticleQuizId3-2\", jsonData.data.newsArticleGroup.newsArticles[2].newsArticleQuiz[1].newsArticleQuizId);",
+							"",
+							"pm.environment.set(\"newsArticleQuizId4-1\", jsonData.data.newsArticleGroup.newsArticles[3].newsArticleQuiz[0].newsArticleQuizId);",
+							"pm.environment.set(\"newsArticleQuizId4-2\", jsonData.data.newsArticleGroup.newsArticles[3].newsArticleQuiz[1].newsArticleQuizId);",
+							"pm.environment.set(\"newsArticleQuizId4-3\", jsonData.data.newsArticleGroup.newsArticles[3].newsArticleQuiz[2].newsArticleQuizId);",
+							"",
+							"",
+							"console.log('Article Group Status: ', jsonData.data.newsArticleGroup.status);",
+							"var article = jsonData.data.newsArticleGroup.newsArticles[0];",
+							"console.log('Article 1 Status: ', article.newsArticleId + \"#\" + article.status);",
+							"console.log('newsArticleQuizId1-1: ', pm.environment.get(\"newsArticleQuizId1-1\"));",
+							"console.log('newsArticleQuizId1-2: ', pm.environment.get(\"newsArticleQuizId1-2\"));",
+							"",
+							"article = jsonData.data.newsArticleGroup.newsArticles[1];",
+							"console.log('Article 2 Status: ', article.newsArticleId + \"#\" + article.status);",
+							"",
+							"article = jsonData.data.newsArticleGroup.newsArticles[2];",
+							"console.log('Article 3 Status: ', article.newsArticleId + \"#\" + article.status);",
+							"console.log('newsArticleQuizId3-1: ', pm.environment.get(\"newsArticleQuizId3-1\"));",
+							"console.log('newsArticleQuizId3-2: ', pm.environment.get(\"newsArticleQuizId3-2\"));",
+							"",
+							"article = jsonData.data.newsArticleGroup.newsArticles[3];",
+							"console.log('Article 4 Status: ', article.newsArticleId + \"#\" + article.status);",
+							"console.log('newsArticleQuizId4-1: ', pm.environment.get(\"newsArticleQuizId4-1\"));",
+							"console.log('newsArticleQuizId4-2: ', pm.environment.get(\"newsArticleQuizId4-2\"))",
+							"console.log('newsArticleQuizId4-3: ', pm.environment.get(\"newsArticleQuizId4-3\"));",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"SaveNewsArticle\"\n    },\n    \"data\": {\n        \"operatorId\": \"mesmayus\",\n        \"recordInUse\": \"Y\",\n        \"newsArticleGroupId\": {{newsArticleGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"genreId\": \"SCIENCE\",\n        \"headline\": \"Article Group 1-Headline\",\n        \"credits\": \"Article Group 1-Credit\",\n        \"url\": \"http://Article Group 1-url\",\n        \"sourceText\": \"Article Group 1-SourceText\",\n        \"hashTags\": \"#Article Group 1\",\n        \"imagePathMobile\": \"Article Group 1-imagePathMobile\",\n        \"imagePathTab\": \"Article Group 1-imagePathTab\",\n        \"imagePathDesktop\": \"Article Group 1-imagePathDesktop\",\n        \"authorId\": \"deepaksem\",\n        \"targetCompletionDate\": \"2019-06-29\",\n        \"publicationDate\": \"2019-06-29\",\n        \"intendedPubMonth\": \"Jan\",\n        \"intendedPubDay\": \"Fri\",\n        \"comments\": \"Article Group 1-Comment1\",\n        \"readingLevel1\": true,\n        \"readingLevel2\": false,\n        \"readingLevel3\": true,\n        \"readingLevel4\": true,\n        \"newsArticles\": [\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId1}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 1,\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"ReadyToPublish\",\n                \"content\": \"Article Group 1 - Article 1 Content\",\n                \"newsArticleQuiz\": [\n                    {\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId1-1}},\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId1-2}},\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId2}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 2,\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"Close\",\n                \"newsArticleQuiz\": []\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId3}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 3,\n                \"authorId\": \"deepaksem\",\n                \"currentAction\": \"ReadyToPublish\",\n                \"newsArticleQuiz\": [\n                \t{\n                    \t\"newsArticleId\": {{newsArticleId3}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId3-1}},\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    },\n                \t{\n                    \t\"newsArticleId\": {{newsArticleId3}},\n                        \"newsArticleQuizId\": {{newsArticleQuizId3-2}},\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    }\n                ]\n            },\n            {\n                \"operatorId\": \"mesmayus\",\n                \"recordInUse\": \"Y\",\n                \"newsArticleId\": {{newsArticleId4}},\n                \"newsArticleGroupId\": {{newsArticleGroupId}},\n                \"readingLevel\": 4,\n                \"authorId\": \"deepaksem\",\n                \"content\": \"Article Group 1 - Article 4 Content\",\n                \"currentAction\": \"ReadyToPublish\",\n                \"newsArticleQuiz\": [\n                    {\n                    \t\"newsArticleId\": {{newsArticleId4}},\n                    \t\"newsArticleQuizId\": {{newsArticleQuizId4-1}},\n                        \"question\": \"Question 1\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 1\n                    },\n                    {\n                    \t\"newsArticleId\": {{newsArticleId4}},\n                    \t\"newsArticleQuizId\": {{newsArticleQuizId4-2}},\n                        \"question\": \"Question 2\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 2\n                    },\n                    {\n                    \t\"newsArticleId\": {{newsArticleId4}},\n                    \t\"newsArticleQuizId\": {{newsArticleQuizId4-3}},\n                        \"question\": \"Question 3\",\n                        \"opt1\": \"Option 1\",\n                        \"opt2\": \"Option 2\",\n                        \"opt3\": \"Option 3\",\n                        \"opt4\": \"Option 4\",\n                        \"correctOpt\": 3\n                    }\n                ]\n            }\n        ]\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Article Group",
 			"event": [
 				{
@@ -544,36 +629,6 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"header\": {\n    \t\"pageName\": \"ListNewsArticles\",\n        \"action\": \"ClickNewsArticleGroupID\"\n    },\n    \"data\": {\n    \t\"newsArticleGroupId\": {{newsArticleGroupId}}\n    }\n    \n}"
-				},
-				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
-					"protocol": "http",
-					"host": [
-						"{{host}}"
-					],
-					"port": "{{port}}",
-					"path": [
-						"{{base-path}}",
-						"{{publisherAppPath}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Publication",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 comments\",\n                \"currentAction\": \"AssignEditor\",\n                \"articleLinkages\": [\n                    {\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            }\n        ]\n    }\n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -631,6 +686,303 @@
 						"{{base-path}}",
 						"articles",
 						"1",
+						"audit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create publication group with publication for reading level 1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a8994854-664d-46a7-a263-1478415e7a1c",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.environment.set(\"publicationGroupId\", jsonData.data.publicationGroup.publicationGroupId);",
+							"",
+							"pm.environment.set(\"publicationId1\", jsonData.data.publicationGroup.publications[0].publicationId);",
+							"",
+							"pm.environment.set(\"articleLinkage1-1\", jsonData.data.publicationGroup.publications[0].articleLinkages[0].linkageId);",
+							"",
+							"",
+							"",
+							"var publication = jsonData.data.publicationGroup.publications[0];",
+							"console.log('Pulblication 1 Status: ', publication.publicationId + \"#\" + publication.status);",
+							"",
+							"console.log('articleLinkage1-1 : ', pm.environment.get(\"articleLinkage1-1\"));",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 comments\",\n                \"currentAction\": \"AssignEditor\",\n                \"articleLinkages\": [\n                    {\n                        \"recordInUse\": \"Y\",\n                        \"operatorId\": \"mesmayu\",\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            }\n        ]\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add publication for reading level 3 + send publication for reading level 1 to publisher",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a8994854-664d-46a7-a263-1478415e7a1c",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.environment.set(\"publicationGroupId\", jsonData.data.publicationGroup.publicationGroupId);",
+							"",
+							"pm.environment.set(\"publicationId1\", jsonData.data.publicationGroup.publications[0].publicationId);",
+							"pm.environment.set(\"publicationId3\", jsonData.data.publicationGroup.publications[1].publicationId);",
+							"",
+							"pm.environment.set(\"articleLinkage1-1\", jsonData.data.publicationGroup.publications[0].articleLinkages[0].linkageId);",
+							"",
+							"pm.environment.set(\"articleLinkage3-1\", jsonData.data.publicationGroup.publications[1].articleLinkages[0].linkageId);",
+							"pm.environment.set(\"articleLinkage3-2\", jsonData.data.publicationGroup.publications[1].articleLinkages[1].linkageId);",
+							"",
+							"",
+							"",
+							"var publication = jsonData.data.publicationGroup.publications[0];",
+							"console.log('Pulblication 1 Status: ', publication.publicationId + \"#\" + publication.status);",
+							"console.log('articleLinkage1-1 : ', pm.environment.get(\"articleLinkage1-1\"));",
+							"",
+							"publication = jsonData.data.publicationGroup.publications[1];",
+							"console.log('Pulblication 3 Status: ', publication.publicationId + \"#\" + publication.status);",
+							"console.log('articleLinkage3-1 : ', pm.environment.get(\"articleLinkage3-1\"));",
+							"console.log('articleLinkage3-2 : ', pm.environment.get(\"articleLinkage3-2\"));",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": {{publicationGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId1}},\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 comments\",\n                \"currentAction\": \"ReadyToPublish\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage1-1}},\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"publicationId\": {{publicationId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            },\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n                \"readingLevel\": 3,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 2 comments\",\n                \"currentAction\": \"AssignEditor\",\n                \"articleLinkages\": [\n                    {\n                        \"newsArticleId\": {{newsArticleId3}},\n                        \"sequence\": 1\n                    },\n                    {\n                        \"newsArticleId\": 31,\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "From reading level 3 publication, remove 1 article and add another",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a8994854-664d-46a7-a263-1478415e7a1c",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.environment.set(\"publicationGroupId\", jsonData.data.publicationGroup.publicationGroupId);",
+							"",
+							"pm.environment.set(\"publicationId1\", jsonData.data.publicationGroup.publications[0].publicationId);",
+							"pm.environment.set(\"publicationId3\", jsonData.data.publicationGroup.publications[1].publicationId);",
+							"",
+							"pm.environment.set(\"articleLinkage1-1\", jsonData.data.publicationGroup.publications[0].articleLinkages[0].linkageId);",
+							"",
+							"pm.environment.set(\"articleLinkage3-1\", jsonData.data.publicationGroup.publications[1].articleLinkages[0].linkageId);",
+							"pm.environment.set(\"articleLinkage3-2\", jsonData.data.publicationGroup.publications[1].articleLinkages[1].linkageId);",
+							"",
+							"",
+							"",
+							"var publication = jsonData.data.publicationGroup.publications[0];",
+							"console.log('Pulblication 1 Status: ', publication.publicationId + \"#\" + publication.status);",
+							"console.log('articleLinkage1-1 : ', pm.environment.get(\"articleLinkage1-1\"));",
+							"",
+							"publication = jsonData.data.publicationGroup.publications[1];",
+							"console.log('Pulblication 3 Status: ', publication.publicationId + \"#\" + publication.status);",
+							"console.log('articleLinkage3-1 : ', pm.environment.get(\"articleLinkage3-1\"));",
+							"console.log('articleLinkage3-2 : ', pm.environment.get(\"articleLinkage3-2\"));",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": {{publicationGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId1}},\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 comments\",\n                \"currentAction\": \"ReadyToPublish\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage1-1}},\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"publicationId\": {{publicationId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            },\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId3}},\n                \"readingLevel\": 3,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 2 comments\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage3-1}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": {{newsArticleId3}},\n                        \"sequence\": 1\n                    },\n                    {\n                        \"newsArticleId\": 32,\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Publication Group",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n    \t\"pageName\":\"ListPublications\",\n    \t\"action\": \"ClickPublicationID\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": 1\n    }\n    \n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Publication Audit",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/publications/3/audit",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"publications",
+						"3",
 						"audit"
 					]
 				}
@@ -773,41 +1125,6 @@
 						"audit",
 						"entity",
 						"com.enewschamp.article.domain.entity.NewsArticleQuiz"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Publication Audit",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/publications/1/audit",
-					"protocol": "http",
-					"host": [
-						"{{host}}"
-					],
-					"port": "{{port}}",
-					"path": [
-						"{{base-path}}",
-						"publications",
-						"1",
-						"audit"
 					]
 				}
 			},

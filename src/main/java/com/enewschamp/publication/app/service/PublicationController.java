@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enewschamp.problem.BusinessException;
+import com.enewschamp.problem.Fault;
+import com.enewschamp.problem.HttpStatusAdapter;
 import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.domain.service.PublicationService;
@@ -74,8 +77,15 @@ public class PublicationController {
 	
 	@GetMapping(value = "/publications/{publicationId}/audit")
 	public ResponseEntity<String> getAudit(@PathVariable Long publicationId) {
-		String audit = publicationService.getAudit(publicationId);
-		return new ResponseEntity<String>(audit, HttpStatus.OK);
+		ResponseEntity<String> response = null;
+		try {
+			String audit = publicationService.getAudit(publicationId);
+			response = new ResponseEntity<String>(audit, HttpStatus.OK);
+		}catch(BusinessException e) {
+			Fault fault = new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e); 
+			throw fault;
+		}
+		return response;
 	}
 	
 	

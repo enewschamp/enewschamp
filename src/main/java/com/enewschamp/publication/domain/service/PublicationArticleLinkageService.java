@@ -33,13 +33,13 @@ public class PublicationArticleLinkageService {
 	}
 	
 	public PublicationArticleLinkage update(PublicationArticleLinkage publicationArticleLinkage) {
-		PublicationArticleLinkage existingPublicationArticleLinkage = get(publicationArticleLinkage.getId());
+		PublicationArticleLinkage existingPublicationArticleLinkage = get(publicationArticleLinkage.getLinkageId());
 		modelMapper.map(publicationArticleLinkage, existingPublicationArticleLinkage);
 		return repository.save(existingPublicationArticleLinkage);
 	}
 	
 	public PublicationArticleLinkage patch(PublicationArticleLinkage publicationArticleLinkage) {
-		PublicationArticleLinkage existingEntity = get(publicationArticleLinkage.getId());
+		PublicationArticleLinkage existingEntity = get(publicationArticleLinkage.getLinkageId());
 		modelMapperForPatch.map(publicationArticleLinkage, existingEntity);
 		return repository.save(existingEntity);
 	}
@@ -59,7 +59,7 @@ public class PublicationArticleLinkageService {
 	
 	public String getAudit(Long linkageId) {
 		PublicationArticleLinkage publicationArticleLinkage = new PublicationArticleLinkage();
-		publicationArticleLinkage.setId(linkageId);
+		publicationArticleLinkage.setLinkageId(linkageId);
 		return auditService.getEntityAudit(publicationArticleLinkage);
 	}
 	

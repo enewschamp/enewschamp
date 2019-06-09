@@ -39,7 +39,6 @@ public class NewsArticleGroupHelper {
 	
 	public NewsArticleGroupDTO createArticleGroup(NewsArticleGroupDTO articleGroupDTO) {
 		
-		List<NewsArticle> articles = new ArrayList<NewsArticle>();
 		List<NewsArticleDTO> newsArticles = null;
 		NewsArticleGroup existingArticleGroup = newsArticleGroupService.get(articleGroupDTO.getNewsArticleGroupId());
 		if(existingArticleGroup != null) {
@@ -51,6 +50,7 @@ public class NewsArticleGroupHelper {
 		
 		NewsArticleGroup articleGroup = modelMapper.map(articleGroupDTO, NewsArticleGroup.class);
 		
+		List<NewsArticle> articles = new ArrayList<NewsArticle>();
 		for(NewsArticleDTO articleDTO: newsArticles) {
 			articles.add(modelMapper.map(articleDTO, NewsArticle.class));
 		}

@@ -1,8 +1,9 @@
-package com.enewschamp.article.domain.common;
+package com.enewschamp.publication.domain.common;
 
 public enum PublicationActionType {
 
 	AssignEditor,
+	SaveAsDraft,
 	Rework,
 	ReadyToPublish,
 	Publish,

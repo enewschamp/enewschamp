@@ -1,5 +1,6 @@
 package com.enewschamp.publication.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.publication.domain.common.PublicationGroupStatusType;
+import com.enewschamp.publication.domain.common.PublicationStatusType;
+import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.domain.entity.PublicationGroup;
 
 @Service
@@ -28,20 +32,24 @@ public class PublicationGroupService {
 	@Autowired
 	AuditService auditService;
 	
+	@Autowired
+	private PublicationService publicationService;
+	
 	public PublicationGroup create(PublicationGroup publicationGroup) {
+		//deriveStatus(publicationGroup);
 		return repository.save(publicationGroup);
 	}
 	
 	public PublicationGroup update(PublicationGroup publicationGroup) {
 		Long publicationGroupId = publicationGroup.getPublicationGroupId();
-		PublicationGroup existingEntity = get(publicationGroupId);
+		PublicationGroup existingEntity = load(publicationGroupId);
 		modelMapper.map(publicationGroup, existingEntity);
 		return repository.save(existingEntity);
 	}
 	
 	public PublicationGroup patch(PublicationGroup publicationGroup) {
 		Long publicationGroupId = publicationGroup.getPublicationGroupId();
-		PublicationGroup existingEntity = get(publicationGroupId);
+		PublicationGroup existingEntity = load(publicationGroupId);
 		modelMapperForPatch.map(publicationGroup, existingEntity);
 		return repository.save(existingEntity);
 	}
@@ -50,7 +58,7 @@ public class PublicationGroupService {
 		repository.deleteById(publicationGroupId);
 	}
 	
-	public PublicationGroup get(Long publicationGroupId) {
+	public PublicationGroup load(Long publicationGroupId) {
 		Optional<PublicationGroup> existingEntity = repository.findById(publicationGroupId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
@@ -59,10 +67,49 @@ public class PublicationGroupService {
 		}
 	}
 	
+	public PublicationGroup get(Long publicationGroupId) {
+		Optional<PublicationGroup> existingEntity = repository.findById(publicationGroupId);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
+		} else {
+			return null;
+		}
+	}
+	
 	public String getAudit(Long publicationGroupId) {
 		PublicationGroup publicationGroup = new PublicationGroup();
 		publicationGroup.setPublicationGroupId(publicationGroupId);
 		return auditService.getEntityAudit(publicationGroup);
+	}
+	
+	public PublicationGroupStatusType deriveStatus(PublicationGroup articleGroup) {
+		PublicationGroupStatusType newStatus = deriveStatus(articleGroup.getPublications());
+		//articleGroup.setStatus(newStatus);
+		return newStatus;
+	}
+	
+	private PublicationGroupStatusType deriveStatus(List<Publication> publications) {
+		PublicationGroupStatusType newStatus = null;
+		if(publications != null) {
+			for(Publication publication: publications) {
+				PublicationStatusType articleStatus = publicationService.derivePublicationStatus(publication);
+				if(articleStatus != null) {
+					PublicationGroupStatusType status = PublicationGroupStatusType.fromPublicationStatus(articleStatus);
+					if(status.equals(PublicationGroupStatusType.WIP)) {
+						newStatus = status;
+						break;
+					}
+					if(newStatus == null) {
+						newStatus = status;
+						continue;
+					}
+					if(status.getOrder() < newStatus.getOrder()) {
+						newStatus = status;
+					}
+				}
+			}
+		}
+		return newStatus;
 	}
 	
 }

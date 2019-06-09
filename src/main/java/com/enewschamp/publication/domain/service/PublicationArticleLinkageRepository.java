@@ -25,4 +25,10 @@ public interface PublicationArticleLinkageRepository
 	@Query(value = "DELETE FROM PublicationArticleLinkage a"
 			+ " where a.publicationId = :publicationId")
 	public void deleteByPublicationId(long publicationId);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "DELETE FROM PublicationArticleLinkage a"
+			+ " where a.linkageId = :linkageId")
+	public void deleteById(long linkageId);
 }

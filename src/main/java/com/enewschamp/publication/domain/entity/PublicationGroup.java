@@ -1,20 +1,19 @@
 package com.enewschamp.publication.domain.entity;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
-import com.enewschamp.publication.domain.common.PublicationStatusType;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,12 +40,14 @@ public class PublicationGroup extends BaseEntity {
 	@Column(name = "PublicationDate")
 	private LocalDate publicationDate;
 	
-	@Column(name = "Status", length = 25)
-	@Enumerated(EnumType.STRING)
-	private PublicationStatusType status;
+//	@Column(name = "Status", length = 25)
+//	@Enumerated(EnumType.STRING)
+//	private PublicationGroupStatusType status;
 	
 	public String getKeyAsString() {
 		return String.valueOf(this.publicationGroupId);
 	}
 	
+	@Transient
+	private List<Publication> publications;
 }

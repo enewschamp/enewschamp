@@ -25,5 +25,9 @@ public interface NewsArticleRepository extends JpaRepository<NewsArticle, Long>{
 	
 	@Query(value = "SELECT a.status FROM NewsArticle a"
 			+ " where a.newsArticleId = :articleId")
-	public ArticleStatusType getArticleStatusType(long articleId);
+	public ArticleStatusType getCurrentStatus(long articleId);
+	
+	@Query(value = "SELECT a.previousStatus FROM NewsArticle a"
+			+ " where a.newsArticleId = :articleId")
+	public ArticleStatusType getPreviousStatus(long articleId);
 } 

@@ -7,8 +7,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.article.app.dto.NewsArticleDTO;
+import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.enewschamp.publication.app.dto.PublicationGroupDTO;
+import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.domain.entity.PublicationGroup;
 import com.enewschamp.publication.domain.service.PublicationArticleLinkageRepository;
 import com.enewschamp.publication.domain.service.PublicationGroupService;
@@ -30,17 +33,22 @@ public class PublicationGroupHelper {
 	
 	public PublicationGroupDTO createPublicationGroup(PublicationGroupDTO publicationGroupDTO) {
 		
-		List<PublicationDTO> publications = publicationGroupDTO.getPublications();
+		List<PublicationDTO> publicationDTOs = publicationGroupDTO.getPublications();
 		
 		PublicationGroup publicationGroup = modelMapper.map(publicationGroupDTO, PublicationGroup.class);
+		
+		List<Publication> publications = new ArrayList<Publication>();
+		for(PublicationDTO publicationDTO: publicationDTOs) {
+			publications.add(modelMapper.map(publicationDTO, Publication.class));
+		}
+		publicationGroup.setPublications(publications);
+		
 		publicationGroup = publicationGroupService.create(publicationGroup);
+		
 		publicationGroupDTO = modelMapper.map(publicationGroup, PublicationGroupDTO.class);
 		
-//		// Delete existing records, if any
-//		publicationHelper.deleteByPublicationGroupId(publicationGroup.getPublicationGroupId());
-		
 		List<PublicationDTO> publicationList = new ArrayList<PublicationDTO>(); 
-		for(PublicationDTO publicationDTO: publications) {
+		for(PublicationDTO publicationDTO: publicationDTOs) {
 			publicationDTO.setPublicationGroupId(publicationGroup.getPublicationGroupId());
 			publicationDTO.setRecordInUse(publicationGroup.getRecordInUse());
 			publicationDTO.setOperatorId(publicationGroup.getOperatorId());

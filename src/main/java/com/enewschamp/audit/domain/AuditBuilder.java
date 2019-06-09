@@ -214,9 +214,7 @@ public class AuditBuilder  {
 					auditDTO.addCommitInfo(commitMetadata);
 					
 					this.parentObjectId = instanceId.getCdoId().toString();
-					if(!auditDTO.getAction().equals(OperationType.Add)) {
-						buildParentChangeAuditDTO(commitMetadata, auditDTO, byObject, instanceId.getTypeName());
-					}
+					buildParentChangeAuditDTO(commitMetadata, auditDTO, byObject, instanceId.getTypeName());
 					audits.add(auditDTO);
 				} else {
 					AuditDTO parentAuditDTO = getParentAuditForCommitId(commitMetadata.getId().valueAsNumber());
@@ -243,41 +241,44 @@ public class AuditBuilder  {
 
 	private void buildParentChangeAuditDTO(CommitMetadata commitMetadata, AuditDTO auditDTO, ChangesByObject byObject,
 			String typeName) {
-		byObject.get().forEach(change -> {
-			// Value change
-			if (change instanceof ValueChange) {
-				handleValueChange(auditDTO, (ValueChange) change);
-			}
-			
-			// Child object change
-			if (change instanceof ListChange) {
-				ListChange listChange = (ListChange) change;
-				List<ContainerElementChange> collectionChanges = listChange.getChanges();
-				auditDTO.addChildItemPropertyName(listChange.getPropertyName());
+		
+		if(!auditDTO.getAction().equals(OperationType.Add)) {
+			byObject.get().forEach(change -> {
+				// Value change
+				if (change instanceof ValueChange) {
+					handleValueChange(auditDTO, (ValueChange) change);
+				}
 				
-				// In case of collection change, only removed objects are considered here as different commit id is created for object removal
-				// Added objects get considered as part of getChildAuditForSameParentCommitId method call which is made at the end of this method
-				collectionChanges.forEach(collectionChange -> {
-					if (collectionChange instanceof ValueRemoved) {
-						ValueRemoved itemRemoved = (ValueRemoved) collectionChange;
-						if(childObjectExists(((InstanceId) itemRemoved.getValue()))) {
-							return;
+				// Child object change
+				if (change instanceof ListChange) {
+					ListChange listChange = (ListChange) change;
+					List<ContainerElementChange> collectionChanges = listChange.getChanges();
+					auditDTO.addChildItemPropertyName(listChange.getPropertyName());
+					
+					// In case of collection change, only removed objects are considered here as different commit id is created for object removal
+					// Added objects get considered as part of getChildAuditForSameParentCommitId method call which is made at the end of this method
+					collectionChanges.forEach(collectionChange -> {
+						if (collectionChange instanceof ValueRemoved) {
+							ValueRemoved itemRemoved = (ValueRemoved) collectionChange;
+							if(childObjectExists(((InstanceId) itemRemoved.getValue()))) {
+								return;
+							}
+							handleChildItemRemoval(auditDTO, listChange.getPropertyName(), ((InstanceId) itemRemoved.getValue()));
 						}
-						handleChildItemRemoval(auditDTO, listChange.getPropertyName(), ((InstanceId) itemRemoved.getValue()));
-					}
-					if (collectionChange instanceof ElementValueChange) {
-						// In case of element change, left value is the removed item
-						ElementValueChange itemExchanged = (ElementValueChange) collectionChange;
-						InstanceId removedItemInstanceDetails = (InstanceId) itemExchanged.getLeftValue();
-						if(childObjectExists(removedItemInstanceDetails)) {
-							return;
+						if (collectionChange instanceof ElementValueChange) {
+							// In case of element change, left value is the removed item
+							ElementValueChange itemExchanged = (ElementValueChange) collectionChange;
+							InstanceId removedItemInstanceDetails = (InstanceId) itemExchanged.getLeftValue();
+							if(childObjectExists(removedItemInstanceDetails)) {
+								return;
+							}
+							handleChildItemRemoval(auditDTO, listChange.getPropertyName(), removedItemInstanceDetails);
 						}
-						handleChildItemRemoval(auditDTO, listChange.getPropertyName(), removedItemInstanceDetails);
-					}
-				});
-			}
-						
-		});
+					});
+				}
+							
+			});
+		}
 		
 		// For the same commit id, check if there are any modifications done to child objects
 		getChildAuditForSameParentCommitId(commitMetadata, auditDTO);

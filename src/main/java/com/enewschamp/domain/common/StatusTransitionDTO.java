@@ -7,12 +7,11 @@ import lombok.Data;
 @AllArgsConstructor
 public class StatusTransitionDTO {
 
+	public static final String REVERSE_STATE = "Reverse";
 	private String entityName;
 	private String entityId;
 	private String fromStatus;
 	private String action;
 	private String toStatus;
-	
-	
 	
 }

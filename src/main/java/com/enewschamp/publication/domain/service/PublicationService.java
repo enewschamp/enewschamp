@@ -1,5 +1,6 @@
 package com.enewschamp.publication.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -9,9 +10,15 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.article.domain.entity.NewsArticle;
+import com.enewschamp.article.domain.entity.NewsArticleQuiz;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.domain.common.StatusTransitionDTO;
+import com.enewschamp.domain.common.StatusTransitionHandler;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.publication.domain.common.PublicationActionType;
+import com.enewschamp.publication.domain.common.PublicationStatusType;
 import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,11 +45,16 @@ public class PublicationService {
 	@Autowired
 	private EnewschampApplicationProperties appConfig;
 	
+	@Autowired
+	private StatusTransitionHandler statusTransitionHandler;
+	
 	public Publication create(Publication publication) {
+		derivePublicationStatus(publication);
 		return repository.save(publication);
 	}
 	
 	public Publication update(Publication publication) {
+		derivePublicationStatus(publication);
 		Long publicationId = publication.getPublicationId();
 		Publication existingEntity = load(publicationId);
 		modelMapper.map(publication, existingEntity);
@@ -50,6 +62,7 @@ public class PublicationService {
 	}
 	
 	public Publication patch(Publication publication) {
+		derivePublicationStatus(publication);
 		Long publicationId = publication.getPublicationId();
 		Publication existingEntity = load(publicationId);
 		modelMapperForPatch.map(publication, existingEntity);
@@ -91,4 +104,38 @@ public class PublicationService {
 		return auditBuilder.build();
 	}
 	
+	public PublicationStatusType derivePublicationStatus(Publication publication) {
+		PublicationStatusType status = PublicationStatusType.Unassigned;
+		if(publication.getCurrentAction() != null) {
+			PublicationStatusType existingStatus = repository.getCurrentStatus(publication.getPublicationId());
+			existingStatus = existingStatus == null ? PublicationStatusType.Unassigned : existingStatus;
+			StatusTransitionDTO transition = new StatusTransitionDTO(Publication.class.getSimpleName(), 
+																	 String.valueOf(publication.getPublicationId()),
+																	 existingStatus.toString(),
+																     publication.getCurrentAction().toString(), 
+																     null);
+			
+			String nextStatus = statusTransitionHandler.findNextStatus(transition);
+			if(nextStatus.equals(StatusTransitionDTO.REVERSE_STATE)) {
+				PublicationStatusType previousStatus = repository.getPreviousStatus(publication.getPublicationId());
+				nextStatus = previousStatus.toString();
+			}
+			
+			status = PublicationStatusType.fromValue(nextStatus);
+		}
+		publication.setStatus(status);
+		return status;
+	}
+	
+	public List<Publication> assignAuthor(Long publicationGroupId, String editorId) {
+		
+		List<Publication> existingPublications = repository.findByPublicationGroupId(publicationGroupId);
+		for(Publication article: existingPublications) {
+			article.setEditorId(editorId);
+			article.setCurrentAction(PublicationActionType.AssignEditor);
+			derivePublicationStatus(article);
+			repository.save(article);
+		}
+		return existingPublications;
+	}
 }

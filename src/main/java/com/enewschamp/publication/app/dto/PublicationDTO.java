@@ -10,8 +10,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.enewschamp.app.common.MaintenanceDTO;
-import com.enewschamp.article.domain.common.PublicationActionType;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
+import com.enewschamp.publication.domain.common.PublicationActionType;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
 
 import lombok.Data;

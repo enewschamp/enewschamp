@@ -71,9 +71,9 @@ public class PublicationHelper {
 			return;
 		}
 		for (PublicationArticleLinkage existingArticleLinkage : publication.getArticleLinkages()) {
-			if (!isExistingLinkageFound(existingArticleLinkage.getId(), articleLinkages)) {
-				System.out.println("Delete linkage for id: " + existingArticleLinkage.getId());
-				publicationLinkageRepository.deleteById(existingArticleLinkage.getId());
+			if (!isExistingLinkageFound(existingArticleLinkage.getLinkageId(), articleLinkages)) {
+				System.out.println("Delete linkage for id: " + existingArticleLinkage.getLinkageId());
+				publicationLinkageRepository.deleteById(existingArticleLinkage.getLinkageId());
 			}
 		}
 	}
@@ -81,7 +81,7 @@ public class PublicationHelper {
 	private boolean isExistingLinkageFound(long linkageId, List<PublicationArticleLinkageDTO> existingLinkages) {
 		
 		for(PublicationArticleLinkageDTO articleLinkage: existingLinkages) {
-			if(articleLinkage.getId() == linkageId) {
+			if(articleLinkage.getLinkageId() == linkageId) {
 				return true;
 			}
 		}

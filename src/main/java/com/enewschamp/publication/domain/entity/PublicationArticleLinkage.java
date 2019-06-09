@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.javers.core.metamodel.annotation.DiffIgnore;
+
 import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
@@ -23,10 +25,11 @@ public class PublicationArticleLinkage extends BaseEntity {
 
 	@Id 
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private long id;
+	private long linkageId;
 
 	@NotNull
 	@Column(name = "PublicationID")
+	@DiffIgnore
 	private long publicationId = 0L;
 	
 	@NotNull
@@ -38,7 +41,7 @@ public class PublicationArticleLinkage extends BaseEntity {
 	private int sequence;
 	
 	public String getKeyAsString() {
-		return String.valueOf(this.id);
+		return String.valueOf(this.linkageId);
 	}
 
 }
