@@ -123,4 +123,12 @@ public class NewsArticleGroupService {
 		repository.save(articleGroup);
 		return articleGroup;
 	}
+	
+	public NewsArticleGroup assignEditor(Long articleGroupId, String editorId) {
+		NewsArticleGroup articleGroup = load(articleGroupId);
+		articleGroup.setEditorId(editorId);
+		List<NewsArticle> articles = newsArticleService.assignEditor(articleGroupId, editorId);
+		repository.save(articleGroup);
+		return articleGroup;
+	}
 }

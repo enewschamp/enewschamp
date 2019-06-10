@@ -1,6 +1,5 @@
 package com.enewschamp.publication.domain.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -10,14 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
-import com.enewschamp.article.domain.entity.NewsArticle;
-import com.enewschamp.article.domain.entity.NewsArticleQuiz;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.StatusTransitionDTO;
 import com.enewschamp.domain.common.StatusTransitionHandler;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.publication.domain.common.PublicationActionType;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
 import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
@@ -127,15 +123,24 @@ public class PublicationService {
 		return status;
 	}
 	
-	public List<Publication> assignAuthor(Long publicationGroupId, String editorId) {
+	public Publication assignEditor(Long publicationId, String editorId) {
 		
-		List<Publication> existingPublications = repository.findByPublicationGroupId(publicationGroupId);
-		for(Publication article: existingPublications) {
-			article.setEditorId(editorId);
-			article.setCurrentAction(PublicationActionType.AssignEditor);
-			derivePublicationStatus(article);
-			repository.save(article);
+		Publication publication = get(publicationId);
+		if(publication != null) {
+			publication.setEditorId(editorId);
+			repository.save(publication);
 		}
-		return existingPublications;
+		return publication;
 	}
+	
+	public Publication assignPublisher(Long publicationId, String publisherId) {
+		
+		Publication publication = get(publicationId);
+		if(publication != null) {
+			publication.setPublisherId(publisherId);
+			repository.save(publication);
+		}
+		return publication;
+	}
+	
 }

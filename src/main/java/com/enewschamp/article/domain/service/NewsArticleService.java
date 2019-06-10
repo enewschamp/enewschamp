@@ -141,4 +141,14 @@ public class NewsArticleService {
 		}
 		return existingArticles;
 	}
+	
+	public List<NewsArticle> assignEditor(Long articleGroupId, String editorId) {
+		
+		List<NewsArticle> existingArticles = repository.findByNewsArticleGroupId(articleGroupId);
+		for(NewsArticle article: existingArticles) {
+			article.setEditorId(editorId);
+			repository.save(article);
+		}
+		return existingArticles;
+	}
 }
