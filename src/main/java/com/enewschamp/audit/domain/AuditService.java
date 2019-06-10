@@ -39,6 +39,11 @@ public class AuditService {
 		if(queryCriteria.getCommitId() != null) {
 			jqlQuery.withCommitId(queryCriteria.getCommitId());
 		}
+
+		if(queryCriteria.getPropertyName() != null) {
+			jqlQuery.withChangedProperty(queryCriteria.getPropertyName());
+		}
+		jqlQuery.withNewObjectChanges(queryCriteria.isWithNewObjectChanges());
 		
 		return queryChanges(jqlQuery);
 	}
@@ -76,6 +81,9 @@ public class AuditService {
 			jqlQuery.withNewObjectChanges(queryCriteria.isWithNewObjectChanges());
 			if(queryCriteria.getVersion() != null) {
 				jqlQuery.withVersion(queryCriteria.getVersion());
+			}
+			if(queryCriteria.getPropertyName() != null) {
+				jqlQuery.withChangedProperty(queryCriteria.getPropertyName());
 			}
 		}
 		

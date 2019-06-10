@@ -1,5 +1,6 @@
 package com.enewschamp.publication.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.article.domain.entity.NewsArticleGroup;
+import com.enewschamp.article.page.data.PropertyAuditData;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.StatusTransitionDTO;
@@ -141,6 +144,16 @@ public class PublicationService {
 			repository.save(publication);
 		}
 		return publication;
+	}
+	
+	public List<PropertyAuditData> getPreviousComments(Long publicationId) {
+		Publication publication = new Publication();
+		publication.setPublicationId(publicationId);
+		
+		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig).forParentObject(publication);
+		auditBuilder.forProperty("comments");
+		
+		return auditBuilder.buildPropertyAudit();
 	}
 	
 }

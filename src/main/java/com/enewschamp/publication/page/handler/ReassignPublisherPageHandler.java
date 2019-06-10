@@ -14,7 +14,7 @@ import com.enewschamp.publication.page.data.ReassignPublisherPageData;
 import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component(value="ReassignAuthorPageHandler")
+@Component(value="ReassignPublisherPageHandler")
 public class ReassignPublisherPageHandler implements IPageHandler  {
 
 	@Autowired

@@ -76,5 +76,11 @@ public class NewsArticleGroupController {
 		String audit = newsArticleGroupService.getAudit(articleGroupId);
 		return new ResponseEntity<String>(audit, HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/articleGroups/{articleGroupId}/audit/comments")
+	public ResponseEntity<String> getCommentsAudit(@PathVariable Long articleGroupId) {
+		String audit = newsArticleGroupService.getCommentsAudit(articleGroupId);
+		return new ResponseEntity<String>(audit, HttpStatus.OK);
+	}
 
 }

@@ -19,6 +19,7 @@ public class AuditQueryCriteria extends AbstractDTO {
 	private Long version;
 	private boolean withNewObjectChanges;
 	private String objectName;
+	private String propertyName;
 
 	
 }

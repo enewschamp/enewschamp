@@ -22,7 +22,6 @@ import org.javers.core.diff.changetype.ValueChange;
 import org.javers.core.diff.changetype.container.ContainerElementChange;
 import org.javers.core.diff.changetype.container.ElementValueChange;
 import org.javers.core.diff.changetype.container.ListChange;
-import org.javers.core.diff.changetype.container.ValueAdded;
 import org.javers.core.diff.changetype.container.ValueRemoved;
 import org.javers.core.metamodel.object.CdoSnapshot;
 import org.javers.core.metamodel.object.CdoSnapshotState;
@@ -32,6 +31,7 @@ import org.javers.core.metamodel.object.SnapshotType;
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.dto.AuditDTO;
 import com.enewschamp.app.dto.FieldChangeDTO;
+import com.enewschamp.article.page.data.PropertyAuditData;
 import com.enewschamp.domain.common.IEntity;
 import com.enewschamp.domain.common.OperationType;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -61,6 +61,8 @@ public class AuditBuilder  {
 	
 	private Map<BigDecimal, AuditDTO> commitWiseParentAudit;
 	
+	private String propertyName;
+	
 	private AuditBuilder(AuditService auditService, ObjectMapper objectMapper, EnewschampApplicationProperties appConfig) {
 		this.auditService = auditService;
 		this.objectMapper = objectMapper;
@@ -82,6 +84,11 @@ public class AuditBuilder  {
 			childObjects = new ArrayList<IEntity>();
 		}
 		childObjects.add(chidObjectInstance);
+		return this;
+	}
+	
+	public AuditBuilder forProperty(String propertyName) {
+		this.propertyName = propertyName;
 		return this;
 	}
 	
@@ -513,6 +520,26 @@ public class AuditBuilder  {
 	
 	private void printDebugLine(String line) {
 		System.out.println(line);
+	}
+	
+	public List<PropertyAuditData> buildPropertyAudit() {
+		
+		List<PropertyAuditData> propertyAudit = new ArrayList<PropertyAuditData>();
+		AuditQueryCriteria queryCriteria = new AuditQueryCriteria();
+		queryCriteria.setPropertyName(this.propertyName);
+		queryCriteria.setWithNewObjectChanges(true);
+		Changes changes = auditService.getEntityChangesByCriteria(this.parentObject, queryCriteria);
+		
+		changes.forEach(change -> {
+			if (change instanceof ValueChange) {
+				ValueChange valueChange = (ValueChange) change;
+				CommitMetadata commitData = valueChange.getCommitMetadata().get();
+				propertyAudit.add(new PropertyAuditData(commitData.getAuthor(), 
+						commitData.getCommitDate(), String.valueOf(valueChange.getRight())));
+			}
+		});
+		
+		return propertyAudit;
 	}
 	
 }

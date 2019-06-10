@@ -8,13 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.article.domain.common.ArticleGroupStatusType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
+import com.enewschamp.article.page.data.PropertyAuditData;
+import com.enewschamp.audit.domain.AuditBuilder;
+import com.enewschamp.audit.domain.AuditQueryCriteria;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.BusinessException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class NewsArticleGroupService {
@@ -26,6 +31,9 @@ public class NewsArticleGroupService {
 	ModelMapper modelMapper;
 	
 	@Autowired
+	private ObjectMapper objectMapper;
+	
+	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
 	
@@ -34,6 +42,10 @@ public class NewsArticleGroupService {
 	
 	@Autowired 
 	private NewsArticleService newsArticleService;
+	
+	@Autowired
+	private EnewschampApplicationProperties appConfig;
+	
 	
 	public NewsArticleGroup create(NewsArticleGroup articleGroup) {
 		deriveStatus(articleGroup);
@@ -85,6 +97,15 @@ public class NewsArticleGroupService {
 		return auditService.getEntityAudit(articleGroup);
 	}
 	
+	public String getCommentsAudit(Long articleGroupId) {
+		NewsArticleGroup articleGroup = new NewsArticleGroup();
+		articleGroup.setNewsArticleGroupId(articleGroupId);
+		AuditQueryCriteria queryCriteria = new AuditQueryCriteria();
+		queryCriteria.setPropertyName("comments");
+		queryCriteria.setWithNewObjectChanges(true);
+		return auditService.getEntityAuditByCriteria(articleGroup, queryCriteria);
+	}
+	
 	public ArticleGroupStatusType deriveStatus(NewsArticleGroup articleGroup) {
 		ArticleGroupStatusType newStatus = deriveStatus(articleGroup.getNewsArticles());
 		articleGroup.setStatus(newStatus);
@@ -130,5 +151,15 @@ public class NewsArticleGroupService {
 		List<NewsArticle> articles = newsArticleService.assignEditor(articleGroupId, editorId);
 		repository.save(articleGroup);
 		return articleGroup;
+	}
+	
+	public List<PropertyAuditData> getPreviousComments(Long articleGroupId) {
+		NewsArticleGroup articleGroup = new NewsArticleGroup();
+		articleGroup.setNewsArticleGroupId(articleGroupId);
+		
+		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig).forParentObject(articleGroup);
+		auditBuilder.forProperty("comments");
+		
+		return auditBuilder.buildPropertyAudit();
 	}
 }

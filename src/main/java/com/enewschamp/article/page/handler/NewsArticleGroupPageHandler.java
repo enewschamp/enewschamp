@@ -49,22 +49,32 @@ public class NewsArticleGroupPageHandler implements IPageHandler  {
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		
 		PageDTO pageDTO = new PageDTO();
-
-		NewsArticleGroupDTO articleGroupDTO = null;
-		try {
-			articleGroupDTO = objectMapper.readValue(pageRequest.getData().toString(), NewsArticleGroupDTO.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		NewsArticleGroupPageData data = new NewsArticleGroupPageData();
+		
+		String action = pageRequest.getHeader().getAction();
+		switch(action) {
+			case "SaveNewsArticle":
+				NewsArticleGroupDTO articleGroupDTO = null;
+				try {
+					articleGroupDTO = objectMapper.readValue(pageRequest.getData().toString(), NewsArticleGroupDTO.class);
+				} catch (JsonParseException e) {
+					throw new RuntimeException(e);
+				} catch (JsonMappingException e) {
+					throw new RuntimeException(e);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+				
+				articleGroupDTO = newsArticleGroupHelper.createArticleGroup(articleGroupDTO);
+				data.setNewsArticleGroup(articleGroupDTO);
+			break;
+			case "GetPreviousComments":
+				// do nothing;
+			break;
 		}
 		
-		articleGroupDTO = newsArticleGroupHelper.createArticleGroup(articleGroupDTO);
-
-		NewsArticleGroupPageData data = new NewsArticleGroupPageData();
-		data.setNewsArticleGroup(articleGroupDTO);
+		
+		
 		pageDTO.setData(data);
 		
 		return pageDTO;
