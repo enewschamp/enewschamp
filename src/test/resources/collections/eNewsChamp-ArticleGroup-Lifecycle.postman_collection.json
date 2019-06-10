@@ -777,7 +777,7 @@
 			"response": []
 		},
 		{
-			"name": "Article Comments Audit",
+			"name": "Article Comments Audit for article group",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -790,11 +790,8 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
@@ -804,10 +801,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": ""
+					"raw": "{\n    \"header\": {\n       \"pageName\": \"NewsArticle\",\n       \"action\": \"GetPreviousComments\"\n    },\n    \"data\": {\n    \t\"newsArticleGroupId\": {{newsArticleGroupId}}\n    }\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/articleGroups/1/audit/comments",
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -815,10 +812,7 @@
 					"port": "{{port}}",
 					"path": [
 						"{{base-path}}",
-						"articleGroups",
-						"1",
-						"audit",
-						"comments"
+						"{{publisherAppPath}}"
 					]
 				}
 			},
@@ -951,7 +945,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": {{publicationGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId1}},\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 comments\",\n                \"currentAction\": \"ReadyToPublish\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage1-1}},\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"publicationId\": {{publicationId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            },\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n                \"readingLevel\": 3,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 2 comments\",\n                \"currentAction\": \"AssignEditor\",\n                \"articleLinkages\": [\n                    {\n                        \"newsArticleId\": {{newsArticleId3}},\n                        \"sequence\": 1\n                    },\n                    {\n                        \"newsArticleId\": 31,\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": {{publicationGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId1}},\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 is ready to publish\",\n                \"currentAction\": \"ReadyToPublish\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage1-1}},\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"publicationId\": {{publicationId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            },\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n                \"readingLevel\": 3,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 2 comments\",\n                \"currentAction\": \"AssignEditor\",\n                \"articleLinkages\": [\n                    {\n                        \"newsArticleId\": {{newsArticleId3}},\n                        \"sequence\": 1\n                    },\n                    {\n                        \"newsArticleId\": 31,\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -1027,7 +1021,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": {{publicationGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId1}},\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 comments\",\n                \"currentAction\": \"ReadyToPublish\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage1-1}},\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"publicationId\": {{publicationId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            },\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId3}},\n                \"readingLevel\": 3,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 2 comments\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage3-1}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": {{newsArticleId3}},\n                        \"sequence\": 1\n                    },\n                    {\n                        \"newsArticleId\": 32,\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": {{publicationGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId1}},\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 is ready to publish\",\n                \"currentAction\": \"ReadyToPublish\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage1-1}},\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"publicationId\": {{publicationId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            },\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId3}},\n                \"readingLevel\": 3,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 2 comments\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage3-1}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": {{newsArticleId3}},\n                        \"sequence\": 1\n                    },\n                    {\n                        \"newsArticleId\": 32,\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -1103,7 +1097,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": {{publicationGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"govisaxe\",\n        \"publications\": [\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId1}},\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 comments - Rework\",\n                \"currentAction\": \"Rework\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage1-1}},\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"publicationId\": {{publicationId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            },\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId3}},\n                \"readingLevel\": 3,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 2 comments\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage3-1}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": {{newsArticleId3}},\n                        \"sequence\": 1\n                    },\n                    {\n                    \t\"linkageId\": {{articleLinkage3-2}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": 32,\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": {{publicationGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"govisaxe\",\n        \"publications\": [\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId1}},\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publisher sends back reading level 1 publication for rework\",\n                \"currentAction\": \"Rework\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage1-1}},\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"publicationId\": {{publicationId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            },\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId3}},\n                \"readingLevel\": 3,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 2 comments\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage3-1}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": {{newsArticleId3}},\n                        \"sequence\": 1\n                    },\n                    {\n                    \t\"linkageId\": {{articleLinkage3-2}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": 32,\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -1179,7 +1173,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": {{publicationGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId1}},\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 comments - Ready to publish\",\n                \"currentAction\": \"ReadyToPublish\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage1-1}},\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"publicationId\": {{publicationId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            },\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId3}},\n                \"readingLevel\": 3,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 2 comments\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage3-1}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": {{newsArticleId3}},\n                        \"sequence\": 1\n                    },\n                    {\n                    \t\"linkageId\": {{articleLinkage3-2}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": 32,\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": {{publicationGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"mesmayu\",\n        \"publications\": [\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId1}},\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Editor marks reading level 1 publication as ready for publish\",\n                \"currentAction\": \"ReadyToPublish\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage1-1}},\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"publicationId\": {{publicationId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            },\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId3}},\n                \"readingLevel\": 3,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 2 comments\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage3-1}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": {{newsArticleId3}},\n                        \"sequence\": 1\n                    },\n                    {\n                    \t\"linkageId\": {{articleLinkage3-2}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": 32,\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -1255,7 +1249,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": {{publicationGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"govisaxe\",\n        \"publications\": [\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId1}},\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 1 comments - Published\",\n                \"currentAction\": \"Publish\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage1-1}},\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"publicationId\": {{publicationId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            },\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId3}},\n                \"readingLevel\": 3,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 2 comments\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage3-1}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": {{newsArticleId3}},\n                        \"sequence\": 1\n                    },\n                    {\n                    \t\"linkageId\": {{articleLinkage3-2}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": 32,\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"SavePublication\"\n    },\n    \"data\": {\n    \t\"publicationGroupId\": {{publicationGroupId}},\n        \"editionId\": \"INDIAN\",\n        \"publicationDate\": \"2019-06-30\",\n        \"recordInUse\": \"Y\",\n        \"operatorId\": \"govisaxe\",\n        \"publications\": [\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId1}},\n                \"readingLevel\": 1,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publisher publishes publication for reading level 1\",\n                \"currentAction\": \"Publish\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage1-1}},\n                        \"newsArticleId\": {{newsArticleId1}},\n                        \"publicationId\": {{publicationId1}},\n                        \"sequence\": 1\n                    }\n                ]\n            },\n            {\n            \t\"publicationGroupId\": {{publicationGroupId}},\n            \t\"publicationId\": {{publicationId3}},\n                \"readingLevel\": 3,\n                \"editorId\": \"mesmayus\",\n                \"publisherId\": \"govisaxe\",\n                \"comments\": \"Publication 2 comments\",\n                \"currentAction\": \"SaveAsDraft\",\n                \"articleLinkages\": [\n                    {\n                    \t\"linkageId\": {{articleLinkage3-1}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": {{newsArticleId3}},\n                        \"sequence\": 1\n                    },\n                    {\n                    \t\"linkageId\": {{articleLinkage3-2}},\n                    \t\"publicationId\": {{publicationId3}},\n                        \"newsArticleId\": 32,\n                        \"sequence\": 2\n                    }\n                ]\n            }\n        ]\n    }\n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -1417,7 +1411,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/publications/3/audit",
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/publications/1/audit",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -1426,8 +1420,50 @@
 					"path": [
 						"{{base-path}}",
 						"publications",
-						"3",
+						"1",
 						"audit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Article Comments Audit for publication",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n       \"pageName\": \"Publication\",\n       \"action\": \"GetPreviousComments\"\n    },\n    \"data\": {\n    \t\"publicationId\": {{publicationId1}}\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
 					]
 				}
 			},

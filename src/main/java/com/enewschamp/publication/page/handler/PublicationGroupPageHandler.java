@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
+import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.publication.app.dto.PublicationGroupDTO;
@@ -39,22 +40,29 @@ public class PublicationGroupPageHandler implements IPageHandler  {
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		
 		PageDTO pageDTO = new PageDTO();
-
-		PublicationGroupDTO publicationGroupDTO = null;
-		try {
-			publicationGroupDTO = objectMapper.readValue(pageRequest.getData().toString(), PublicationGroupDTO.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		
-		publicationGroupDTO = publicationGroupHelper.createPublicationGroup(publicationGroupDTO);
-		
 		PublicationGroupPageData data = new PublicationGroupPageData();
-		data.setPublicationGroup(publicationGroupDTO);
+		
+		String action = pageRequest.getHeader().getAction();
+		switch(action) {
+			case "SavePublication":
+				PublicationGroupDTO publicationGroupDTO = null;
+				try {
+					publicationGroupDTO = objectMapper.readValue(pageRequest.getData().toString(), PublicationGroupDTO.class);
+				} catch (JsonParseException e) {
+					throw new RuntimeException(e);
+				} catch (JsonMappingException e) {
+					throw new RuntimeException(e);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+				
+				publicationGroupDTO = publicationGroupHelper.createPublicationGroup(publicationGroupDTO);
+				data.setPublicationGroup(publicationGroupDTO);
+			break;
+			case "GetPreviousComments":
+				// do nothing;
+			break;
+		}
 		
 		pageDTO.setData(data);
 		
