@@ -42,7 +42,10 @@ public class NewsArticleHelper {
 				quizDTO.setRecordInUse(articleDTO.getRecordInUse());
 			}
 			// Remove questions which have been deleted on the UI
-			removeDelinkedQuestions(articleDTO.getNewsArticleId(), newsArticleQuiz);
+			NewsArticle existingArticle = newsArticleService.get(articleDTO.getNewsArticleId());
+			if(existingArticle != null) {
+				removeDelinkedQuestions(articleDTO.getNewsArticleId(), newsArticleQuiz);
+			}
 		}
 		
 		NewsArticle article = modelMapper.map(articleDTO, NewsArticle.class);

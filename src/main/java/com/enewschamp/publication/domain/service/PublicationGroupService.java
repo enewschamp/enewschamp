@@ -63,7 +63,7 @@ public class PublicationGroupService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.PUBLICATION_GRP_NOT_FOUND);
+			throw new BusinessException(ErrorCodes.PUBLICATION_GRP_NOT_FOUND, String.valueOf(publicationGroupId));
 		}
 	}
 	

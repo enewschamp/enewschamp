@@ -30,8 +30,6 @@ import org.javers.core.metamodel.object.SnapshotType;
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.dto.AuditDTO;
 import com.enewschamp.app.dto.FieldChangeDTO;
-import com.enewschamp.article.domain.common.ArticleActionType;
-import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.domain.common.OperationType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

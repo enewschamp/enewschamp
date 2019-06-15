@@ -16,7 +16,6 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.problem.Fault;
 import com.enewschamp.subscription.app.dto.StudentPreferencePageData;
 import com.enewschamp.subscription.app.dto.StudentPreferencesDTO;
 import com.enewschamp.subscription.app.dto.StudentPreferencesWorkDTO;

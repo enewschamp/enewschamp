@@ -7,6 +7,6 @@ import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.enewschamp.publication.page.data.PublicationSearchRequest;
 
 public interface PublicationRepositoryCustom {
-	public Page<PublicationDTO> findAllPage(PublicationSearchRequest searchRequest, Pageable pageable);
+	public Page<PublicationDTO> findPublications(PublicationSearchRequest searchRequest, Pageable pageable);
 
 }

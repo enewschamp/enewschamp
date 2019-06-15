@@ -1,7 +1,5 @@
 package com.enewschamp.app.common.city.entity;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +9,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.enewschamp.app.common.uicontrols.entity.UIControls;
 import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;

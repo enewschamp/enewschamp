@@ -11,7 +11,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.query.criteria.internal.path.RootImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -21,8 +20,9 @@ import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
 import com.enewschamp.article.page.data.NewsArticleSearchRequest;
 import com.enewschamp.domain.common.AppConstants;
+import com.enewschamp.domain.service.RepositoryImpl;
 
-public class NewsArticleRepositoryImpl implements NewsArticleRepositoryCustom {
+public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArticleRepositoryCustom {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -49,6 +49,7 @@ public class NewsArticleRepositoryImpl implements NewsArticleRepositoryCustom {
 				  articleGroupRoot.get("imagePathTab"), 
 				  articleGroupRoot.get("imagePathDesktop")));
 		
+		// Build filter conditions
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		filterPredicates.add(cb.equal(articleGroupRoot.get("newsArticleGroupId"), articleRoot.get("newsArticleGroupId")));
@@ -62,7 +63,6 @@ public class NewsArticleRepositoryImpl implements NewsArticleRepositoryCustom {
 		if (searchRequest.getPublicationDate() != null) {
 			filterPredicates.add(cb.equal(articleRoot.get("publishDate"), searchRequest.getPublicationDate()));
 		}
-		
 		if (searchRequest.getPublicationDateFrom() != null) {
 			filterPredicates.add(cb.greaterThanOrEqualTo(articleRoot.get("publishDate"), searchRequest.getPublicationDateFrom()));
 		}
@@ -99,6 +99,7 @@ public class NewsArticleRepositoryImpl implements NewsArticleRepositoryCustom {
 		}
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		
+		// Build query
 		TypedQuery<NewsArticleSummaryDTO> q = entityManager.createQuery(criteriaQuery);
 		
 		if(pageable.getPageSize() > 0) {
@@ -108,7 +109,7 @@ public class NewsArticleRepositoryImpl implements NewsArticleRepositoryCustom {
 			
 		}
 		List<NewsArticleSummaryDTO> list = q.getResultList();
-		long count = getAllCount(searchRequest, criteriaQuery, filterPredicates, articleRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, articleRoot);
 		
 		return new PageImpl<>(list, pageable, count);
 	}
@@ -150,29 +151,6 @@ public class NewsArticleRepositoryImpl implements NewsArticleRepositoryCustom {
 			predicate = cb.or(readingLevelPredicates.toArray(new Predicate[0]));
 		}
 		return predicate;
-	}
-	
-	private Long getAllCount(NewsArticleSearchRequest searchRequest, 
-							 CriteriaQuery criteriaQuery, 
-							 List<Predicate> filterPredicates, 
-							 Root originalRoot) {
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-		
-		Root mainRoot = countQuery.from(originalRoot.getJavaType());
-		
-		if(criteriaQuery.getRoots() != null) {
-			for(Object root: criteriaQuery.getRoots()) {
-				RootImpl rootImpl = (RootImpl) root;
-				if(!rootImpl.getJavaType().equals(mainRoot.getJavaType())) {
-					countQuery.from(rootImpl.getJavaType());
-				}
-			}
-		}
-		
-		countQuery.select(cb.count(mainRoot))
-					.where(cb.and((Predicate[])filterPredicates.toArray(new Predicate[0])));
-		return (Long) entityManager.createQuery(countQuery).getSingleResult();
 	}
 
 }

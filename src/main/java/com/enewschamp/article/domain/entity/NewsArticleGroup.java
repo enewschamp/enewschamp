@@ -20,7 +20,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.article.domain.common.ArticleGroupStatusType;
-import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.domain.common.MonthType;
 import com.enewschamp.domain.common.WeekDayType;

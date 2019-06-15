@@ -1,7 +1,5 @@
 package com.enewschamp.subscription.app.dto;
 
-import java.sql.Timestamp;
-
 import com.enewschamp.app.common.AbstractDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

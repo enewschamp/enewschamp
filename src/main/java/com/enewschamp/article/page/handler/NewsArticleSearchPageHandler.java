@@ -5,8 +5,6 @@ import java.io.IOException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.common.HeaderDTO;
@@ -74,6 +72,7 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 		header.setIsLastPage(pageResult.isLast());
 		header.setPageCount(pageResult.getTotalPages());
 		header.setRecordCount(pageResult.getNumberOfElements());
+		header.setPageNumber(pageResult.getNumber() + 1);
 		pageDTO.setHeader(header);
 		
 		searchResult.setNewsArticlesSummary(pageResult.getContent());

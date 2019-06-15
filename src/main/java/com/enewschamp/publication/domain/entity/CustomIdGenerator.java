@@ -5,7 +5,6 @@ import java.util.Properties;
 
 import org.hibernate.HibernateException;
 import org.hibernate.boot.MappingException;
-import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.id.Configurable;
 import org.hibernate.id.IdentifierGenerator;

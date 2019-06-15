@@ -4,14 +4,11 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
 import com.enewschamp.subscription.app.dto.StudentShareAchievementsDTO;
 import com.enewschamp.subscription.domain.entity.StudentShareAchievements;
 import com.enewschamp.subscription.domain.service.StudentShareAchievementsService;

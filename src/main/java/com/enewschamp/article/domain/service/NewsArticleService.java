@@ -88,11 +88,14 @@ public class NewsArticleService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.ARTICLE_NOT_FOUND);
+			throw new BusinessException(ErrorCodes.ARTICLE_NOT_FOUND, String.valueOf(articleId));
 		}
 	}
 	
 	public NewsArticle get(Long articleId) {
+		if(articleId == null) {
+			return null;
+		}
 		Optional<NewsArticle> existingEntity = repository.findById(articleId);
 		if(existingEntity.isPresent()) {
 			return existingEntity.get();

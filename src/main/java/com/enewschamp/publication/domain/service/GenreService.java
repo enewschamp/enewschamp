@@ -58,7 +58,7 @@ public class GenreService extends AbstractDomainService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.GENRE_NOT_FOUND);
+			throw new BusinessException(ErrorCodes.GENRE_NOT_FOUND, genreId);
 		}
 	}
 	

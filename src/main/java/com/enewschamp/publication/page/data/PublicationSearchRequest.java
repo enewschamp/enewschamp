@@ -1,6 +1,6 @@
 package com.enewschamp.publication.page.data;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.enewschamp.app.common.PageData;
@@ -15,7 +15,7 @@ public class PublicationSearchRequest extends PageData {
 
 	private static final long serialVersionUID = 9108562541842148687L;
 	
-	private Date publicationDate;
+	private LocalDate publicationDate;
 	private String readingLevel1;
 	private String readingLevel2;
 	private String readingLevel3;

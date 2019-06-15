@@ -6,10 +6,14 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.article.page.data.PropertyAuditData;
 import com.enewschamp.audit.domain.AuditBuilder;
@@ -17,9 +21,11 @@ import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.StatusTransitionDTO;
 import com.enewschamp.domain.common.StatusTransitionHandler;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
 import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
+import com.enewschamp.publication.page.data.PublicationSearchRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -27,6 +33,9 @@ public class PublicationService {
 
 	@Autowired
 	PublicationRepository repository;
+	
+	@Autowired
+	private PublicationRepositoryCustom customRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -85,7 +94,7 @@ public class PublicationService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.PUBLICATION_NOT_FOUND);
+			throw new BusinessException(ErrorCodes.PUBLICATION_NOT_FOUND, String.valueOf(publicationId));
 		}
 	}
 	
@@ -164,4 +173,10 @@ public class PublicationService {
 		return auditBuilder.buildPropertyAudit();
 	}
 	
+	public Page<PublicationDTO> findPublications(PublicationSearchRequest searchRequest, HeaderDTO header) {
+		int pageNumber = header.getPageNumber();
+		pageNumber = pageNumber > 0 ? (pageNumber - 1) : 0;
+		Pageable pageable = PageRequest.of(pageNumber, header.getPageSize());
+		return customRepository.findPublications(searchRequest, pageable);
+	}
 }

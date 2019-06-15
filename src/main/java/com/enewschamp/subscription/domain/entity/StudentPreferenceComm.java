@@ -3,7 +3,6 @@ package com.enewschamp.subscription.domain.entity;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import com.enewschamp.domain.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;

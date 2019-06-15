@@ -58,7 +58,7 @@ public class EditionService extends AbstractDomainService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.EDITION_NOT_FOUND);
+			throw new BusinessException(ErrorCodes.EDITION_NOT_FOUND, editionId);
 		}
 	}
 	

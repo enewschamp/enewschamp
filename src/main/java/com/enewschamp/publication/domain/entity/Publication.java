@@ -48,7 +48,7 @@ public class Publication extends BaseEntity {
 
 	@NotNull
 	@Column(name = "PublicationGroupID")
-	private long publicationGroupId = 0L;
+	private Long publicationGroupId = 0L;
 
 	@NotNull
 	@Column(name = "EditionID", length = 6)
@@ -97,7 +97,7 @@ public class Publication extends BaseEntity {
 		if(operationDateTime == null) {
 			operationDateTime = LocalDateTime.now();
 		}
-		if(articleLinkages != null && publicationId != 0) {
+		if(articleLinkages != null && publicationId != null && publicationId != 0) {
 			for(PublicationArticleLinkage linkage: articleLinkages) {
 				linkage.setPublicationId(publicationId);
 			}

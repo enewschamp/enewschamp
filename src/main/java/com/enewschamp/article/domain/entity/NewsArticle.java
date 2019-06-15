@@ -123,7 +123,7 @@ public class NewsArticle extends BaseEntity {
 	@PreUpdate
 	public void prePersist() {
 		super.prePersist();
-		if(newsArticleQuiz != null && newsArticleId != 0) {
+		if(newsArticleQuiz != null && newsArticleId  != null && newsArticleId != 0) {
 			for(NewsArticleQuiz question: newsArticleQuiz) {
 				question.setNewsArticleId(newsArticleId);
 			}

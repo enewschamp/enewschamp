@@ -7,7 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.article.app.dto.NewsArticleDTO;
 import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
 import com.enewschamp.article.domain.common.ArticleActionType;
@@ -17,7 +16,6 @@ import com.enewschamp.article.domain.service.NewsArticleGroupRepository;
 import com.enewschamp.article.domain.service.NewsArticleGroupService;
 import com.enewschamp.article.domain.service.NewsArticleRepository;
 import com.enewschamp.domain.common.RecordInUseType;
-import com.enewschamp.problem.BusinessException;
 
 @Component
 public class NewsArticleGroupHelper {
@@ -41,7 +39,7 @@ public class NewsArticleGroupHelper {
 		
 		List<NewsArticleDTO> newsArticles = null;
 		NewsArticleGroup existingArticleGroup = newsArticleGroupService.get(articleGroupDTO.getNewsArticleGroupId());
-		if(existingArticleGroup != null) {
+		if(existingArticleGroup != null || articleGroupDTO.getNewsArticles() != null) {
 			//checkForArticleIds(articleGroupDTO, existingArticleGroup);
 			newsArticles = articleGroupDTO.getNewsArticles();
 		} else {

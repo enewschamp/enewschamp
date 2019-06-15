@@ -75,7 +75,7 @@ public class NewsArticleGroupService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else { 
-			throw new BusinessException(ErrorCodes.ARTICLE_GROUP_NOT_FOUND);
+			throw new BusinessException(ErrorCodes.ARTICLE_GROUP_NOT_FOUND, String.valueOf(articleGroupId));
 		}
 	}
 	

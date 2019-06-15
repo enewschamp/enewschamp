@@ -1,7 +1,6 @@
 package com.enewschamp.publication.app.dto;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -53,7 +52,7 @@ public class PublicationDTO extends MaintenanceDTO {
 	@NotNull
 	private PublicationActionType currentAction;
 
-	private List<PublicationArticleLinkageDTO> articleLinkages = new ArrayList<PublicationArticleLinkageDTO>();
+	private List<PublicationArticleLinkageDTO> articleLinkages;
 	
 	public PublicationDTO() {
 		super();

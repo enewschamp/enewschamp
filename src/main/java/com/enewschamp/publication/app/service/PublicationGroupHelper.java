@@ -7,8 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.enewschamp.article.app.dto.NewsArticleDTO;
-import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.enewschamp.publication.app.dto.PublicationGroupDTO;
 import com.enewschamp.publication.domain.entity.Publication;

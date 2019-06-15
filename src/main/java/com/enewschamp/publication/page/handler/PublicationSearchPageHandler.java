@@ -5,8 +5,6 @@ import java.io.IOException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.common.HeaderDTO;
@@ -18,7 +16,7 @@ import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.enewschamp.publication.domain.service.EditionService;
 import com.enewschamp.publication.domain.service.GenreService;
-import com.enewschamp.publication.domain.service.PublicationRepositoryCustom;
+import com.enewschamp.publication.domain.service.PublicationService;
 import com.enewschamp.publication.page.data.PublicationSearchPageData;
 import com.enewschamp.publication.page.data.PublicationSearchRequest;
 import com.enewschamp.publication.page.data.PublicationSearchResultData;
@@ -31,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class PublicationSearchPageHandler implements IPageHandler  {
 
 	@Autowired
-	private PublicationRepositoryCustom publicationCustomRepository;
+	private PublicationService publicationService;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -66,13 +64,13 @@ public class PublicationSearchPageHandler implements IPageHandler  {
 		PublicationSearchResultData searchResult = new PublicationSearchResultData();
 		pageDTO.setData(searchResult);
 		
-		Pageable pageable = PageRequest.of(pageRequest.getHeader().getPageNumber(), pageRequest.getHeader().getPageSize());
-		Page<PublicationDTO> pageResult = publicationCustomRepository.findAllPage(searchRequestData, pageable);
+		Page<PublicationDTO> pageResult = publicationService.findPublications(searchRequestData, pageRequest.getHeader());
 		
 		HeaderDTO header = new HeaderDTO();
 		header.setIsLastPage(pageResult.isLast());
 		header.setPageCount(pageResult.getTotalPages());
 		header.setRecordCount(pageResult.getNumberOfElements());
+		header.setPageNumber(pageResult.getNumber() + 1);
 		pageDTO.setHeader(header);
 		
 		searchResult.setPublications(pageResult.getContent());

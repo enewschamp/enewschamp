@@ -3,9 +3,7 @@ package com.enewschamp.subscription.app.dto;
 import java.util.List;
 
 import com.enewschamp.app.common.PageData;
-import com.enewschamp.app.common.city.dto.CityDTO;
 import com.enewschamp.app.common.country.dto.CountryDTO;
-import com.enewschamp.app.common.state.dto.StateDTO;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
