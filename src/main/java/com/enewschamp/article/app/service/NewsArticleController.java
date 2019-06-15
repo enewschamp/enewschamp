@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enewschamp.EnewschampApplicationErrorProperties;
 import com.enewschamp.article.app.dto.NewsArticleDTO;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.service.NewsArticleService;
@@ -88,7 +87,6 @@ public class NewsArticleController {
 		}
 		return response;
 	}
-	
 	
 
 }

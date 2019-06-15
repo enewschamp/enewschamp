@@ -13,8 +13,8 @@ import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
-import com.enewschamp.article.app.dto.NewsArticleDTO;
-import com.enewschamp.article.domain.service.NewsArticleRepositoryCustom;
+import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
+import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.article.page.data.NewsArticleSearchPageData;
 import com.enewschamp.article.page.data.NewsArticleSearchRequest;
 import com.enewschamp.article.page.data.NewsArticleSearchResultData;
@@ -33,7 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class NewsArticleSearchPageHandler implements IPageHandler  {
 
 	@Autowired
-	private NewsArticleRepositoryCustom newsArticleCustomRepository;
+	private NewsArticleService newsArticleService;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -68,8 +68,7 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 		NewsArticleSearchResultData searchResult = new NewsArticleSearchResultData();
 		pageDTO.setData(searchResult);
 		
-		Pageable pageable = PageRequest.of(pageRequest.getHeader().getPageNumber(), pageRequest.getHeader().getPageSize());
-		Page<NewsArticleDTO> pageResult = newsArticleCustomRepository.findAllPage(searchRequestData, pageable);
+		Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData, pageRequest.getHeader());
 		
 		HeaderDTO header = new HeaderDTO();
 		header.setIsLastPage(pageResult.isLast());
@@ -77,7 +76,7 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 		header.setRecordCount(pageResult.getNumberOfElements());
 		pageDTO.setHeader(header);
 		
-		searchResult.setNewsArticles(pageResult.getContent());
+		searchResult.setNewsArticlesSummary(pageResult.getContent());
 		return pageDTO;
 	}
 	

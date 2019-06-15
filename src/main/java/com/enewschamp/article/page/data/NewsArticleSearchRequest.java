@@ -1,6 +1,6 @@
 package com.enewschamp.article.page.data;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.enewschamp.app.common.PageData;
@@ -26,15 +26,16 @@ public class NewsArticleSearchRequest extends PageData {
 	private String headline;
 	private String credits;
 	
-	private String articleId;
-	private String articleGroupId;
+	private Long articleId;
+	private Long articleGroupId;
+	
 	private String readingLevel1;
 	private String readingLevel2;
 	private String readingLevel3;
 	private String readingLevel4;
-	private Date publicationDateFrom;
-	private Date publicationDateTo;
-	private Date publicationDate;
+	private LocalDate publicationDateFrom;
+	private LocalDate publicationDateTo;
+	private LocalDate publicationDate;
 	private MonthType intendedPubMonth;
 	private List<ArticleStatusType> articleStatusList;
 

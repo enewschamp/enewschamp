@@ -11,6 +11,7 @@ import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
 import com.enewschamp.article.app.service.NewsArticleGroupHelper;
+import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.article.page.data.NewsArticleGroupPageData;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.MonthType;
@@ -44,6 +45,9 @@ public class NewsArticleGroupPageHandler implements IPageHandler  {
 	
 	@Autowired
 	GenreService genreService;
+	
+	@Autowired
+	NewsArticleService articleService;
 	
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {

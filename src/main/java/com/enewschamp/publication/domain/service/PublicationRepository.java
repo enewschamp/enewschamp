@@ -30,4 +30,5 @@ public interface PublicationRepository extends JpaRepository<Publication, Long>{
 	@Query(value = "SELECT a.previousStatus FROM Publication a"
 			+ " where a.publicationId = :publicationId")
 	public PublicationStatusType getPreviousStatus(long publicationId);
+	
 } 

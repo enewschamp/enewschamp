@@ -66,4 +66,5 @@ public class PublicationRepositoryImpl implements PublicationRepositoryCustom {
 		//.where(cb.and((Predicate[])filterPredicates.toArray(new Predicate[0])));
 		return (Long) entityManager.createQuery(query).getSingleResult();
 	}
+
 }

@@ -6,16 +6,20 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.HeaderDTO;
+import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
 import com.enewschamp.article.domain.common.ArticleActionType;
-import com.enewschamp.article.domain.common.ArticleRatingType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.article.domain.entity.NewsArticle;
-import com.enewschamp.article.domain.entity.NewsArticleGroup;
 import com.enewschamp.article.domain.entity.NewsArticleQuiz;
+import com.enewschamp.article.page.data.NewsArticleSearchRequest;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.StatusTransitionDTO;
@@ -28,6 +32,9 @@ public class NewsArticleService {
 
 	@Autowired
 	private NewsArticleRepository repository;
+	
+	@Autowired
+	private NewsArticleRepositoryCustom customRepository;
 	
 	@Autowired
 	private ModelMapper modelMapper;
@@ -150,5 +157,12 @@ public class NewsArticleService {
 			repository.save(article);
 		}
 		return existingArticles;
+	}
+	
+	public Page<NewsArticleSummaryDTO> findArticles(NewsArticleSearchRequest searchRequest, HeaderDTO header) {
+		int pageNumber = header.getPageNumber();
+		pageNumber = pageNumber > 0 ? (pageNumber - 1) : 0;
+		Pageable pageable = PageRequest.of(pageNumber, header.getPageSize());
+		return customRepository.findArticles(searchRequest, pageable);
 	}
 }

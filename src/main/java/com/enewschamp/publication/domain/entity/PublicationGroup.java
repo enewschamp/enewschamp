@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -21,7 +22,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Entity
-@Table(name="PublicationGroup")
+@Table(name="PublicationGroup", uniqueConstraints={@UniqueConstraint(columnNames = {"publicationDate"})})
 public class PublicationGroup extends BaseEntity {
 	
 	private static final long serialVersionUID = 819426502462078317L;
