@@ -117,17 +117,33 @@ public class NewsArticleRepositoryImpl implements NewsArticleRepositoryCustom {
 												 CriteriaBuilder cb,
 												 Root<NewsArticle> articleRoot) {
 		List<Predicate> readingLevelPredicates = new ArrayList<>();
-		if (searchRequest.getReadingLevel1() != null && searchRequest.getReadingLevel1().equals(AppConstants.YES)) {
-			readingLevelPredicates.add(cb.equal(articleRoot.get("readingLevel"), 1));
+		if (searchRequest.getReadingLevel1() != null) {
+			if(searchRequest.getReadingLevel1().equals(AppConstants.YES)) {
+				readingLevelPredicates.add(cb.equal(articleRoot.get("readingLevel"), 1));
+			} else {
+				readingLevelPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 1));
+			}
 		}
-		if (searchRequest.getReadingLevel2() != null && searchRequest.getReadingLevel2().equals(AppConstants.YES)) {
-			readingLevelPredicates.add(cb.equal(articleRoot.get("readingLevel"), 2));
+		if (searchRequest.getReadingLevel2() != null) {
+			if(searchRequest.getReadingLevel2().equals(AppConstants.YES)) {
+				readingLevelPredicates.add(cb.equal(articleRoot.get("readingLevel"), 2));
+			} else {
+				readingLevelPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 2));
+			}
 		}
-		if (searchRequest.getReadingLevel3() != null && searchRequest.getReadingLevel3().equals(AppConstants.YES)) {
-			readingLevelPredicates.add(cb.equal(articleRoot.get("readingLevel"), 3));
+		if (searchRequest.getReadingLevel3() != null) {
+			if(searchRequest.getReadingLevel3().equals(AppConstants.YES)) {
+				readingLevelPredicates.add(cb.equal(articleRoot.get("readingLevel"), 3));
+			} else {
+				readingLevelPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 3));
+			}
 		}
-		if (searchRequest.getReadingLevel4() != null && searchRequest.getReadingLevel4().equals(AppConstants.YES)) {
-			readingLevelPredicates.add(cb.equal(articleRoot.get("readingLevel"), 4));
+		if (searchRequest.getReadingLevel4() != null) {
+			if(searchRequest.getReadingLevel4().equals(AppConstants.YES)) {
+				readingLevelPredicates.add(cb.equal(articleRoot.get("readingLevel"), 4));
+			} else {
+				readingLevelPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 4));
+			}
 		}
 		Predicate predicate = null;
 		if(readingLevelPredicates.size() > 0) {

@@ -25,6 +25,8 @@ import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.StatusTransitionDTO;
 import com.enewschamp.domain.common.StatusTransitionHandler;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.publication.domain.entity.Publication;
+import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -164,5 +166,20 @@ public class NewsArticleService {
 		pageNumber = pageNumber > 0 ? (pageNumber - 1) : 0;
 		Pageable pageable = PageRequest.of(pageNumber, header.getPageSize());
 		return customRepository.findArticles(searchRequest, pageable);
+	}
+	
+	public void markArticlesAsPublished(Publication publication) {
+		if(publication == null || publication.getArticleLinkages() == null) {
+			return;
+		}
+		List<PublicationArticleLinkage> articleLinkages = publication.getArticleLinkages(); 
+		articleLinkages.forEach(articleLinkage -> {
+			NewsArticle article = load(articleLinkage.getNewsArticleId());
+			article.setCurrentAction(ArticleActionType.Publish);
+			deriveArticleStatus(article);
+			article.setPublishDate(publication.getPublishDate());
+			article.setPublisherId(publication.getPublisherId());
+			repository.save(article);
+		});
 	}
 }

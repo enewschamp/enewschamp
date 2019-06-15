@@ -6,20 +6,17 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
-import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
-import com.enewschamp.article.domain.entity.NewsArticleGroup;
+import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.article.page.data.PropertyAuditData;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.StatusTransitionDTO;
 import com.enewschamp.domain.common.StatusTransitionHandler;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
 import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
@@ -50,8 +47,16 @@ public class PublicationService {
 	@Autowired
 	private StatusTransitionHandler statusTransitionHandler;
 	
+	@Autowired
+	private NewsArticleService articleService;
+	
 	public Publication create(Publication publication) {
 		derivePublicationStatus(publication);
+		
+		if(PublicationStatusType.Published.equals(publication.getStatus())) {
+			articleService.markArticlesAsPublished(publication);
+		}
+		
 		return repository.save(publication);
 	}
 	
