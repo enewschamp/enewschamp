@@ -7,12 +7,16 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
+import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
 import com.enewschamp.article.domain.service.NewsArticleGroupService;
+import com.enewschamp.article.page.data.NewsArticleGroupPageData;
 import com.enewschamp.article.page.data.ReassignEditorPageData;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.publication.domain.service.PublicationService;
+import com.enewschamp.publication.page.data.PublicationGroupPageData;
 import com.enewschamp.user.domain.service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value="ReassignEditorPageHandler")
@@ -40,12 +44,23 @@ public class ReassignEditorPageHandler implements IPageHandler  {
 		String editorId = pageRequest.getData().get("editorId").asText();
 		
 		// Handle editor assignment from article group page
-		Long articleGroupId = pageRequest.getData().get("newsArticleGroupId").asLong();
+		Long articleGroupId = null;
+		JsonNode node = pageRequest.getData().get("newsArticleGroupId");
+		if(node != null) {
+			articleGroupId = node.asLong();
+		}
 		if(articleGroupId != null) {
-			articleGroupService.assignEditor(articleGroupId, editorId);
+			NewsArticleGroupPageData data = new NewsArticleGroupPageData();
+			pageDTO.setData(data);
+			NewsArticleGroupDTO groupDTO = modelMapper.map(articleGroupService.assignEditor(articleGroupId, editorId), NewsArticleGroupDTO.class);
+			data.setNewsArticleGroup(groupDTO);
 		}
 		
-		Long publicationId = pageRequest.getData().get("publicationId").asLong();
+		Long publicationId = null;
+		node = pageRequest.getData().get("publicationId");
+		if(node != null) {
+			publicationId = node.asLong();
+		}
 		if(publicationId != null) {
 			publicationService.assignEditor(publicationId, editorId);
 		}

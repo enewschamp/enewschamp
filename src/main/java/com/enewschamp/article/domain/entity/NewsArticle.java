@@ -113,6 +113,7 @@ public class NewsArticle extends BaseEntity {
 	private String authorId;
 	
 	@Enumerated(EnumType.STRING)
+	@DiffIgnore
 	private ArticleActionType currentAction;
 	
 	@OneToMany(cascade = CascadeType.ALL)

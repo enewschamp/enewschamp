@@ -72,7 +72,49 @@
 			"response": []
 		},
 		{
-			"name": "Assign Author",
+			"name": "Get author reassignment page on article page",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"ClickReassignAuthor\"\n    },\n    \"data\": {\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign Author to article group",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -97,6 +139,90 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"header\": {\n        \"pageName\": \"ReassignAuthor\",\n        \"action\": \"SaveAuthor\"\n    },\n    \"data\": {\n        \"newsArticleGroupId\": {{newsArticleGroupId}},\n        \"authorId\": \"deepaksem\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get editor reassignment page on article page",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"ClickReassignEditor\"\n    },\n    \"data\": {\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign Editor to article group",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"ReassignEditor\",\n        \"action\": \"SaveEditor\"\n    },\n    \"data\": {\n        \"newsArticleGroupId\": {{newsArticleGroupId}},\n        \"editorId\": \"mesmayus\"\n    }\n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -434,7 +560,7 @@
 			"response": []
 		},
 		{
-			"name": "Complete all articles and submit for review",
+			"name": "Complete all articles and submit for review except reading level 2",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -519,7 +645,7 @@
 			"response": []
 		},
 		{
-			"name": "Mark all articles ready for publish",
+			"name": "Mark all articles ready for publish except reading level 2",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -670,7 +796,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"SearchNewsArticles\",\n        \"action\": \"ClickGetNewsArticles\",\n        \"pageNumber\": 1,\n        \"pageSize\": 5\n    },\n    \"data\": {\n        \"publicationDate\": \"2019-06-30\",\n        \"readingLevel1\": \"Y\"\n    }\n}"
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"SearchNewsArticles\",\n        \"action\": \"ClickGetNewsArticles\",\n        \"pageNumber\": 1,\n        \"pageSize\": 5\n    },\n    \"data\": {\n        \"articleStatusList\": [\n            \"ReadyToPublish\"\n        ]\n    }\n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -712,7 +838,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {\n    \t\"pageName\": \"ListNewsArticles\",\n        \"action\": \"ClickNewsArticleGroupID\"\n    },\n    \"data\": {\n    \t\"newsArticleGroupId\": {{newsArticleGroupId}}\n    }\n    \n}"
+					"raw": "{\n    \"header\": {\n    \t\"pageName\": \"ListNewsArticles\",\n        \"action\": \"ClickNewsArticleGroupID\"\n    },\n    \"data\": {\n    \t\"newsArticleGroupId\": 1\n    }\n    \n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -730,7 +856,7 @@
 			"response": []
 		},
 		{
-			"name": "Article Audit",
+			"name": "Get article Group Audit",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -743,11 +869,8 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
@@ -757,10 +880,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": ""
+					"raw": "{\n    \"header\": {\n    \t\"pageName\": \"NewsArticle\",\n        \"action\": \"GetNewsArticleGroupAudit\"\n    },\n    \"data\": {\n    \t\"newsArticleGroupId\": 1\n    }\n    \n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/articles/1/audit",
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -768,16 +891,56 @@
 					"port": "{{port}}",
 					"path": [
 						"{{base-path}}",
-						"articles",
-						"1",
-						"audit"
+						"{{publisherAppPath}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Article Comments Audit for article group",
+			"name": "Get article Audit",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n    \t\"pageName\": \"NewsArticle\",\n        \"action\": \"GetNewsArticleAudit\"\n    },\n    \"data\": {\n    \t\"newsArticleId\": 1\n    }\n    \n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Comments Audit for article group",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -1267,6 +1430,174 @@
 			"response": []
 		},
 		{
+			"name": "Get editor reassignment page on publication page",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"ClickReassignEditor\"\n    },\n    \"data\": {\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign Editor to publication",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"ReassignEditor\",\n        \"action\": \"SaveEditor\"\n    },\n    \"data\": {\n        \"publicationId\": {{publicationId1}},\n        \"editorId\": \"mesmayus\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get publisher reassignment page on publication page",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Publication\",\n        \"action\": \"ClickReassignPublisher\"\n    },\n    \"data\": {\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign Publisher to publication",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"ReassignPublisher\",\n        \"action\": \"SavePublisher\"\n    },\n    \"data\": {\n        \"publicationId\": {{publicationId1}},\n        \"publisherId\": \"govisaxe\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Publication Search Page",
 			"event": [
 				{
@@ -1333,7 +1664,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"SearchPublications\",\n        \"action\": \"ClickGetPublications\",\n        \"pageNumber\": 1,\n        \"pageSize\": 99\n    },\n    \"data\": {\n        \"editorId\": \"editorId\",\n        \"publisherId\": \"publisherId\",\n        \"readingLevel1\": \"Y\",\n        \"readingLevel2\": \"Y\",\n        \"readingLevel3\": \"Y\",\n        \"readingLevel4\": \"Y\",\n        \"publicationDate\": \"2019-05-18\",\n        \"articleStatusList\": [\n            \"Closed\",\n            \"Assigned\",\n            \"ReadyToPublish\"\n        ]\n    }\n}"
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"SearchPublications\",\n        \"action\": \"ClickGetPublications\",\n        \"pageNumber\": 1,\n        \"pageSize\": 99\n    },\n    \"data\": {\n        \"publisherId\": \"govisaxe\"\n    }\n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
@@ -1393,12 +1724,21 @@
 			"response": []
 		},
 		{
-			"name": "Publication Audit",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
+			"name": "Get publication Audit",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
@@ -1408,10 +1748,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": ""
+					"raw": "{\n    \"header\": {\n    \t\"pageName\": \"Publication\",\n        \"action\": \"GetPublicationAudit\"\n    },\n    \"data\": {\n    \t\"publicationId\": 1\n    }\n    \n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/publications/1/audit",
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -1419,16 +1759,14 @@
 					"port": "{{port}}",
 					"path": [
 						"{{base-path}}",
-						"publications",
-						"1",
-						"audit"
+						"{{publisherAppPath}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Article Comments Audit for publication",
+			"name": "Get Comments Audit for publication",
 			"event": [
 				{
 					"listen": "prerequest",

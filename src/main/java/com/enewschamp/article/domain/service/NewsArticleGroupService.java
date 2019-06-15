@@ -14,6 +14,7 @@ import com.enewschamp.article.domain.common.ArticleGroupStatusType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
+import com.enewschamp.article.domain.entity.NewsArticleQuiz;
 import com.enewschamp.article.page.data.PropertyAuditData;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditQueryCriteria;
@@ -94,7 +95,8 @@ public class NewsArticleGroupService {
 	public String getAudit(Long articleGroupId) {
 		NewsArticleGroup articleGroup = new NewsArticleGroup();
 		articleGroup.setNewsArticleGroupId(articleGroupId);
-		return auditService.getEntityAudit(articleGroup);
+		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig).forParentObject(articleGroup);
+		return auditBuilder.build();
 	}
 	
 	public String getCommentsAudit(Long articleGroupId) {

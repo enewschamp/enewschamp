@@ -84,6 +84,7 @@ public class Publication extends BaseEntity {
 	private String comments;
 	
 	@Enumerated(EnumType.STRING)
+	@DiffIgnore
 	private PublicationActionType currentAction;
 	
 	@OneToMany(cascade = CascadeType.ALL)

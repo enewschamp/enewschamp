@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.EnewschampApplicationProperties;
+import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -75,7 +76,10 @@ public class PublisherPageController {
 		
 		//Load next page
 		String nextPageName = appConfig.getPageNavigationConfig().get(pageName.toLowerCase()).get(actionName.toLowerCase());
-		if(!pageName.equals(nextPageName)) {
+		if(nextPageName == null) {
+			throw new BusinessException(ErrorCodes.NEXT_PAGE_NOT_FOUND, pageName, actionName);
+		}
+		if(!nextPageName.trim().equals("") && !pageName.equals(nextPageName)) {
 			PageNavigationContext pageNavigationContext = new PageNavigationContext();
 			pageNavigationContext.setActionName(actionName);
 			pageNavigationContext.setPageRequest(pageRequest);

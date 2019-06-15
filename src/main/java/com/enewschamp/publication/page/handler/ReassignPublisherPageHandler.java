@@ -45,8 +45,6 @@ public class ReassignPublisherPageHandler implements IPageHandler  {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO page = new PageDTO();
 		
-		Long publicationId = pageNavigationContext.getPageRequest().getData().get("publicationId").asLong();
-		
 		ReassignPublisherPageData pageData = new ReassignPublisherPageData();
 		pageData.setPublisherLOV(userService.getPublisherLOV());
 		page.setData(pageData);

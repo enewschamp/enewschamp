@@ -50,8 +50,6 @@ public class ReassignAuthorPageHandler implements IPageHandler  {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO page = new PageDTO();
 		
-		Long articleGroupId = pageNavigationContext.getPageRequest().getData().get("newsArticleGroupId").asLong();
-		
 		ReassignAuthorPageData pageData = new ReassignAuthorPageData();
 		pageData.setAuthorLOV(userService.getAuthorLOV());
 		page.setData(pageData);
