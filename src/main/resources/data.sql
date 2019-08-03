@@ -1,9 +1,3 @@
-
-delete FROM enewschamp.jv_snapshot where 1 = 1;
-delete FROM enewschamp.jv_commit where 1 = 1;
-delete FROM enewschamp.jv_global_id where 1 = 1;
-delete FROM enewschamp.jv_commit_property where 1 = 1;
-
 INSERT INTO Country (countryId,name_Id,description,isd,currency_id, language,operator_Id,operation_Date_Time,record_In_Use) values (1,'IN','India','11','INR','EN','SYSTEM', CURRENT_DATE, 'Y');
 INSERT INTO Country (countryId,name_Id,description,isd,currency_id, language,Operator_Id,operation_Date_Time,record_In_Use) values (2,'US','United States','12','USD','EN','SYSTEM', CURRENT_DATE, 'Y');
 
@@ -181,11 +175,60 @@ values (53, 'ShareAchievements','back','ShareAchievements','ShareAchievements','
 Insert into Page_Navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
 values (54, 'MyProfile','get','MyProfile','MyProfile','MyProfile','Y','N','SYSTEM',CURRENT_DATE,'M',1);
 
+Insert into Page_Navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (55, 'Quiz','save','SavedNewsArticle','Quiz','Quiz','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+
+Insert into Page_Navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (56, 'NewsArticleQuizCompletion','ok','SavedNewsArticle','NewsArticleQuizCompletion','NewsArticleQuizCompletion','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+
+Insert into Page_Navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (57, 'NewsArticle','like','NewsArticle','NewsArticle','NewsArticle','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+
+Insert into Page_Navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (58, 'NewsArticle','opinion','NewsArticle','NewsArticle','NewsArticle','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into Page_Navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (59, 'NewsArticle','savearticle','SavedNewsArticle','NewsArticle','NewsArticle','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+
+Insert into Page_Navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (60, 'NewsArticle','quiz','NewsArticle','Quiz','NewsArticle','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+
+Insert into Page_Navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (61, 'Menu','myprofile','Menu','MyProfile','Menu','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+
+Insert into Page_Navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (62, 'Menu','mypicture','Menu','MyPicture','Menu','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+
+Insert into Page_Navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (63, 'Menu','studentdetails','Menu','StudentDetailsPage','Menu','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+
+Insert into Page_Navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (64, 'Menu','schooldetails','Menu','SchoolDetailsPage','Menu','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+
+Insert into Page_Navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (65, 'Menu','preferences','Menu','NewPreferencePage','Menu','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+
+Insert into Page_Navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (66, 'Menu','shareachievements','Menu','ShareAchievements','Menu','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+
+
+Insert into page_navigator_rules (nav_id,rule_id , exec_seq,rule, nextpage, plugin_class, record_in_use , operator_id, operation_date_time )
+values(1, 1, 1, '''#{operation}'' == ''Subscription''', 'StudentDetailsPage','SubscripitionRulePlugin','Y','SYSTEM',CURRENT_DATE);
+
+Insert into page_navigator_rules (nav_id,rule_id , exec_seq,rule, nextpage, plugin_class, record_in_use , operator_id, operation_date_time )
+values(4, 2, 1, '''Y'' == ''#{schoolPayment}'' &&  ''#{operation}'' == ''Subscription''', 'NewPreferencePage','SubscripitionSchoolDetailsRulePlugin','Y','SYSTEM',CURRENT_DATE);
+
+
+Insert into News_Article_Quiz (news_article_quizid,news_articleid,Question,Opt1,Opt2,Opt3,Opt4,correct_Opt,Operator_Id,Operation_Date_Time,Record_In_Use) 
+values (1, 3331323, 'Where is Taj Mahal ?', 'Delhi','Mumbai','Agra','Chennai', 3, 'SYSTEM', CURRENT_DATE,'Y');
+
+Insert into News_Article_Quiz (news_article_quizid,news_articleid,Question,Opt1,Opt2,Opt3,Opt4,correct_Opt,Operator_Id,Operation_Date_Time,Record_In_Use) 
+values (2, 3331323, 'Where is India Gate ?', 'Delhi','Mumbai','Kolkata','Chennai', 1, 'SYSTEM', CURRENT_DATE,'Y');
+
+Insert into News_Article_Quiz (news_article_quizid,news_articleid,Question,Opt1,Opt2,Opt3,Opt4,correct_Opt,Operator_Id,Operation_Date_Time,Record_In_Use) 
+values (3, 3331323, 'Where is Eden Garden Cricker Ground ?', 'Delhi','Mumbai','Agra','Kolkata', 4, 'SYSTEM', CURRENT_DATE,'Y');
+
+Insert into News_Article_Quiz (news_article_quizid,news_articleid,Question,Opt1,Opt2,Opt3,Opt4,correct_Opt,Operator_Id,Operation_Date_Time,Record_In_Use) 
+values (4, 3331323, 'Where is Marine Drive ?', 'Delhi','Mumbai','Agra','Chennai', 2, 'SYSTEM', CURRENT_DATE,'Y');
 
 commit;
-=======
-delete FROM enewschamp.jv_snapshot where 1 = 1;
-delete FROM enewschamp.jv_commit where 1 = 1;
-delete FROM enewschamp.jv_global_id where 1 = 1;
-delete FROM enewschamp.jv_commit_property where 1 = 1;
->>>>>>> 5308d1573cf9afb51cf9aadb9da8674d80c4a668
+
