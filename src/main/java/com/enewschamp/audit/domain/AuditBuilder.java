@@ -519,7 +519,7 @@ public class AuditBuilder  {
 	}
 	
 	private void printDebugLine(String line) {
-		System.out.println(line);
+		//System.out.println(line);
 	}
 	
 	public List<PropertyAuditData> buildPropertyAudit() {
