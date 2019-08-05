@@ -43,6 +43,9 @@ public class PublicationRepositoryImpl extends RepositoryImpl implements Publica
 		if(readingLevelPredicate != null) {
 			filterPredicates.add(readingLevelPredicate);
 		}
+		if (searchRequest.getEditionId() != null) {
+			filterPredicates.add(cb.equal(publicationRoot.get("editionId"), searchRequest.getEditionId()));
+		}
 		if (searchRequest.getEditorId() != null) {
 			filterPredicates.add(cb.equal(publicationRoot.get("editorId"), searchRequest.getEditorId()));
 		}

@@ -21,6 +21,7 @@ public class PublicationSearchRequest extends PageData {
 	private String readingLevel3;
 	private String readingLevel4;
 	private String editorId;
+	private String editionId;
 	private String publisherId;
 	private List<PublicationStatusType> publicationStatusList;
 
