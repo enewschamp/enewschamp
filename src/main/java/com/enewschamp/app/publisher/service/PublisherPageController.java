@@ -42,7 +42,7 @@ public class PublisherPageController {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	@PostMapping(value = "/publisher")	
+	@PostMapping(value = "/publisher1")	
 	@Transactional
 	public ResponseEntity<PageDTO> processPublisherAppRequest(@RequestBody PageRequestDTO pageRequest) {
 		

@@ -1,5 +1,6 @@
 package com.enewschamp.article.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -56,6 +57,15 @@ public class NewsArticleQuizService {
 			return existingEntity.get();
 		} else {
 			throw new BusinessException(ErrorCodes.EDITION_NOT_FOUND);
+		}
+	}
+	
+	public List<NewsArticleQuiz> getByNewsArticleId(Long newsArticleId) {
+		List<NewsArticleQuiz> existingEntity = repository.findByNewsArticle(newsArticleId);
+		if (!existingEntity.isEmpty()) {
+			return existingEntity;
+		} else {
+			throw new BusinessException(ErrorCodes.ARTICLE_NOT_FOUND);
 		}
 	}
 	

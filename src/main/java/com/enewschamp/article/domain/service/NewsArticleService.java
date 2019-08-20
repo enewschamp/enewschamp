@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.HeaderDTO;
+import com.enewschamp.app.savedarticle.dto.SavedNewsArticleSearchRequest;
+import com.enewschamp.app.savedarticle.dto.SavedNewsArticleSummaryDTO;
+import com.enewschamp.app.savedarticle.repository.SavedNewsArticleCustomRepository;
 import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
 import com.enewschamp.article.domain.common.ArticleActionType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
@@ -56,6 +59,7 @@ public class NewsArticleService {
 	
 	@Autowired
 	private StatusTransitionHandler statusTransitionHandler;
+	
 	
 	public NewsArticle create(NewsArticle article) {
 		new ArticleBusinessPolicy(article).validateAndThrow();
@@ -170,6 +174,8 @@ public class NewsArticleService {
 		Pageable pageable = PageRequest.of(pageNumber, header.getPageSize());
 		return customRepository.findArticles(searchRequest, pageable);
 	}
+	
+	
 	
 	public void markArticlesAsPublished(Publication publication) {
 		if(publication == null || publication.getArticleLinkages() == null) {

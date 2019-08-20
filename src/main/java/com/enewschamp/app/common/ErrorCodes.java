@@ -20,7 +20,12 @@ public interface ErrorCodes {
 	public static String MULTI_LANG_TEXT_NOT_FOUND = "FRW_001";
 	public static String STUDENT_DTLS_NOT_FOUND = "STUDDTLS_001";
 	
-	
+	public static String TREND_DAILY_NOT_FOUND ="TRDLY_001";
+	public static String TREND_MONTHLY_TOTAL_NOT_FOUND ="TRMNTT_001";
+	public static String BADGE_NOT_FOUND ="BDG_001";
+	public static String QUIZ_SCORE_NOT_FOUND ="QZSC_001";
+	public static String STUDENT_ACTIVITY_NOT_FOUND ="STA_001";
+
 	public static String USER_NOT_FOUND = "USER_001";
 	public static String USER_ROLE_NOT_FOUND = "USER_002";
 	
@@ -36,10 +41,16 @@ public interface ErrorCodes {
 	public static String STATE_NOT_FOUND ="STATE_001";
 	public static String CITY_NOT_FOUND ="CITY_001";
 	public static String SCHOOL_NOT_FOUND ="SPOU_002";
+	public static String REQUESTID_NOT_FOUND ="REQ_001";
+
 	public static String SREVER_ERROR="SERVER_ERROR";
 	
 	public static String BUS_POLICY_FAILED="FRW_001";
 	public static String STATUS_TRANSITION_NOT_FOUND="FRW_002";
+	public static String STUD_BADGES_NOT_FOUND="BADGE_001";
 	
+	public static String INVALID_YEARMONTH_FORMAT="TREND_001";
+	public static String INVALID_NOT_PRESENT="SNA_01";
+
 	
 }

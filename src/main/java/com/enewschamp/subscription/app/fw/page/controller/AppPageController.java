@@ -78,11 +78,11 @@ public class AppPageController {
 		}
 		String nextPageName="";
 		//Load next page.. If action is next load the next page.. If action is previous load the previous page.
-		if(PageAction.next.toString().equals(actionName) || PageAction.save.toString().equals(actionName))
+		if(PageAction.next.toString().equalsIgnoreCase(actionName) || PageAction.save.toString().equalsIgnoreCase(actionName) || PageAction.home.toString().equalsIgnoreCase(actionName) || PageAction.clickArticleImage.toString().equalsIgnoreCase(actionName) || PageAction.savedarticles.toString().equalsIgnoreCase(actionName) || PageAction.GoPremium.toString().equalsIgnoreCase(actionName) || PageAction.PicImage.toString().equalsIgnoreCase(actionName) || PageAction.opinions.toString().equalsIgnoreCase(actionName) || PageAction.subscription.toString().equalsIgnoreCase(actionName) || PageAction.savednewsarticle.toString().equalsIgnoreCase(actionName) || PageAction.MyActivity.toString().equalsIgnoreCase(actionName) || PageAction.Champs.toString().equalsIgnoreCase(actionName) || PageAction.Menu.toString().equalsIgnoreCase(actionName) )
 		{
 			nextPageName = pageNavDto.getNextpage();
 		}
-		else if(PageAction.previous.toString().equals(actionName) || PageAction.back.toString().equals(actionName))
+		else if(PageAction.previous.toString().equalsIgnoreCase(actionName) || PageAction.back.toString().equalsIgnoreCase(actionName))
 		{
 			nextPageName = pageNavDto.getPreviousPage();
 

@@ -29,4 +29,6 @@ public class NewsArticleSummaryDTO extends AbstractDTO {
 	private String imagePathMobile;
 	private String imagePathTab;
 	private String imagePathDesktop;
+	
+	
 }

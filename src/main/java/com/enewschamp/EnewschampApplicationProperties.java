@@ -32,6 +32,7 @@ public class EnewschampApplicationProperties {
 	private Map<String, String> studentDetailsPageText;
 	private int evalDays;
 	private String incompleteFormText;
+	private String premiumSubsMsg;
 	@Data
 	public static class AuditConfig {
 		private boolean includeSnapShots;

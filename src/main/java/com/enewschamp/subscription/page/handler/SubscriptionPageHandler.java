@@ -60,7 +60,7 @@ public class SubscriptionPageHandler implements IPageHandler {
 		StudentControlWorkDTO studentControlWorkDTO = null;
 		Long studentId = 0L;
 		
-		if(PageAction.next.toString().equalsIgnoreCase(action))
+		if(PageAction.next.toString().equalsIgnoreCase(action) || PageAction.GoPremium.toString().equalsIgnoreCase(action) || PageAction.PicImage.toString().equalsIgnoreCase(action))
 		{
 			// add static data from proerties
 			StudentSubscriptionPageData subscripionPagedata = new StudentSubscriptionPageData();
@@ -73,11 +73,12 @@ public class SubscriptionPageHandler implements IPageHandler {
 			pageDto.setData(subscripionPagedata);
 
 		}
-		else if(PageAction.previous.toString().equalsIgnoreCase(action))
+		else if(PageAction.previous.toString().equalsIgnoreCase(action) || PageAction.subscription.toString().equalsIgnoreCase(action) )
 		{
 			// if the user is new then fetch from work table
 			if (studentControlDTO == null) {
 				studentControlWorkDTO = StudentControlBusiness.getStudentFromWork(eMailId);
+				if(studentControlWorkDTO!=null) {
 				studentId = studentControlWorkDTO.getStudentID();
 				StudentSubscriptionWorkDTO studentSubscriptionWorkDTO = subscriptionBusiness.getStudentSubscriptionFromWork(studentId, editionId);
 				
@@ -90,11 +91,11 @@ public class SubscriptionPageHandler implements IPageHandler {
 				subscripionPagedata.setWhatYouGetTextPremium(appConfig.getSubscriptionText().get("whatYouGetTextPremium"));
 				subscripionPagedata.setWhatYouGetTextStandard(appConfig.getSubscriptionText().get("whatYouGetTextStandard"));
 				pageDto.setData(subscripionPagedata);
-
+				}
 
 			} else {
 				
-				StudentSubscriptionDTO  studentSubscriptionDTO = subscriptionBusiness.getStudentSubscriptionFromMaster(studentId, editionId);
+				StudentSubscriptionDTO  studentSubscriptionDTO = subscriptionBusiness.getStudentSubscriptionFromMaster(studentControlDTO.getStudentID(), editionId);
 				
 				StudentSubscriptionPageData subscripionPagedata = modelMapper.map(studentSubscriptionDTO, StudentSubscriptionPageData.class);
 				subscripionPagedata.setEMailID(studentControlDTO.getEmailID());
