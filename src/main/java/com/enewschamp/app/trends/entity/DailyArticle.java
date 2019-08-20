@@ -19,7 +19,7 @@ public class DailyArticle {
 
 	@Id
 	@Column(name = "publishDate", updatable = false, nullable = false)
-	private Integer publishDate;
+	private LocalDate publishDate;
 	
 	@Column(name = "articlesRead")
 	private Long articlesRead;
