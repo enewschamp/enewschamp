@@ -43,15 +43,15 @@ public class Publication extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "publication_id_generator")
 	@SequenceGenerator(name = "publication_id_generator", sequenceName = "pub_id_seq", allocationSize = 1)
-	@Column(name = "PublicationID", updatable = false, nullable = false)
+	@Column(name = "PublicationId", updatable = false, nullable = false)
 	private Long publicationId;
 
 	@NotNull
-	@Column(name = "PublicationGroupID")
+	@Column(name = "PublicationGroupId")
 	private Long publicationGroupId = 0L;
 
 	@NotNull
-	@Column(name = "EditionID", length = 6)
+	@Column(name = "EditionId", length = 6)
 	private String editionId;
 
 	@NotNull
@@ -62,6 +62,7 @@ public class Publication extends BaseEntity {
 	@Column(name = "PublishDate")
 	private LocalDate publishDate;
 
+	@NotNull
 	@Column(name = "Status")
 	@Enumerated(EnumType.STRING)
 	private PublicationStatusType status;
@@ -88,7 +89,7 @@ public class Publication extends BaseEntity {
 	private PublicationActionType currentAction;
 	
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "publication_Id")
+	@JoinColumn(name = "pub_Id")
 	private List<PublicationArticleLinkage> articleLinkages;
 
 	@PrePersist

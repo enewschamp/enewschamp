@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "PublicationArticleLinkage")
+@Table(name = "PublicationArticles")
 public class PublicationArticleLinkage extends BaseEntity {
 
 	private static final long serialVersionUID = 6691771323336628236L;
@@ -28,12 +28,12 @@ public class PublicationArticleLinkage extends BaseEntity {
 	private long linkageId;
 
 	@NotNull
-	@Column(name = "PublicationID")
+	@Column(name = "PublicationId", insertable= false, updatable = false, nullable = false)
 	@DiffIgnore
 	private long publicationId = 0L;
 	
 	@NotNull
-	@Column(name = "NewsArticleID")
+	@Column(name = "NewsArticleId")
 	private long newsArticleId = 0L;
 	
 	@NotNull

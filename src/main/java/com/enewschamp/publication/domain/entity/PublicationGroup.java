@@ -29,11 +29,11 @@ public class PublicationGroup extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "publication_grp_id_generator")
 	@SequenceGenerator(name="publication_grp_id_generator", sequenceName = "pub_grp_id_seq", allocationSize=1)
-	@Column(name = "PublicationGroupID", updatable = false, nullable = false)
+	@Column(name = "PublicationGroupId", updatable = false, nullable = false)
 	private Long publicationGroupId;
 	
 	@NotNull
-	@Column(name = "EditionID", length=6)
+	@Column(name = "EditionId", length=6)
 	private String editionId;
 	
 	@NotNull

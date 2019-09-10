@@ -1,4 +1,5 @@
-	package com.enewschamp.publication.domain.entity;
+
+package com.enewschamp.publication.domain.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,11 +22,11 @@ public class Genre extends BaseEntity {
 
 	@Id
 	@NotNull
-	@Column(name = "GenreID", length=12)
+	@Column(name = "GenreId", length=12)
 	private String genreId;
 	
 	@NotNull
-	@Column(name = "NameID")
+	@Column(name = "NameId")
 	private Long nameId;
 	
 	@NotNull

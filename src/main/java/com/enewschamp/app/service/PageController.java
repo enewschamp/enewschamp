@@ -76,7 +76,7 @@ public class PageController {
 		
 		//Load next page
 		String nextPageName = appConfig.getPageNavigationConfig().get(pageName.toLowerCase()).get(actionName.toLowerCase());
-		if(!pageName.equals(nextPageName)) {
+		if(!pageName.equals(nextPageName) && !nextPageName.isEmpty()) {
 			PageNavigationContext pageNavigationContext = new PageNavigationContext();
 			pageNavigationContext.setActionName(actionName);
 			pageNavigationContext.setPageRequest(pageRequest);

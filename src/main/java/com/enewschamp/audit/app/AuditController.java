@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enewschamp.article.domain.entity.NewsArticle;
-
 @RestController
 @RequestMapping(value = "/enewschamp-api/v1/audit")
 public class AuditController {
@@ -25,21 +23,6 @@ public class AuditController {
         this.javers = javers;
     }
 
-    @GetMapping("/article")
-    public String getArticleChanges() {
-        QueryBuilder jqlQuery = QueryBuilder.byClass(NewsArticle.class).withChildValueObjects();
-        return queryChanges(jqlQuery);
-    }
-    
-    @RequestMapping("/article/{articleId}")
-    public String getArticleChanges(@PathVariable Long articleId) {
-    	NewsArticle article = new NewsArticle();
-    	article.setNewsArticleId(articleId);
-    	
-        QueryBuilder jqlQuery = QueryBuilder.byInstance(article).withChildValueObjects().withNewObjectChanges();
-        return queryChanges(jqlQuery);
-    }
-    
     private String queryChanges(QueryBuilder jqlQuery) {
     	List<Change> changes = javers.findChanges(jqlQuery.build());
         return javers.getJsonConverter().toJson(changes);

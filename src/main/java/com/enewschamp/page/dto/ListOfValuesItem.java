@@ -16,7 +16,8 @@ public class ListOfValuesItem implements Serializable {
 	@NotNull
 	private String name;
 	
-	@NotNull
 	private String id;
+	
+	private String description;
 
 }

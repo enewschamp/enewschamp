@@ -26,11 +26,11 @@ public class HashTag extends BaseEntity {
 	private String hashTag;
 	
 	@NotNull
-	@Column(name = "GenreID", length = ForeignKeyColumnLength.GenreId)
+	@Column(name = "GenreId", length = ForeignKeyColumnLength.GenreId)
 	private String genreId;
 	
 	@NotNull
-	@Column(name = "LanguageID", length = 3)
+	@Column(name = "LanguageId", length = 3)
 	private String languageId;
 	
 	

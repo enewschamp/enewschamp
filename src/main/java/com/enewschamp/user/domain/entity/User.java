@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -24,7 +25,7 @@ public class User extends BaseEntity {
 
 	@Id
 	@NotNull
-	@Column(name = "UserID", length = 8)
+	@Column(name = "UserId", length = 8)
 	private String userId;
 	
 	@NotNull
@@ -43,7 +44,7 @@ public class User extends BaseEntity {
 	private String otherNames;
 	
 	@NotNull
-	@Column(name = "Gender")
+	@Column(name = "Gender", length=1)
 	private Gender gender;
 	
 	@NotNull
@@ -55,10 +56,10 @@ public class User extends BaseEntity {
 	private LocalDate contractEndDate;
 	
 	@NotNull
-	@Column(name = "Mobile1", length=12)
+	@Column(name = "Mobile1", length=15)
 	private long mobile1 = 0;
 	
-	@Column(name = "Mobile2", length=12)
+	@Column(name = "Mobile2", length=15)
 	private long mobile2 = 0;
 	
 	@Column(name = "LandLine1", length=12)
@@ -77,4 +78,7 @@ public class User extends BaseEntity {
 	@Column(name = "Comments", length = 999)
 	private String comments;
 
+	@Column(name = "Photo")
+	@Lob
+	private String photo;
 }

@@ -1,4 +1,4 @@
-package com.enewschamp.domain.service;
+package com.enewschamp.domain.repository;
 
 import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.enewschamp.domain.entity.MultiLanguageText;
 
 @JaversSpringDataAuditable
-interface MultiLanguageTextRepository extends JpaRepository<MultiLanguageText, Long>{ 
+public interface MultiLanguageTextRepository extends JpaRepository<MultiLanguageText, Long>{ 
 	 
 } 

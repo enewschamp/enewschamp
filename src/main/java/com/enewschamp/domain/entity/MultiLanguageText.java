@@ -26,7 +26,7 @@ public class MultiLanguageText extends BaseEntity {
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "multi_lang_text_id_generator")
 	@SequenceGenerator(name="multi_lang_text_id_generator", sequenceName = "lang_text_id_seq", allocationSize=1)
-	@Column(name = "MultiLanguageTextID", updatable = false, nullable = false)
+	@Column(name = "MultiLanguageTextId", updatable = false, nullable = false)
 	private long multiLanguageTextId = 0L;
 	
 	@NotNull
