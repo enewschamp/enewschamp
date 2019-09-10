@@ -21,7 +21,7 @@ import com.enewschamp.app.savedarticle.dto.SavedNewsArticleSummaryDTO;
 import com.enewschamp.app.student.entity.StudentActivity;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
-import com.enewschamp.domain.service.RepositoryImpl;
+import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class SavedNewsArticleCustomRepositoryImpl extends RepositoryImpl implements SavedNewsArticleCustomRepository {

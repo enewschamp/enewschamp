@@ -16,7 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import com.enewschamp.domain.common.AppConstants;
-import com.enewschamp.domain.service.RepositoryImpl;
+import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.page.data.PublicationSearchRequest;

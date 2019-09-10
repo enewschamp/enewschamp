@@ -20,7 +20,7 @@ import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
 import com.enewschamp.article.page.data.NewsArticleSearchRequest;
 import com.enewschamp.domain.common.AppConstants;
-import com.enewschamp.domain.service.RepositoryImpl;
+import com.enewschamp.domain.repository.RepositoryImpl;
 
 public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArticleRepositoryCustom {
 

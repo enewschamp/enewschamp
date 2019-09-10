@@ -22,11 +22,11 @@ public class Edition extends BaseEntity {
 
 	@Id
 	@NotNull
-	@Column(name = "EditionID", length=ForeignKeyColumnLength.EditionId)
+	@Column(name = "EditionId", length=ForeignKeyColumnLength.EditionId)
 	private String editionId;
 	
 	@NotNull
-	@Column(name = "LanguageID", length = 3)
+	@Column(name = "LanguageId", length = 3)
 	private String languageId;
 	
 	@NotNull

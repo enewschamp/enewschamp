@@ -10,10 +10,11 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.entity.MultiLanguageText;
+import com.enewschamp.domain.repository.MultiLanguageTextRepository;
 import com.enewschamp.problem.BusinessException;
 
 @Service
-public class MultiLanguageTextService {
+public class MultiLanguageTextService extends AbstractDomainService {
 
 	@Autowired
 	MultiLanguageTextRepository repository;

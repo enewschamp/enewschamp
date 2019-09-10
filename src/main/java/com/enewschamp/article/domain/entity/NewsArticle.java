@@ -22,6 +22,7 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.ForeignKey;
 import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -53,15 +54,15 @@ public class NewsArticle extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "article_id_generator")
 	@SequenceGenerator(name="article_id_generator", sequenceName = "art_id_seq", allocationSize=1)
-	@Column(name = "NewsArticleID", updatable = false, nullable = false)
+	@Column(name = "NewsArticleId", updatable = false, nullable = false)
 	private Long newsArticleId;
 	
 	@NotNull
-	@Column(name = "NewsArticleGroupID", length=10)
+	@Column(name = "NewsArticleGroupId", length=10)
 	private Long newsArticleGroupId = 0L;
 	
 	@NotNull
-	@Column(name = "ReadingLevel")
+	@Column(name = "ReadingLevel", length=1)
 	private Integer readingLevel = 0;
 	
 	@NotNull

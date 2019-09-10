@@ -1,4 +1,4 @@
-package com.enewschamp.domain.service;
+package com.enewschamp.domain.repository;
 
 import java.util.List;
 

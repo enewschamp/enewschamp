@@ -17,7 +17,6 @@ public interface ErrorCodes {
 	public static String INVALID_ARTICLE_ACTION = "PUB_013";
 	public static String QUIZ_LIMIT_EXCEEDED = "PUB_014";
 	
-	public static String MULTI_LANG_TEXT_NOT_FOUND = "FRW_001";
 	public static String STUDENT_DTLS_NOT_FOUND = "STUDDTLS_001";
 	
 	public static String TREND_DAILY_NOT_FOUND ="TRDLY_001";
@@ -47,6 +46,10 @@ public interface ErrorCodes {
 	
 	public static String BUS_POLICY_FAILED="FRW_001";
 	public static String STATUS_TRANSITION_NOT_FOUND="FRW_002";
+	public static String MULTI_LANG_TEXT_NOT_FOUND = "FRW_003";
+	public static String LOV_NOT_FOUND = "FRW_004";
+	
+	
 	public static String STUD_BADGES_NOT_FOUND="BADGE_001";
 	
 	public static String INVALID_YEARMONTH_FORMAT="TREND_001";

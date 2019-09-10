@@ -1,6 +1,7 @@
 package com.enewschamp.article.domain.entity;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -39,16 +40,23 @@ public class NewsArticleGroup extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "article_group_id_generator")
 	@SequenceGenerator(name="article_group_id_generator", sequenceName = "art_grp_id_seq", allocationSize=1)
-	@Column(name = "NewsArticleGroupID", updatable = false, nullable = false)
+	@Column(name = "NewsArticleGroupId", updatable = false, nullable = false)
 	private Long newsArticleGroupId;
 	
 	@NotNull
-	@Column(name = "EditionID", length = ForeignKeyColumnLength.EditionId)
+	@Column(name = "EditionId", length = ForeignKeyColumnLength.EditionId)
 	private String editionId;
 	
+	@Column(name = "CityId", length=ForeignKeyColumnLength.CityId)
+	private String cityId;
+	
 	@NotNull
-	@Column(name = "GenreID", length = ForeignKeyColumnLength.GenreId)
+	@Column(name = "GenreId", length = ForeignKeyColumnLength.GenreId)
 	private String genreId;
+
+	@NotNull
+	@Column(name = "EditorId", length = ForeignKeyColumnLength.UserId)
+	private String editorId;
 	
 	@NotNull
 	@Column(name = "Headline", length = 100) 
@@ -83,8 +91,17 @@ public class NewsArticleGroup extends BaseEntity {
 	@Column(name = "ImagePathDesktop", length = 200)
 	private String imagePathDesktop;
 	
-	@Column(name = "EditorId", length = ForeignKeyColumnLength.UserId)
-	private String editorId;
+	@Column(name = "TextCoordinateX")
+	private BigDecimal textCoordinateX;
+	
+	@Column(name = "TextCoordinateY")
+	private BigDecimal textCoordinateY;
+	
+	@Column(name = "TextBoxWidth")
+	private BigDecimal textBoxWidth;
+	
+	@Column(name = "TextBoxLength")
+	private BigDecimal textBoxLength;
 	
 	@Column(name = "AuthorId", length = ForeignKeyColumnLength.UserId)
 	private String authorId;
@@ -95,7 +112,8 @@ public class NewsArticleGroup extends BaseEntity {
 	@Column(name = "PublicationDate")
 	private LocalDate publicationDate;
 	
-	@Column(name = "IntendedPubMonth")
+	@Column(name = "IntendedPubMonth", length=3)
+	@Enumerated(EnumType.STRING)
 	private MonthType intendedPubMonth;
 	
 	@Column(name = "IntendedPubDay", length=3)

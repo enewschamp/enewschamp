@@ -28,14 +28,15 @@ public class NewsArticleQuiz extends BaseEntity {
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_id_generator")
 	@SequenceGenerator(name="quiz_id_generator", sequenceName = "art_quiz_id_seq", allocationSize=1)
-	@Column(name = "NewsArticleQuizID", updatable = false, nullable = false)
+	@Column(name = "NewsArticleQuizId", updatable = false, nullable = false)
 	private long newsArticleQuizId = 0L;
 	
 	@NotNull
-	@Column(name = "NewsArticleID", length=10)
+	@Column(name = "NewsArticleId", length=10)
 	@DiffIgnore
 	private long newsArticleId = 0L;
 	
+	@NotNull
 	@Column(name = "Question", length = 99)
 	private String question;
 	
