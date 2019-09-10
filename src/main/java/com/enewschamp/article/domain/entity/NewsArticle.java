@@ -127,7 +127,7 @@ public class NewsArticle extends BaseEntity {
 		super.prePersist();
 		if(newsArticleQuiz != null && newsArticleId  != null && newsArticleId != 0) {
 			for(NewsArticleQuiz question: newsArticleQuiz) {
-				//question.setNewsArticleId(newsArticleId);
+				question.setNewsArticleId(newsArticleId);
 			}
 		}
 	}
