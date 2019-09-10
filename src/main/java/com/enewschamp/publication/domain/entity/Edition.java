@@ -27,7 +27,7 @@ public class Edition extends BaseEntity {
 	
 	@NotNull
 	@Column(name = "LanguageId", length = 3)
-	private String languageId;
+	private Long languageId;
 	
 	@NotNull
 	@Column(name = "EditionName", length = 255)
