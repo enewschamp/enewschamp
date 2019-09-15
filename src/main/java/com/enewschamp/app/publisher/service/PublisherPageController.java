@@ -76,7 +76,7 @@ public class PublisherPageController {
 		PageDTO pageResponse = pageHandler.handleAction(actionName, pageRequest);
 		
 		//Load next page
-		String nextPageName = appConfig.getPageNavigationConfig().get(pageName.toLowerCase()).get(actionName.toLowerCase());
+		String nextPageName = appConfig.getPageNavigationConfig().get(context).get(pageName.toLowerCase()).get(actionName.toLowerCase());
 		if(nextPageName == null) {
 			throw new BusinessException(ErrorCodes.NEXT_PAGE_NOT_FOUND, pageName, actionName);
 		}
@@ -88,18 +88,18 @@ public class PublisherPageController {
 			pageResponse = pageHandlerFactory.getPageHandler(nextPageName, context).loadPage(pageNavigationContext);
 		}
 		
-		addSuccessHeader(pageName, actionName, pageResponse);
+		addSuccessHeader(pageName, actionName, pageResponse, context);
 		return pageResponse;
 	}
 	
-	private void addSuccessHeader(String currentPageName, String actionName, PageDTO page) {
+	private void addSuccessHeader(String currentPageName, String actionName, PageDTO page, String context) {
 		if(page.getHeader() == null) {
 			page.setHeader(new HeaderDTO());
 		}
 		page.getHeader().setRequestStatus(RequestStatusType.S);
 		page.getHeader().setPageName(page.getPageName());
 		
-		String nextPageName = appConfig.getPageNavigationConfig().get(currentPageName.toLowerCase()).get(actionName.toLowerCase());
+		String nextPageName = appConfig.getPageNavigationConfig().get(context).get(currentPageName.toLowerCase()).get(actionName.toLowerCase());
 		page.getHeader().setPageName(nextPageName);
 	}
 	

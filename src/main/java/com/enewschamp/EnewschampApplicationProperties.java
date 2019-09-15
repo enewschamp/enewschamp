@@ -25,7 +25,7 @@ public class EnewschampApplicationProperties {
 	
 	private Map<String, Map<String, String>> pageHandlerConfig;
 	
-	private Map<String, Map<String, String>> pageNavigationConfig;
+	private Map<String, Map<String, Map<String, String>>> pageNavigationConfig;
 	
 	
 	private Map<String, String> subscriptionText;
