@@ -14,6 +14,8 @@ import com.enewschamp.domain.common.LocalDateDeserializer;
 import com.enewschamp.domain.common.LocalDateSerializer;
 import com.enewschamp.domain.common.LocalDateTimeDeserializer;
 import com.enewschamp.domain.common.LocalDateTimeSerializer;
+import com.enewschamp.publication.domain.service.PublicationSummaryRepositoryCustom;
+import com.enewschamp.publication.domain.service.PublicationSummaryRepositoryImpl;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +36,11 @@ public class EnewschampApplicationConfig {
 		// Null attributes are ignored from the source object
 		modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 		return modelMapper;
+	}
+	
+	@Bean
+	public PublicationSummaryRepositoryCustom publicationSummaryCustomRepository() {
+		return new PublicationSummaryRepositoryImpl();
 	}
 	
 	@Bean

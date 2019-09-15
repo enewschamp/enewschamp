@@ -29,6 +29,7 @@ public interface ErrorCodes {
 
 	public static String USER_NOT_FOUND = "USER_001";
 	public static String USER_ROLE_NOT_FOUND = "USER_002";
+	public static String USER_LEAVE_NOT_FOUND = "USER_003";
 	
 	public static String PAGE_NOT_FOUND= "PAGE_001";
 	public static String NEXT_PAGE_NOT_FOUND= "PAGE_002";

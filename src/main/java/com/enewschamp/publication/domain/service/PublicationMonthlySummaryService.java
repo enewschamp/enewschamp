@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,16 +50,6 @@ public class PublicationMonthlySummaryService extends AbstractDomainService {
 	}
 
 	public PublicationMonthlySummary load(String recordId) {
-		PublicationMonthlySummary existingEntity = get(recordId);
-		if (existingEntity != null) {
-			return existingEntity;
-		} else {
-			throw new BusinessException(ErrorCodes.PUBLICATION_MONTHLY_SUMMARY_NOT_FOUND, recordId);
-		}
-	}
-	
-	public PublicationMonthlySummary load(int year, int month) {
-		String recordId = year + StringUtils.leftPad(String.valueOf(month), 2, "0");
 		PublicationMonthlySummary existingEntity = get(recordId);
 		if (existingEntity != null) {
 			return existingEntity;

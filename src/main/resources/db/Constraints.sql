@@ -8,6 +8,8 @@ alter table multi_language_text add constraint multi_lang_oper_id_fk foreign key
 alter table user add constraint user_oper_id_fk foreign key (operator_id) references user (user_id);
 alter table user add constraint user_title_fk foreign key (title) references lov (lov_id);
 
+alter table user_roles add constraint role_user_id_fk foreign key (user_id) references user (user_id);
+
 
 alter table news_article_group add constraint art_grp_oper_id_fk foreign key (operator_id) references user (user_id);
 alter table news_article_group add constraint art_grp_author_id_fk foreign key (author_id) references user (user_id);
