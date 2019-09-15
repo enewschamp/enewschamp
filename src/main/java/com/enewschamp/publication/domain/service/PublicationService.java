@@ -64,14 +64,7 @@ public class PublicationService {
 	
 	public Publication create(Publication publication) {
 		derivePublicationStatus(publication);
-		
-		List<PublicationArticleLinkage> articleLinkages = publication.getArticleLinkages();
-//		publication.setArticleLinkages(null);
 		publication = repository.save(publication);
-		
-//		publication.setArticleLinkages(articleLinkages);
-//		publication = repository.save(publication);
-		
 		checkAndPerformPublishActions(publication);
 		return publication;
 	}
