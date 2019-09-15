@@ -16,6 +16,8 @@ public interface ErrorCodes {
 	public static String PUBLICATION_DATE_SHOULD_BE_FUTURE = "PUB_012";
 	public static String INVALID_ARTICLE_ACTION = "PUB_013";
 	public static String QUIZ_LIMIT_EXCEEDED = "PUB_014";
+	public static String PUBLICATION_DAILY_SUMMARY_NOT_FOUND = "PUB_015";
+	public static String PUBLICATION_MONTHLY_SUMMARY_NOT_FOUND = "PUB_016";
 	
 	public static String STUDENT_DTLS_NOT_FOUND = "STUDDTLS_001";
 	

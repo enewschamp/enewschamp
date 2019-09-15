@@ -51,7 +51,7 @@ public class Publication extends BaseEntity {
 	private Long publicationGroupId = 0L;
 
 	@NotNull
-	@Column(name = "EditionId", length = 6)
+	@Column(name = "EditionId", length = ForeignKeyColumnLength.EditionId)
 	private String editionId;
 
 	@NotNull

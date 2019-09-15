@@ -59,13 +59,12 @@ public class PublicationService {
 	@Autowired
 	private NewsArticleService articleService;
 	
+	@Autowired
+	private PublicationDailySummaryService dailySummaryService;
+	
 	public Publication create(Publication publication) {
 		derivePublicationStatus(publication);
-		
-		if(PublicationStatusType.Published.equals(publication.getStatus())) {
-			articleService.markArticlesAsPublished(publication);
-		}
-		
+		checkAndPerformPublishActions(publication);
 		return repository.save(publication);
 	}
 	
@@ -74,6 +73,7 @@ public class PublicationService {
 		Long publicationId = publication.getPublicationId();
 		Publication existingEntity = load(publicationId);
 		modelMapper.map(publication, existingEntity);
+		checkAndPerformPublishActions(publication);
 		return repository.save(existingEntity);
 	}
 	
@@ -82,7 +82,15 @@ public class PublicationService {
 		Long publicationId = publication.getPublicationId();
 		Publication existingEntity = load(publicationId);
 		modelMapperForPatch.map(publication, existingEntity);
+		checkAndPerformPublishActions(publication);
 		return repository.save(existingEntity);
+	}
+	
+	private void checkAndPerformPublishActions(Publication publication) {
+		if(PublicationStatusType.Published.equals(publication.getStatus())) {
+			articleService.markArticlesAsPublished(publication);
+		}
+		dailySummaryService.saveSummary(publication);
 	}
 	
 	public void delete(Long publicationId) {
