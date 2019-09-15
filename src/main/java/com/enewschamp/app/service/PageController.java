@@ -1,5 +1,7 @@
 package com.enewschamp.app.service;
 
+import javax.transaction.Transactional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,12 +54,13 @@ public class PageController {
 		pageRequest.getHeader().setPageName(pageName);
 		pageRequest.getHeader().setAction(actionName);
 		
-		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest);
+		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest, "app");
 		
 		return new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/publisher")
+	@Transactional
 	public ResponseEntity<PageDTO> processPublisherAppRequest(@RequestBody PageRequestDTO pageRequest) {
 		
 		String pageName = pageRequest.getHeader().getPageName();
@@ -65,14 +68,14 @@ public class PageController {
 		pageRequest.getHeader().setPageName(pageName);
 		pageRequest.getHeader().setAction(actionName);
 		
-		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest);
+		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest, "publisher");
 		
 		return new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
 	}
 
-	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest) {
+	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest, String context) {
 		//Process current page
-		PageDTO pageResponse = pageHandlerFactory.getPageHandler(pageName).handleAction(actionName, pageRequest);
+		PageDTO pageResponse = pageHandlerFactory.getPageHandler(pageName, context).handleAction(actionName, pageRequest);
 		
 		//Load next page
 		String nextPageName = appConfig.getPageNavigationConfig().get(pageName.toLowerCase()).get(actionName.toLowerCase());
@@ -81,7 +84,7 @@ public class PageController {
 			pageNavigationContext.setActionName(actionName);
 			pageNavigationContext.setPageRequest(pageRequest);
 			pageNavigationContext.setPreviousPageResponse(pageResponse);
-			pageResponse = pageHandlerFactory.getPageHandler(nextPageName).loadPage(pageNavigationContext);
+			pageResponse = pageHandlerFactory.getPageHandler(nextPageName, context).loadPage(pageNavigationContext);
 		}
 		
 		addSuccessHeader(pageName, actionName, pageResponse);

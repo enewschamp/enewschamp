@@ -64,8 +64,16 @@ public class PublicationService {
 	
 	public Publication create(Publication publication) {
 		derivePublicationStatus(publication);
+		
+		List<PublicationArticleLinkage> articleLinkages = publication.getArticleLinkages();
+//		publication.setArticleLinkages(null);
+		publication = repository.save(publication);
+		
+//		publication.setArticleLinkages(articleLinkages);
+//		publication = repository.save(publication);
+		
 		checkAndPerformPublishActions(publication);
-		return repository.save(publication);
+		return publication;
 	}
 	
 	public Publication update(Publication publication) {
@@ -130,22 +138,28 @@ public class PublicationService {
 	
 	public PublicationStatusType derivePublicationStatus(Publication publication) {
 		PublicationStatusType status = PublicationStatusType.Unassigned;
-		if(publication.getCurrentAction() != null) {
-			PublicationStatusType existingStatus = repository.getCurrentStatus(publication.getPublicationId());
-			existingStatus = existingStatus == null ? PublicationStatusType.Unassigned : existingStatus;
-			StatusTransitionDTO transition = new StatusTransitionDTO(Publication.class.getSimpleName(), 
-																	 String.valueOf(publication.getPublicationId()),
-																	 existingStatus.toString(),
-																     publication.getCurrentAction().toString(), 
-																     null);
-			
-			String nextStatus = statusTransitionHandler.findNextStatus(transition);
-			if(nextStatus.equals(StatusTransitionDTO.REVERSE_STATE)) {
-				PublicationStatusType previousStatus = repository.getPreviousStatus(publication.getPublicationId());
-				nextStatus = previousStatus.toString();
+		if(publication.getPublicationId() == null 
+				|| publication.getPublicationId() == 0
+				|| publication.getEditorId() != null) {
+			status = PublicationStatusType.Assigned;
+		} else {
+			if(publication.getCurrentAction() != null && publication.getPublicationId() != null) {
+				PublicationStatusType existingStatus = repository.getCurrentStatus(publication.getPublicationId());
+				existingStatus = existingStatus == null ? PublicationStatusType.Unassigned : existingStatus;
+				StatusTransitionDTO transition = new StatusTransitionDTO(Publication.class.getSimpleName(), 
+																		 String.valueOf(publication.getPublicationId()),
+																		 existingStatus.toString(),
+																	     publication.getCurrentAction().toString(), 
+																	     null);
+				
+				String nextStatus = statusTransitionHandler.findNextStatus(transition);
+				if(nextStatus.equals(StatusTransitionDTO.REVERSE_STATE)) {
+					PublicationStatusType previousStatus = repository.getPreviousStatus(publication.getPublicationId());
+					nextStatus = previousStatus.toString();
+				}
+				
+				status = PublicationStatusType.fromValue(nextStatus);
 			}
-			
-			status = PublicationStatusType.fromValue(nextStatus);
 		}
 		publication.setStatus(status);
 		return status;

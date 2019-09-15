@@ -28,7 +28,7 @@ public class PublicationArticleLinkage extends BaseEntity {
 	private long linkageId;
 
 	@NotNull
-	@Column(name = "PublicationId", insertable= false, updatable = false, nullable = false)
+	@Column(name = "PublicationId")
 	@DiffIgnore
 	private long publicationId = 0L;
 	

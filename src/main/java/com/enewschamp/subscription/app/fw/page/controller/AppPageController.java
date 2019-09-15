@@ -52,19 +52,19 @@ public class AppPageController {
 		pageRequest.getHeader().setPageName(pageName);
 		pageRequest.getHeader().setAction(actionName);
 		
-		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest);
+		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest, "app");
 		
 		return new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
 	}
 	
-	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest) {
+	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest, String context) {
 		String operation = pageRequest.getHeader().getOperation();
 
 		//get  the page navigation based for current page
 		PageNavigatorDTO pageNavDto = pageNavigationService.getNavPage(actionName, operation, pageName);
 		
 		//Process current page
-		PageDTO pageResponse = pageHandlerFactory.getPageHandler(pageName).handleAppAction(actionName, pageRequest,pageNavDto);
+		PageDTO pageResponse = pageHandlerFactory.getPageHandler(pageName, context).handleAppAction(actionName, pageRequest,pageNavDto);
 			
 		//save data in master Tables (including the previous unsaved data
 		String commitMasterData = pageNavDto.getCommitMasterData();
@@ -73,7 +73,7 @@ public class AppPageController {
 			List<PageNavigatorDTO> pagenNavList =  pageNavigationService.getNavList(actionName, operation, pageName);
 			for(PageNavigatorDTO item:pagenNavList)
 			{
-				pageHandlerFactory.getPageHandler(item.getCurrentPage()).saveAsMaster(actionName, pageRequest);
+				pageHandlerFactory.getPageHandler(item.getCurrentPage(), context).saveAsMaster(actionName, pageRequest);
 			}
 		}
 		String nextPageName="";
@@ -99,7 +99,7 @@ public class AppPageController {
 			pageNavigationContext.setPreviousPageResponse(pageResponse);
 			pageNavigationContext.setPreviousPage(nextPageName);
 			//load data for the next page
-			pageResponse = pageHandlerFactory.getPageHandler(nextPageName).loadPage(pageNavigationContext);
+			pageResponse = pageHandlerFactory.getPageHandler(nextPageName, context).loadPage(pageNavigationContext);
 		}
 		else
 		{
@@ -109,7 +109,7 @@ public class AppPageController {
 			pageNavigationContext.setPreviousPageResponse(pageResponse);
 			pageNavigationContext.setPreviousPage(pageName);
 			//load data for the same page
-			pageResponse = pageHandlerFactory.getPageHandler(pageName).loadPage(pageNavigationContext);
+			pageResponse = pageHandlerFactory.getPageHandler(pageName, context).loadPage(pageNavigationContext);
 		}
 		
 		addSuccessHeader(pageName, actionName, operation,pageResponse);

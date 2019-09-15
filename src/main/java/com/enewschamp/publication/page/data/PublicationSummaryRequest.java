@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class PublicationSummaryRequest extends PageData {
 
 	private static final long serialVersionUID = 2029361603680208757L;
@@ -16,6 +16,10 @@ public class PublicationSummaryRequest extends PageData {
 	private Integer month;
 	private Integer year;
 	
+	private String editionId;
+	private String genreId;
+	private Integer readingLevel;
+
 	private int pageNumber;
 	private int pageSize;
 

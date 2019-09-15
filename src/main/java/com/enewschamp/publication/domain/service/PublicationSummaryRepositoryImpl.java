@@ -92,6 +92,12 @@ public class PublicationSummaryRepositoryImpl extends RepositoryImpl implements 
 		if (summaryRequest.getYear() != null) {
 			filterPredicates.add(cb.equal(publicationDailySummaryRoot.get("year"), summaryRequest.getYear()));
 		}
+		if (summaryRequest.getEditionId() != null) {
+			filterPredicates.add(cb.equal(publicationDailySummaryRoot.get("editionId"), summaryRequest.getEditionId()));
+		}
+		if (summaryRequest.getGenreId() != null) {
+			filterPredicates.add(cb.equal(publicationDailySummaryRoot.get("genreId"), summaryRequest.getGenreId()));
+		}
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		
 		// Build query

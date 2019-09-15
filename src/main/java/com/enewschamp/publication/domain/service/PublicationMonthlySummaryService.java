@@ -86,7 +86,7 @@ public class PublicationMonthlySummaryService extends AbstractDomainService {
 	private int getQuizCount(List<NewsArticle> articles) {
 		int count = 0;
 		for(NewsArticle article: articles) {
-			if(article != null) {
+			if(article != null && article.getNewsArticleQuiz() != null) {
 				count = count + article.getNewsArticleQuiz().size();
 			}
 		}
@@ -98,6 +98,9 @@ public class PublicationMonthlySummaryService extends AbstractDomainService {
 		for(PublicationArticleLinkage linkage: publication.getArticleLinkages()) {
 			if(linkage != null) {
 				NewsArticle article = articleService.get(linkage.getNewsArticleId());
+				if(article == null) {
+					continue;
+				}
 				String genre = getGenre(article.getNewsArticleGroupId());
 				List<NewsArticle> articleList = genreWiseArticlesMap.get(genre);
 				if(articleList == null) {

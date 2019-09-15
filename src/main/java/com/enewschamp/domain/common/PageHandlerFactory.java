@@ -15,9 +15,9 @@ public class PageHandlerFactory {
 	@Autowired
 	private ApplicationContext context;
 	
-	public IPageHandler getPageHandler(String pageName) {
+	public IPageHandler getPageHandler(String pageName, String context) {
 		
-		String pageHandlerName = appConfig.getPageHandlerConfig().get(pageName.toLowerCase());
+		String pageHandlerName = appConfig.getPageHandlerConfig().get(context).get(pageName.toLowerCase());
 	
 		if(pageHandlerName == null) {
 			throw new RuntimeException("Page handler not found for page: " + pageName);

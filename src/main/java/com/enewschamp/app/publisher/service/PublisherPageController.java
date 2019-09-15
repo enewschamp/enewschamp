@@ -31,6 +31,7 @@ import lombok.extern.java.Log;
 @Log
 @RestController
 @RequestMapping("/enewschamp-api/v1")
+@Deprecated
 public class PublisherPageController {
 
 	@Autowired
@@ -55,7 +56,7 @@ public class PublisherPageController {
 			pageRequest.getHeader().setPageName(pageName);
 			pageRequest.getHeader().setAction(actionName);
 			
-			PageDTO pageResponse = processRequest(pageName, actionName, pageRequest);
+			PageDTO pageResponse = processRequest(pageName, actionName, pageRequest, "publisher");
 			response = new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
 		}catch(BusinessException e) {
 			HeaderDTO header = pageRequest.getHeader();
@@ -69,9 +70,9 @@ public class PublisherPageController {
 		return response;
 	}
 
-	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest) {
+	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest, String context) {
 		//Process current page
-		IPageHandler pageHandler = pageHandlerFactory.getPageHandler(pageName);
+		IPageHandler pageHandler = pageHandlerFactory.getPageHandler(pageName, context);
 		PageDTO pageResponse = pageHandler.handleAction(actionName, pageRequest);
 		
 		//Load next page
@@ -84,7 +85,7 @@ public class PublisherPageController {
 			pageNavigationContext.setActionName(actionName);
 			pageNavigationContext.setPageRequest(pageRequest);
 			pageNavigationContext.setPreviousPageResponse(pageResponse);
-			pageResponse = pageHandlerFactory.getPageHandler(nextPageName).loadPage(pageNavigationContext);
+			pageResponse = pageHandlerFactory.getPageHandler(nextPageName, context).loadPage(pageNavigationContext);
 		}
 		
 		addSuccessHeader(pageName, actionName, pageResponse);

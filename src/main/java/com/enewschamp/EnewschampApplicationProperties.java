@@ -23,7 +23,7 @@ public class EnewschampApplicationProperties {
 		private String handlerName;
 	}
 	
-	private Map<String, String> pageHandlerConfig;
+	private Map<String, Map<String, String>> pageHandlerConfig;
 	
 	private Map<String, Map<String, String>> pageNavigationConfig;
 	

@@ -95,10 +95,8 @@ public class Publication extends BaseEntity {
 	@PrePersist
 	@PreUpdate
 	public void prePersist() {
+		super.prePersist();
 		new PublicationBusinessPolicy(this).validateAndThrow();
-		if(operationDateTime == null) {
-			operationDateTime = LocalDateTime.now();
-		}
 		if(articleLinkages != null && publicationId != null && publicationId != 0) {
 			for(PublicationArticleLinkage linkage: articleLinkages) {
 				linkage.setPublicationId(publicationId);

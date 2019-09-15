@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
@@ -77,7 +78,10 @@ public class PublicationDailySummaryService extends AbstractDomainService {
 		int count = 0;
 		for (PublicationArticleLinkage linkage : linkages) {
 			if (linkage != null) {
-				count = count + articleService.get(linkage.getNewsArticleId()).getNewsArticleQuiz().size();
+				NewsArticle article = articleService.get(linkage.getNewsArticleId());
+				if(article != null && article.getNewsArticleQuiz() != null) {
+					count = count + article.getNewsArticleQuiz().size();
+				}
 			}
 		}
 		return count;

@@ -22,10 +22,10 @@ public class PublicationDTO extends MaintenanceDTO {
 
 	private static final long serialVersionUID = -1938738416579485109L;
 
-	private long publicationId;
+	private Long publicationId;
 	
 	@NotNull
-	private long publicationGroupId;
+	private Long publicationGroupId;
 
 	@NotNull
 	@Size(max = 6)
@@ -58,7 +58,7 @@ public class PublicationDTO extends MaintenanceDTO {
 		super();
 	}
 
-	public PublicationDTO(long publicationId, long publicationGroupId, String editionId, int readingLevel, LocalDate publishDate,
+	public PublicationDTO(Long publicationId, Long publicationGroupId, String editionId, int readingLevel, LocalDate publishDate,
 			PublicationStatusType status, String editorId, String publisherId) {
 		super();
 		this.publicationId = publicationId;
