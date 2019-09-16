@@ -43,6 +43,7 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 				  articleRoot.get("editorId"),
 				  articleRoot.get("publisherId"),
 				  articleRoot.get("status"),
+				  articleRoot.get("articleType"),
 				  articleGroupRoot.get("genreId"),
 				  articleGroupRoot.get("headline"),
 				  articleGroupRoot.get("imagePathMobile"),
@@ -84,6 +85,9 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 		}
 		if (searchRequest.getArticleStatusList() != null && searchRequest.getArticleStatusList().size() > 0) {
 			filterPredicates.add(articleRoot.get("status").in(searchRequest.getArticleStatusList()));
+		}
+		if (searchRequest.getArticleTypeList() != null && searchRequest.getArticleTypeList().size() > 0) {
+			filterPredicates.add(articleRoot.get("articleType").in(searchRequest.getArticleTypeList()));
 		}
 		if (searchRequest.getGenreId() != null) {
 			filterPredicates.add(cb.equal(articleGroupRoot.get("genreId"), searchRequest.getGenreId()));

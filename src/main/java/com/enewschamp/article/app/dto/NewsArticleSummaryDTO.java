@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.enewschamp.app.common.AbstractDTO;
 import com.enewschamp.article.domain.common.ArticleStatusType;
+import com.enewschamp.article.domain.common.ArticleType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class NewsArticleSummaryDTO extends AbstractDTO {
 	private String editorId;
 	private String publisherId;
 	private ArticleStatusType status;
+	private ArticleType articleType;
 	private String genreId;
 	private String headLine;
 	private String imagePathMobile;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.article.domain.common.ArticleStatusType;
+import com.enewschamp.article.domain.common.ArticleType;
 import com.enewschamp.domain.common.MonthType;
 
 import lombok.Data;
@@ -38,5 +39,6 @@ public class NewsArticleSearchRequest extends PageData {
 	private LocalDate publicationDate;
 	private MonthType intendedPubMonth;
 	private List<ArticleStatusType> articleStatusList;
+	private List<ArticleType> articleTypeList;
 
 }
