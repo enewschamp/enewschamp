@@ -3,12 +3,16 @@ package com.enewschamp.article.app.dto;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.MaintenanceDTO;
 import com.enewschamp.article.domain.common.ArticleActionType;
 import com.enewschamp.article.domain.common.ArticleRatingType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
+import com.enewschamp.article.domain.common.ArticleType;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,6 +43,8 @@ public class NewsArticleDTO extends MaintenanceDTO {
 	
 	@NotNull
 	private ArticleStatusType status;
+	
+	private ArticleType articleType = ArticleType.Article;
 	
 	private String content;
 	

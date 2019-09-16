@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.enewschamp.article.domain.common.ArticleActionType;
 import com.enewschamp.article.domain.common.ArticleRatingType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
+import com.enewschamp.article.domain.common.ArticleType;
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.domain.common.StatusTransitionHandler;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
@@ -69,6 +70,11 @@ public class NewsArticle extends BaseEntity {
 	@Column(name = "Status")
 	@Enumerated(EnumType.STRING)
 	private ArticleStatusType status = ArticleStatusType.Unassigned;
+	
+	@NotNull
+	@Column(name = "ArticleType")
+	@Enumerated(EnumType.STRING)
+	private ArticleType articleType = ArticleType.Article;
 	
 	@Column(name = "PreviousStatus")
 	@Enumerated(EnumType.STRING)
