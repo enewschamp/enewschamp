@@ -1,4 +1,4 @@
-package com.enewschamp.app.student.notification;
+package com.enewschamp.app.notification;
 
 public enum NotificationActionType {
 

@@ -1,4 +1,4 @@
-package com.enewschamp.app.student.notification;
+package com.enewschamp.app.notification;
 
 import java.time.LocalDate;
 
@@ -31,8 +31,12 @@ public class NotificationAction extends BaseEntity {
 	@Column(name = "NotificationActionId", updatable = false, nullable = false)
 	private Long notificationActionId;
 
-	@Column(name = "StudentId")
-	private Long studentId;
+	@Column(name = "NotificationRecipientType")
+	@Enumerated(EnumType.STRING)
+	private NotificationRecipientType recipientType;
+	
+	@Column(name = "RecipientId")
+	private String recipientId;
 	
 	@Column(name = "NotificationActionType")
 	@Enumerated(EnumType.STRING)

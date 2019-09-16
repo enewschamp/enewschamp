@@ -20,6 +20,7 @@ public interface ErrorCodes {
 	public static String PUBLICATION_MONTHLY_SUMMARY_NOT_FOUND = "PUB_016";
 	
 	public static String STUDENT_DTLS_NOT_FOUND = "STUDDTLS_001";
+	public static String STUDENT_NOTIFICATION_NOT_FOUND = "STUDDTLS_002";
 	
 	public static String TREND_DAILY_NOT_FOUND ="TRDLY_001";
 	public static String TREND_MONTHLY_TOTAL_NOT_FOUND ="TRMNTT_001";
@@ -51,6 +52,7 @@ public interface ErrorCodes {
 	public static String STATUS_TRANSITION_NOT_FOUND="FRW_002";
 	public static String MULTI_LANG_TEXT_NOT_FOUND = "FRW_003";
 	public static String LOV_NOT_FOUND = "FRW_004";
+	public static String NOTIFICATION_ACTION_NOT_FOUND = "FRW_005";
 	
 	
 	public static String STUD_BADGES_NOT_FOUND="BADGE_001";
