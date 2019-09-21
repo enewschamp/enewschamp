@@ -131,6 +131,7 @@ public class PublicationMonthlySummaryService extends AbstractDomainService {
 		response.setPageCount(pageResult.getTotalPages());
 		response.setRecordCount(pageResult.getNumberOfElements());
 		response.setPageNumber(pageResult.getNumber() + 1);
+		response.setMonthlySummary(pageResult.getContent());
 
 		return response;
 	}
