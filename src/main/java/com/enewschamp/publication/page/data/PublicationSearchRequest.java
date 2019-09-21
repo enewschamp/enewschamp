@@ -24,5 +24,18 @@ public class PublicationSearchRequest extends PageData {
 	private String editionId;
 	private String publisherId;
 	private List<PublicationStatusType> publicationStatusList;
+	
+	public int getReadingLevel() {
+		if(readingLevel1 != null && readingLevel1.equals("Y")) {
+			return 1; 
+		} else if(readingLevel2 != null && readingLevel2.equals("Y")) {
+			return 2;
+		} else if(readingLevel3 != null && readingLevel3.equals("Y")) {
+			return 3;
+		} else if(readingLevel4 != null && readingLevel4.equals("Y")) {
+			return 4;
+		}
+		return 0;
+	}
 
 }

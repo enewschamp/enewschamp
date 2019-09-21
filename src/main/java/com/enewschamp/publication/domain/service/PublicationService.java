@@ -1,5 +1,6 @@
 package com.enewschamp.publication.domain.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -193,5 +194,13 @@ public class PublicationService {
 		pageNumber = pageNumber > 0 ? (pageNumber - 1) : 0;
 		Pageable pageable = PageRequest.of(pageNumber, header.getPageSize());
 		return customRepository.findPublications(searchRequest, pageable);
+	}
+	
+	public LocalDate getNextAvailablePublicationDate(LocalDate givenDate, String editionId, int readingLevel) {
+		return repository.getNextAvailablePublicationDate(givenDate, editionId, readingLevel);
+	}
+	
+	public LocalDate getPreviousAvailablePublicationDate(LocalDate givenDate, String editionId, int readingLevel) {
+		return repository.getPreviousAvailablePublicationDate(givenDate, editionId, readingLevel);
 	}
 }

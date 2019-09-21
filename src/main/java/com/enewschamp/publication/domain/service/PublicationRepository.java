@@ -1,5 +1,6 @@
 package com.enewschamp.publication.domain.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -30,5 +31,17 @@ public interface PublicationRepository extends JpaRepository<Publication, Long>{
 	@Query(value = "SELECT a.previousStatus FROM Publication a"
 			+ " where a.publicationId = :publicationId")
 	public PublicationStatusType getPreviousStatus(long publicationId);
+	
+	@Query(value = "SELECT min(a.publishDate) FROM Publication a"
+			+ " where a.publishDate > :givenDate"
+			+ " and a.editionId = :editionId"
+			+ " and a.readingLevel = :readingLevel")
+	public LocalDate getNextAvailablePublicationDate(LocalDate givenDate, String editionId, int readingLevel);
+	
+	@Query(value = "SELECT max(a.publishDate) FROM Publication a"
+			+ " where a.publishDate < :givenDate"
+			+ " and a.editionId = :editionId"
+			+ " and a.readingLevel = :readingLevel")
+	public LocalDate getPreviousAvailablePublicationDate(LocalDate givenDate, String editionId, int readingLevel);
 	
 } 
