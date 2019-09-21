@@ -1,7 +1,6 @@
 package com.enewschamp.publication.domain.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -19,6 +18,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.javers.core.metamodel.annotation.DiffIgnore;
@@ -35,7 +35,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "Publication")
+@Table(name="Publication",uniqueConstraints={@UniqueConstraint(columnNames = {"publicationId", "editionId", "readingLevel", "publishDate"})})
 public class Publication extends BaseEntity {
 
 	private static final long serialVersionUID = -6656836773546374871L;

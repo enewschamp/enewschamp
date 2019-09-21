@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +23,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "PublicationMonthlySummary")
+@Table(name = "PublicationMonthlySummary", uniqueConstraints={@UniqueConstraint(columnNames = {"year", "month", "editionId", "genreId", "readingLevel"})})
 public class PublicationMonthlySummary extends TransactionEntity {
 
 	private static final long serialVersionUID = -7063853831579952336L;
