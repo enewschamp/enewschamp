@@ -17,16 +17,16 @@ values ( 1, 1,'S','Indian',CURRENT_DATE,CURRENT_DATE+10,'INR',20,60,120,240,'SYS
 
 
 
-Insert into news_article_quiz (news_article_quizid,news_articleid,Question,Opt1,Opt2,Opt3,Opt4,correct_Opt,Operator_Id,Operation_Date_Time,Record_In_Use) 
+Insert into news_article_quiz (news_article_quiz_id,news_article_id,Question,Opt1,Opt2,Opt3,Opt4,correct_Opt,Operator_Id,Operation_Date_Time,Record_In_Use) 
 values (1, 3331323, 'Where is Taj Mahal ?', 'Delhi','Mumbai','Agra','Chennai', 3, 'SYSTEM', CURRENT_DATE,'Y');
 
-Insert into news_article_quiz (news_article_quizid,news_articleid,Question,Opt1,Opt2,Opt3,Opt4,correct_Opt,Operator_Id,Operation_Date_Time,Record_In_Use) 
+Insert into news_article_quiz (news_article_quiz_id,news_article_id,Question,Opt1,Opt2,Opt3,Opt4,correct_Opt,Operator_Id,Operation_Date_Time,Record_In_Use) 
 values (2, 3331323, 'Where is India Gate ?', 'Delhi','Mumbai','Kolkata','Chennai', 1, 'SYSTEM', CURRENT_DATE,'Y');
 
-Insert into news_article_quiz (news_article_quizid,news_articleid,Question,Opt1,Opt2,Opt3,Opt4,correct_Opt,Operator_Id,Operation_Date_Time,Record_In_Use) 
+Insert into news_article_quiz (news_article_quiz_id,news_article_id,Question,Opt1,Opt2,Opt3,Opt4,correct_Opt,Operator_Id,Operation_Date_Time,Record_In_Use) 
 values (3, 3331323, 'Where is Eden Garden Cricker Ground ?', 'Delhi','Mumbai','Agra','Kolkata', 4, 'SYSTEM', CURRENT_DATE,'Y');
 
-Insert into news_article_quiz (news_article_quizid,news_articleid,Question,Opt1,Opt2,Opt3,Opt4,correct_Opt,Operator_Id,Operation_Date_Time,Record_In_Use) 
+Insert into news_article_quiz (news_article_quiz_id,news_article_id,Question,Opt1,Opt2,Opt3,Opt4,correct_Opt,Operator_Id,Operation_Date_Time,Record_In_Use) 
 values (4, 3331323, 'Where is Marine Drive ?', 'Delhi','Mumbai','Agra','Chennai', 2, 'SYSTEM', CURRENT_DATE,'Y');
 
 
