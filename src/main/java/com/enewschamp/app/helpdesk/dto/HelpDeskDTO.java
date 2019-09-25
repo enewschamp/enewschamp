@@ -22,7 +22,7 @@ public class HelpDeskDTO extends BaseEntity{
 	private String categoryId;
 	private String details;
 	private String callbackRequest;
-	private Long phoneNumber;
+	private String phoneNumber;
 	private String supportingComments;
 	private String closeFlag;
 	private LocalDateTime callBackTime;

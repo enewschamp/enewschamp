@@ -1,6 +1,7 @@
 package com.enewschamp.app.trends.page.handler;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -62,7 +63,8 @@ public class TrendsPageHandler implements IPageHandler {
 		// pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 
 		String operation = pageNavigationContext.getPageRequest().getHeader().getOperation();
-		if ("ListMonthlyTrends".equals(operation)) {
+		String action = pageNavigationContext.getPageRequest().getHeader().getAction();
+		if ("ListMonthlyTrends".equals(operation) || PageAction.Trends.toString().equalsIgnoreCase(action)) {
 			pageDto = handleMonthlyTrends(pageNavigationContext);
 		}
 		if ("ListYearlyTrends".equals(operation)) {
@@ -103,7 +105,7 @@ public class TrendsPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		if (PageAction.Year.toString().equalsIgnoreCase(action)) {
+		if (PageAction.Year.toString().equalsIgnoreCase(action) || PageAction.Month.toString().equalsIgnoreCase(action)) {
 
 			List<MonthlyArticleDTO> monthlyArticlesTrend = trendsService.findMonthlyNewsArticlesTrend(searchData);
 			List<MonthlyQuizScoresDTO> monthlyQuizScoresTrend = trendsService.findMonthlyQuizScoreTrend(searchData);
@@ -207,6 +209,19 @@ public class TrendsPageHandler implements IPageHandler {
 					throw new BusinessException(ErrorCodes.INVALID_YEARMONTH_FORMAT, "Invalid Year Month Format");
 				}
 			}
+			else
+			{
+				// Default load monthly data..
+				
+				LocalDate now = LocalDate.now();
+				int month = now.getMonthValue();
+				String monthStr = (month<10) ? "0"+month : ""+month; 
+				String year = ""+now.getYear();
+				yearMonth = year+monthStr;
+				System.out.println("year month "+yearMonth);
+				searchData.setMonthYear(yearMonth);
+				action="month";
+			}
 		} catch (JsonParseException e) {
 			throw new RuntimeException(e);
 		} catch (JsonMappingException e) {
@@ -214,7 +229,7 @@ public class TrendsPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		if (PageAction.Month.toString().equalsIgnoreCase(action)) {
+		if (PageAction.Month.toString().equalsIgnoreCase(action) || PageAction.Year.toString().equalsIgnoreCase(action)) {
 
 			List<DailyArticleDTO> dailyArticlesTrend = trendsService.findDailyNewsArticlesTrend(searchData);
 			List<DailyQuizScoresDTO> dailyQuizScoresTrend = trendsService.findDailyQuizScoreTrend(searchData);
@@ -230,21 +245,24 @@ public class TrendsPageHandler implements IPageHandler {
 
 			pageDto.setData(pageData);
 		}
-		if (PageAction.next.toString().equalsIgnoreCase(action)
-				|| PageAction.RightSwipe.toString().equalsIgnoreCase(action)) {
+		if (PageAction.next.toString().equalsIgnoreCase(action) || PageAction.LeftSwipe.toString().equalsIgnoreCase(action)
+				) {
 
 			String yearMonth = searchData.getMonthYear();
 			String year = yearMonth.substring(0, 4);
 			String monthStr = yearMonth.substring(yearMonth.length() - 2, yearMonth.length());
 			int month = Integer.parseInt(monthStr);
-			month = month + 1;
-
-			if (month >= 10) {
-				monthStr = "" + month;
-			} else {
-				monthStr = "0" + month;
+			
+			if(month>12 || month <1)
+			{
+				throw new BusinessException(ErrorCodes.INVALID_MONTH, "Invalid Month (Month should be between 1 - 12)");
 
 			}
+			if(month<12)
+			month = month + 1;
+			
+			monthStr = (month>=10) ? ""+month :"0"+month;
+
 			yearMonth = year + monthStr;
 			System.out.println("yearMonth :" + yearMonth);
 
@@ -265,7 +283,7 @@ public class TrendsPageHandler implements IPageHandler {
 			pageDto.setData(pageData);
 		}
 		if (PageAction.previous.toString().equalsIgnoreCase(action)
-				|| PageAction.LeftSwipe.toString().equalsIgnoreCase(action)) {
+				|| PageAction.RightSwipe.toString().equalsIgnoreCase(action)) {
 
 			String yearMonth = searchData.getMonthYear();
 			System.out.println("yearMonth :" + yearMonth);
@@ -273,16 +291,11 @@ public class TrendsPageHandler implements IPageHandler {
 			String monthStr = yearMonth.substring(yearMonth.length() - 2, yearMonth.length());
 			int month = Integer.parseInt(monthStr);
 			System.out.println("***month  " + month);
-			if (month > 0) {
+			if (month > 1) {
 				month = month - 1;
 			}
+			monthStr = (month >= 10) ? ""+month : "0"+month;
 
-			if (month >= 10) {
-				monthStr = "" + month;
-			} else {
-				monthStr = "0" + month;
-
-			}
 			yearMonth = year + monthStr;
 			System.out.println("yearMonth :" + yearMonth);
 

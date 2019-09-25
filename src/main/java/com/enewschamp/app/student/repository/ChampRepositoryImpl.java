@@ -22,7 +22,7 @@ import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.school.entity.School;
 import com.enewschamp.app.student.dto.ChampStudentDTO;
 import com.enewschamp.app.student.monthlytrends.entity.TrendsMonthlyTotal;
-import com.enewschamp.domain.repository.RepositoryImpl;
+import com.enewschamp.domain.service.RepositoryImpl;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
 import com.enewschamp.subscription.domain.entity.StudentPreference;
 import com.enewschamp.subscription.domain.entity.StudentSchool;

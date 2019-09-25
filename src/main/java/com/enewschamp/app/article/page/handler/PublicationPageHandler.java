@@ -71,27 +71,45 @@ public class PublicationPageHandler  implements IPageHandler {
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
-		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
 		Long studentId = studentControlBusiness.getStudentId(eMailId);
 		
 		String action = pageNavigationContext.getActionName();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
-		
-		if(PageAction.load.toString().equalsIgnoreCase(action) ||PageAction.home.toString().equalsIgnoreCase(action) )
+	
+		if(PageAction.load.toString().equalsIgnoreCase(action) ||PageAction.home.toString().equalsIgnoreCase(action) ||PageAction.back.toString().equalsIgnoreCase(action) ||PageAction.save.toString().equalsIgnoreCase(action)  ||PageAction.Cancel.toString().equalsIgnoreCase(action) )
 		{
+			System.out.println("Inside load in Publication Handler");
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
+			
+			//if publication date is null, load the latest publication... TO DO 
+			if(publicationDate==null)
+			{
+				publicationDate = LocalDate.now();
+			}
+			//if page number is not passed, load the first page
+			if(pageNavigationContext.getPageRequest().getHeader().getPageNo() ==null )
+			{
+				pageNavigationContext.getPageRequest().getHeader().setPageNo(0);
+				
+			}
+			// if page size is not passed, load from config.
+			if(pageNavigationContext.getPageRequest().getHeader().getPageSize() ==null )
+			{
+				pageNavigationContext.getPageRequest().getHeader().setPageSize(appConfig.getPageSize());
+				
+			}
+			
 			searchRequestData.setEditionId(editionId);
 			searchRequestData.setPublicationDate(publicationDate);
-			
 			Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData, pageNavigationContext.getPageRequest().getHeader());
 
 			HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
 			header.setIsLastPage(pageResult.isLast());
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNumber(pageResult.getNumber() + 1);
+			header.setPageNo(pageResult.getNumber() + 1);
 			pageDto.setHeader(header);
 			
 			List<PublicationData> publicationData = null;
@@ -129,7 +147,8 @@ public class PublicationPageHandler  implements IPageHandler {
 			header.setIsLastPage(pageResult.isLast());
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNumber(pageResult.getNumber() + 1);
+			header.setPageNo(pageResult.getNumber() + 1);
+			header.setPublicationdate(newDate);
 			pageDto.setHeader(header);
 			
 			List<PublicationData> publicationData = null;
@@ -155,7 +174,7 @@ public class PublicationPageHandler  implements IPageHandler {
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 			searchRequestData.setEditionId(editionId);
 			
-			//get the articles for next publication date
+			//get the articles for previous publication date
 			LocalDate newDate = publicationDate.minusDays(1);
 			
 			searchRequestData.setPublicationDate(newDate);
@@ -165,7 +184,8 @@ public class PublicationPageHandler  implements IPageHandler {
 			header.setIsLastPage(pageResult.isLast());
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNumber(pageResult.getNumber() + 1);
+			header.setPageNo(pageResult.getNumber() + 1);
+			header.setPublicationdate(newDate);
 			pageDto.setHeader(header);
 			
 			List<PublicationData> publicationData = null;
@@ -185,13 +205,13 @@ public class PublicationPageHandler  implements IPageHandler {
 			
 			pageDto.setData(pageData);
 		}
-		if(PageAction.next.toString().equalsIgnoreCase(action) ) {
+		if(PageAction.next.toString().equalsIgnoreCase(action)  || PageAction.LeftSwipe.toString().equalsIgnoreCase(action)) {
 
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 			searchRequestData.setEditionId(editionId);
-			int pageNumber = pageNavigationContext.getPageRequest().getHeader().getPageNumber();
+			int pageNumber = pageNavigationContext.getPageRequest().getHeader().getPageNo();
 			pageNumber = pageNumber+1;
-			pageNavigationContext.getPageRequest().getHeader().setPageNumber(pageNumber);
+			pageNavigationContext.getPageRequest().getHeader().setPageNo(pageNumber);
 			
 			searchRequestData.setPublicationDate(publicationDate);
 			Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData, pageNavigationContext.getPageRequest().getHeader());
@@ -200,7 +220,7 @@ public class PublicationPageHandler  implements IPageHandler {
 			header.setIsLastPage(pageResult.isLast());
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNumber(pageResult.getNumber() + 1);
+			header.setPageNo(pageResult.getNumber() + 1);
 			pageDto.setHeader(header);
 			
 			List<PublicationData> publicationData = null;
@@ -221,17 +241,17 @@ public class PublicationPageHandler  implements IPageHandler {
 			pageDto.setData(pageData);
 		
 		}
-		if(PageAction.previous.toString().equalsIgnoreCase(action) ) {
+		if(PageAction.previous.toString().equalsIgnoreCase(action) || PageAction.RightSwipe.toString().equalsIgnoreCase(action)) {
 			
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 			searchRequestData.setEditionId(editionId);
-			int pageNumber = pageNavigationContext.getPageRequest().getHeader().getPageNumber();
+			int pageNumber = pageNavigationContext.getPageRequest().getHeader().getPageNo();
 			pageNumber = pageNumber-1;
 			if(pageNumber <0)
 			{
 				pageNumber=0;
 			}
-			pageNavigationContext.getPageRequest().getHeader().setPageNumber(pageNumber);
+			pageNavigationContext.getPageRequest().getHeader().setPageNo(pageNumber);
 			
 			searchRequestData.setPublicationDate(publicationDate);
 			Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData, pageNavigationContext.getPageRequest().getHeader());
@@ -240,7 +260,7 @@ public class PublicationPageHandler  implements IPageHandler {
 			header.setIsLastPage(pageResult.isLast());
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNumber(pageResult.getNumber() + 1);
+			header.setPageNo(pageResult.getNumber() + 1);
 			pageDto.setHeader(header);
 			
 			List<PublicationData> publicationData = null;
@@ -260,7 +280,8 @@ public class PublicationPageHandler  implements IPageHandler {
 			
 			pageDto.setData(pageData);
 		}
-		
+		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
+
 		return pageDto;
 	}
 

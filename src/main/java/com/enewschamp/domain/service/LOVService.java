@@ -71,5 +71,5 @@ public class LOVService extends AbstractDomainService {
 	public List<ListOfValuesItem> getLOV(String lovType) {
 		return toListOfValuesItems(repository.getLOV(lovType));
 	}
-	
+
 }

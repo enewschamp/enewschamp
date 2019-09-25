@@ -31,8 +31,12 @@ public class EnewschampApplicationProperties {
 	private Map<String, String> subscriptionText;
 	private Map<String, String> studentDetailsPageText;
 	private int evalDays;
+	private int pageSize;
+	private int workingDays;
 	private String incompleteFormText;
 	private String premiumSubsMsg;
+	private String helpDeskText;
+	private String helpDeskEmail;
 	@Data
 	public static class AuditConfig {
 		private boolean includeSnapShots;

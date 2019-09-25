@@ -67,7 +67,14 @@ public class EditionService extends AbstractDomainService {
 		edition.setEditionId(editionId);
 		return auditService.getEntityAudit(edition);
 	}
-	
+	public Edition getEdition(String editionId) {
+		Optional<Edition> existingEntity = repository.findById(editionId);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
+		} else {
+			throw new BusinessException(ErrorCodes.EDITION_NOT_FOUND, editionId);
+		}
+	}
 	public List<ListOfValuesItem> getLOV() {
 		return toListOfValuesItems(repository.getEditionLOV());
 	}

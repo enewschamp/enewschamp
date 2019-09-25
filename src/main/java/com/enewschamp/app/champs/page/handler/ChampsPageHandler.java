@@ -11,6 +11,7 @@ import com.enewschamp.app.champs.page.data.ChampsPageData;
 import com.enewschamp.app.champs.page.data.ChampsSearchData;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.dto.ChampStudentDTO;
 import com.enewschamp.app.student.service.StudentChampService;
@@ -45,8 +46,10 @@ public class ChampsPageHandler implements IPageHandler{
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String action = pageNavigationContext.getActionName();
 		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
-
+		int pageNo = pageNavigationContext.getPageRequest().getHeader().getPageNo();
+		
 		ChampsSearchData searchData = new ChampsSearchData();
+
 		try {
 			searchData = objectMapper.readValue(pageNavigationContext.getPageRequest().getData().toString(), ChampsSearchData.class);
 		} catch (JsonParseException e) {
@@ -57,13 +60,37 @@ public class ChampsPageHandler implements IPageHandler{
 			throw new RuntimeException(e);
 		}
 		
-		List<ChampStudentDTO> champList = studentChampService.findChampStudents(searchData);
+		if(PageAction.Level1.toString().equalsIgnoreCase(action))
+		{
+			searchData.setReadingLevel("1");
+		}
+		if(PageAction.Level2.toString().equalsIgnoreCase(action))
+		{
+			searchData.setReadingLevel("2");
+
+		}
+		if(PageAction.Level3.toString().equalsIgnoreCase(action))
+		{
+			searchData.setReadingLevel("3");
+
+		}
+		if(PageAction.next.toString().equalsIgnoreCase(action) || PageAction.LeftSwipe.toString().equalsIgnoreCase(action))
+		{
+			pageNo ++;
+		}
+		if(PageAction.previous.toString().equalsIgnoreCase(action)  || PageAction.RightSwipe.toString().equalsIgnoreCase(action))
+		{
+			if(pageNo>1)
+			pageNo--;
+		}
+		
+		List<ChampStudentDTO> champList = studentChampService.findChampStudents(searchData,pageNo);
 		//List<ChampStudentDTO> champList = studentChampService.findChampions(searchRequest)(searchData);
 		ChampsPageData pageData = new ChampsPageData();
 		pageData.setChamps(champList);
 		pageData.setMonthYear(searchData.getMonthYear());
 		pageData.setReadingLevel(searchData.getReadingLevel());
-		
+		pageData.setPageNo(pageNo);
 		pageDto.setData(pageData);
 		
 		return pageDto;

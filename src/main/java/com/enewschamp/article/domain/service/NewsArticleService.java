@@ -166,7 +166,7 @@ public class NewsArticleService {
 	}
 	
 	public Page<NewsArticleSummaryDTO> findArticles(NewsArticleSearchRequest searchRequest, HeaderDTO header) {
-		int pageNumber = header.getPageNumber();
+		int pageNumber = header.getPageNo();
 		pageNumber = pageNumber > 0 ? (pageNumber - 1) : 0;
 		Pageable pageable = PageRequest.of(pageNumber, header.getPageSize());
 		return customRepository.findArticles(searchRequest, pageable);

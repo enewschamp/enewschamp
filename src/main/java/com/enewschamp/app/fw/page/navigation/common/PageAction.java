@@ -36,5 +36,18 @@ public enum PageAction {
 	Year,
 	MyActivity,
 	Champs,
-	Menu
+	Menu,
+	HelpDesk,
+	Filter,
+	ClearFilter,
+	Cancel,
+	MyProfile,
+	FilterSavedArticles,
+	ClearFilterSavedArticles,
+	Scores,
+	Trends,
+	Level1,
+	Level2,
+	Level3,
+	Level4
 }

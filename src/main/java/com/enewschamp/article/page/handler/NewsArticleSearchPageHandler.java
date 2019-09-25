@@ -72,7 +72,7 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 		header.setIsLastPage(pageResult.isLast());
 		header.setPageCount(pageResult.getTotalPages());
 		header.setRecordCount(pageResult.getNumberOfElements());
-		header.setPageNumber(pageResult.getNumber() + 1);
+		header.setPageNo(pageResult.getNumber() + 1);
 		pageDTO.setHeader(header);
 		
 		searchResult.setNewsArticlesSummary(pageResult.getContent());

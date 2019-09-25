@@ -14,17 +14,25 @@ import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.article.page.dto.ArticlePageData;
 import com.enewschamp.app.article.page.dto.PublicationData;
 import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
+import com.enewschamp.app.savedarticle.dto.SavedArticleData;
+import com.enewschamp.app.savedarticle.dto.SavedArticlePageData;
+import com.enewschamp.app.savedarticle.dto.SavedNewsArticleSearchRequest;
+import com.enewschamp.app.savedarticle.dto.SavedNewsArticleSummaryDTO;
+import com.enewschamp.app.savedarticle.service.SavedNewsArticleService;
 import com.enewschamp.app.student.business.StudentActivityBusiness;
 import com.enewschamp.app.student.dto.StudentActivityDTO;
 import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
 import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.domain.common.IPageHandler;
+import com.enewschamp.domain.common.MonthType;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.publication.domain.service.GenreService;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,7 +59,10 @@ public class SavedNewsArticlePageHandler implements IPageHandler {
 	private StudentActivityBusiness studentActivityBusiness;
 	@Autowired
 	private NewsArticleService newsArticleService;
-	
+	@Autowired
+	SavedNewsArticleService savedNewsArticleService;
+	@Autowired
+	GenreService genreService;
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		return null;
@@ -73,14 +84,60 @@ public class SavedNewsArticlePageHandler implements IPageHandler {
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
 		
-		if(PageAction.savedarticles.toString().equalsIgnoreCase(action))
+		 if(PageAction.savedarticles.toString().equalsIgnoreCase(action) || PageAction.back.toString().equalsIgnoreCase(action)  || PageAction.FilterSavedArticles.toString().equalsIgnoreCase(action) || PageAction.ClearFilterSavedArticles.toString().equalsIgnoreCase(action))
 		{
+			ArticlePageData articlePageData = new ArticlePageData();
+			articlePageData = mapPageData(articlePageData, pageNavigationContext.getPageRequest());
+			
 			 studentId = studentControlBusiness.getStudentId(eMailId);
-			List<StudentActivityDTO> savedArticles = studentActivityBusiness.getSavedArticles(studentId);
-			for(StudentActivityDTO studentArticle:savedArticles )
+			//List<StudentActivityDTO> savedArticles = studentActivityBusiness.getSavedArticles(studentId);
+			SavedNewsArticleSearchRequest searchRequestData = new SavedNewsArticleSearchRequest();
+			searchRequestData.setEditionId(editionId);
+			searchRequestData.setGenreId(articlePageData.getGenreId());
+			searchRequestData.setHeadline(articlePageData.getHeadline());
+			searchRequestData.setStudentId(studentId);
+			
+			Page<SavedNewsArticleSummaryDTO> pageResult = savedNewsArticleService.findSavedArticles(searchRequestData, pageNavigationContext.getPageRequest().getHeader());
+			HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
+			header.setIsLastPage(pageResult.isLast());
+			header.setPageCount(pageResult.getTotalPages());
+			header.setRecordCount(pageResult.getNumberOfElements());
+			header.setPageNo(pageResult.getNumber() + 1);
+			pageDto.setHeader(header);
+			
+			List<SavedNewsArticleSummaryDTO> savedArticleSummaryList = pageResult.getContent();
+			SavedArticlePageData savedPageData = new SavedArticlePageData();
+			List<SavedArticleData> savedArticleList = new ArrayList<SavedArticleData>();
+			List<StudentActivityDTO> savedArticlesList = studentActivityBusiness.getSavedArticles(studentId);
+
+			for(SavedNewsArticleSummaryDTO dto:savedArticleSummaryList)
 			{
-				//fetch the 
+				Long savedArticleId=0L;
+				if(savedArticlesList!=null && !savedArticlesList.isEmpty()) {
+				for(StudentActivityDTO studentSavedArticles:savedArticlesList)
+				{
+					savedArticleId = studentSavedArticles.getNewsArticleId();
+				}
+				if(dto.getNewsArticleId()==savedArticleId) {
+				SavedArticleData savedData = new SavedArticleData();
+				savedData.setGenreId(dto.getGenreId());
+				
+				savedData.setHeadline(dto.getHeadLine());
+				savedData.setPublicationDate(dto.getPublicationDate());
+				savedData.setNewsArticleId(dto.getNewsArticleId());
+				
+				
+
+				savedArticleList.add(savedData);
+				}}
+				
 			}
+			savedPageData.setSavedNewsArticles(savedArticleList);
+			savedPageData.setGenreLOV(genreService.getLOV());
+			savedPageData.setMonthsLOV(MonthType.getLOV());
+			//SavedArticlePageData pageData = new SavedArticlePageData();
+			//pageData.setSavedNewsArticles(savedNewsArticles);
+			pageDto.setData(savedPageData);
 		}
 
 		return pageDto;

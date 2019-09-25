@@ -18,9 +18,9 @@ public interface ErrorCodes {
 	public static String QUIZ_LIMIT_EXCEEDED = "PUB_014";
 	public static String PUBLICATION_DAILY_SUMMARY_NOT_FOUND = "PUB_015";
 	public static String PUBLICATION_MONTHLY_SUMMARY_NOT_FOUND = "PUB_016";
-	
+
+	public static String MULTI_LANG_TEXT_NOT_FOUND = "FRW_001";
 	public static String STUDENT_DTLS_NOT_FOUND = "STUDDTLS_001";
-	public static String STUDENT_NOTIFICATION_NOT_FOUND = "STUDDTLS_002";
 	
 	public static String TREND_DAILY_NOT_FOUND ="TRDLY_001";
 	public static String TREND_MONTHLY_TOTAL_NOT_FOUND ="TRMNTT_001";
@@ -31,7 +31,7 @@ public interface ErrorCodes {
 	public static String USER_NOT_FOUND = "USER_001";
 	public static String USER_ROLE_NOT_FOUND = "USER_002";
 	public static String USER_LEAVE_NOT_FOUND = "USER_003";
-	
+
 	public static String PAGE_NOT_FOUND= "PAGE_001";
 	public static String NEXT_PAGE_NOT_FOUND= "PAGE_002";
 	
@@ -50,15 +50,20 @@ public interface ErrorCodes {
 	
 	public static String BUS_POLICY_FAILED="FRW_001";
 	public static String STATUS_TRANSITION_NOT_FOUND="FRW_002";
-	public static String MULTI_LANG_TEXT_NOT_FOUND = "FRW_003";
-	public static String LOV_NOT_FOUND = "FRW_004";
-	public static String NOTIFICATION_ACTION_NOT_FOUND = "FRW_005";
-	
-	
 	public static String STUD_BADGES_NOT_FOUND="BADGE_001";
 	
 	public static String INVALID_YEARMONTH_FORMAT="TREND_001";
-	public static String INVALID_NOT_PRESENT="SNA_01";
+	public static String INVALID_YEAR="TREND_002";
+	public static String INVALID_MONTH="TREND_003";
 
-	
+	public static String INVALID_NOT_PRESENT="SNA_01";
+	public static String HOLIDAY_NOT_FOUND="HOL_01";
+	public static String WORKING_HOUR_NOT_FOUND="WH_01";
+	public static String LOV_NOT_FOUND="LOV_01";
+	public static String NOTIFICATION_ACTION_NOT_FOUND = "FRW_005";
+
+	public static String MOBILE_IS_MANDATORY="MOB_01";
+
+	public static String NOTIFICATION_NOT_FOUND="NOT_01";
+	public static String STUDENT_NOTIFICATION_NOT_FOUND = "ST_NOT_01";
 }

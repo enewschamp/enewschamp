@@ -95,7 +95,8 @@ public class QuizScoreBusiness {
 
 		int year = currDate.getYear();
 		int month = currDate.getMonthValue();
-		String monthYear = year + "" + month;
+		String monthStr = (month<10) ? "0"+month : ""+month;
+		String monthYear = year + "" + monthStr;
 		String genreId = trendsMonthlyByGenreBusiness.getGenreId(newsArticleId);
 		StudentBadges studbadge = studentBadgesBusiness.grantBadge(studentId,editionId,Long.valueOf(monthYear),genreId,trendsMonthlyTotalDTO);
 		ArticleQuizCompletionDTO quizCompletiondto = new ArticleQuizCompletionDTO();

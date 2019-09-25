@@ -75,7 +75,7 @@ public class MyProfilePageHandler implements IPageHandler {
 		Long studentId = 0L;
 		MyProfilePageData myProfilePageData = new MyProfilePageData();
 
-		if (PageAction.get.toString().equalsIgnoreCase(action)) {
+		if (PageAction.get.toString().equalsIgnoreCase(action) || PageAction.MyProfile.toString().equalsIgnoreCase(action) ) {
 			studentId = studentControlBusiness.getStudentId(emailId);
 			StudentSubscriptionDTO studentSubscriptionDTO = studentSubscriptionBusiness
 					.getStudentSubscriptionFromMaster(studentId, editionId);

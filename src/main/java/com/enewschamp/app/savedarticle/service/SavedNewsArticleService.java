@@ -19,7 +19,7 @@ public class SavedNewsArticleService {
 	
 	
 	public Page<SavedNewsArticleSummaryDTO> findSavedArticles(SavedNewsArticleSearchRequest searchRequest, HeaderDTO header) {
-		int pageNumber = header.getPageNumber();
+		int pageNumber = header.getPageNo();
 		pageNumber = pageNumber > 0 ? (pageNumber - 1) : 0;
 		Pageable pageable = PageRequest.of(pageNumber, header.getPageSize());
 		return savedNewsArticleCustomRepository.findArticles(searchRequest, pageable);

@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.champs.page.data.ChampsSearchData;
 import com.enewschamp.app.student.dto.ChampStudentDTO;
 import com.enewschamp.app.student.repository.ChampRepositoryImpl;
@@ -19,6 +20,9 @@ public class StudentChampService {
 	@Autowired
 	ChampRepositoryImpl repository;
 	
+	@Autowired
+	EnewschampApplicationProperties appConfig;
+
 	/*public List<ChampStudentDTO> findChampStudents(ChampsSearchData searchRequest) {
 	
 		// TO DO.. some logic to find the top 10 students..
@@ -34,10 +38,10 @@ public class StudentChampService {
 		return champStudentList;
 
 	}*/
-	public List<ChampStudentDTO> findChampStudents(ChampsSearchData searchRequest) {
+	public List<ChampStudentDTO> findChampStudents(ChampsSearchData searchRequest, int pageNo) {
 		
 		// TO DO.. some logic to find the top 10 students..
-		Pageable pageable = PageRequest.of(0, 10);
+		Pageable pageable = PageRequest.of(pageNo, appConfig.getPageSize());
 		
 		Page<ChampStudentDTO> champStudentPage = repository.findChampions(searchRequest, pageable);
 		List<ChampStudentDTO> champStudentList = new ArrayList<ChampStudentDTO>();

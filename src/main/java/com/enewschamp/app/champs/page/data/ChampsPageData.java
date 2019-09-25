@@ -19,5 +19,6 @@ public class ChampsPageData extends PageData{
 	private String readingLevel;
 	private String monthYear;
 	private List<ChampStudentDTO> champs;
+	private int pageNo;
 	
 }

@@ -54,8 +54,8 @@ public class HelpDesk extends BaseEntity{
 	@Column(name = "callbackRequest", length=1)
 	private String callbackRequest;
 	
-	@Column(name = "phoneNumber", length=12)
-	private Long phoneNumber;
+	@Column(name = "phoneNumber", length=15)
+	private String phoneNumber;
 	
 	@Column(name = "supportingComments", length=399)
 	private String supportingComments;

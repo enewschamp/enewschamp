@@ -19,6 +19,7 @@ public class ArticlePageData extends PageData {
 	private String saveFlag;
 	private String genreId;
 private String headline;
+private String headlineKeyWord;
 private String publishMonth;
 
 	

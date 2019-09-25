@@ -21,7 +21,7 @@ import com.enewschamp.app.savedarticle.dto.SavedNewsArticleSummaryDTO;
 import com.enewschamp.app.student.entity.StudentActivity;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
-import com.enewschamp.domain.repository.RepositoryImpl;
+import com.enewschamp.domain.service.RepositoryImpl;
 
 @Repository
 public class SavedNewsArticleCustomRepositoryImpl extends RepositoryImpl implements SavedNewsArticleCustomRepository {
@@ -48,6 +48,7 @@ public class SavedNewsArticleCustomRepositoryImpl extends RepositoryImpl impleme
 		filterPredicates
 				.add(cb.equal(articleGroupRoot.get("newsArticleGroupId"), articleRoot.get("newsArticleGroupId")));
 		filterPredicates.add(cb.equal(studentActivityRoot.get("newsArticleId"), articleRoot.get("newsArticleId")));
+		filterPredicates.add(cb.notEqual(studentActivityRoot.get("opinion"), ""));
 
 		if (searchRequest.getPublicationDate() != null) {
 			filterPredicates.add(cb.equal(articleRoot.get("publishDate"), searchRequest.getPublicationDate()));
@@ -58,6 +59,9 @@ public class SavedNewsArticleCustomRepositoryImpl extends RepositoryImpl impleme
 		}
 		if (searchRequest.getEditionId() != null) {
 			filterPredicates.add(cb.equal(articleGroupRoot.get("editionId"), searchRequest.getEditionId()));
+		}
+		if (searchRequest.getHeadline() != null) {
+			filterPredicates.add(cb.equal(articleGroupRoot.get("headline"), searchRequest.getHeadline()));
 		}
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));

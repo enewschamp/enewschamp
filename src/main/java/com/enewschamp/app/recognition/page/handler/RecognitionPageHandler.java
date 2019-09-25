@@ -42,7 +42,7 @@ public class RecognitionPageHandler implements IPageHandler {
 
 	@Autowired
 	StudentBadgesBusiness studentBadgesBusiness;
-	
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		return null;
@@ -52,39 +52,57 @@ public class RecognitionPageHandler implements IPageHandler {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		String action = pageNavigationContext.getActionName();
-		int pageNo = pageNavigationContext.getPageRequest().getHeader().getPageNumber();
+		int pageNo = pageNavigationContext.getPageRequest().getHeader().getPageNo();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
-		
+
+		// if (PageAction.upswipe.toString().equalsIgnoreCase(action)) {
+		// pageDto = newsArticlePageHandler.loadPage(pageNavigationContext);
+		// }
+
+		if (PageAction.downswipe.toString().equalsIgnoreCase(action)) {
+
+		}
 		if (PageAction.upswipe.toString().equalsIgnoreCase(action)) {
-			pageDto = newsArticlePageHandler.loadPage(pageNavigationContext);
-		}
-		
-		
-		if(PageAction.downswipe.toString().equalsIgnoreCase(action))
-		{
-			
-		}
-		if(PageAction.recognitions.toString().equalsIgnoreCase(action) || PageAction.upswipe.toString().equalsIgnoreCase(action) || PageAction.MyActivity.toString().equalsIgnoreCase(action) )
-		{
+			pageNo = pageNo + 1;
+
 			Page<StudentBadges> studbadges = studentBadgesBusiness.getStudentBadges(studentId, editionId, pageNo);
 			RecognitionPageData pageData = new RecognitionPageData();
-			if(!studbadges.isEmpty())
-			{
+			HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
+			header.setIsLastPage(studbadges.isLast());
+			header.setPageCount(studbadges.getTotalPages());
+			header.setRecordCount(studbadges.getNumberOfElements());
+			header.setPageNo(studbadges.getNumber() + 1);
+			pageDto.setHeader(header);
+
+			if (!studbadges.isEmpty()) {
 				pageData.setRecognitions(studbadges.getContent());
-				HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
-				header.setIsLastPage(studbadges.isLast());
-				header.setPageCount(studbadges.getTotalPages());
-				header.setRecordCount(studbadges.getNumberOfElements());
-				header.setPageNumber(studbadges.getNumber() + 1);
-				pageDto.setHeader(header);
-				pageDto.setData(pageData);
+
 			}
-			else
-			{
-				throw new BusinessException(ErrorCodes.STUD_BADGES_NOT_FOUND);
+			pageDto.setData(pageData);
+
+		}
+		if (PageAction.recognitions.toString().equalsIgnoreCase(action)
+				|| PageAction.MyActivity.toString().equalsIgnoreCase(action)) {
+			Page<StudentBadges> studbadges = studentBadgesBusiness.getStudentBadges(studentId, editionId, pageNo);
+			RecognitionPageData pageData = new RecognitionPageData();
+			HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
+			header.setIsLastPage(studbadges.isLast());
+			header.setPageCount(studbadges.getTotalPages());
+			header.setRecordCount(studbadges.getNumberOfElements());
+			header.setPageNo(studbadges.getNumber() + 1);
+			pageDto.setHeader(header);
+
+			if (!studbadges.isEmpty()) {
+				pageData.setRecognitions(studbadges.getContent());
 			}
+			pageDto.setData(pageData);
+
+			// else
+			// {
+			// throw new BusinessException(ErrorCodes.STUD_BADGES_NOT_FOUND);
+			// }
 		}
 
 		return pageDto;

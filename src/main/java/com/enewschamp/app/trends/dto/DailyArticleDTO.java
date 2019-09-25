@@ -15,8 +15,8 @@ public class DailyArticleDTO implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private LocalDate publishDate;
-	
+	private LocalDate date;
+	private String month;
 	private Long articlesRead;
 	
 	private Long articlePublished;

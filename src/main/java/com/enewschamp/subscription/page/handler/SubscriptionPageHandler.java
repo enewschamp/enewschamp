@@ -53,6 +53,7 @@ public class SubscriptionPageHandler implements IPageHandler {
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
+		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
 		String action = pageNavigationContext.getActionName();
 		String editionId =  pageNavigationContext.getPageRequest().getHeader().getEditionID();

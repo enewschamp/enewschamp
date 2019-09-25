@@ -98,7 +98,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 			header.setIsLastPage(pageResult.isLast());
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNumber(pageResult.getNumber() + 1);
+			header.setPageNo(pageResult.getNumber() + 1);
 			pageDto.setHeader(header);
 			
 			List<PublicationData> publicationData = null;
@@ -134,7 +134,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 			header.setIsLastPage(pageResult.isLast());
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNumber(pageResult.getNumber() + 1);
+			header.setPageNo(pageResult.getNumber() + 1);
 			pageDto.setHeader(header);
 			NewsArticlePageData newsArticlePageData  =  new NewsArticlePageData()
 ;
@@ -165,7 +165,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 			pageDto.setData(newsArticlePageData);
 			
 		}
-		else if(PageAction.savedarticles.toString().equalsIgnoreCase(action) || PageAction.back.toString().equalsIgnoreCase(action))
+		else if(PageAction.savedarticles.toString().equalsIgnoreCase(action) || PageAction.back.toString().equalsIgnoreCase(action)  || PageAction.FilterSavedArticles.toString().equalsIgnoreCase(action) || PageAction.ClearFilterSavedArticles.toString().equalsIgnoreCase(action))
 		{
 			ArticlePageData articlePageData = new ArticlePageData();
 			articlePageData = mapPageData(articlePageData, pageNavigationContext.getPageRequest());
@@ -175,23 +175,32 @@ public class NewsArticlePageHandler implements IPageHandler {
 			SavedNewsArticleSearchRequest searchRequestData = new SavedNewsArticleSearchRequest();
 			searchRequestData.setEditionId(editionId);
 			searchRequestData.setGenreId(articlePageData.getGenreId());
-			searchRequestData.setHeadline(articlePageData.getHeadline());
+			searchRequestData.setHeadline(articlePageData.getHeadlineKeyWord());
 			searchRequestData.setStudentId(studentId);
+			searchRequestData.setPublishMonth(articlePageData.getPublishMonth());
 			
 			Page<SavedNewsArticleSummaryDTO> pageResult = savedNewsArticleService.findSavedArticles(searchRequestData, pageNavigationContext.getPageRequest().getHeader());
 			HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
 			header.setIsLastPage(pageResult.isLast());
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNumber(pageResult.getNumber() + 1);
+			header.setPageNo(pageResult.getNumber() + 1);
 			pageDto.setHeader(header);
 			
 			List<SavedNewsArticleSummaryDTO> savedArticleSummaryList = pageResult.getContent();
 			SavedArticlePageData savedPageData = new SavedArticlePageData();
 			List<SavedArticleData> savedArticleList = new ArrayList<SavedArticleData>();
-			
+			List<StudentActivityDTO> savedArticlesList = studentActivityBusiness.getSavedArticles(studentId);
+
 			for(SavedNewsArticleSummaryDTO dto:savedArticleSummaryList)
 			{
+				Long savedArticleId=0L;
+				if(savedArticlesList!=null && !savedArticlesList.isEmpty()) {
+				for(StudentActivityDTO studentSavedArticles:savedArticlesList)
+				{
+					savedArticleId = studentSavedArticles.getNewsArticleId();
+				}
+				if(dto.getNewsArticleId()==savedArticleId) {
 				SavedArticleData savedData = new SavedArticleData();
 				savedData.setGenreId(dto.getGenreId());
 				
@@ -202,6 +211,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 				
 
 				savedArticleList.add(savedData);
+				}}
 				
 			}
 			savedPageData.setSavedNewsArticles(savedArticleList);
@@ -211,26 +221,33 @@ public class NewsArticlePageHandler implements IPageHandler {
 			//pageData.setSavedNewsArticles(savedNewsArticles);
 			pageDto.setData(savedPageData);
 		}
-		if(PageAction.next.toString().equalsIgnoreCase(action)  )
+		if(PageAction.next.toString().equalsIgnoreCase(action) ||PageAction.upswipe.toString().equalsIgnoreCase(action) || PageAction.LeftSwipe.toString().equalsIgnoreCase(action) )
 		{
 		
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
+			ArticlePageData articlePageData = new ArticlePageData();
+			articlePageData = mapPageData(articlePageData, pageNavigationContext.getPageRequest());
 			searchRequestData.setEditionId(editionId);
 			searchRequestData.setPublicationDate(publicationDate);
-			int pageNumber = pageNavigationContext.getPageRequest().getHeader().getPageNumber();
+			int pageNumber = pageNavigationContext.getPageRequest().getHeader().getPageNo();
 			pageNumber = pageNumber+1;
-			 pageNavigationContext.getPageRequest().getHeader().setPageNumber(pageNumber);
+			 pageNavigationContext.getPageRequest().getHeader().setPageNo(pageNumber);
 			 
 			NewsArticleSearchResultData searchResult = new NewsArticleSearchResultData();
 			//pageDto.setData(searchResult);
-			
+			searchRequestData.setEditionId(editionId);
+			searchRequestData.setGenreId(articlePageData.getGenreId());
+			searchRequestData.setHeadline(articlePageData.getHeadlineKeyWord());
+		//	searchRequestData.setStudentId(studentId);
+		//	searchRequestData.setPublishMonth(articlePageData.getPublishMonth());
 			Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData, pageNavigationContext.getPageRequest().getHeader());
-
+			System.out.println("Data in pageResult "+pageResult.getContent());
+			
 			HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
 			header.setIsLastPage(pageResult.isLast());
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNumber(pageNumber);
+			header.setPageNo(pageNumber);
 			pageDto.setHeader(header);
 			
 			List<PublicationData> publicationData = null;
@@ -254,19 +271,19 @@ public class NewsArticlePageHandler implements IPageHandler {
 
 		
 		}
-		if(PageAction.previous.toString().equalsIgnoreCase(action)  )
+		if(PageAction.previous.toString().equalsIgnoreCase(action)  || PageAction.RightSwipe.toString().equalsIgnoreCase(action))
 		{
 		
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 			searchRequestData.setEditionId(editionId);
 			searchRequestData.setPublicationDate(publicationDate);
-			int pageNumber = pageNavigationContext.getPageRequest().getHeader().getPageNumber();
+			int pageNumber = pageNavigationContext.getPageRequest().getHeader().getPageNo();
 			pageNumber = pageNumber-1;
 			if(pageNumber<0)
 			{
 				pageNumber=0;
 			}
-			 pageNavigationContext.getPageRequest().getHeader().setPageNumber(pageNumber);
+			 pageNavigationContext.getPageRequest().getHeader().setPageNo(pageNumber);
 			 
 			NewsArticleSearchResultData searchResult = new NewsArticleSearchResultData();
 			//pageDto.setData(searchResult);
@@ -277,7 +294,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 			header.setIsLastPage(pageResult.isLast());
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNumber(pageNumber);
+			header.setPageNo(pageNumber);
 			pageDto.setHeader(header);
 			
 			List<PublicationData> publicationData = null;
