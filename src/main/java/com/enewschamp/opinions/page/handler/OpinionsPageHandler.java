@@ -17,6 +17,7 @@ import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.savedarticle.dto.SavedArticleData;
 import com.enewschamp.app.savedarticle.dto.SavedArticlePageData;
@@ -57,14 +58,13 @@ public class OpinionsPageHandler implements IPageHandler {
 	private StudentActivityBusiness studentActivityBusiness;
 	@Autowired
 	private NewsArticleService newsArticleService;
-	
+
 	@Autowired
 	SavedNewsArticleService savedNewsArticleService;
-	
+
 	@Autowired
 	GenreService genreService;
-	
-	
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		return null;
@@ -74,92 +74,98 @@ public class OpinionsPageHandler implements IPageHandler {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		System.out.println("OpinionsPageHandler  loadPage()");
 		PageDTO pageDto = new PageDTO();
+		int pageNo = pageNavigationContext.getPageRequest().getHeader().getPageNo();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
 		Long studentId = studentControlBusiness.getStudentId(eMailId);
-		if(studentId==null || studentId==0L)
-		{
+		if (studentId == null || studentId == 0L) {
 			throw new BusinessException(ErrorCodes.STUDENT_DTLS_NOT_FOUND);
-			
+
 		}
 		String action = pageNavigationContext.getActionName();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
+
+		if (PageAction.upswipe.toString().equalsIgnoreCase(action)) {
+			pageNo++;
+			pageNavigationContext.getPageRequest().getHeader().setPageNo(pageNo);
+		}
+		// if(PageAction.home.toString().equalsIgnoreCase(action) )
+		// {
+		ArticlePageData articlePageData = new ArticlePageData();
+		articlePageData = mapPageData(articlePageData, pageNavigationContext.getPageRequest());
+
+		studentId = studentControlBusiness.getStudentId(eMailId);
+		// List<StudentActivityDTO> savedArticles =
+		// studentActivityBusiness.getSavedArticles(studentId);
+		SavedNewsArticleSearchRequest searchRequestData = new SavedNewsArticleSearchRequest();
+		searchRequestData.setEditionId(editionId);
+		searchRequestData.setGenreId(articlePageData.getGenreId());
+		searchRequestData.setHeadline(articlePageData.getHeadlineKeyWord());
+		searchRequestData.setPublishMonth(articlePageData.getPublishMonth());
+		searchRequestData.setPublicationDate(publicationDate);
 		
-		//if(PageAction.home.toString().equalsIgnoreCase(action) )
-		//{
-			ArticlePageData articlePageData = new ArticlePageData();
-			articlePageData = mapPageData(articlePageData, pageNavigationContext.getPageRequest());
-			
-			 studentId = studentControlBusiness.getStudentId(eMailId);
-			//List<StudentActivityDTO> savedArticles = studentActivityBusiness.getSavedArticles(studentId);
-			SavedNewsArticleSearchRequest searchRequestData = new SavedNewsArticleSearchRequest();
-			searchRequestData.setEditionId(editionId);
-			searchRequestData.setGenreId(articlePageData.getGenreId());
-			searchRequestData.setHeadline(articlePageData.getHeadline());
-			searchRequestData.setStudentId(studentId);
-			
-			Page<SavedNewsArticleSummaryDTO> pageResult = savedNewsArticleService.findSavedArticles(searchRequestData, pageNavigationContext.getPageRequest().getHeader());
-			HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
-			header.setIsLastPage(pageResult.isLast());
-			header.setPageCount(pageResult.getTotalPages());
-			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNo(pageResult.getNumber() + 1);
-			pageDto.setHeader(header);
-			
-			List<SavedNewsArticleSummaryDTO> savedArticleSummaryList = pageResult.getContent();
-			SavedArticlePageData savedPageData = new SavedArticlePageData();
-			List<SavedArticleData> savedArticleList = new ArrayList<SavedArticleData>();
-			
-			for(SavedNewsArticleSummaryDTO dto:savedArticleSummaryList)
-			{
-				if(dto.getOpinionText() !=null) {
+		searchRequestData.setStudentId(studentId);
+
+		Page<SavedNewsArticleSummaryDTO> pageResult = savedNewsArticleService.findSavedArticles(searchRequestData,
+				pageNavigationContext.getPageRequest().getHeader());
+		HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
+		header.setIsLastPage(pageResult.isLast());
+		header.setPageCount(pageResult.getTotalPages());
+		header.setRecordCount(pageResult.getNumberOfElements());
+		header.setPageNo(pageResult.getNumber() + 1);
+		pageDto.setHeader(header);
+
+		List<SavedNewsArticleSummaryDTO> savedArticleSummaryList = pageResult.getContent();
+		SavedArticlePageData savedPageData = new SavedArticlePageData();
+		List<SavedArticleData> savedArticleList = new ArrayList<SavedArticleData>();
+
+		for (SavedNewsArticleSummaryDTO dto : savedArticleSummaryList) {
+			if (dto.getOpinionText() != null) {
 				SavedArticleData savedData = new SavedArticleData();
 				savedData.setGenreId(dto.getGenreId());
-				
+
 				savedData.setHeadline(dto.getHeadLine());
 				savedData.setPublicationDate(dto.getPublicationDate());
 				savedData.setNewsArticleId(dto.getNewsArticleId());
 				savedData.setOpinionText(dto.getOpinionText());
-				
-				
 
 				savedArticleList.add(savedData);
-				}
-				
 			}
-			savedPageData.setGenreLOV(genreService.getLOV());
-			savedPageData.setMonthsLOV(MonthType.getLOV());
-			savedPageData.setSavedNewsArticles(savedArticleList);
-			
-			//SavedArticlePageData pageData = new SavedArticlePageData();
-			//pageData.setSavedNewsArticles(savedNewsArticles);
-			pageDto.setData(savedPageData);
-		//}
-		
+
+		}
+		savedPageData.setGenreLOV(genreService.getLOV());
+		savedPageData.setMonthsLOV(MonthType.getLOV());
+		savedPageData.setSavedNewsArticles(savedArticleList);
+
+		// SavedArticlePageData pageData = new SavedArticlePageData();
+		// pageData.setSavedNewsArticles(savedNewsArticles);
+		pageDto.setData(savedPageData);
+		// }
+
 		return pageDto;
 	}
 
 	@Override
 	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-	
+
 		return pageDto;
 	}
 
 	@Override
 	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDto = new PageDTO();
-		
+
 		return pageDto;
 	}
-	private List<PublicationData> mapData(Page<NewsArticleSummaryDTO>  page)
-	{
-		
+
+	private List<PublicationData> mapData(Page<NewsArticleSummaryDTO> page) {
+
 		List<PublicationData> publicationPageDataList = new ArrayList<PublicationData>();
 		List<NewsArticleSummaryDTO> pageDataList = page.getContent();
 
-		for(NewsArticleSummaryDTO article: pageDataList) {
+		for (NewsArticleSummaryDTO article : pageDataList) {
 			PublicationData pPageData = new PublicationData();
 			pPageData.setNewsArticleId(article.getNewsArticleId());
 			pPageData.setImagePathMobile(article.getImagePathMobile());
@@ -168,8 +174,8 @@ public class OpinionsPageHandler implements IPageHandler {
 		}
 		return publicationPageDataList;
 	}
-	private ArticlePageData mapPageData(ArticlePageData pageData, PageRequestDTO pageRequest)
-	{
+
+	private ArticlePageData mapPageData(ArticlePageData pageData, PageRequestDTO pageRequest) {
 		try {
 			pageData = objectMapper.readValue(pageRequest.getData().toString(), ArticlePageData.class);
 		} catch (IOException e) {
