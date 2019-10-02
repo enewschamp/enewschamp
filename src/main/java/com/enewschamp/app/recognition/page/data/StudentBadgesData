@@ -1,0 +1,14 @@
+package com.enewschamp.app.recognition.page.data;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class StudentBadgesData {
+
+	private Long yearMonth;
+	private String badgeImage;
+	private String bagde;
+	
+}
