@@ -38,6 +38,10 @@ public class EnewschampApplicationProperties {
 	private String premiumSubsMsg;
 	private String helpDeskText;
 	private String helpDeskEmail;
+	private String otpMessage;
+	private String registrationMessage;
+	private String accountDeletionMessage;
+	private String pwdResetMessage;
 	@Data
 	public static class AuditConfig {
 		private boolean includeSnapShots;
