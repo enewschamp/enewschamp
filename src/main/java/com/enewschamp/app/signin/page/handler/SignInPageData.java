@@ -1,9 +1,11 @@
 package com.enewschamp.app.signin.page.handler;
 
+import com.enewschamp.app.common.PageData;
+
 import lombok.Data;
 
 @Data
-public class SignInPageData implements java.io.Serializable {
+public class SignInPageData extends PageData implements java.io.Serializable {
 
 	/**
 	 * 
@@ -12,5 +14,6 @@ public class SignInPageData implements java.io.Serializable {
 	private String emailId;
 	private Long securityCode;
 	private String password;
-	private String verifypassword;
+	private String verifyPassword;
+	private String message;
 }
