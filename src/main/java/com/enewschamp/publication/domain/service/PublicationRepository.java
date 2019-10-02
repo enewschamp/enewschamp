@@ -39,6 +39,13 @@ public interface PublicationRepository extends JpaRepository<Publication, Long>{
 	public LocalDate getNextAvailablePublicationDate(LocalDate givenDate, String editionId, int readingLevel);
 	
 	@Query(value = "SELECT max(a.publishDate) FROM Publication a"
+			+ " where "
+			+ " a.editionId = :editionId"
+			+ " and a.readingLevel = :readingLevel")
+	public LocalDate getLatestPublicationDate(String editionId, int readingLevel);
+	
+	
+	@Query(value = "SELECT max(a.publishDate) FROM Publication a"
 			+ " where a.publishDate < :givenDate"
 			+ " and a.editionId = :editionId"
 			+ " and a.readingLevel = :readingLevel")
