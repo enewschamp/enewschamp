@@ -199,6 +199,9 @@ public class PublicationService {
 	public LocalDate getNextAvailablePublicationDate(LocalDate givenDate, String editionId, int readingLevel) {
 		return repository.getNextAvailablePublicationDate(givenDate, editionId, readingLevel);
 	}
+	public LocalDate getLatestPublication(String editionId, int readingLevel) {
+		return repository.getLatestPublicationDate(editionId, readingLevel);
+	}
 	
 	public LocalDate getPreviousAvailablePublicationDate(LocalDate givenDate, String editionId, int readingLevel) {
 		return repository.getPreviousAvailablePublicationDate(givenDate, editionId, readingLevel);
