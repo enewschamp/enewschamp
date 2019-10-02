@@ -32,6 +32,7 @@ public class EnewschampApplicationProperties {
 	private Map<String, String> studentDetailsPageText;
 	private int evalDays;
 	private int pageSize;
+	private int otpExpirySecs;
 	private int workingDays;
 	private String incompleteFormText;
 	private String premiumSubsMsg;

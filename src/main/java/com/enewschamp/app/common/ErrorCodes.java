@@ -66,4 +66,20 @@ public interface ErrorCodes {
 
 	public static String NOTIFICATION_NOT_FOUND="NOT_01";
 	public static String STUDENT_NOTIFICATION_NOT_FOUND = "ST_NOT_01";
+	public static String EMAIL_NOT_SENT="EM_NOT_01";
+	public static String NO_RECORD_FOUND="NO_REC_01";
+	public static String OTP_EXPIRED="OTP_01";
+	public static String STUD_REG_NOT_FOUND="STUD_REG_01";
+	public static String INVALID_EMAILID_OR_PASSWORD="STUD_REG_02";
+	public static String STUD_ALREADY_REGISTERED="STUD_REG_03";
+	public static String INVALID_PWD_LEN="STUD_REG_04";
+	public static String STUD_IS_INACTIVE="STUD_REG_05";
+	public static String INVALID_EMAIL_ID="STUD_06";
+	public static String INVALID_SECURITY_CODE="STUD_07";
+	public static String INVALID_PASSWORD ="STUD_08";
+	public static String INVALID_VERIFY_PWD="STUD_09";
+	public static String PWD_VPWD_DONT_MATCH = "STUD_10";
+	public static String SEC_CODE_VALIDATION_FAILURE = "STUD_11";
+	
+	
 }

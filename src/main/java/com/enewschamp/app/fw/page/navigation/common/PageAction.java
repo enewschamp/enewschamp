@@ -49,5 +49,11 @@ public enum PageAction {
 	Level1,
 	Level2,
 	Level3,
-	Level4
+	Level4,
+	login,
+	SecurityCode,
+	register,
+	DeleteAccount,
+	ResetPassword,
+	ResendSecurityCode
 }
