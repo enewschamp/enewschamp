@@ -11,6 +11,7 @@ import com.enewschamp.app.student.registration.entity.RegistrationStatus;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.app.student.registration.service.StudentRegistrationService;
 import com.enewschamp.domain.common.AppConstants;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 
 @Service
@@ -30,7 +31,7 @@ public class StudentRegistrationBusiness {
 		StudentRegistrationDTO studentDTO = new StudentRegistrationDTO();
 		studentDTO.setEmailId(emailId);
 		studentDTO.setPassword(password);
-		studentDTO.setOperatorId(emailId);
+		studentDTO.setOperatorId("SYSTEM");
 		studentDTO.setStatus(RegistrationStatus.A);
 		
 		
@@ -45,6 +46,8 @@ public class StudentRegistrationBusiness {
 		}
 
 		StudentRegistration student = modelMapper.map(studentDTO, StudentRegistration.class);
+		student.setRecordInUse(RecordInUseType.Y);
+		
 		student = regService.create(student);
 		studentDTO = modelMapper.map(student, StudentRegistrationDTO.class);
 		return studentDTO;
@@ -116,10 +119,10 @@ public class StudentRegistrationBusiness {
 	
 	public void sendOtp(final String emailId)
 	{
-		StudentRegistration student = regService.getStudentReg(emailId);
-		if (!student.getStatus().toString().equalsIgnoreCase("A")) {
-			throw new BusinessException(ErrorCodes.STUD_IS_INACTIVE, "User Is is inactive");
-		}
+		//StudentRegistration student = regService.getStudentReg(emailId);
+		//if (!student.getStatus().toString().equalsIgnoreCase("A")) {
+		//	throw new BusinessException(ErrorCodes.STUD_IS_INACTIVE, "User Is is inactive");
+		//}
 		
 		otpService.genOTP(emailId);
 		
@@ -127,10 +130,10 @@ public class StudentRegistrationBusiness {
 	
 	public boolean validateOtp(final String emailId, final Long otp)
 	{
-		StudentRegistration student = regService.getStudentReg(emailId);
+		/*StudentRegistration student = regService.getStudentReg(emailId);
 		if (!student.getStatus().toString().equalsIgnoreCase("A")) {
 			throw new BusinessException(ErrorCodes.STUD_IS_INACTIVE, "User Is is inactive");
-		}
+		}*/
 		
 		return otpService.validateOtp(otp, emailId);
 	}
