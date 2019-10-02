@@ -434,6 +434,31 @@ Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , p
 values (184, 'NewsArticle','Previous','NewsArticle','appnewsarticle','appnewsarticle','Y','N','SYSTEM',CURRENT_DATE,'M',1);
 Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
 values (185, 'NewsArticle','LeftSwipe','NewsEvent','appnewsarticle','appnewsarticle','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (186, 'Opinions','Opinions','ListOpinions','opinions','opinions','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (187, 'Opinions','UpSwipe','ListOpinions','opinions','opinions','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (188, 'Trends','Opinions','ListMonthlyTrends','opinions','opinions','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (189, 'Scores','Opinions','ListMonthlyScores','opinions','opinions','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (190, 'Recognitions','Opinions','ListRecognitions','opinions','opinions','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (192, 'signin','SecurityCode','SignUp','signin','signin','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (193, 'signin','Register','SignUp','signin','signin','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (194, 'signin','ResetPassword','SignUp','signin','signin','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (195, 'signin','ResendSecurityCode','SignUp','signin','signin','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (197, 'signin','DeleteAccount','SignUp','signin','signin','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (198, 'Login','Login','Login','login','login','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (199, 'Login','Logout','Login','login','login','Y','N','SYSTEM',CURRENT_DATE,'M',1);
 
 
 Insert into page_navigator_rules (nav_id,rule_id , exec_seq,rule, nextpage, plugin_class, record_in_use , operator_id, operation_date_time )
