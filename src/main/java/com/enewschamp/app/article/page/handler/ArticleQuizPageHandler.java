@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.EnewschampApplicationProperties;
@@ -15,18 +16,26 @@ import com.enewschamp.app.article.page.dto.ArticleQuizCompletionDTO;
 import com.enewschamp.app.article.page.dto.ArticleQuizDetailsPageData;
 import com.enewschamp.app.article.page.dto.ArticleQuizPageData;
 import com.enewschamp.app.article.page.dto.ArticleQuizQuestionsPageData;
+import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
+import com.enewschamp.app.student.business.StudentActivityBusiness;
+import com.enewschamp.app.student.dto.StudentActivityDTO;
 import com.enewschamp.app.student.quiz.business.QuizScoreBusiness;
 import com.enewschamp.app.student.quiz.dto.QuizScoreDTO;
+import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
 import com.enewschamp.article.domain.entity.NewsArticleQuiz;
 import com.enewschamp.article.domain.service.NewsArticleQuizService;
+import com.enewschamp.article.domain.service.NewsArticleService;
+import com.enewschamp.article.page.data.NewsArticleSearchRequest;
+import com.enewschamp.article.page.data.NewsArticleSearchResultData;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.master.badge.entity.Badge;
 import com.enewschamp.master.badge.service.BadgeService;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,7 +66,12 @@ public class ArticleQuizPageHandler implements IPageHandler {
 	
 	@Autowired
 	BadgeService badgeService;
+	@Autowired
+	private NewsArticleService newsArticleService;
 	
+	
+	@Autowired
+	private StudentActivityBusiness studentActivityBusiness;
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		return null;
@@ -69,19 +83,48 @@ public class ArticleQuizPageHandler implements IPageHandler {
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String action = pageNavigationContext.getActionName();
 		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		Long studentId = studentControlBusiness.getStudentId(eMailId);
 
+		if(studentId==null || studentId==0L)
+		{
+			throw new BusinessException(ErrorCodes.STUDENT_DTLS_NOT_FOUND);
+			
+		}
 		if(PageAction.quiz.toString().equalsIgnoreCase(action) || PageAction.ok.toString().equalsIgnoreCase(action))
 		{
-			Long studentId = studentControlBusiness.getStudentId(eMailId);
 
 			//load the article quiz
 			ArticleQuizDetailsPageData pageData = new ArticleQuizDetailsPageData();
+
 			pageData = mapPageDataOnLoad(pageData,pageNavigationContext.getPageRequest());
 			
 			Long newsArticleId= pageData.getNewsArticleId();
 			
+			//update the quiz indicator flag..
+			StudentActivityDTO stdactivity = studentActivityBusiness.getActivity(studentId,newsArticleId);
+			
+			if(stdactivity.getQuizScore()==null)
+			{
+				pageData.setQuizCompleteIndicator("N");
+			}else
+			{
+				pageData.setQuizCompleteIndicator("Y");
+			}
+			
+			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
+			searchRequestData.setArticleId(newsArticleId);
+			pageNavigationContext.getPageRequest().getHeader().setPageNo(0);
+			Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData, pageNavigationContext.getPageRequest().getHeader());
+			List<NewsArticleSummaryDTO> articleDtoList = pageResult.getContent();
+			if(articleDtoList!=null && !articleDtoList.isEmpty())
+			{
+				pageData.setHeadline(articleDtoList.get(0).getHeadLine());
+			}
+			
+			
 			List<NewsArticleQuiz> newsArticleQuizList= newsArticleQuizService.getByNewsArticleId(newsArticleId);
 			List<ArticleQuizQuestionsPageData> qList = mapQuizDataWithAnswers(newsArticleQuizList,studentId);
+			pageData.setIncompeleteFormText(appConfig.getIncompleteFormText());
 			pageData.setQuizQuestions(qList);
 			pageDto.setData(pageData);
 		}
