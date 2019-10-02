@@ -10,5 +10,6 @@ public interface SavedNewsArticleCustomRepository{
 
 	
 	public Page<SavedNewsArticleSummaryDTO> findArticles(SavedNewsArticleSearchRequest searchRequest, Pageable pageable);
+	public Page<SavedNewsArticleSummaryDTO> findArticlesWithOpinions(SavedNewsArticleSearchRequest searchRequest, Pageable pageable);
 
 }
