@@ -12,5 +12,8 @@ public class PublicationData {
 	private Long newsArticleId;
 	private String imagePathMobile;
 	private boolean quizCompletedIndicator;
+	private String genreID;
+	private String headline;
+	
 	
 }
