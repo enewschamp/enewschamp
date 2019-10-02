@@ -18,6 +18,8 @@ public class ArticleQuizDetailsPageData extends PageData {
 	private long newsArticleId;
 	private String quizFlag;
 	private String incompeleteFormText;
+	private String quizCompleteIndicator;
+	private String headline;
 	private List<ArticleQuizQuestionsPageData> quizQuestions;
 	
 	
