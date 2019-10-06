@@ -18,10 +18,12 @@ import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.common.PageSaveTable;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.fw.page.navigation.service.PageNavigationService;
+import com.enewschamp.app.school.entity.School;
 import com.enewschamp.app.school.service.SchoolService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.subscription.app.dto.SchoolData;
 import com.enewschamp.subscription.app.dto.StudentSchoolDTO;
 import com.enewschamp.subscription.app.dto.StudentSchoolPageData;
 import com.enewschamp.subscription.app.dto.StudentSchoolWorkDTO;
@@ -112,6 +114,24 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 
 				pageDTO.setData(studentSchoolPageData);
 			}
+		}
+		else if(PageAction.schooldetails.toString().equalsIgnoreCase(action))
+		{
+			StudentSchoolDTO studentSchoolDTO = schoolDetailsBusiness.getStudentFromMaster(studentId);
+			Long schoolId = studentSchoolDTO.getSchoolId();
+			School school= schoolService.get(schoolId);
+			SchoolData schoolData = new SchoolData();
+			schoolData.setId(school.getSchoolId());
+			schoolData.setName(school.getName());
+			
+			StudentSchoolPageData studentSchoolPageData = modelMapper.map(studentSchoolDTO, StudentSchoolPageData.class);
+			studentSchoolPageData.setSchool(schoolData);
+			
+			// set the state, country and cities...
+			List<CountryDTO> countries = countryService.getAll();
+			studentSchoolPageData.setCountryLOV(countries);
+
+			pageDTO.setData(studentSchoolPageData);
 		}
 		// set the header as is...
 		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
