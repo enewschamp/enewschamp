@@ -3,6 +3,8 @@ package com.enewschamp.app.article.page.handler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -204,7 +206,12 @@ public class ArticleQuizPageHandler implements IPageHandler {
 	private List<ArticleQuizQuestionsPageData> mapQuizDataWithAnswers(List<NewsArticleQuiz> newsArticleQuizList,
 			Long studentId) {
 		List<ArticleQuizQuestionsPageData> questions = new ArrayList<ArticleQuizQuestionsPageData>();
+		int[] solutionArray = { 1, 2, 3, 4 };
+
 		for (NewsArticleQuiz quiz : newsArticleQuizList) {
+
+			shuffleArray(solutionArray);
+
 			// check if the question is already answered..
 			QuizScoreDTO quizScoreDTO = quizScoreBusiness.getQuizScore(studentId, quiz.getNewsArticleQuizId());
 
@@ -215,6 +222,10 @@ public class ArticleQuizPageHandler implements IPageHandler {
 			articleQuizQuestionsPageData.setOpt2(quiz.getOpt2());
 			articleQuizQuestionsPageData.setOpt3(quiz.getOpt3());
 			articleQuizQuestionsPageData.setOpt4(quiz.getOpt4());
+			articleQuizQuestionsPageData.setOptSeq1(solutionArray[0]);
+			articleQuizQuestionsPageData.setOptSeq2(solutionArray[1]);
+			articleQuizQuestionsPageData.setOptSeq3(solutionArray[2]);
+			articleQuizQuestionsPageData.setOptSeq4(solutionArray[3]);
 
 			if (quizScoreDTO != null) {
 				Long selectedOpt = quizScoreDTO.getResponse();
@@ -227,4 +238,18 @@ public class ArticleQuizPageHandler implements IPageHandler {
 		}
 		return questions;
 	}
+
+	// Implementing Fisher–Yates shuffle
+	private void shuffleArray(int[] ar) {
+		// If running on Java 6 or older, use `new Random()` on RHS here
+		Random rnd = ThreadLocalRandom.current();
+		for (int i = ar.length - 1; i > 0; i--) {
+			int index = rnd.nextInt(i + 1);
+			// Simple swap
+			int a = ar[index];
+			ar[index] = ar[i];
+			ar[i] = a;
+		}
+	}
+
 }
