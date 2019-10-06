@@ -2,6 +2,7 @@ package com.enewschamp.app.savedarticle.handler;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
+import com.enewschamp.app.savedarticle.dto.MonthsLovData;
 import com.enewschamp.app.savedarticle.dto.SavedArticleData;
 import com.enewschamp.app.savedarticle.dto.SavedArticlePageData;
 import com.enewschamp.app.savedarticle.dto.SavedNewsArticleSearchRequest;
@@ -29,7 +31,6 @@ import com.enewschamp.app.student.dto.StudentActivityDTO;
 import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
 import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.domain.common.IPageHandler;
-import com.enewschamp.domain.common.MonthType;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.service.GenreService;
@@ -134,7 +135,8 @@ public class SavedNewsArticlePageHandler implements IPageHandler {
 			}
 			savedPageData.setSavedNewsArticles(savedArticleList);
 			savedPageData.setGenreLOV(genreService.getLOV());
-			savedPageData.setMonthsLOV(MonthType.getLOV());
+			savedPageData.setMonthsLOV(getMonthsLov());
+			//savedPageData.setMonthsLOV(MonthType.getLOV());
 			//SavedArticlePageData pageData = new SavedArticlePageData();
 			//pageData.setSavedNewsArticles(savedNewsArticles);
 			pageDto.setData(savedPageData);
@@ -143,6 +145,24 @@ public class SavedNewsArticlePageHandler implements IPageHandler {
 		return pageDto;
 	}
 
+	private List<MonthsLovData> getMonthsLov()
+	{
+		List<MonthsLovData> monthsLovList = new ArrayList<MonthsLovData>();
+		LocalDate currdate = LocalDate.now();
+		LocalDate startDate = currdate.minusMonths(appConfig.getMonthLov());
+		for(int i=0;i<appConfig.getMonthLov();i++)
+		{
+			String key = startDate.toString();
+			String value = startDate.format(DateTimeFormatter.ofPattern(appConfig.getMonthLovFormat()));
+			MonthsLovData monthlov = new MonthsLovData();
+			monthlov.setKey(key);
+			monthlov.setValue(value);
+			monthsLovList.add(monthlov);
+			startDate = startDate.plusMonths(1);
+		}
+		
+		return monthsLovList;
+	}
 	@Override
 	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
