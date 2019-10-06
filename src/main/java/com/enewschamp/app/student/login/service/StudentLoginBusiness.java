@@ -49,5 +49,12 @@ public class StudentLoginBusiness {
 			loginService.update(loggedIn);
 		}
 	}
+	
+	public StudentLogin getLoginDetails(final String deviceId, final String emailId)
+	{
+		StudentLogin loggedIn = loginService.getStudenLogin(emailId, deviceId);
+		return loggedIn;
+		
+	}
 
 }
