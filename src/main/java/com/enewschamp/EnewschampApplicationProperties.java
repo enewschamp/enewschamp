@@ -42,6 +42,14 @@ public class EnewschampApplicationProperties {
 	private String registrationMessage;
 	private String accountDeletionMessage;
 	private String pwdResetMessage;
+	private String shareMyAchievementsText;
+	private String fromEmailId;
+	private String emailPwd;
+	private String emailHost;
+	private String emailPort;
+	private String otpEmailBodyText;
+	private String otpEmailSubject;
+	
 	@Data
 	public static class AuditConfig {
 		private boolean includeSnapShots;
