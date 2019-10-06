@@ -60,18 +60,18 @@ public class ArticleQuizPageHandler implements IPageHandler {
 
 	@Autowired
 	QuizScoreBusiness quizScoreBusiness;
-	
+
 	@Autowired
 	NewsArticleQuizService newsArticleQuizService;
-	
+
 	@Autowired
 	BadgeService badgeService;
 	@Autowired
 	private NewsArticleService newsArticleService;
-	
-	
+
 	@Autowired
 	private StudentActivityBusiness studentActivityBusiness;
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		return null;
@@ -85,50 +85,44 @@ public class ArticleQuizPageHandler implements IPageHandler {
 		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
 		Long studentId = studentControlBusiness.getStudentId(eMailId);
 
-		if(studentId==null || studentId==0L)
-		{
+		if (studentId == null || studentId == 0L) {
 			throw new BusinessException(ErrorCodes.STUDENT_DTLS_NOT_FOUND);
-			
-		}
-		if(PageAction.quiz.toString().equalsIgnoreCase(action) || PageAction.ok.toString().equalsIgnoreCase(action))
-		{
 
-			//load the article quiz
+		}
+		if (PageAction.quiz.toString().equalsIgnoreCase(action) || PageAction.ok.toString().equalsIgnoreCase(action)) {
+
+			// load the article quiz
 			ArticleQuizDetailsPageData pageData = new ArticleQuizDetailsPageData();
 
-			pageData = mapPageDataOnLoad(pageData,pageNavigationContext.getPageRequest());
-			
-			Long newsArticleId= pageData.getNewsArticleId();
-			
-			//update the quiz indicator flag..
-			StudentActivityDTO stdactivity = studentActivityBusiness.getActivity(studentId,newsArticleId);
-			
-			if(stdactivity.getQuizScore()==null)
-			{
-				pageData.setQuizCompleteIndicator("N");
-			}else
-			{
-				pageData.setQuizCompleteIndicator("Y");
+			pageData = mapPageDataOnLoad(pageData, pageNavigationContext.getPageRequest());
+
+			Long newsArticleId = pageData.getNewsArticleId();
+
+			// update the quiz indicator flag..
+			StudentActivityDTO stdactivity = studentActivityBusiness.getActivity(studentId, newsArticleId);
+			if (stdactivity != null) {
+				if (stdactivity.getQuizScore() == null) {
+					pageData.setQuizCompleteIndicator("N");
+				} else {
+					pageData.setQuizCompleteIndicator("Y");
+				}
 			}
-			
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 			searchRequestData.setArticleId(newsArticleId);
 			pageNavigationContext.getPageRequest().getHeader().setPageNo(0);
-			Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData, pageNavigationContext.getPageRequest().getHeader());
+			Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData,
+					pageNavigationContext.getPageRequest().getHeader());
 			List<NewsArticleSummaryDTO> articleDtoList = pageResult.getContent();
-			if(articleDtoList!=null && !articleDtoList.isEmpty())
-			{
+			if (articleDtoList != null && !articleDtoList.isEmpty()) {
 				pageData.setHeadline(articleDtoList.get(0).getHeadLine());
 			}
-			
-			
-			List<NewsArticleQuiz> newsArticleQuizList= newsArticleQuizService.getByNewsArticleId(newsArticleId);
-			List<ArticleQuizQuestionsPageData> qList = mapQuizDataWithAnswers(newsArticleQuizList,studentId);
+
+			List<NewsArticleQuiz> newsArticleQuizList = newsArticleQuizService.getByNewsArticleId(newsArticleId);
+			List<ArticleQuizQuestionsPageData> qList = mapQuizDataWithAnswers(newsArticleQuizList, studentId);
 			pageData.setIncompeleteFormText(appConfig.getIncompleteFormText());
 			pageData.setQuizQuestions(qList);
 			pageDto.setData(pageData);
-		}
-		else {
+		} else {
 			pageDto.setData(pageNavigationContext.getPreviousPageResponse().getData());
 		}
 		return pageDto;
@@ -137,7 +131,7 @@ public class ArticleQuizPageHandler implements IPageHandler {
 	@Override
 	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-	
+
 		return pageDto;
 	}
 
@@ -145,37 +139,35 @@ public class ArticleQuizPageHandler implements IPageHandler {
 	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
 		String eMailId = pageRequest.getHeader().getEmailID();
-		String editionId =  pageRequest.getHeader().getEditionID();
+		String editionId = pageRequest.getHeader().getEditionID();
 		List<QuizScoreDTO> quizScoreDTOList = null;
-		
+
 		if (PageAction.save.toString().equals(actionName)) {
 			Long studentId = studentControlBusiness.getStudentId(eMailId);
 			ArticleQuizPageData pageData = new ArticleQuizPageData();
-			pageData = mapPageData(pageData,pageRequest);
-			quizScoreDTOList = populateQuizDto(pageData,studentId);
-			Long newsArticleId= pageData.getNewsArticleId();
-			
-			ArticleQuizCompletionDTO articleQuizCompletionDTO = quizScoreBusiness.saveQuizScore(newsArticleId,quizScoreDTOList, studentId,editionId);
-			
+			pageData = mapPageData(pageData, pageRequest);
+			quizScoreDTOList = populateQuizDto(pageData, studentId);
+			Long newsArticleId = pageData.getNewsArticleId();
+
+			ArticleQuizCompletionDTO articleQuizCompletionDTO = quizScoreBusiness.saveQuizScore(newsArticleId,
+					quizScoreDTOList, studentId, editionId);
+
 			ArticleCompletionQuizPageData articleCompletionQuizPageData = new ArticleCompletionQuizPageData();
 			articleCompletionQuizPageData.setNewsArticleId(articleQuizCompletionDTO.getArticleId());
 			articleCompletionQuizPageData.setNewBadge(articleQuizCompletionDTO.getNewBadge());
 			articleCompletionQuizPageData.setNewBadgeName(articleQuizCompletionDTO.getBadgeName());
 			articleCompletionQuizPageData.setQuizCompletionMessage(articleQuizCompletionDTO.getQuizCompletionMessage());
-			System.out.println("articleCompletionQuizPageData "+articleCompletionQuizPageData.getNewBadgeName());
-			
+			System.out.println("articleCompletionQuizPageData " + articleCompletionQuizPageData.getNewBadgeName());
+
 			pageDTO.setData(articleCompletionQuizPageData);
-		} 
-		else if(PageAction.previous.toString().equals(actionName))
-		{
-				// TO Do may want to delete the data from work table
+		} else if (PageAction.previous.toString().equals(actionName)) {
+			// TO Do may want to delete the data from work table
 		}
 		pageDTO.setHeader(pageRequest.getHeader());
 		return pageDTO;
 	}
-	
-	private ArticleQuizPageData mapPageData(ArticleQuizPageData pageData, PageRequestDTO pageRequest)
-	{
+
+	private ArticleQuizPageData mapPageData(ArticleQuizPageData pageData, PageRequestDTO pageRequest) {
 		try {
 			pageData = objectMapper.readValue(pageRequest.getData().toString(), ArticleQuizPageData.class);
 		} catch (IOException e) {
@@ -184,8 +176,9 @@ public class ArticleQuizPageHandler implements IPageHandler {
 		}
 		return pageData;
 	}
-	private ArticleQuizDetailsPageData mapPageDataOnLoad(ArticleQuizDetailsPageData pageData, PageRequestDTO pageRequest)
-	{
+
+	private ArticleQuizDetailsPageData mapPageDataOnLoad(ArticleQuizDetailsPageData pageData,
+			PageRequestDTO pageRequest) {
 		try {
 			pageData = objectMapper.readValue(pageRequest.getData().toString(), ArticleQuizDetailsPageData.class);
 		} catch (IOException e) {
@@ -194,12 +187,11 @@ public class ArticleQuizPageHandler implements IPageHandler {
 		}
 		return pageData;
 	}
-	private List<QuizScoreDTO> populateQuizDto(ArticleQuizPageData pageData, Long studentId)
-	{
+
+	private List<QuizScoreDTO> populateQuizDto(ArticleQuizPageData pageData, Long studentId) {
 		List<QuizScoreDTO> quizScoreDTOList = new ArrayList<QuizScoreDTO>();
 		Long newArticleId = pageData.getNewsArticleId();
-		for(ArticleQuizAnswers data:pageData.getQuizAnswers())
-		{
+		for (ArticleQuizAnswers data : pageData.getQuizAnswers()) {
 			QuizScoreDTO dto = new QuizScoreDTO();
 			dto.setStudentId(studentId);
 			dto.setNewsArticleQuizId(data.getNewsArticleQuizId());
@@ -208,29 +200,28 @@ public class ArticleQuizPageHandler implements IPageHandler {
 		}
 		return quizScoreDTOList;
 	}
-	
-	private List<ArticleQuizQuestionsPageData> mapQuizDataWithAnswers(List<NewsArticleQuiz> newsArticleQuizList, Long studentId)
-	{
+
+	private List<ArticleQuizQuestionsPageData> mapQuizDataWithAnswers(List<NewsArticleQuiz> newsArticleQuizList,
+			Long studentId) {
 		List<ArticleQuizQuestionsPageData> questions = new ArrayList<ArticleQuizQuestionsPageData>();
-		for(NewsArticleQuiz quiz: newsArticleQuizList)
-		{
-			//check if the question is already answered..
+		for (NewsArticleQuiz quiz : newsArticleQuizList) {
+			// check if the question is already answered..
 			QuizScoreDTO quizScoreDTO = quizScoreBusiness.getQuizScore(studentId, quiz.getNewsArticleQuizId());
-			
+
 			ArticleQuizQuestionsPageData articleQuizQuestionsPageData = new ArticleQuizQuestionsPageData();
-			articleQuizQuestionsPageData.setNewsArticleQuizId( quiz.getNewsArticleQuizId());
+			articleQuizQuestionsPageData.setNewsArticleQuizId(quiz.getNewsArticleQuizId());
 			articleQuizQuestionsPageData.setQuestion(quiz.getQuestion());
 			articleQuizQuestionsPageData.setOpt1(quiz.getOpt1());
 			articleQuizQuestionsPageData.setOpt2(quiz.getOpt2());
 			articleQuizQuestionsPageData.setOpt3(quiz.getOpt3());
 			articleQuizQuestionsPageData.setOpt4(quiz.getOpt4());
-			
-			if(quizScoreDTO!=null) {
+
+			if (quizScoreDTO != null) {
 				Long selectedOpt = quizScoreDTO.getResponse();
 				articleQuizQuestionsPageData.setChosenOptSeq(selectedOpt);
 			}
 			articleQuizQuestionsPageData.setCorrectOptSeq(quiz.getCorrectOpt());
-			
+
 			questions.add(articleQuizQuestionsPageData);
 
 		}
