@@ -1,5 +1,6 @@
 package com.enewschamp.app.student.badges.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -84,6 +85,19 @@ public class StudentBadgesService {
 
 		//}
 
+				
+	}
+	public StudentBadges getLastestbadge(Long studentId, String editionId)
+	{
+		
+		List<StudentBadges> studentBadgeList = studentBadgesRepository.getLatestBadges(studentId, editionId);
+		StudentBadges badge = null;
+		if(!studentBadgeList.isEmpty())
+		{
+			badge = studentBadgeList.get(0);
+		}
+
+		return badge;
 				
 	}
 }
