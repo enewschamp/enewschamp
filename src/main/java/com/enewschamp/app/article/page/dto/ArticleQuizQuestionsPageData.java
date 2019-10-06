@@ -15,7 +15,10 @@ public class ArticleQuizQuestionsPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	private Long newsArticleQuizId;
 	private String question;
-	private Long optSeq1;
+	private int optSeq1;
+	private int optSeq2;
+	private int optSeq3;
+	private int optSeq4;
 	private String opt1;
 	private String opt2;
 	private String opt3;
