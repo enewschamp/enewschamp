@@ -67,4 +67,11 @@ System.out.println("Monthly points in grantBadge()"+ trendsMonthlyTotalDTO.getQu
 		Page<StudentBadges> studentBadges = studentBadgesService.getStudetbadges(studentId, editionId, pageNo);
 		return studentBadges;
 	}
+	
+	public StudentBadges getLastestBadge(Long studentId, String editionId)
+	{
+		StudentBadges latestBadge = studentBadgesService.getLastestbadge(studentId, editionId);
+		return latestBadge;
+	}
+	
 }
