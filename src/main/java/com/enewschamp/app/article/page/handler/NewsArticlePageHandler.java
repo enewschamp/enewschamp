@@ -329,16 +329,16 @@ public class NewsArticlePageHandler implements IPageHandler {
 	{
 		List<MonthsLovData> monthsLovList = new ArrayList<MonthsLovData>();
 		LocalDate currdate = LocalDate.now();
-		LocalDate startDate = currdate.minusMonths(appConfig.getMonthLov());
+		//LocalDate startDate = currdate.minusMonths(appConfig.getMonthLov());
 		for(int i=0;i<appConfig.getMonthLov();i++)
 		{
-			String key = startDate.toString();
-			String value = startDate.format(DateTimeFormatter.ofPattern(appConfig.getMonthLovFormat()));
+			String key = currdate.toString();
+			String value = currdate.format(DateTimeFormatter.ofPattern(appConfig.getMonthLovFormat()));
 			MonthsLovData monthlov = new MonthsLovData();
 			monthlov.setKey(key);
 			monthlov.setValue(value);
 			monthsLovList.add(monthlov);
-			startDate = startDate.plusMonths(1);
+			currdate = currdate.minusMonths(1);
 		}
 		
 		return monthsLovList;
