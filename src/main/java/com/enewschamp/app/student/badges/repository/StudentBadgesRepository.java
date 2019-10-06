@@ -1,5 +1,6 @@
 package com.enewschamp.app.student.badges.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -17,4 +18,7 @@ public interface StudentBadgesRepository extends JpaRepository<StudentBadges, Lo
 	
 	@Query("select d from StudentBadges d where d.studentId = :studentId and d.editionId= :editionId and d.recordInUse ='Y'")
 	public Page<StudentBadges> getStudentBadges(@Param("studentId") Long studentId, @Param("editionId") String editionId, Pageable pageable);
+	
+	@Query("select d from StudentBadges d where d.studentId = :studentId and d.editionId= :editionId and d.recordInUse ='Y' order by operationDateTime desc")
+	public List<StudentBadges> getLatestBadges(@Param("studentId") Long studentId, @Param("editionId") String editionId);
 }
