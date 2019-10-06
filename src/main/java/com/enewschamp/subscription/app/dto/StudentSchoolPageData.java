@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.country.dto.CountryDTO;
+import com.enewschamp.app.school.entity.School;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,7 +24,7 @@ public class StudentSchoolPageData  extends PageData {
 	private long schoolId = 0L;
 	
 	private String grade;
-	
+	private SchoolData school;
 	private String section;
 	private String emailId;
 	
