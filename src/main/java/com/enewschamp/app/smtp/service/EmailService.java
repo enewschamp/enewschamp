@@ -10,24 +10,34 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.enewschamp.EnewschampApplicationProperties;
 
 @Service
 public class EmailService {
 
+	@Autowired
+	EnewschampApplicationProperties appConfig;
+	
 	public boolean sendOTP(final String otp, final String toEmailId)
 	{
-		return this.sendMail("Your One Time Password for eNewsChamp", otp, toEmailId);
+		String otpBody = appConfig.getOtpEmailBodyText();
+		otpBody = otpBody.replace("{OTP}", otp);
+		String subject  = appConfig.getOtpEmailSubject();
+				
+		return this.sendMail(subject, otpBody, toEmailId);
 	}
 	public boolean sendMail(final String subject, final String body, final String toEmail)
 	{
 		boolean sendSuccess=true;
-        final String username = "deepaksemwal82@gmail.com";
-        final String password = "knight#2mare";
+        final String username = appConfig.getFromEmailId();
+        final String password = appConfig.getEmailPwd();
 
         Properties prop = new Properties();
-		prop.put("mail.smtp.host", "smtp.gmail.com");
-        prop.put("mail.smtp.port", "587");
+		prop.put("mail.smtp.host", appConfig.getEmailHost());
+        prop.put("mail.smtp.port", appConfig.getEmailPwd());
         prop.put("mail.smtp.auth", "true");
         prop.put("mail.smtp.starttls.enable", "true"); //TLS
         
@@ -41,14 +51,13 @@ public class EmailService {
         try {
 
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("deepaksemwal82@gmail.com"));
+            message.setFrom(new InternetAddress(appConfig.getFromEmailId()));
             message.setRecipients(
                     Message.RecipientType.TO,
                     InternetAddress.parse(toEmail)
             );
-            message.setSubject("Testing Gmail TLS");
-            message.setText("Dear Mail Crawler,"
-                    + "\n\n Please do not spam my email!");
+            message.setSubject(subject);
+            message.setText(body);
 
             Transport.send(message);
 
