@@ -49,6 +49,8 @@ public class EnewschampApplicationProperties {
 	private String emailPort;
 	private String otpEmailBodyText;
 	private String otpEmailSubject;
+	private Long monthLov;
+	private String monthLovFormat;
 	
 	@Data
 	public static class AuditConfig {
