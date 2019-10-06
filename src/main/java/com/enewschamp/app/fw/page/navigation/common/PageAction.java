@@ -55,5 +55,7 @@ public enum PageAction {
 	register,
 	DeleteAccount,
 	ResetPassword,
-	ResendSecurityCode
+	ResendSecurityCode,
+	logout,
+	WelcomeUser
 }
