@@ -1,5 +1,6 @@
 package com.enewschamp.master.badge.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -84,4 +85,27 @@ public class BadgeService {
 		}
 	}
 	
+	public Badge getNextBadge(String editionId, Long studPoints)
+	{
+		List<Badge> badgeList = badgeRepository.getNextBadge(editionId, studPoints);
+		Badge bade=null;
+		
+		if (!badgeList.isEmpty()) {
+			bade = badgeList.get(0);
+		} 
+		
+		return bade;
+	}
+	
+	public Badge getNextBadgeForGenre(String editionId, String genreId, Long studPoints)
+	{
+		List<Badge> badgeList = badgeRepository.getNextBadgeForGenre(editionId, genreId, studPoints);
+		Badge bade=null;
+		
+		if (!badgeList.isEmpty()) {
+			bade = badgeList.get(0);
+		} 
+		
+		return bade;
+	}
 }
