@@ -39,12 +39,13 @@ public class OTPService {
 		otp.setOtpGenTime(LocalDateTime.now());
 		otp.setOtp(uniqueNo);
 		otp.setRecordInUse(RecordInUseType.Y);
-		otp.setOperatorId(emailId);
-
+		otp.setOperatorId("SYSTEM");
+		otp.setOperationDateTime(LocalDateTime.now());
 		otp = repository.save(otp);
 
 		OTPDTO otpDto = modelMapper.map(otp, OTPDTO.class);
-		boolean sendSuccess = emailService.sendOTP("" + uniqueNo, emailId);
+		boolean sendSuccess = true;
+				emailService.sendOTP("" + uniqueNo, emailId);
 		if (!sendSuccess) {
 			throw new BusinessException(ErrorCodes.EMAIL_NOT_SENT, emailId);
 		}
@@ -64,7 +65,7 @@ public class OTPService {
 			otpEntity = data.get();
 			
 			Long otpExisting = otpEntity.getOtp();
-			if (otpExisting == otp) {
+			if (otpExisting.equals(otp)) {
 				LocalDateTime currentTime = LocalDateTime.now();
 				LocalDateTime otpDateTime = otpEntity.getOtpGenTime();
 				otpDateTime.plusSeconds(appConfig.getOtpExpirySecs());
