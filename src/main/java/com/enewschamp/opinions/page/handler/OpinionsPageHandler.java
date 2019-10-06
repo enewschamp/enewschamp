@@ -2,6 +2,7 @@ package com.enewschamp.opinions.page.handler;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
+import com.enewschamp.app.savedarticle.dto.MonthsLovData;
 import com.enewschamp.app.savedarticle.dto.SavedArticleData;
 import com.enewschamp.app.savedarticle.dto.SavedArticlePageData;
 import com.enewschamp.app.savedarticle.dto.SavedNewsArticleSearchRequest;
@@ -135,7 +137,10 @@ public class OpinionsPageHandler implements IPageHandler {
 
 		}
 		savedPageData.setGenreLOV(genreService.getLOV());
-		savedPageData.setMonthsLOV(MonthType.getLOV());
+		
+		//savedPageData.setMonthsLOV(MonthType.getLOV());
+		savedPageData.setMonthsLOV(getMonthsLov());
+
 		savedPageData.setSavedNewsArticles(savedArticleList);
 
 		// SavedArticlePageData pageData = new SavedArticlePageData();
@@ -145,7 +150,24 @@ public class OpinionsPageHandler implements IPageHandler {
 
 		return pageDto;
 	}
-
+	private List<MonthsLovData> getMonthsLov()
+	{
+		List<MonthsLovData> monthsLovList = new ArrayList<MonthsLovData>();
+		LocalDate currdate = LocalDate.now();
+		LocalDate startDate = currdate.minusMonths(appConfig.getMonthLov());
+		for(int i=0;i<appConfig.getMonthLov();i++)
+		{
+			String key = startDate.toString();
+			String value = startDate.format(DateTimeFormatter.ofPattern(appConfig.getMonthLovFormat()));
+			MonthsLovData monthlov = new MonthsLovData();
+			monthlov.setKey(key);
+			monthlov.setValue(value);
+			monthsLovList.add(monthlov);
+			startDate = startDate.plusMonths(1);
+		}
+		
+		return monthsLovList;
+	}
 	@Override
 	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
