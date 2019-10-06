@@ -17,7 +17,8 @@ public class SavedArticlePageData extends PageData{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<ListOfValuesItem> monthsLOV;
+	//private List<ListOfValuesItem> monthsLOV;
+	private List<MonthsLovData> monthsLOV;
 	private List<ListOfValuesItem> genreLOV;
 	private List<SavedArticleData> savedNewsArticles;
 
