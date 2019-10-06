@@ -26,5 +26,5 @@ public class HeaderDTO implements Serializable {
 	private Integer pageCount;
 	private Integer recordCount;
 	private Boolean isLastPage;
-	
+	private String deviceId;
 }
