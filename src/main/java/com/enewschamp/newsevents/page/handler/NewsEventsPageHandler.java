@@ -15,7 +15,6 @@ import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component(value = "NewsEventsPageHandler")
 public class NewsEventsPageHandler implements IPageHandler {
 
 	@Autowired
