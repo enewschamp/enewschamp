@@ -1,9 +1,12 @@
 package com.enewschamp.app.article.page.handler;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,14 +107,24 @@ public class NewsEventsPageHandler implements IPageHandler {
 
 			searchRequestData.setHeadline(newsEventsSearchPageData.getHeadline());
 			String monthYear = newsEventsSearchPageData.getMonth();
+			
 			// format is MMM-yyyy
 			if (monthYear != null && !"".equals(monthYear)) {
-				String month = monthYear.substring(0, 3);
+				String monthStr = monthYear.substring(0, 3);
 				String year = monthYear.substring(4, 7);
-
+				//int month = Month.valueOf(monthStr.toUpperCase()).monthStr();
+				SimpleDateFormat inputFormat = new SimpleDateFormat("MMMM");
+				Calendar cal = Calendar.getInstance();
+				try {
+					cal.setTime(inputFormat.parse(monthStr));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				SimpleDateFormat outputFormat = new SimpleDateFormat("MM"); // 01-12
 				String day1 = "01";
 				// form date..
-				LocalDate startDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month),
+				LocalDate startDate = LocalDate.of(Integer.parseInt(year),Integer.parseInt(outputFormat.format(cal.getTime())),
 						Integer.parseInt(day1));
 				LocalDate endDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1).plusMonths(12)
 						.minusDays(1);
