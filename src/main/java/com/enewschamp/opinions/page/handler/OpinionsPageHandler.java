@@ -88,9 +88,16 @@ public class OpinionsPageHandler implements IPageHandler {
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
 
-		if (PageAction.upswipe.toString().equalsIgnoreCase(action)) {
+		if (PageAction.upswipe.toString().equalsIgnoreCase(action) || PageAction.next.toString().equalsIgnoreCase(action)) {
 			pageNo++;
 			pageNavigationContext.getPageRequest().getHeader().setPageNo(pageNo);
+		}
+		else if(PageAction.previous.toString().equalsIgnoreCase(action) || PageAction.RightSwipe.toString().equalsIgnoreCase(action))
+		{
+			if(pageNo>0) {
+			pageNo--;
+			pageNavigationContext.getPageRequest().getHeader().setPageNo(pageNo);
+			}
 		}
 		// if(PageAction.home.toString().equalsIgnoreCase(action) )
 		// {
@@ -115,7 +122,7 @@ public class OpinionsPageHandler implements IPageHandler {
 		header.setIsLastPage(pageResult.isLast());
 		header.setPageCount(pageResult.getTotalPages());
 		header.setRecordCount(pageResult.getNumberOfElements());
-		header.setPageNo(pageResult.getNumber() + 1);
+		header.setPageNo(pageNo);
 		pageDto.setHeader(header);
 
 		List<SavedNewsArticleSummaryDTO> savedArticleSummaryList = pageResult.getContent();
