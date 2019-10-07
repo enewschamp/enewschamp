@@ -126,7 +126,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 
 			// searchResult.setNewsArticlesSummary(pageResult.getContent());
 
-		} else if (PageAction.clickArticleImage.toString().equalsIgnoreCase(action)) {
+		} else if (PageAction.clickArticleImage.toString().equalsIgnoreCase(action) || PageAction.ClickSavedArticle.toString().equalsIgnoreCase(action) || PageAction.ClickOpinionArticle.toString().equalsIgnoreCase(action) || PageAction.ClickNewsEvent.toString().equalsIgnoreCase(action)) {
 			ArticlePageData articlePageData = new ArticlePageData();
 			articlePageData = mapPageData(articlePageData, pageNavigationContext.getPageRequest());
 
@@ -170,7 +170,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 			}
 			pageDto.setData(newsArticlePageData);
 
-		} else if (PageAction.savedarticles.toString().equalsIgnoreCase(action)
+		} else if (PageAction.savedarticles.toString().equalsIgnoreCase(action) 
 				|| PageAction.back.toString().equalsIgnoreCase(action)
 				|| PageAction.FilterSavedArticles.toString().equalsIgnoreCase(action)
 				|| PageAction.ClearFilterSavedArticles.toString().equalsIgnoreCase(action)) {
