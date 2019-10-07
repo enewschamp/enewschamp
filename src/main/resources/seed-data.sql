@@ -471,6 +471,20 @@ Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , p
 values (204, 'NewsEvents','ClearFilterNewsEvents','ListNewsEvents','newsevents','newsevents','Y','N','SYSTEM',CURRENT_DATE,'M',1);
 Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
 values (205, 'NewsEvents','UpSwipe','ListNewsEvents','newsevents','newsevents','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (206, 'NewsArticle','Previous','OpinionNewsArticle','opinions','opinions','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (207, 'NewsArticle','RightSwipe','NewsArticle','appnewsarticle','appnewsarticle','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (208, 'NewsArticle','RightSwipe','OpinionNewsArticle','opinions','opinions','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (209, 'NewsArticle','RightSwipe','NewsEvent','newsevents','newsevents','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (210, 'SavedArticles','ClickSavedArticle','ListSavedArticles','appnewsarticle','appnewsarticle','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (211, 'Opinions','ClickOpinionArticle','ListOpinionArticles','appnewsarticle','appnewsarticle','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (212, 'NewsEvents','ClickNewsEvent','ListNewsEvents','appnewsarticle','appnewsarticle','Y','N','SYSTEM',CURRENT_DATE,'M',1);
 
 
 Insert into page_navigator_rules (nav_id,rule_id , exec_seq,rule, nextpage, plugin_class, record_in_use , operator_id, operation_date_time )
