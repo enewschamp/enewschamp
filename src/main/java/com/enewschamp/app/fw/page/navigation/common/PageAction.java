@@ -57,5 +57,11 @@ public enum PageAction {
 	ResetPassword,
 	ResendSecurityCode,
 	logout,
-	WelcomeUser
+	WelcomeUser,
+	NewsEvents,
+	FilterNewsEvents,
+	ClearFilterNewsEvents,
+	ClickSavedArticle,
+	ClickOpinionArticle,
+	ClickNewsEvent
 }
