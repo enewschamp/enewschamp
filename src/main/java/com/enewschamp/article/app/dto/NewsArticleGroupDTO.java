@@ -1,8 +1,10 @@
 package com.enewschamp.article.app.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -30,6 +32,9 @@ public class NewsArticleGroupDTO extends MaintenanceDTO {
 	@NotNull
 	@Size(max=ForeignKeyColumnLength.GenreId)
 	private String genreId;
+	
+	@Size(max=ForeignKeyColumnLength.CityId)
+	private String cityId;
 	
 	@NotNull
 	@Size(max=100)
@@ -81,6 +86,14 @@ public class NewsArticleGroupDTO extends MaintenanceDTO {
 	private Boolean readingLevel3;
 	
 	private Boolean readingLevel4;
+	
+	private BigDecimal textCoordinateX;
+	
+	private BigDecimal textCoordinateY;
+	
+	private BigDecimal textBoxWidth;
+	
+	private BigDecimal textBoxLength;
 	
 	private List<NewsArticleDTO> newsArticles;
 	

@@ -20,7 +20,6 @@ public class EditionDTO extends MaintenanceDTO {
 	private String editionId;
 	
 	@NotNull
-	@Size(min=3, max=3)
 	private Long languageId;
 	
 	@NotNull

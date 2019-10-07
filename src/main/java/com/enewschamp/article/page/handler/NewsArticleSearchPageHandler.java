@@ -75,7 +75,7 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 		header.setPageNo(pageResult.getNumber() + 1);
 		pageDTO.setHeader(header);
 		
-		searchResult.setNewsArticlesSummary(pageResult.getContent());
+		searchResult.setNewsArticles(pageResult.getContent());
 		return pageDTO;
 	}
 	

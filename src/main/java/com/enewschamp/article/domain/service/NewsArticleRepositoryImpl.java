@@ -69,11 +69,13 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 			filterPredicates.add(cb.greaterThanOrEqualTo(articleRoot.get("publishDate"), searchRequest.getPublicationDateFrom()));
 		}
 		if (searchRequest.getPublicationDateTo() != null) {
-			filterPredicates.add(cb.lessThan(articleRoot.get("publishDate"), searchRequest.getPublicationDateTo()));
+			filterPredicates.add(cb.lessThanOrEqualTo(articleRoot.get("publishDate"), searchRequest.getPublicationDateTo()));
 		}
-		Predicate readingLevelPredicate = buildReadingLevelPredicate(searchRequest, cb, articleRoot);
-		if(readingLevelPredicate != null) {
-			filterPredicates.add(readingLevelPredicate);
+		List<Predicate> readingLevelPredicates = buildReadingLevelPredicate(searchRequest, cb, articleRoot);
+		if(readingLevelPredicates != null && !readingLevelPredicates.isEmpty()) {
+			readingLevelPredicates.forEach(predicate -> {
+				filterPredicates.add(predicate);
+			});
 		}
 		if (searchRequest.getAuthorId() != null) {
 			filterPredicates.add(cb.equal(articleRoot.get("authorId"), searchRequest.getAuthorId()));
@@ -122,43 +124,48 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 		return new PageImpl<>(list, pageable, count);
 	}
 
-	private Predicate buildReadingLevelPredicate(NewsArticleSearchRequest searchRequest, 
+	private List<Predicate> buildReadingLevelPredicate(NewsArticleSearchRequest searchRequest, 
 												 CriteriaBuilder cb,
 												 Root<NewsArticle> articleRoot) {
-		List<Predicate> readingLevelPredicates = new ArrayList<>();
+		List<Predicate> readingLevelOrPredicates = new ArrayList<>();
+		List<Predicate> readingLevelAndPredicates = new ArrayList<>();
+		
 		if (searchRequest.getReadingLevel1() != null) {
 			if(searchRequest.getReadingLevel1().equals(AppConstants.YES)) {
-				readingLevelPredicates.add(cb.equal(articleRoot.get("readingLevel"), 1));
+				readingLevelOrPredicates.add(cb.equal(articleRoot.get("readingLevel"), 1));
 			} else {
-				readingLevelPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 1));
+				readingLevelAndPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 1));
 			}
 		}
 		if (searchRequest.getReadingLevel2() != null) {
 			if(searchRequest.getReadingLevel2().equals(AppConstants.YES)) {
-				readingLevelPredicates.add(cb.equal(articleRoot.get("readingLevel"), 2));
+				readingLevelOrPredicates.add(cb.equal(articleRoot.get("readingLevel"), 2));
 			} else {
-				readingLevelPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 2));
+				readingLevelAndPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 2));
 			}
 		}
 		if (searchRequest.getReadingLevel3() != null) {
 			if(searchRequest.getReadingLevel3().equals(AppConstants.YES)) {
-				readingLevelPredicates.add(cb.equal(articleRoot.get("readingLevel"), 3));
+				readingLevelOrPredicates.add(cb.equal(articleRoot.get("readingLevel"), 3));
 			} else {
-				readingLevelPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 3));
+				readingLevelAndPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 3));
 			}
 		}
 		if (searchRequest.getReadingLevel4() != null) {
 			if(searchRequest.getReadingLevel4().equals(AppConstants.YES)) {
-				readingLevelPredicates.add(cb.equal(articleRoot.get("readingLevel"), 4));
+				readingLevelOrPredicates.add(cb.equal(articleRoot.get("readingLevel"), 4));
 			} else {
-				readingLevelPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 4));
+				readingLevelAndPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 4));
 			}
 		}
-		Predicate predicate = null;
-		if(readingLevelPredicates.size() > 0) {
-			predicate = cb.or(readingLevelPredicates.toArray(new Predicate[0]));
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		if(readingLevelOrPredicates.size() > 0) {
+			predicates.add(cb.or(readingLevelOrPredicates.toArray(new Predicate[0])));
 		}
-		return predicate;
+		if(readingLevelAndPredicates.size() > 0) {
+			predicates.add(cb.and(readingLevelAndPredicates.toArray(new Predicate[0])));
+		}
+		return predicates;
 	}
 
 }
