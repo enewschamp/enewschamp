@@ -2636,6 +2636,228 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "NewsArticle - Previous - OpinionNewsSrticle",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"header\": {\n        \"module\": \"StudentApp\",\n        \"loginCredentials\": \"\",\n        \"pageName\": \"NewsArticle\",\n        \"action\": \"Previous\",\n        \"operation\": \"OpinionNewsArticle\",\n        \"editionID\": \"INDIAN\",\n        \"publicationdate\": \"2019-08-12\",\n        \"pageNo\": 1,\n        \"emailID\":\"deepaksemwal82@gmail.com\"\n    },\n    \"data\": {\n        \"newsArticleId\": \"123456789104\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewsArticle - RightSwipe- OpinionNewsArticle",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"header\": {\r\n        \"module\": \"StudentApp\",\r\n        \"loginCredentials\": \"\",\r\n        \"pageName\": \"NewsArticle\",\r\n        \"action\": \"RightSwipe\",\r\n        \"operation\": \"OpinionNewsArticle\",\r\n        \"editionID\": \"INDIAN\",\r\n        \"publicationdate\": \"2019-08-12\",\r\n        \"pageNo\":0,\r\n        \"emailID\":\"deepaksemwal82@gmail.com\"\r\n    \t\r\n    },\r\n    \"data\": {\r\n        \"newsArticleId\": \"123456789104\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewsArricle - RightSwipe -NewsArticle",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"header\": {\r\n        \"module\": \"StudentApp\",\r\n        \"loginCredentials\": \"\",\r\n        \"pageName\": \"NewsArticle\",\r\n        \"action\": \"RightSwipe\",\r\n        \"operation\": \"NewsArticle\",\r\n        \"editionID\": \"INDIAN\",\r\n        \"publicationdate\": \"2019-08-12\",\r\n        \"pageNo\":0,\r\n        \"emailID\":\"deepaksemwal82@gmail.com\"\r\n        },\r\n    \"data\": {\r\n        \"newsArticleId\": \"123456789104\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewsArticle - Previous - SavedNewsArticle",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"header\": {\r\n        \"module\": \"StudentApp\",\r\n        \"loginCredentials\": \"\",\r\n        \"pageName\": \"NewsArticle\",\r\n        \"action\": \"Previous\",\r\n        \"operation\": \"SavedNewsArticle\",\r\n        \"editionID\": \"INDIAN\",\r\n        \"publicationdate\": \"2019-08-12\",\r\n        \"pageNo\":0,\r\n        \"emailID\":\"deepaksemwal82@gmail.com\"\r\n    },\r\n    \"data\": {\r\n        \"newsArticleId\": \"123456789104\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewsArticle - RightSwipe - NewsEvent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"header\": {\r\n        \"module\": \"StudentApp\",\r\n        \"loginCredentials\": \"\",\r\n        \"pageName\": \"NewsArticle\",\r\n        \"action\": \"RightSwipe\",\r\n        \"operation\": \"NewsEvent\",\r\n        \"editionID\": \"INDIAN\",\r\n        \"publicationdate\": \"2019-08-12\",\r\n        \"pageNo\":0,\r\n        \"emailID\":\"deepaksemwal82@gmail.com\"\r\n        },\r\n    \"data\": {\r\n        \"newsArticleId\": \"123456789104\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SavedArticles - ClickSavedArticle - ListSavedArticles",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"header\": {\r\n        \"module\": \"StudentApp\",\r\n        \"loginCredentials\": \"\",\r\n        \"pageName\": \"SavedArticles\",\r\n        \"action\": \"ClickSavedArticle\",\r\n        \"operation\": \"ListSavedArticles\",\r\n        \"editionID\": \"INDIAN\",\r\n        \"publicationdate\": \"2019-08-12\",\r\n        \"pageNo\":0,\r\n        \"emailID\":\"deepaksemwal82@gmail.com\"\r\n    \t\r\n    },\r\n    \"data\": {\r\n        \"newsArticleId\": \"123456789104\"\r\n    }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -4536,6 +4758,43 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "OPinions - ClickOpinionArticle - ListOpinionArticles",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"header\": {\r\n        \"module\": \"StudentApp\",\r\n        \"loginCredentials\": \"\",\r\n        \"pageName\": \"Opinions\",\r\n        \"action\": \"ClickOpinionArticle\",\r\n        \"operation\": \"ListOpinionArticles\",\r\n        \"editionID\": \"INDIAN\",\r\n        \"publicationdate\": \"2019-08-12\",\r\n        \"pageNo\":0,\r\n        \"emailID\":\"deepaksemwal82@gmail.com\"\r\n        },\r\n    \"data\": {\r\n        \"newsArticleId\": \"123456789104\"\r\n    }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -6089,6 +6348,272 @@
 					"response": []
 				}
 			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "NewsEvents",
+			"item": [
+				{
+					"name": "NewsEvents - NewsEvents - Publication",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"header\": {\n        \"module\": \"StudentApp\",\n        \"loginCredentials\": \"\",\n        \"pageName\": \"NewsEvents\",\n        \"action\": \"NewsEvents\",\n        \"operation\": \"Publication\",\n        \"editionID\": \"INDIAN\",\n        \"publicationDate\": \"2019-10-10\",\n        \"emailID\":\"deepaksemwal82@gmail.com\",\n        \"pageNo\":0\n    }\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewsArticle - Back - NewsEvent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"header\": {\r\n        \"module\": \"StudentApp\",\r\n        \"loginCredentials\": \"\",\r\n        \"pageName\": \"NewsArticle\",\r\n        \"action\": \"Back\",\r\n        \"operation\": \"NewsEvent\",\r\n        \"editionID\": \"INDIAN\",\r\n        \"publicationdate\": \"2019-08-12\",\r\n        \"pageNo\":0\r\n    },\r\n    \"data\": {\r\n        \"newsArticleId\": \"123456789104\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewsEvents - FilterNewsEvents - ListNewsEvents",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"header\": {\n        \"module\": \"StudentApp\",\n        \"loginCredentials\": \"\",\n        \"pageName\": \"NewsEvents\",\n        \"action\": \"FilterNewsEvents\",\n        \"operation\": \"ListNewsEvents\",\n        \"editionID\": \"Indian\",\n        \"publicationDate\": \"2019-02-21\",\n        \"emailID\": \"deepaksemwal82@gmail.com\",\n        \"pageNo\": 0\n    },\n    \"data\": {\n        \"city\": \"Mumbai\",\n        \"month\": \"Jan-2019\",\n        \"headline\": \"Annual Function\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewsEvents - ClearNewsEventsFilter - ListNewsEvents",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"header\" : \r\n      { \"module\" : \"StudentApp\",\r\n        \"loginCredentials\": \"\",\r\n        \"pageName\" : \"NewsEvents\",\r\n        \"action\" : \"ClearFilterNewsEvents\",\r\n        \"operation\" : \"ListNewsEvents\",\r\n        \"editionID\" : \"Indian\",\r\n        \"publicationDate\" : \"2019-02-21\",\r\n        \"emailID\":\"deepaksemwal82@gmail.com\",\r\n        \"pageNo\":0\r\n      },\r\n\"data\" : \r\n   {}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewsEvents - UpSwipe -ListNewsEvents",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"header\": {\n        \"module\": \"StudentApp\",\n        \"loginCredentials\": \"\",\n        \"pageName\": \"NewsEvents\",\n        \"action\": \"UpSwipe\",\n        \"operation\": \"ListNewsEvents\",\n        \"editionID\": \"Indian\",\n        \"publicationDate\": \"2019-02-21\",\n        \"emailID\": \"deepaksemwal82@gmail.com\",\n        \"pageNo\": 0\n    },\n    \"data\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewsEvents - FilterNewsEvents - ListNewsEvents",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"header\": {\n        \"module\": \"StudentApp\",\n        \"loginCredentials\": \"\",\n        \"pageName\": \"NewsEvents\",\n        \"action\": \"FilterNewsEvents\",\n        \"operation\": \"ListNewsEvents\",\n        \"editionID\": \"Indian\",\n        \"publicationDate\": \"2019-02-21\",\n        \"emailID\": \"deepaksemwal82@gmail.com\",\n        \"pageNo\": \"1\"\n    },\n    \"data\": {\n        \"city\": \"Mumbai\",\n        \"month\": \"Jan-2019\",\n        \"headline\": \"Annual Function\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewsEvents - ClickNewsEvent - ListNewsEvents",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"header\": {\r\n        \"module\": \"StudentApp\",\r\n        \"loginCredentials\": \"\",\r\n        \"pageName\": \"NewsEvents\",\r\n        \"action\": \"ClickNewsEvent\",\r\n        \"operation\": \"ListNewsEvents\",\r\n        \"editionID\": \"INDIAN\",\r\n        \"publicationdate\": \"2019-08-12\",\r\n        \"pageNo\":0,\r\n        \"emailID\":\"deepaksemwal82@gmail.com\"\r\n    \t\r\n    },\r\n    \"data\": {\r\n        \"newsArticleId\": \"123456789104\"\r\n    }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/enewschamp/ui/v1/app",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"enewschamp",
+								"ui",
+								"v1",
+								"app"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "NewsEvents articles",
 			"protocolProfileBehavior": {}
 		},
 		{
