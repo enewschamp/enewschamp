@@ -48,7 +48,8 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 				  articleGroupRoot.get("headline"),
 				  articleGroupRoot.get("imagePathMobile"),
 				  articleGroupRoot.get("imagePathTab"), 
-				  articleGroupRoot.get("imagePathDesktop")));
+				  articleGroupRoot.get("imagePathDesktop"),
+				  articleGroupRoot.get("cityId")));
 		
 		// Build filter conditions
 		List<Predicate> filterPredicates = new ArrayList<>();
@@ -100,6 +101,9 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 		}
 		if (searchRequest.getCredits() != null) {
 			filterPredicates.add(cb.like(articleGroupRoot.get("credits"), "%" + searchRequest.getCredits() + "%"));
+		}
+		if (searchRequest.getCity() != null) {
+			filterPredicates.add(cb.like(articleGroupRoot.get("cityId"), searchRequest.getCity()));
 		}
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		
