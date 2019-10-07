@@ -40,5 +40,6 @@ public class NewsArticleSearchRequest extends PageData {
 	private MonthType intendedPubMonth;
 	private List<ArticleStatusType> articleStatusList;
 	private List<ArticleType> articleTypeList;
+	private String city;
 
 }
