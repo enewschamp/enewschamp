@@ -461,6 +461,16 @@ Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , p
 values (199, 'Login','Logout','Login','login','login','Y','N','SYSTEM',CURRENT_DATE,'M',1);
 Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
 values (200, 'WelcomeUser','WelcomeUser','WelcomeUser','welcome','welcome','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (201, 'NewsEvents','NewsEvents','Publication','newsevents','newsevents','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (202, 'NewsArticle','Back','NewsEvent','newsevents','newsevents','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (203, 'NewsEvents','FilterNewsEvents','ListNewsEvents','newsevents','newsevents','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (204, 'NewsEvents','ClearFilterNewsEvents','ListNewsEvents','newsevents','newsevents','Y','N','SYSTEM',CURRENT_DATE,'M',1);
+Insert into page_navigator(nav_Id ,current_page ,action ,operation ,nextpage , previous_Page, record_In_Use ,commit_Master_Data ,operator_Id ,operation_Date_Time ,updation_Table,process_Seq)
+values (205, 'NewsEvents','UpSwipe','ListNewsEvents','newsevents','newsevents','Y','N','SYSTEM',CURRENT_DATE,'M',1);
 
 
 Insert into page_navigator_rules (nav_id,rule_id , exec_seq,rule, nextpage, plugin_class, record_in_use , operator_id, operation_date_time )
