@@ -62,7 +62,9 @@ public class NewsEventsPageHandler implements IPageHandler {
 		String action = pageNavigationContext.getActionName();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
+		int pageNumber = pageNavigationContext.getPageRequest().getHeader().getPageNo();
 
+		
 		if (PageAction.NewsEvents.toString().equalsIgnoreCase(action)
 				|| PageAction.back.toString().equalsIgnoreCase(action)
 				|| PageAction.ClearFilterNewsEvents.toString().equalsIgnoreCase(action)) {
@@ -84,7 +86,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 			header.setIsLastPage(pageResult.isLast());
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNo(pageResult.getNumber() + 1);
+			header.setPageNo(pageNumber);
 			pageDto.setHeader(header);
 
 			NewsEventsPageData newsEventsPageData = new NewsEventsPageData();
@@ -153,10 +155,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 			pageDto.setData(newsEventsPageData);
 
 		}
-		if (PageAction.upswipe.toString().equalsIgnoreCase(action)) {
-			int pageNumber = pageNavigationContext.getPageRequest().getHeader().getPageNo();
-			pageNumber = pageNumber + 1;
-			pageNavigationContext.getPageRequest().getHeader().setPageNo(pageNumber);
+		if (PageAction.next.toString().equalsIgnoreCase(action)|| PageAction.upswipe.toString().equalsIgnoreCase(action)) {
 
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 			searchRequestData.setEditionId(editionId);
@@ -176,7 +175,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 			header.setIsLastPage(pageResult.isLast());
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNo(pageResult.getNumber() + 1);
+			header.setPageNo(pageNumber+1);
 			pageDto.setHeader(header);
 
 			NewsEventsPageData newsEventsPageData = new NewsEventsPageData();
@@ -185,6 +184,38 @@ public class NewsEventsPageHandler implements IPageHandler {
 
 			pageDto.setData(newsEventsPageData);
 
+		}
+		if(PageAction.RightSwipe.toString().equalsIgnoreCase(action) || PageAction.previous.toString().equalsIgnoreCase(action) )
+		{
+			if(pageNumber>1) {
+			pageNumber = pageNumber - 1;
+			}
+			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
+			searchRequestData.setEditionId(editionId);
+			searchRequestData.setPublicationDate(publicationDate);
+
+			// Load News and Events..
+			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
+			articleTypeList.add(ArticleType.Event);
+			articleTypeList.add(ArticleType.News);
+
+			searchRequestData.setArticleTypeList(articleTypeList);
+
+			Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData,
+					pageNavigationContext.getPageRequest().getHeader());
+
+			HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
+			header.setIsLastPage(pageResult.isLast());
+			header.setPageCount(pageResult.getTotalPages());
+			header.setRecordCount(pageResult.getNumberOfElements());
+			header.setPageNo(pageNumber);
+			pageDto.setHeader(header);
+
+			NewsEventsPageData newsEventsPageData = new NewsEventsPageData();
+			List<NewsEventsPublicationData> eventsList = mapArticleData(pageResult);
+			newsEventsPageData.setNewsArticles(eventsList);
+
+			pageDto.setData(newsEventsPageData);
 		}
 		return pageDto;
 	}
