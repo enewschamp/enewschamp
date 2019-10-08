@@ -1,38 +1,37 @@
 package com.enewschamp.app.notification.firebase.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-
-import com.enewschamp.app.notification.firebase.FCMService;
-import com.enewschamp.app.notification.firebase.model.PushNotificationRequest;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.enewschamp.app.notification.firebase.FCMService;
+import com.enewschamp.app.notification.firebase.model.PushNotificationRequest;
+
+import lombok.extern.java.Log;
+
 @Service
+@Log
 public class PushNotificationService {
 
     @Value("#{${app.notifications.defaults}}")
     private Map<String, String> defaults;
 
-    private Logger logger = LoggerFactory.getLogger(PushNotificationService.class);
     private FCMService fcmService;
 
     public PushNotificationService(FCMService fcmService) {
         this.fcmService = fcmService;
     }
 
-    @Scheduled(initialDelay = 60000, fixedDelay = 60000)
+    //@Scheduled(initialDelay = 60000, fixedDelay = 60000)
     public void sendSamplePushNotification() {
         try {
             fcmService.sendMessageWithoutData(getSamplePushNotificationRequest());
         } catch (InterruptedException | ExecutionException e) {
-            logger.error(e.getMessage());
+            log.severe(e.getMessage());
         }
     }
 
@@ -40,7 +39,7 @@ public class PushNotificationService {
         try {
             fcmService.sendMessage(getSamplePayloadData(), request);
         } catch (InterruptedException | ExecutionException e) {
-            logger.error(e.getMessage());
+            log.severe(e.getMessage());
         }
     }
 
@@ -48,7 +47,7 @@ public class PushNotificationService {
         try {
             fcmService.sendMessageWithoutData(request);
         } catch (InterruptedException | ExecutionException e) {
-            logger.error(e.getMessage());
+            log.severe(e.getMessage());
         }
     }
 
@@ -57,7 +56,7 @@ public class PushNotificationService {
         try {
             fcmService.sendMessageToToken(request);
         } catch (InterruptedException | ExecutionException e) {
-            logger.error(e.getMessage());
+            log.severe(e.getMessage());
         }
     }
 

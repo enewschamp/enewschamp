@@ -14,7 +14,7 @@ import com.google.firebase.FirebaseOptions;
 
 import lombok.extern.java.Log;
 
-@Service
+//@Service
 @Log
 public class FCMInitializer {
 

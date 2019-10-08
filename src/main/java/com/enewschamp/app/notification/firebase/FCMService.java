@@ -40,7 +40,7 @@ public class FCMService {
             throws InterruptedException, ExecutionException {
         Message message = getPreconfiguredMessageToToken(request);
         String response = sendAndGetResponse(message);
-        log.info("Sent message to token. Device token: " + request.getToken() + ", " + response);
+        log.info("Sent message to token. Device token: " + request.getDeviceToken() + ", " + response);
     }
 
     private String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
@@ -61,7 +61,7 @@ public class FCMService {
     }
 
     private Message getPreconfiguredMessageToToken(PushNotificationRequest request) {
-        return getPreconfiguredMessageBuilder(request).setToken(request.getToken())
+        return getPreconfiguredMessageBuilder(request).setToken(request.getDeviceToken())
                 .build();
     }
 
