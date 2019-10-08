@@ -1,5 +1,6 @@
 package com.enewschamp;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.constraints.NotNull;
@@ -57,7 +58,21 @@ public class EnewschampApplicationProperties {
 		private boolean includeSnapShots;
 	}
 	
+	@Data
+	public static class ArticleImageConfig {
+		private String size1FolderPath;
+		private String size2FolderPath;
+		private String size3FolderPath;
+		private String size4FolderPath;
+		private List<Integer> size1Dimention;
+		private List<Integer> size2Dimention;
+		private List<Integer> size3Dimention;
+		private List<Integer> size4Dimention;
+	}
+	
 	private AuditConfig audit;
+	
+	private ArticleImageConfig articleImageConfig;
 	
 	private Map<String, Map<String, Map<String, String>>> statusTransitionConfig;
 }

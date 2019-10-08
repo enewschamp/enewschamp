@@ -72,6 +72,7 @@ public class NewsArticleGroupHelper {
 		}
 		articleGroupDTO.setNewsArticles(articleList);
 		
+		articleGroupDTO.setBase64Image(null);
 		return articleGroupDTO;
 	}
 	

@@ -20,6 +20,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.javers.core.metamodel.annotation.DiffIgnore;
+
 import com.enewschamp.article.domain.common.ArticleGroupStatusType;
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.domain.common.MonthType;
@@ -90,6 +92,9 @@ public class NewsArticleGroup extends BaseEntity {
 	
 	@Column(name = "ImagePathDesktop", length = 200)
 	private String imagePathDesktop;
+	
+	@Transient
+	private String base64Image;
 	
 	@Column(name = "TextCoordinateX")
 	private BigDecimal textCoordinateX;

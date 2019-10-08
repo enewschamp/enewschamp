@@ -63,6 +63,8 @@ public class NewsArticleGroupDTO extends MaintenanceDTO {
 	@Size(max=200)
 	private String imagePathDesktop;
 	
+	private String base64Image;
+	
 	@Size(max = ForeignKeyColumnLength.UserId)
 	private String editorId;
 	
