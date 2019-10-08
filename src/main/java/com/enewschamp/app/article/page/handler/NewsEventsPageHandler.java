@@ -1,5 +1,6 @@
 package com.enewschamp.app.article.page.handler;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.article.page.dto.NewsEventsFilterData;
 import com.enewschamp.app.article.page.dto.NewsEventsPageData;
 import com.enewschamp.app.article.page.dto.NewsEventsPublicationData;
+import com.enewschamp.app.article.page.dto.NewsEventsSearchData;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -94,19 +96,19 @@ public class NewsEventsPageHandler implements IPageHandler {
 			pageDto.setData(newsEventsPageData);
 
 		} else if (PageAction.FilterNewsEvents.toString().equalsIgnoreCase(action)) {
-//			NewsEventsSearchData newsEventsSearchPageData = new NewsEventsSearchData();
-//			newsEventsSearchPageData = mapPageData(newsEventsSearchPageData, pageNavigationContext.getPageRequest());
+			NewsEventsSearchData newsEventsSearchPageData = new NewsEventsSearchData();
+			newsEventsSearchPageData = mapPageData(newsEventsSearchPageData, pageNavigationContext.getPageRequest());
 
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 			searchRequestData.setEditionId(editionId);
-//			searchRequestData.setCity(newsEventsSearchPageData.getCity());
+			searchRequestData.setCity(newsEventsSearchPageData.getCity());
 			// Load News and Events..
 			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
 			articleTypeList.add(ArticleType.Event);
 			articleTypeList.add(ArticleType.News);
 
-//			searchRequestData.setHeadline(newsEventsSearchPageData.getHeadline());
-			String monthYear = "12";
+			searchRequestData.setHeadline(newsEventsSearchPageData.getHeadline());
+			String monthYear = newsEventsSearchPageData.getMonth();
 			
 			// format is MMM-yyyy
 			if (monthYear != null && !"".equals(monthYear)) {
@@ -141,9 +143,9 @@ public class NewsEventsPageHandler implements IPageHandler {
 			pageDto.setHeader(header);
 			NewsEventsPageData newsEventsPageData = new NewsEventsPageData();
 			NewsEventsFilterData filterData = new NewsEventsFilterData();
-//			filterData.setCityID(newsEventsSearchPageData.getCity());
-//			filterData.setHeadline(newsEventsSearchPageData.getHeadline());
-//			filterData.setMonth(newsEventsSearchPageData.getMonth());
+			filterData.setCityID(newsEventsSearchPageData.getCity());
+			filterData.setHeadline(newsEventsSearchPageData.getHeadline());
+			filterData.setMonth(newsEventsSearchPageData.getMonth());
 			newsEventsPageData.setMonthsLov(getMonthsLov());
 
 			newsEventsPageData.setFilter(filterData);
@@ -253,15 +255,15 @@ public class NewsEventsPageHandler implements IPageHandler {
 		return monthsLovList;
 	}
 
-//	private NewsEventsSearchData mapPageData(NewsEventsSearchData pageData, PageRequestDTO pageRequest) {
-//		try {
-//			pageData = objectMapper.readValue(pageRequest.getData().toString(), NewsEventsSearchData.class);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return pageData;
-//	}
+	private NewsEventsSearchData mapPageData(NewsEventsSearchData pageData, PageRequestDTO pageRequest) {
+		try {
+			pageData = objectMapper.readValue(pageRequest.getData().toString(), NewsEventsSearchData.class);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return pageData;
+	}
 
 	@Override
 	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
