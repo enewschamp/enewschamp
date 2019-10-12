@@ -22,7 +22,6 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.ForeignKey;
 import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -122,6 +121,9 @@ public class NewsArticle extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	@DiffIgnore
 	private ArticleActionType currentAction;
+	
+	@Transient
+	private String currentComments;
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "article_Id")

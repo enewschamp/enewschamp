@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.MaintenanceDTO;
@@ -13,6 +14,7 @@ import com.enewschamp.article.domain.common.ArticleActionType;
 import com.enewschamp.article.domain.common.ArticleRatingType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.article.domain.common.ArticleType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -75,4 +77,8 @@ public class NewsArticleDTO extends MaintenanceDTO {
 	
 	private List<NewsArticleQuizDTO> newsArticleQuiz;
 	
+	// Below attribute added for state transition specific validations .e.g. comments are mandatory for ReWork related statuses
+	@Transient
+	@JsonIgnore
+	private String currentComments;
 }

@@ -120,13 +120,23 @@ public class NewsArticleService {
 	
 	public ArticleStatusType deriveArticleStatus(NewsArticle article, boolean validateAccess) {
 		ArticleStatusType status = ArticleStatusType.Unassigned;
-		if(article.getCurrentAction() != null) {
-			ArticleStatusType existingStatus = repository.getCurrentStatus(article.getNewsArticleId());
-			existingStatus = existingStatus == null ? ArticleStatusType.Unassigned : existingStatus;
-			StatusTransitionDTO transition = new StatusTransitionDTO(NewsArticle.class.getSimpleName(), 
+		StatusTransitionDTO transition = null;
+		ArticleActionType currentAction = article.getCurrentAction();
+		ArticleStatusType existingStatus = null;
+		
+		NewsArticle existingArticle = get(article.getNewsArticleId());
+		
+		if(existingArticle == null) { // Check for first time creation
+			currentAction = ArticleActionType.SaveNewsArticleGroup;
+			existingStatus = ArticleStatusType.Initial;
+		} else {
+			existingStatus = existingArticle.getStatus();
+		}
+		if(currentAction != null) {
+			transition = new StatusTransitionDTO(NewsArticle.class.getSimpleName(), 
 																	 String.valueOf(article.getNewsArticleId()),
 																	 existingStatus.toString(),
-																     article.getCurrentAction().toString(), 
+																	 currentAction.toString(), 
 																     null);
 			
 			String nextStatus = statusTransitionHandler.findNextStatus(transition);
@@ -136,21 +146,32 @@ public class NewsArticleService {
 			}
 			
 			status = ArticleStatusType.fromValue(nextStatus);
+		} 
+		if(transition != null && validateAccess) {
 			statusTransitionHandler.validateStateTransitionAccess(transition, article.getAuthorId(), article.getEditorId(), article.getPublisherId(), article.getOperatorId());
-		} else {
-			// Check for first time creation
-			if(get(article.getNewsArticleId()) == null) {
-				StatusTransitionDTO transition = new StatusTransitionDTO(NewsArticle.class.getSimpleName(), 
-						 String.valueOf(article.getNewsArticleId()),
-						 ArticleStatusType.Initial.toString(),
-					     ArticleActionType.SaveNewsArticleGroup.toString(), 
-					     null);
-				statusTransitionHandler.validateStateTransitionAccess(transition, article.getAuthorId(), article.getEditorId(), article.getPublisherId(), article.getOperatorId());
-			}
+			validateStateTransition(article, transition, status);
 		}
-		
 		article.setStatus(status);
 		return status;
+	}
+	
+	private void validateStateTransition(NewsArticle article, StatusTransitionDTO transition, ArticleStatusType newStatus) {
+		if(newStatus == null) {
+			return;
+		}
+		switch(newStatus) {
+			case ReadyToPublish:
+				if(article.getRating() == null) {
+					new BusinessException(ErrorCodes.RATING_REQD_FOR_PUBLISH);
+				}
+			break;
+			case ReworkForAuthor:
+			case ReworkForEditor:
+				if(article.getCurrentComments() == null || article.getCurrentComments().isEmpty()) {
+					new BusinessException(ErrorCodes.REWORK_COMMENTS_REQUIRED);
+				}
+			break;
+		}
 	}
 	
 	public List<NewsArticle> assignAuthor(Long articleGroupId, String authorId) {

@@ -67,6 +67,7 @@ public class NewsArticleGroupHelper {
 				articleDTO.setRecordInUse(RecordInUseType.N);
 				articleDTO.setCurrentAction(ArticleActionType.Close);
 			}
+			copyFromArticleGroup(articleGroupDTO, articleDTO);
 			articleDTO = newsArticleHelper.create(articleDTO);
 			articleList.add(articleDTO);
 		}
@@ -74,6 +75,11 @@ public class NewsArticleGroupHelper {
 		
 		articleGroupDTO.setBase64Image(null);
 		return articleGroupDTO;
+	}
+	
+	private void copyFromArticleGroup(NewsArticleGroupDTO articleGroupDTO, NewsArticleDTO articleDTO ) {
+		articleDTO.setEditorId(articleGroupDTO.getEditorId());
+		articleDTO.setCurrentComments(articleGroupDTO.getComments());
 	}
 	
 	

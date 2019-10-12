@@ -54,35 +54,32 @@ public class StatusTransitionHandler {
 		Map<String, List<String>> statusWiseActionAccessConfig = actionAccessConfig.get(transition.getFromStatus());
 		List<String> accessRoles = statusWiseActionAccessConfig.get(transition.getAction());
 
+		if(accessRoles == null) {
+			return;
+		}
+		
 		for (String role : accessRoles) {
 			switch (role) {
 			case "Author":
 				if (!actionBy.equals(authorId)) {
 					throw new BusinessException(ErrorCodes.ACTION_DISALLOWED_FOR_THIS_USER);
 				}
-				break;
+				return;
 			case "AnyPublisher":
-				UserRoleKey userRoleKey = new UserRoleKey();
-				userRoleKey.setUserId(actionBy);
-				userRoleKey.setRoleId(CommonConstants.PUBLISHER_ROLE);
-				if (userRoleService.get(userRoleKey) == null) {
+				if (userRoleService.getByUserIdAndRole(actionBy, CommonConstants.PUBLISHER_ROLE) == null) {
 					throw new BusinessException(ErrorCodes.ACTION_DISALLOWED_FOR_THIS_USER);
 				}
-				break;
+				return;
 			case "Editor":
 				if (!actionBy.equals(editorId)) {
 					throw new BusinessException(ErrorCodes.ACTION_DISALLOWED_FOR_THIS_USER);
 				}
-				break;
+				return;
 			case "AnyEditor":
-				userRoleKey = new UserRoleKey();
-				userRoleKey.setUserId(actionBy);
-				userRoleKey.setRoleId(CommonConstants.EDITOR_ROLE);
-				if (userRoleService.get(userRoleKey) == null) {
+				if (userRoleService.getByUserIdAndRole(actionBy, CommonConstants.EDITOR_ROLE) == null) {
 					throw new BusinessException(ErrorCodes.ACTION_DISALLOWED_FOR_THIS_USER);
 				}
-				break;
-
+				return;
 			default:
 				log.severe("Invalid role '" + role + "' configured in state transition access config.");
 			}

@@ -6,7 +6,8 @@ public enum ArticleStatusType {
 	Unassigned,
 	Assigned,
 	UnderReview,
-	Rework,
+	ReworkForAuthor,
+	ReworkForEditor,
 	ReadyToPublish,
 	Published,
 	Closed;

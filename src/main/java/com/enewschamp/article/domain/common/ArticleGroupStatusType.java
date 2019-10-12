@@ -30,7 +30,8 @@ public enum ArticleGroupStatusType {
 				status = ArticleGroupStatusType.Assigned;
 			break;
 			case UnderReview:
-			case Rework:
+			case ReworkForAuthor:
+			case ReworkForEditor:
 				status = ArticleGroupStatusType.WIP;
 			break;
 			case ReadyToPublish:

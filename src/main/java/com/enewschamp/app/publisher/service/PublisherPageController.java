@@ -56,7 +56,7 @@ public class PublisherPageController {
 			
 			PageDTO pageResponse = processRequest(pageName, actionName, pageRequest, "publisher");
 			response = new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
-		}catch(BusinessException e) {
+		} catch(BusinessException e) {
 			HeaderDTO header = pageRequest.getHeader();
 			if(header == null) {
 				header = new HeaderDTO();

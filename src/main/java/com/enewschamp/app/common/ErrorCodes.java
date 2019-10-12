@@ -2,6 +2,7 @@ package com.enewschamp.app.common;
 
 public interface ErrorCodes {
 
+	// Error codes for publication APIs start
 	public static String ARTICLE_GROUP_NOT_FOUND = "PUB_001";
 	public static String ARTICLE_NOT_FOUND = "PUB_002";
 	public static String EDITION_NOT_FOUND = "PUB_003";
@@ -18,7 +19,9 @@ public interface ErrorCodes {
 	public static String QUIZ_LIMIT_EXCEEDED = "PUB_014";
 	public static String PUBLICATION_DAILY_SUMMARY_NOT_FOUND = "PUB_015";
 	public static String PUBLICATION_MONTHLY_SUMMARY_NOT_FOUND = "PUB_016";
-
+	public static String RATING_REQD_FOR_PUBLISH = "PUB_017";
+	public static String REWORK_COMMENTS_REQUIRED = "PUB_018";
+	// Error codes for publication APIs end
 
 	public static String STUDENT_DTLS_NOT_FOUND = "STUDDTLS_001";
 	
