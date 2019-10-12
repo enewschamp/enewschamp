@@ -2,6 +2,7 @@ package com.enewschamp.article.domain.common;
 
 public enum ArticleStatusType {
 
+	Initial,
 	Unassigned,
 	Assigned,
 	UnderReview,

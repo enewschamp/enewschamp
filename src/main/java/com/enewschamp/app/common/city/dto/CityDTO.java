@@ -1,16 +1,15 @@
 package com.enewschamp.app.common.city.dto;
 
-import com.enewschamp.domain.common.BaseEntity;
+import com.enewschamp.app.common.MaintenanceDTO;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class CityDTO extends BaseEntity{
+@EqualsAndHashCode(callSuper=false)
+public class CityDTO extends MaintenanceDTO { 
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -4856450567308583126L;
 
 	private Long cityId;
 	
@@ -23,5 +22,6 @@ public class CityDTO extends BaseEntity{
 	
 	private String countryId;
 	
+	private boolean isApplicableForNewsEvents = false;
 
 }

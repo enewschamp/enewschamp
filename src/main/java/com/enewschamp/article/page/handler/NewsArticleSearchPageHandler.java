@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.city.service.CityService;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
 import com.enewschamp.article.domain.service.NewsArticleService;
@@ -47,6 +48,9 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 	
 	@Autowired
 	EditionService editionService;
+	
+	@Autowired
+	CityService cityService;
 	
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
@@ -90,6 +94,7 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 		newsArticleSearchPageData.setMonthsLOV(MonthType.getLOV());
 		newsArticleSearchPageData.setDaysLOV(WeekDayType.getLOV());
 		newsArticleSearchPageData.setEditionsLOV(editionService.getLOV());
+		newsArticleSearchPageData.setCityLOV(cityService.getLOVForNewsEvents());
 		page.setData(newsArticleSearchPageData);
 		return page;
 	}

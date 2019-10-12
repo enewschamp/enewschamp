@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.city.repository.CityRepository;
+import com.enewschamp.domain.service.AbstractDomainService;
+import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
 
 @Service
-public class CityService {
+public class CityService extends AbstractDomainService {
 
 	@Autowired
 	CityRepository cityRepository;
@@ -66,4 +68,9 @@ public class CityService {
 	{
 		return cityRepository.getCitiesByState(stateId,countryId);
 	}
+	
+	public List<ListOfValuesItem> getLOVForNewsEvents() {
+		return toListOfValuesItems(cityRepository.getCityLOVForNewsEvent());
+	}
+	
 }

@@ -74,8 +74,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 
 			// Load News and Events..
 			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
-			articleTypeList.add(ArticleType.Event);
-			articleTypeList.add(ArticleType.News);
+			articleTypeList.add(ArticleType.News_Event);
 
 			searchRequestData.setArticleTypeList(articleTypeList);
 
@@ -104,8 +103,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 			searchRequestData.setCity(newsEventsSearchPageData.getCity());
 			// Load News and Events..
 			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
-			articleTypeList.add(ArticleType.Event);
-			articleTypeList.add(ArticleType.News);
+			articleTypeList.add(ArticleType.News_Event);
 
 			searchRequestData.setHeadline(newsEventsSearchPageData.getHeadline());
 			String monthYear = newsEventsSearchPageData.getMonth();
@@ -163,8 +161,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 
 			// Load News and Events..
 			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
-			articleTypeList.add(ArticleType.Event);
-			articleTypeList.add(ArticleType.News);
+			articleTypeList.add(ArticleType.News_Event);
 
 			searchRequestData.setArticleTypeList(articleTypeList);
 
@@ -196,8 +193,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 
 			// Load News and Events..
 			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
-			articleTypeList.add(ArticleType.Event);
-			articleTypeList.add(ArticleType.News);
+			articleTypeList.add(ArticleType.News_Event);
 
 			searchRequestData.setArticleTypeList(articleTypeList);
 

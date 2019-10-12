@@ -60,12 +60,12 @@ public class NewsArticleService {
 	
 	public NewsArticle create(NewsArticle article) {
 		new ArticleBusinessPolicy(article).validateAndThrow();
-		deriveArticleStatus(article);
+		deriveArticleStatus(article, true);
 		return repository.save(article);
 	}
 	
 	public NewsArticle update(NewsArticle article) {
-		deriveArticleStatus(article);
+		deriveArticleStatus(article, true);
 		Long articleId = article.getNewsArticleId();
 		NewsArticle existingEntity = load(articleId);
 		modelMapper.map(article, existingEntity);
@@ -73,7 +73,7 @@ public class NewsArticleService {
 	}
 	
 	public NewsArticle patch(NewsArticle article) {
-		deriveArticleStatus(article);
+		deriveArticleStatus(article, true);
 		Long articleId = article.getNewsArticleId();
 		NewsArticle existingEntity = load(articleId);
 		modelMapperForPatch.map(article, existingEntity);
@@ -118,7 +118,7 @@ public class NewsArticleService {
 		return auditBuilder.build();
 	}
 	
-	public ArticleStatusType deriveArticleStatus(NewsArticle article) {
+	public ArticleStatusType deriveArticleStatus(NewsArticle article, boolean validateAccess) {
 		ArticleStatusType status = ArticleStatusType.Unassigned;
 		if(article.getCurrentAction() != null) {
 			ArticleStatusType existingStatus = repository.getCurrentStatus(article.getNewsArticleId());
@@ -136,8 +136,18 @@ public class NewsArticleService {
 			}
 			
 			status = ArticleStatusType.fromValue(nextStatus);
+			statusTransitionHandler.validateStateTransitionAccess(transition, article.getAuthorId(), article.getEditorId(), article.getPublisherId(), article.getOperatorId());
+		} else {
+			// Check for first time creation
+			if(get(article.getNewsArticleId()) == null) {
+				StatusTransitionDTO transition = new StatusTransitionDTO(NewsArticle.class.getSimpleName(), 
+						 String.valueOf(article.getNewsArticleId()),
+						 ArticleStatusType.Initial.toString(),
+					     ArticleActionType.SaveNewsArticleGroup.toString(), 
+					     null);
+				statusTransitionHandler.validateStateTransitionAccess(transition, article.getAuthorId(), article.getEditorId(), article.getPublisherId(), article.getOperatorId());
+			}
 		}
-		
 		
 		article.setStatus(status);
 		return status;
@@ -149,7 +159,7 @@ public class NewsArticleService {
 		for(NewsArticle article: existingArticles) {
 			article.setAuthorId(authorId);
 			article.setCurrentAction(ArticleActionType.AssignAuthor);
-			deriveArticleStatus(article);
+			deriveArticleStatus(article, true);
 			repository.save(article);
 		}
 		return existingArticles;
@@ -182,7 +192,7 @@ public class NewsArticleService {
 		articleLinkages.forEach(articleLinkage -> {
 			NewsArticle article = load(articleLinkage.getNewsArticleId());
 			article.setCurrentAction(ArticleActionType.Publish);
-			deriveArticleStatus(article);
+			deriveArticleStatus(article, true);
 			article.setPublishDate(publication.getPublishDate());
 			article.setPublisherId(publication.getPublisherId());
 			repository.save(article);

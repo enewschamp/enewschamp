@@ -1,7 +1,5 @@
 package com.enewschamp.app.service;
 
-import javax.transaction.Transactional;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +16,9 @@ import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.domain.common.PageNavigationContext;
+import com.enewschamp.problem.BusinessException;
+import com.enewschamp.problem.Fault;
+import com.enewschamp.problem.HttpStatusAdapter;
 
 import lombok.extern.java.Log;
 
@@ -35,42 +36,29 @@ public class PageController {
 	@Autowired
 	ModelMapper modelMapper;
 	
-//	@PostMapping(value = "/pages/{pageName}/{actionName}")
-//	public ResponseEntity<PageDTO> get(@PathVariable String pageName, @PathVariable String actionName, @RequestBody PageRequestDTO pageRequest) {
-//		
-//		pageRequest.getHeader().setPageName(pageName);
-//		pageRequest.getHeader().setAction(actionName);
-//		
-//		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest);
-//		
-//		return new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
-//	}
-	
 	@PostMapping(value = "/app")
 	public ResponseEntity<PageDTO> processAppRequest(@RequestBody PageRequestDTO pageRequest) {
 		
-		String pageName = pageRequest.getHeader().getPageName();
-		String actionName = pageRequest.getHeader().getAction();
-		pageRequest.getHeader().setPageName(pageName);
-		pageRequest.getHeader().setAction(actionName);
+		ResponseEntity<PageDTO> response = null;
+		try {
+			String pageName = pageRequest.getHeader().getPageName();
+			String actionName = pageRequest.getHeader().getAction();
+			pageRequest.getHeader().setPageName(pageName);
+			pageRequest.getHeader().setAction(actionName);
+			
+			PageDTO pageResponse = processRequest(pageName, actionName, pageRequest, "app");
+			response = new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
+		} catch(BusinessException e) {
+			HeaderDTO header = pageRequest.getHeader();
+			if(header == null) {
+				header = new HeaderDTO();
+			}
+			header.setRequestStatus(RequestStatusType.F);
+			throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e, header);
+		}
+		 
+		return response;
 		
-		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest, "app");
-		
-		return new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
-	}
-	
-	@PostMapping(value = "/publisher")
-	@Transactional
-	public ResponseEntity<PageDTO> processPublisherAppRequest(@RequestBody PageRequestDTO pageRequest) {
-		
-		String pageName = pageRequest.getHeader().getPageName();
-		String actionName = pageRequest.getHeader().getAction();
-		pageRequest.getHeader().setPageName(pageName);
-		pageRequest.getHeader().setAction(actionName);
-		
-		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest, "publisher");
-		
-		return new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
 	}
 
 	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest, String context) {

@@ -21,5 +21,6 @@ public class NewsArticleSearchPageData extends PageData {
 	private List<ListOfValuesItem> editorLOV;
 	private List<ListOfValuesItem> publisherLOV;
 	private List<ListOfValuesItem> genreLOV;
+	private List<ListOfValuesItem> cityLOV;
 
 }

@@ -2,7 +2,6 @@ package com.enewschamp.article.domain.common;
 
 public enum ArticleType {
 
-	News,
-	Event,
+	News_Event,
 	Article
 }

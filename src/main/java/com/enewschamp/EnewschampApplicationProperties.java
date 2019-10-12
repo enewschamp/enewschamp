@@ -75,4 +75,7 @@ public class EnewschampApplicationProperties {
 	private ArticleImageConfig articleImageConfig;
 	
 	private Map<String, Map<String, Map<String, String>>> statusTransitionConfig;
+	private Map<String, Map<String, Map<String, List<String>>>> actionAccessConfig;
+	
+	
 }

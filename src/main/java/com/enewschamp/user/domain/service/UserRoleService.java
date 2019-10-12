@@ -36,14 +36,14 @@ public class UserRoleService extends AbstractDomainService {
 	
 	public UserRole update(UserRole userRole) {
 		UserRoleKey userRoleKey = userRole.getUserRoleKey();
-		UserRole existingUserRole = get(userRoleKey);
+		UserRole existingUserRole = load(userRoleKey);
 		modelMapper.map(userRole, existingUserRole);
 		return repository.save(existingUserRole);
 	}
 	
 	public UserRole patch(UserRole userRole) {
 		UserRoleKey userRoleKey = userRole.getUserRoleKey();
-		UserRole existingEntity = get(userRoleKey);
+		UserRole existingEntity = load(userRoleKey);
 		modelMapperForPatch.map(userRole, existingEntity);
 		return repository.save(existingEntity);
 	}
@@ -52,12 +52,21 @@ public class UserRoleService extends AbstractDomainService {
 		repository.deleteById(userRoleKey);
 	}
 	
-	public UserRole get(UserRoleKey userRoleKey) {
+	public UserRole load(UserRoleKey userRoleKey) {
 		Optional<UserRole> existingEntity = repository.findById(userRoleKey);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
 			throw new BusinessException(ErrorCodes.USER_ROLE_NOT_FOUND);
+		}
+	}
+	
+	public UserRole get(UserRoleKey userRoleKey) {
+		Optional<UserRole> existingEntity = repository.findById(userRoleKey);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
+		} else {
+			return null;
 		}
 	}
 	

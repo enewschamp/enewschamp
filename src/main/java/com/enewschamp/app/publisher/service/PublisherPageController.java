@@ -19,7 +19,6 @@ import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.RequestStatusType;
-import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
@@ -31,7 +30,6 @@ import lombok.extern.java.Log;
 @Log
 @RestController
 @RequestMapping("/enewschamp-api/v1")
-@Deprecated
 public class PublisherPageController {
 
 	@Autowired
@@ -43,7 +41,7 @@ public class PublisherPageController {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	@PostMapping(value = "/publisher1")	
+	@PostMapping(value = "/publisher")
 	@Transactional
 	public ResponseEntity<PageDTO> processPublisherAppRequest(@RequestBody PageRequestDTO pageRequest) {
 		
@@ -72,15 +70,14 @@ public class PublisherPageController {
 
 	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest, String context) {
 		//Process current page
-		IPageHandler pageHandler = pageHandlerFactory.getPageHandler(pageName, context);
-		PageDTO pageResponse = pageHandler.handleAction(actionName, pageRequest);
+		PageDTO pageResponse = pageHandlerFactory.getPageHandler(pageName, context).handleAction(actionName, pageRequest);
 		
 		//Load next page
 		String nextPageName = appConfig.getPageNavigationConfig().get(context).get(pageName.toLowerCase()).get(actionName.toLowerCase());
 		if(nextPageName == null) {
 			throw new BusinessException(ErrorCodes.NEXT_PAGE_NOT_FOUND, pageName, actionName);
 		}
-		if(!nextPageName.trim().equals("") && !pageName.equals(nextPageName)) {
+		if(!pageName.equals(nextPageName) && !nextPageName.isEmpty()) {
 			PageNavigationContext pageNavigationContext = new PageNavigationContext();
 			pageNavigationContext.setActionName(actionName);
 			pageNavigationContext.setPageRequest(pageRequest);

@@ -20,10 +20,7 @@ import lombok.EqualsAndHashCode;
 @Table(name="City")
 public class City extends BaseEntity{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6268188630471167106L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "city_id_generator")
@@ -47,6 +44,9 @@ public class City extends BaseEntity{
 	@NotNull
 	@Column(name = "countryId", length=2)
 	private String countryId;
+	
+	@Column(name = "isApplicableForNewsEvents")
+	private boolean isApplicableForNewsEvents = false;
 	
 
 }

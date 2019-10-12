@@ -131,7 +131,7 @@ public class NewsArticleGroupService {
 		ArticleGroupStatusType newStatus = null;
 		if(articles != null) {
 			for(NewsArticle article: articles) {
-				ArticleStatusType articleStatus = newsArticleService.deriveArticleStatus(article);
+				ArticleStatusType articleStatus = newsArticleService.deriveArticleStatus(article, false);
 				if(articleStatus != null) {
 					ArticleGroupStatusType status = ArticleGroupStatusType.fromArticleStatus(articleStatus);
 					if(status.equals(ArticleGroupStatusType.WIP)) {
