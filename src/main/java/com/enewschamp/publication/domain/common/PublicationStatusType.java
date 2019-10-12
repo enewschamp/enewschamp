@@ -2,7 +2,7 @@ package com.enewschamp.publication.domain.common;
 
 public enum PublicationStatusType {
 
-	Unassigned,
+	Initial,
 	Assigned,
 	Rework,
 	ReadyToPublish,

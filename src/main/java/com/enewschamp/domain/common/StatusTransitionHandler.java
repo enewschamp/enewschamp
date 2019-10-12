@@ -59,31 +59,37 @@ public class StatusTransitionHandler {
 		}
 		
 		for (String role : accessRoles) {
+			boolean isValidAccess = false;
 			switch (role) {
-			case "Author":
-				if (!actionBy.equals(authorId)) {
-					throw new BusinessException(ErrorCodes.ACTION_DISALLOWED_FOR_THIS_USER);
-				}
+				case "Author":
+					if (actionBy.equals(authorId)) {
+						isValidAccess = true;
+					}
+					break;
+				case "AnyPublisher":
+					if (userRoleService.getByUserIdAndRole(actionBy, CommonConstants.PUBLISHER_ROLE) != null) {
+						isValidAccess = true;
+					}
+					break;
+				case "Editor":
+					if (actionBy.equals(editorId)) {
+						isValidAccess = true;
+					}
+					break;
+				case "AnyEditor":
+					if (userRoleService.getByUserIdAndRole(actionBy, CommonConstants.EDITOR_ROLE) != null) {
+						isValidAccess = true;
+					}
+					break;
+				default:
+					log.severe("Invalid role '" + role + "' configured in state transition access config.");
+			}
+			if(isValidAccess) {
 				return;
-			case "AnyPublisher":
-				if (userRoleService.getByUserIdAndRole(actionBy, CommonConstants.PUBLISHER_ROLE) == null) {
-					throw new BusinessException(ErrorCodes.ACTION_DISALLOWED_FOR_THIS_USER);
-				}
-				return;
-			case "Editor":
-				if (!actionBy.equals(editorId)) {
-					throw new BusinessException(ErrorCodes.ACTION_DISALLOWED_FOR_THIS_USER);
-				}
-				return;
-			case "AnyEditor":
-				if (userRoleService.getByUserIdAndRole(actionBy, CommonConstants.EDITOR_ROLE) == null) {
-					throw new BusinessException(ErrorCodes.ACTION_DISALLOWED_FOR_THIS_USER);
-				}
-				return;
-			default:
-				log.severe("Invalid role '" + role + "' configured in state transition access config.");
 			}
 		}
+		
+		throw new BusinessException(ErrorCodes.ACTION_DISALLOWED_FOR_THIS_USER, transition.getAction(), transition.getFromStatus());
 
 	}
 

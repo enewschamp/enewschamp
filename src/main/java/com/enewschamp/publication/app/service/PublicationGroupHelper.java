@@ -47,17 +47,27 @@ public class PublicationGroupHelper {
 		
 		List<PublicationDTO> publicationList = new ArrayList<PublicationDTO>(); 
 		for(PublicationDTO publicationDTO: publicationDTOs) {
-			publicationDTO.setPublicationGroupId(publicationGroup.getPublicationGroupId());
-			publicationDTO.setRecordInUse(publicationGroup.getRecordInUse());
-			publicationDTO.setOperatorId(publicationGroup.getOperatorId());
-			publicationDTO.setEditionId(publicationGroup.getEditionId());
-			publicationDTO.setPublishDate(publicationGroup.getPublicationDate());
+			copyFromPublicationGroup(publicationGroup, publicationDTO);
 			publicationDTO = publicationHelper.createPublication(publicationDTO);
 			publicationList.add(publicationDTO);
 		}
 		publicationGroupDTO.setPublications(publicationList);
 		
 		return publicationGroupDTO;
+	}
+	
+	private void copyFromPublicationGroup(PublicationGroup publicationGroup, PublicationDTO publicationDTO) {
+		publicationDTO.setPublicationGroupId(publicationGroup.getPublicationGroupId());
+		publicationDTO.setRecordInUse(publicationGroup.getRecordInUse());
+		publicationDTO.setOperatorId(publicationGroup.getOperatorId());
+		publicationDTO.setEditionId(publicationGroup.getEditionId());
+		publicationDTO.setPublishDate(publicationGroup.getPublicationDate());
+		if(publicationGroup.getEditorId() != null) {
+			publicationDTO.setEditorId(publicationGroup.getEditorId());
+		}
+		if(publicationGroup.getPublisherId() != null) {
+			publicationDTO.setPublisherId(publicationGroup.getPublisherId());	
+		}
 	}
 
 	public PublicationGroupDTO getPublicationGroup(Long publicationGroupId) {

@@ -213,9 +213,10 @@ public class NewsArticleService {
 		articleLinkages.forEach(articleLinkage -> {
 			NewsArticle article = load(articleLinkage.getNewsArticleId());
 			article.setCurrentAction(ArticleActionType.Publish);
-			deriveArticleStatus(article, true);
 			article.setPublishDate(publication.getPublishDate());
 			article.setPublisherId(publication.getPublisherId());
+			article.setOperatorId(publication.getOperatorId());
+			deriveArticleStatus(article, true);
 			repository.save(article);
 		});
 	}

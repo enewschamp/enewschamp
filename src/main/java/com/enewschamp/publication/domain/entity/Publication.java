@@ -26,6 +26,7 @@ import org.javers.core.metamodel.annotation.DiffIgnore;
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 import com.enewschamp.publication.domain.common.PublicationActionType;
+import com.enewschamp.publication.domain.common.PublicationRatingType;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
 import com.enewschamp.publication.domain.service.PublicationBusinessPolicy;
 
@@ -72,6 +73,10 @@ public class Publication extends BaseEntity {
 	@DiffIgnore
 	private PublicationStatusType previousStatus;
 
+	@Column(name = "Rating")
+	@Enumerated(EnumType.STRING)
+	private PublicationRatingType rating;
+	
 	@NotNull
 	@Column(name = "EditorId", length = ForeignKeyColumnLength.UserId)
 	private String editorId;

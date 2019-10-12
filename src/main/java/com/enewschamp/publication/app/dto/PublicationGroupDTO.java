@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 
 import com.enewschamp.app.common.MaintenanceDTO;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
+import com.enewschamp.publication.domain.common.PublicationGroupStatusType;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,7 +28,15 @@ public class PublicationGroupDTO extends MaintenanceDTO {
 	@NotNull
 	private LocalDate publicationDate;
 	
-	//private PublicationGroupStatusType status;
+	private PublicationGroupStatusType status;
 	
 	private List<PublicationDTO> publications;
+	
+	@Size(max = ForeignKeyColumnLength.UserId)
+	private String editorId;
+
+	@Size(max = ForeignKeyColumnLength.UserId)
+	private String publisherId;
+
 }
+

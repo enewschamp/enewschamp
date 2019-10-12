@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,8 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
+import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
+import com.enewschamp.publication.domain.common.PublicationGroupStatusType;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,9 +44,9 @@ public class PublicationGroup extends BaseEntity {
 	@Column(name = "PublicationDate", unique=true)
 	private LocalDate publicationDate;
 	
-//	@Column(name = "Status", length = 25)
-//	@Enumerated(EnumType.STRING)
-//	private PublicationGroupStatusType status;
+	@Column(name = "Status", length = 25)
+	@Enumerated(EnumType.STRING)
+	private PublicationGroupStatusType status;
 	
 	public String getKeyAsString() {
 		return String.valueOf(this.publicationGroupId);
@@ -50,4 +54,12 @@ public class PublicationGroup extends BaseEntity {
 	
 	@Transient
 	private List<Publication> publications;
+	
+	@NotNull
+	@Column(name = "EditorId", length = ForeignKeyColumnLength.UserId)
+	private String editorId;
+
+	@NotNull
+	@Column(name = "PublisherId", length = ForeignKeyColumnLength.UserId)
+	private String publisherId;
 }

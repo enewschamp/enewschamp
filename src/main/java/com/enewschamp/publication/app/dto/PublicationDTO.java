@@ -3,14 +3,13 @@ package com.enewschamp.publication.app.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.enewschamp.app.common.MaintenanceDTO;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 import com.enewschamp.publication.domain.common.PublicationActionType;
+import com.enewschamp.publication.domain.common.PublicationRatingType;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
 
 import lombok.Data;
@@ -45,9 +44,9 @@ public class PublicationDTO extends MaintenanceDTO {
 	@Size(max = ForeignKeyColumnLength.UserId)
 	private String publisherId;
 
-	@Column(name = "Comments")
-	@Lob
 	private String comments;
+	
+	private PublicationRatingType rating;
 	
 	@NotNull
 	private PublicationActionType currentAction;

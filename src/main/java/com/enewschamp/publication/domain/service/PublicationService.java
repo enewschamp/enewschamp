@@ -23,6 +23,7 @@ import com.enewschamp.domain.common.StatusTransitionDTO;
 import com.enewschamp.domain.common.StatusTransitionHandler;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.app.dto.PublicationDTO;
+import com.enewschamp.publication.domain.common.PublicationActionType;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
 import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
@@ -64,14 +65,14 @@ public class PublicationService {
 	private PublicationDailySummaryService dailySummaryService;
 	
 	public Publication create(Publication publication) {
-		derivePublicationStatus(publication);
+		derivePublicationStatus(publication, true);
 		publication = repository.save(publication);
 		checkAndPerformPublishActions(publication);
 		return publication;
 	}
 	
 	public Publication update(Publication publication) {
-		derivePublicationStatus(publication);
+		derivePublicationStatus(publication, true);
 		Long publicationId = publication.getPublicationId();
 		Publication existingEntity = load(publicationId);
 		modelMapper.map(publication, existingEntity);
@@ -80,7 +81,7 @@ public class PublicationService {
 	}
 	
 	public Publication patch(Publication publication) {
-		derivePublicationStatus(publication);
+		derivePublicationStatus(publication, true);
 		Long publicationId = publication.getPublicationId();
 		Publication existingEntity = load(publicationId);
 		modelMapperForPatch.map(publication, existingEntity);
@@ -109,6 +110,9 @@ public class PublicationService {
 	}
 	
 	public Publication get(Long publicationId) {
+		if(publicationId == null) {
+			return null;
+		}
 		Optional<Publication> existingEntity = repository.findById(publicationId);
 		if(existingEntity.isPresent()) {
 			return existingEntity.get();
@@ -130,33 +134,57 @@ public class PublicationService {
 		return auditBuilder.build();
 	}
 	
-	public PublicationStatusType derivePublicationStatus(Publication publication) {
-		PublicationStatusType status = PublicationStatusType.Unassigned;
-		if(publication.getPublicationId() == null 
-				|| publication.getPublicationId() == 0
-				|| publication.getEditorId() != null) {
-			status = PublicationStatusType.Assigned;
+	public PublicationStatusType derivePublicationStatus(Publication publication, boolean validateAccess) {
+		PublicationStatusType status = PublicationStatusType.Initial;
+		PublicationStatusType existingStatus = null;
+		PublicationActionType currentAction = publication.getCurrentAction();
+		Publication existingPublication = get(publication.getPublicationId());
+		if(existingPublication == null) {
+			existingStatus = PublicationStatusType.Initial;
+			currentAction = PublicationActionType.SavePublicationGrp;
 		} else {
-			if(publication.getCurrentAction() != null && publication.getPublicationId() != null) {
-				PublicationStatusType existingStatus = repository.getCurrentStatus(publication.getPublicationId());
-				existingStatus = existingStatus == null ? PublicationStatusType.Unassigned : existingStatus;
-				StatusTransitionDTO transition = new StatusTransitionDTO(Publication.class.getSimpleName(), 
-																		 String.valueOf(publication.getPublicationId()),
-																		 existingStatus.toString(),
-																	     publication.getCurrentAction().toString(), 
-																	     null);
-				
-				String nextStatus = statusTransitionHandler.findNextStatus(transition);
-				if(nextStatus.equals(StatusTransitionDTO.REVERSE_STATE)) {
-					PublicationStatusType previousStatus = repository.getPreviousStatus(publication.getPublicationId());
-					nextStatus = previousStatus.toString();
-				}
-				
-				status = PublicationStatusType.fromValue(nextStatus);
+			existingStatus = existingPublication.getStatus();
+		}
+		StatusTransitionDTO transition = null;
+		if(publication.getCurrentAction() != null) {
+			transition = new StatusTransitionDTO(Publication.class.getSimpleName(), 
+													 String.valueOf(publication.getPublicationId()),
+													 existingStatus.toString(),
+													 currentAction.toString(), 
+												     null);
+			
+			String nextStatus = statusTransitionHandler.findNextStatus(transition);
+			if(nextStatus.equals(StatusTransitionDTO.REVERSE_STATE)) {
+				PublicationStatusType previousStatus = repository.getPreviousStatus(publication.getPublicationId());
+				nextStatus = previousStatus.toString();
 			}
+			
+			status = PublicationStatusType.fromValue(nextStatus); 
+		}
+		if(transition != null && validateAccess) {
+			statusTransitionHandler.validateStateTransitionAccess(transition, null, publication.getEditorId(), publication.getPublisherId(), publication.getOperatorId());
+			validateStateTransition(publication, transition, status);
 		}
 		publication.setStatus(status);
 		return status;
+	}
+	
+	private void validateStateTransition(Publication publication, StatusTransitionDTO transition, PublicationStatusType newStatus) {
+		if(newStatus == null) {
+			return;
+		}
+		switch(newStatus) {
+			case Published:
+				if(publication.getRating() == null) {
+					new BusinessException(ErrorCodes.RATING_REQD_FOR_PUBLISH);
+				}
+			break;
+			case Rework:
+				if(publication.getComments() == null || publication.getComments().isEmpty()) {
+					new BusinessException(ErrorCodes.REWORK_COMMENTS_REQUIRED);
+				}
+			break;
+		}
 	}
 	
 	public Publication assignEditor(Long publicationId, String editorId) {

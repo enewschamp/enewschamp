@@ -84,7 +84,7 @@ public class PublicationGroupService {
 	
 	public PublicationGroupStatusType deriveStatus(PublicationGroup articleGroup) {
 		PublicationGroupStatusType newStatus = deriveStatus(articleGroup.getPublications());
-		//articleGroup.setStatus(newStatus);
+		articleGroup.setStatus(newStatus);
 		return newStatus;
 	}
 	
@@ -92,7 +92,7 @@ public class PublicationGroupService {
 		PublicationGroupStatusType newStatus = null;
 		if(publications != null) {
 			for(Publication publication: publications) {
-				PublicationStatusType articleStatus = publicationService.derivePublicationStatus(publication);
+				PublicationStatusType articleStatus = publicationService.derivePublicationStatus(publication, false);
 				if(articleStatus != null) {
 					PublicationGroupStatusType status = PublicationGroupStatusType.fromPublicationStatus(articleStatus);
 					if(status.equals(PublicationGroupStatusType.WIP)) {
