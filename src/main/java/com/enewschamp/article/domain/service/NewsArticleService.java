@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.EnewschampApplicationProperties;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
@@ -27,6 +28,7 @@ import com.enewschamp.domain.common.StatusTransitionHandler;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
+import com.enewschamp.user.domain.service.UserRoleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -57,6 +59,8 @@ public class NewsArticleService {
 	@Autowired
 	private StatusTransitionHandler statusTransitionHandler;
 	
+	@Autowired
+	UserRoleService userRoleService;
 	
 	public NewsArticle create(NewsArticle article) {
 		new ArticleBusinessPolicy(article).validateAndThrow();
@@ -176,6 +180,9 @@ public class NewsArticleService {
 	
 	public List<NewsArticle> assignAuthor(Long articleGroupId, String authorId) {
 		
+		if (userRoleService.getByUserIdAndRole(authorId, CommonConstants.AUTHOR_ROLE) == null) {
+			throw new BusinessException(ErrorCodes.ROLE_NOT_ASSIGNED_TO_USER, CommonConstants.AUTHOR_ROLE, authorId);
+		}
 		List<NewsArticle> existingArticles = repository.findByNewsArticleGroupId(articleGroupId);
 		for(NewsArticle article: existingArticles) {
 			article.setAuthorId(authorId);
@@ -187,7 +194,9 @@ public class NewsArticleService {
 	}
 	
 	public List<NewsArticle> assignEditor(Long articleGroupId, String editorId) {
-		
+		if (userRoleService.getByUserIdAndRole(editorId, CommonConstants.EDITOR_ROLE) == null) {
+			throw new BusinessException(ErrorCodes.ROLE_NOT_ASSIGNED_TO_USER, CommonConstants.EDITOR_ROLE, editorId);
+		}
 		List<NewsArticle> existingArticles = repository.findByNewsArticleGroupId(articleGroupId);
 		for(NewsArticle article: existingArticles) {
 			article.setEditorId(editorId);

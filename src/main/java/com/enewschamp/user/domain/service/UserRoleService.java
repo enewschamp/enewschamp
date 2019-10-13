@@ -57,7 +57,7 @@ public class UserRoleService extends AbstractDomainService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.USER_ROLE_NOT_FOUND);
+			throw new BusinessException(ErrorCodes.USER_ROLE_NOT_FOUND, userRoleKey.getRoleId(), userRoleKey.getUserId(), userRoleKey.getDayOfTheWeek().toString());
 		}
 	}
 	

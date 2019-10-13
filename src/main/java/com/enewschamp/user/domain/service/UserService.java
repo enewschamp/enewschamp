@@ -58,7 +58,7 @@ public class UserService extends AbstractDomainService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.USER_NOT_FOUND);
+			throw new BusinessException(ErrorCodes.USER_NOT_FOUND, userId);
 		}
 	}
 	

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.EnewschampApplicationProperties;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.article.domain.service.NewsArticleService;
@@ -28,6 +29,7 @@ import com.enewschamp.publication.domain.common.PublicationStatusType;
 import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
 import com.enewschamp.publication.page.data.PublicationSearchRequest;
+import com.enewschamp.user.domain.service.UserRoleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -63,6 +65,9 @@ public class PublicationService {
 	
 	@Autowired
 	private PublicationDailySummaryService dailySummaryService;
+	
+	@Autowired
+	UserRoleService userRoleService;
 	
 	public Publication create(Publication publication) {
 		derivePublicationStatus(publication, true);
@@ -188,7 +193,9 @@ public class PublicationService {
 	}
 	
 	public Publication assignEditor(Long publicationId, String editorId) {
-		
+		if (userRoleService.getByUserIdAndRole(editorId, CommonConstants.EDITOR_ROLE) == null) {
+			throw new BusinessException(ErrorCodes.ROLE_NOT_ASSIGNED_TO_USER, CommonConstants.EDITOR_ROLE, editorId);
+		}
 		Publication publication = get(publicationId);
 		if(publication != null) {
 			publication.setEditorId(editorId);
@@ -198,7 +205,9 @@ public class PublicationService {
 	}
 	
 	public Publication assignPublisher(Long publicationId, String publisherId) {
-		
+		if (userRoleService.getByUserIdAndRole(publisherId, CommonConstants.PUBLISHER_ROLE) == null) {
+			throw new BusinessException(ErrorCodes.ROLE_NOT_ASSIGNED_TO_USER, CommonConstants.PUBLISHER_ROLE, publisherId);
+		}
 		Publication publication = get(publicationId);
 		if(publication != null) {
 			publication.setPublisherId(publisherId);
