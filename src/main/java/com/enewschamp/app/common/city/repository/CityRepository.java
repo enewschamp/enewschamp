@@ -25,5 +25,7 @@ public interface CityRepository extends JpaRepository<City, Long>{
 	
 	@Query(value="select a.cityId as id, a.nameId as name from City a")
     public List<LOVProjection> getCityLOVForNewsEvent();
+	@Query("Select c from City c where c.nameId= :nameId and c.recordInUse ='Y' ")
+	public Optional<City> getCity(@Param("nameId") String nameId);
 
 }
