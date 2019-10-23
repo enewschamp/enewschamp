@@ -12,6 +12,7 @@ import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.app.common.state.repository.StateRepository;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.subscription.app.dto.StatePageData;
 
 @Service
 public class StateService {
@@ -61,4 +62,21 @@ public class StateService {
 	{
 		return stateRepository.getStateForCountry(countryId);
 	}
+	public StatePageData getState(String stateId)
+	{
+		Optional<State> stateentity= stateRepository.getState(stateId);
+		StatePageData statePageData = new StatePageData();
+		if(stateentity.isPresent())
+		{
+			State state = stateentity.get();
+			
+			statePageData.setId(state.getNameId());
+			statePageData.setName(state.getDescription());
+			
+		}
+		
+		return statePageData;
+	}
+	
+	
 }
