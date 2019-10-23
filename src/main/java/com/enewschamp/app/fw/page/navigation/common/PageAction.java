@@ -63,5 +63,8 @@ public enum PageAction {
 	ClearFilterNewsEvents,
 	ClickSavedArticle,
 	ClickOpinionArticle,
-	ClickNewsEvent
+	ClickNewsEvent,
+	stateLov,
+	cityLov,
+	schoolLov
 }
