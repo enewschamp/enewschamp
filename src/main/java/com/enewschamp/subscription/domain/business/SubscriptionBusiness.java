@@ -1,7 +1,9 @@
 package com.enewschamp.subscription.domain.business;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -271,6 +273,22 @@ public class SubscriptionBusiness {
 		return  studentSubscriptionDTO;
 	}
 	
+	public boolean isStudentSubscriptionValid(String emailId, String eidtionId)
+	{
+		boolean validSubcription=false;
+		Long studentId = studentControlBusiness.getStudentId(emailId);
+		StudentSubscription studentSubscriptionEntity = studentSubscription.get(studentId, eidtionId);
+		LocalDate startDate = studentSubscriptionEntity.getStartDate();
+		LocalDate endDate = studentSubscriptionEntity.getEndDate();
+		long diffDays  = ChronoUnit.DAYS.between(startDate, endDate);
+		long evalDays = appConfig.getEvalDays();
+		if(evalDays>=diffDays)
+		{
+			validSubcription=true;
+		}
+		return validSubcription;
+
+	}
 	public StudentSubscriptionWorkDTO getStudentSubscriptionFromWork(Long studentId, String eidtionId)
 	{
 		StudentSubscriptionWork studentSubscriptionEntity = studentWorkSubscription.get(studentId, eidtionId);
