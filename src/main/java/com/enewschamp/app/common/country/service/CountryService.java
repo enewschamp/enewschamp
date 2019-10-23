@@ -1,5 +1,6 @@
 package com.enewschamp.app.common.country.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import com.enewschamp.app.common.country.dto.CountryDTO;
 import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.app.common.country.repository.CountryRepository;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.subscription.app.dto.CountryPageData;
 import com.google.common.reflect.TypeToken;
 
 @Service
@@ -65,5 +67,34 @@ public class CountryService {
 
 		List<CountryDTO> countryDtoList = modelMapper.map(existingEntity,listType);
 		return countryDtoList;
+	}
+	public List<CountryPageData> getCountries()
+	{
+		List<Country> existingEntity = countryRepository.getCountries();
+		List<CountryPageData> countryPageDataList = new ArrayList<CountryPageData>();
+		for(Country country:existingEntity)
+		{
+			CountryPageData countryData = new CountryPageData();
+			countryData.setId(country.getNameId());
+			countryData.setName(country.getDescription());
+			countryPageDataList.add(countryData);
+		}
+		
+		return countryPageDataList;
+	}
+	public CountryPageData getCountry(String countryId)
+	{
+		Optional<Country> existingEntity = countryRepository.getCountry(countryId);
+		CountryPageData countryData = new CountryPageData();
+
+		if(existingEntity.isPresent())
+		{
+			Country country = existingEntity.get();
+			countryData.setId(country.getNameId());
+			countryData.setName(country.getDescription());
+			
+		}
+		
+		return countryData;
 	}
 }
