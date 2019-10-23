@@ -1,4 +1,4 @@
-package com.enewschamp.app.security.service;
+package com.enewschamp.security.service;
 
 import java.util.Optional;
 
@@ -9,9 +9,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
-import com.enewschamp.app.security.entity.AppSecurity;
-import com.enewschamp.app.security.repository.AppSecurityRepository;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.security.entity.AppSecurity;
+import com.enewschamp.security.repository.AppSecurityRepository;
 
 @Service
 public class AppSecurityService {
