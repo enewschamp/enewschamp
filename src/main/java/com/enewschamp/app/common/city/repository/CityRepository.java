@@ -1,6 +1,7 @@
 package com.enewschamp.app.common.city.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +13,7 @@ import com.enewschamp.publication.domain.common.LOVProjection;
 public interface CityRepository extends JpaRepository<City, Long>{
 
 	@Query("Select c from City c where c.stateId = :stateId and c.countryId= :countryId and c.recordInUse ='Y' ")
-	public List<City> getCitiesByState(@Param("stateId")String stateId, @Param("countryId")String countryId);
+	public List<City> getCitiesByState(@Param("stateId")String stateId);
 	
 	@Query("Select c from City c where c.countryId= :countryId and c.recordInUse ='Y' ")
 	public List<City> getCitiesByCountry(@Param("countryId") String countryId);
