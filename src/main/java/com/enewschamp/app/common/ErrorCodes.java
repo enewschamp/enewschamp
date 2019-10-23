@@ -90,7 +90,8 @@ public interface ErrorCodes {
 	public static String PWD_VPWD_DONT_MATCH = "STUD_10";
 	public static String SEC_CODE_VALIDATION_FAILURE = "STUD_11";
 	public static String STUD_LOGIN_NOT_FOUND = "STUD_12";
-
+	public static String APP_SEC_KEY_NOT_FOUND= "APP_SEC_01";
+	public static String UNAUTH_ACCESS= "UNAUTH_ACCESS_01";
 	
 	
 }
