@@ -1,4 +1,4 @@
-package com.enewschamp.app.security.filter;
+package com.enewschamp.security.filter;
 
 import java.io.IOException;
 
@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.enewschamp.app.common.ErrorCodes;
-import com.enewschamp.app.security.service.AppSecurityService;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.security.service.AppSecurityService;
 
 @Configuration
 public class AppSecFilter extends GenericFilterBean{
