@@ -72,5 +72,14 @@ public class CityService extends AbstractDomainService {
 	public List<ListOfValuesItem> getLOVForNewsEvents() {
 		return toListOfValuesItems(cityRepository.getCityLOVForNewsEvent());
 	}
+	public City getCity(String cityId)
+	{
+		Optional<City> cityentity = cityRepository.getCity(cityId);
+		
+		if(cityentity.isPresent())
+		{
+			return cityentity.get(); 
+		}else return null;
+	}
 	
 }
