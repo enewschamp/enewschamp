@@ -3,8 +3,6 @@ package com.enewschamp.subscription.app.dto;
 import java.util.List;
 
 import com.enewschamp.app.common.PageData;
-import com.enewschamp.app.common.country.dto.CountryDTO;
-import com.enewschamp.app.school.entity.School;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,11 +26,11 @@ public class StudentSchoolPageData  extends PageData {
 	private String section;
 	private String emailId;
 	
-	private String countryId;
-	private String stateId;
-	private String cityId;
+	private CountryPageData country;
+	private StatePageData state;
+	private String cityID;
 	
-	private List<CountryDTO> countryLOV;
+	private List<CountryPageData> countryLOV;
 	private String incompeleteFormText;
 	
 }
