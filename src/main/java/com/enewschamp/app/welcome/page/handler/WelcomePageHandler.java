@@ -13,13 +13,14 @@ import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.badges.business.StudentBadgesBusiness;
 import com.enewschamp.app.student.badges.entity.StudentBadges;
-import com.enewschamp.app.student.login.entity.StudentLogin;
-import com.enewschamp.app.student.login.service.StudentLoginBusiness;
 import com.enewschamp.app.student.monthlytrends.business.TrendsMonthlyByGenreBusiness;
 import com.enewschamp.app.student.monthlytrends.business.TrendsMonthlyTotalBusiness;
 import com.enewschamp.app.student.monthlytrends.dto.TrendsMonthlyByGenreDTO;
 import com.enewschamp.app.student.monthlytrends.dto.TrendsMonthlyTotalDTO;
 import com.enewschamp.app.trends.service.TrendsService;
+import com.enewschamp.app.user.login.entity.UserLogin;
+import com.enewschamp.app.user.login.entity.UserType;
+import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.app.welcome.page.data.WelcomePageData;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
@@ -54,7 +55,7 @@ public class WelcomePageHandler implements IPageHandler {
 	EditionService editionService;
 
 	@Autowired
-	StudentLoginBusiness studentLoginBusiness;
+	UserLoginBusiness studentLoginBusiness;
 
 	@Autowired
 	StudentBadgesBusiness studentBadgesBusiness;
@@ -104,7 +105,7 @@ public class WelcomePageHandler implements IPageHandler {
 			editionName = edition.getEditionName();
 			pageData.setEditionName(editionName);
 
-			StudentLogin studentLogin = studentLoginBusiness.getLoginDetails(deviceId, emailId);
+			UserLogin studentLogin = studentLoginBusiness.getLoginDetails(deviceId, emailId, UserType.S);
 			if(studentLogin!=null) {
 			LocalDateTime lastLoginTime = studentLogin.getLastLoginTime();
 
