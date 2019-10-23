@@ -11,8 +11,9 @@ import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
-import com.enewschamp.app.student.login.service.StudentLoginBusiness;
 import com.enewschamp.app.student.registration.business.StudentRegistrationBusiness;
+import com.enewschamp.app.user.login.entity.UserType;
+import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
@@ -30,7 +31,7 @@ public class LoginPageHandler implements IPageHandler {
 	StudentRegistrationBusiness studentRegBusiness;
 
 	@Autowired
-	StudentLoginBusiness studentLoginBusiness;
+	UserLoginBusiness userLoginBusiess;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -67,15 +68,15 @@ public class LoginPageHandler implements IPageHandler {
 		pageDto.setHeader(pageRequest.getHeader());
 		String action = pageRequest.getHeader().getAction();
 		LoginPageData loginPageData = new LoginPageData();
-		String emailId = "";
+		String userId = "";
 		String password = "";
 		String deviceId = "";
 		boolean loginSuccess = false;
 		if (PageAction.login.toString().equalsIgnoreCase(action)) {
-			// String emailId = pageRequest.getData().
+			// String userId = pageRequest.getData().
 			try {
 				loginPageData = objectMapper.readValue(pageRequest.getData().toString(), LoginPageData.class);
-				emailId = loginPageData.getEmailId();
+				userId = loginPageData.getEmailId();
 				password = loginPageData.getPassword();
 				deviceId = loginPageData.getDeviceId();
 
@@ -87,9 +88,9 @@ public class LoginPageHandler implements IPageHandler {
 				throw new RuntimeException(e);
 			}
 
-			loginSuccess = studentRegBusiness.validatePassword(emailId, password);
+			loginSuccess = studentRegBusiness.validatePassword(userId, password);
 			if (loginSuccess) {
-				studentLoginBusiness.login(emailId, deviceId);
+				userLoginBusiess.login(userId, deviceId, UserType.S);
 			} else {
 
 				throw new BusinessException(ErrorCodes.INVALID_EMAILID_OR_PASSWORD, "Invalid User Id Or Password");
@@ -99,7 +100,7 @@ public class LoginPageHandler implements IPageHandler {
 		if (PageAction.logout.toString().equalsIgnoreCase(action)) {
 			try {
 				loginPageData = objectMapper.readValue(pageRequest.getData().toString(), LoginPageData.class);
-				emailId = loginPageData.getEmailId();
+				userId = loginPageData.getEmailId();
 				deviceId = loginPageData.getDeviceId();
 
 			} catch (JsonParseException e) {
@@ -110,7 +111,7 @@ public class LoginPageHandler implements IPageHandler {
 				throw new RuntimeException(e);
 			}
 
-			studentLoginBusiness.logout(emailId, deviceId);
+			userLoginBusiess.logout(userId, deviceId, UserType.S);
 			pageDto.setData(loginPageData);
 
 		}
