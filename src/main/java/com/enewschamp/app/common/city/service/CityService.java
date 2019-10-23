@@ -64,9 +64,9 @@ public class CityService extends AbstractDomainService {
 		return cityRepository.getCitiesByCountry(countryId);
 	}
 	
-	public List<City> getCitiesForState(String stateId, String countryId)
+	public List<City> getCitiesForState(String stateId)
 	{
-		return cityRepository.getCitiesByState(stateId,countryId);
+		return cityRepository.getCitiesByState(stateId);
 	}
 	
 	public List<ListOfValuesItem> getLOVForNewsEvents() {
