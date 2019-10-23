@@ -51,4 +51,8 @@ public class PageNavigator extends BaseEntity{/**
 	
 	@Column(name="processSeq", length=1)	
 	private int processSeq;
+	
+	@Column(name="secured", length=1)	
+	private String secured;
+	
 }
