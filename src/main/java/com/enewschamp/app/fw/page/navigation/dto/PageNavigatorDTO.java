@@ -26,4 +26,6 @@ private static final long serialVersionUID = 1L;
 	
 	private String updationTable;
 	private int processSeq;
+	private String secured;
+
 }
