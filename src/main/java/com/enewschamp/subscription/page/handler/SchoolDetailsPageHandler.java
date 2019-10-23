@@ -1,18 +1,21 @@
 package com.enewschamp.subscription.page.handler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.city.service.CityService;
-import com.enewschamp.app.common.country.dto.CountryDTO;
 import com.enewschamp.app.common.country.service.CountryService;
+import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.app.common.state.service.StateService;
 import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.common.PageSaveTable;
@@ -23,7 +26,13 @@ import com.enewschamp.app.school.service.SchoolService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.subscription.app.dto.CityLOVDTO;
+import com.enewschamp.subscription.app.dto.CountryPageData;
 import com.enewschamp.subscription.app.dto.SchoolData;
+import com.enewschamp.subscription.app.dto.SchoolDetailsRequestData;
+import com.enewschamp.subscription.app.dto.SchoolLovDTO;
+import com.enewschamp.subscription.app.dto.StateLOVDTO;
+import com.enewschamp.subscription.app.dto.StatePageData;
 import com.enewschamp.subscription.app.dto.StudentSchoolDTO;
 import com.enewschamp.subscription.app.dto.StudentSchoolPageData;
 import com.enewschamp.subscription.app.dto.StudentSchoolWorkDTO;
@@ -56,6 +65,12 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 
 	@Autowired
 	CityService cityService;
+	
+	@Autowired
+	private EnewschampApplicationProperties appConfig;
+
+	
+	
 	@Autowired
 	PageNavigationService pageNavigationService;
 	
@@ -86,7 +101,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 		if(PageAction.next.toString().equalsIgnoreCase(action))
 		{
 			StudentSchoolPageData studentSchoolPageData = new StudentSchoolPageData();
-			List<CountryDTO> countries = countryService.getAll();
+			List<CountryPageData> countries = countryService.getCountries();
 			studentSchoolPageData.setCountryLOV(countries);
 			pageDTO.setData(studentSchoolPageData);
 		}
@@ -99,7 +114,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 				StudentSchoolPageData studentSchoolPageData = modelMapper.map(studentSchoolDTO, StudentSchoolPageData.class);
 
 				// set the state, country and cities...
-				List<CountryDTO> countries = countryService.getAll();
+				List<CountryPageData> countries = countryService.getCountries();
 				studentSchoolPageData.setCountryLOV(countries);
 
 				pageDTO.setData(studentSchoolPageData);
@@ -109,7 +124,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 				StudentSchoolWorkDTO studentSchoolWorkDTO = schoolDetailsBusiness.getStudentFromWork(studentId);
 					StudentSchoolPageData studentSchoolPageData = modelMapper.map(studentSchoolWorkDTO, StudentSchoolPageData.class);
 				// set the state, country and cities...
-				List<CountryDTO> countries = countryService.getAll();
+				List<CountryPageData> countries = countryService.getCountries();
 				studentSchoolPageData.setCountryLOV(countries);
 
 				pageDTO.setData(studentSchoolPageData);
@@ -123,16 +138,124 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 			SchoolData schoolData = new SchoolData();
 			schoolData.setId(school.getSchoolId());
 			schoolData.setName(school.getName());
+			String countryId = school.getCountryId();
+			String stateId = school.getStateId();
+			String cityId = school.getCityId();
 			
 			StudentSchoolPageData studentSchoolPageData = modelMapper.map(studentSchoolDTO, StudentSchoolPageData.class);
 			studentSchoolPageData.setSchool(schoolData);
 			
 			// set the state, country and cities...
-			List<CountryDTO> countries = countryService.getAll();
+			List<CountryPageData> countries = countryService.getCountries();
 			studentSchoolPageData.setCountryLOV(countries);
 
+			CountryPageData schoolCountryData = countryService.getCountry(countryId);
+			studentSchoolPageData.setCountry(schoolCountryData);
+			
+			StatePageData statePageData = stateService.getState(stateId);
+			studentSchoolPageData.setState(statePageData);
+			
+			City city  = cityService.getCity(cityId);
+			if(city!=null)
+			studentSchoolPageData.setCityID(city.getDescription());
+			
+			studentSchoolPageData.setIncompeleteFormText(appConfig.getIncompleteFormText());
+			
 			pageDTO.setData(studentSchoolPageData);
 		}
+		else if(PageAction.stateLov.toString().equalsIgnoreCase(action))
+		{
+			String countryId="";
+			try {
+				SchoolDetailsRequestData	schoolDetailsRequestData = objectMapper.readValue(pageNavigationContext.getPageRequest().getData().toString(),
+						SchoolDetailsRequestData.class);
+				countryId = schoolDetailsRequestData.getCountryID();
+				
+			} catch (IOException e) {
+				throw new BusinessException(ErrorCodes.SREVER_ERROR);
+
+			}
+			
+			StateLOVDTO stateLov = new StateLOVDTO();
+			List<State> stateList = stateService.getStateForCountry(countryId);
+			List<StatePageData> statePageDataList = new ArrayList<StatePageData>();
+			for(State state:stateList)
+			{
+				StatePageData statePageData = new StatePageData();
+				statePageData.setId(state.getNameId());
+				statePageData.setName(state.getDescription());
+				statePageDataList.add(statePageData);
+			}
+			stateLov.setStateLOV(statePageDataList);	
+			stateLov.setCountryID(countryId);
+			
+			pageDTO.setData(stateLov);
+		}
+		else if(PageAction.cityLov.toString().equalsIgnoreCase(action))
+		{
+			String countryId="";
+			String stateId="";
+			
+			try {
+				SchoolDetailsRequestData	schoolDetailsRequestData = objectMapper.readValue(pageNavigationContext.getPageRequest().getData().toString(),
+						SchoolDetailsRequestData.class);
+				countryId = schoolDetailsRequestData.getCountryID();
+				stateId=schoolDetailsRequestData.getStateID();
+				
+			} catch (IOException e) {
+				throw new BusinessException(ErrorCodes.SREVER_ERROR);
+			}
+			
+			List<City> cityList = cityService.getCitiesForState(stateId );
+			CityLOVDTO cityDto = new CityLOVDTO();
+			List<String> cities = new ArrayList<String>();
+			
+			for(City city:cityList)
+			{
+				cities.add(city.getNameId());
+			}
+			cityDto.setCityLOV(cities);
+			cityDto.setStateID(stateId);
+			pageDTO.setData(cityDto);
+		}
+		else if(PageAction.schoolLov.toString().equalsIgnoreCase(action))
+		{
+			String countryId="";
+			String stateId="";
+			String cityId="";
+			try {
+				SchoolDetailsRequestData	schoolDetailsRequestData = objectMapper.readValue(pageNavigationContext.getPageRequest().getData().toString(),
+						SchoolDetailsRequestData.class);
+				countryId = schoolDetailsRequestData.getCountryID();
+				stateId=schoolDetailsRequestData.getStateID();
+				cityId = schoolDetailsRequestData.getCityID();
+				
+			} catch (IOException e) {
+				throw new BusinessException(ErrorCodes.SREVER_ERROR);
+			}
+			
+			List<School> schools = schoolService.getSchools(cityId, stateId, countryId);
+			SchoolLovDTO schoolLovData = new SchoolLovDTO();
+			List<SchoolData> schoolDataList = new ArrayList<SchoolData>();
+			
+			for(School school:schools)
+			{
+				SchoolData schoolData = new SchoolData();
+				schoolData.setId(school.getSchoolId());
+				schoolData.setName(school.getName());
+				schoolDataList.add(schoolData);
+				
+			}
+			
+			schoolLovData.setSchoolLOV(schoolDataList);
+			schoolLovData.setCityID(cityId);
+			schoolLovData.setCountryID(countryId);
+			schoolLovData.setStateID(stateId);
+			
+			pageDTO.setData(schoolLovData);
+		}
+			
+			
 		// set the header as is...
 		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
