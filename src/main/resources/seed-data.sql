@@ -892,3 +892,4 @@ from published_acrticles_genre_vw a
 where a.publish_date>='2020-01-01' and a.publish_date<='2020-12-31'
 group by genreid,articles_published,quiz_published;
 
+INSERT INTO app_security(app_sec_id,app_name, app_key) values (1,'ABNGYHUKLOIHGTY','ENEWSCHAMPAPP')
