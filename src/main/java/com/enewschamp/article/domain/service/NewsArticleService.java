@@ -209,9 +209,29 @@ public class NewsArticleService {
 		int pageNumber = header.getPageNo() != null ? header.getPageNo() : 0;
 		pageNumber = pageNumber > 0 ? (pageNumber - 1) : 0;
 		Pageable pageable = PageRequest.of(pageNumber, header.getPageSize());
-		return customRepository.findArticles(searchRequest, pageable);
+		Page<NewsArticleSummaryDTO> list = customRepository.findArticles(searchRequest, pageable);
+		if(list != null && !list.isEmpty()) {
+			List<NewsArticleSummaryDTO> articles = list.getContent();
+			if(articles != null && !articles.isEmpty()) {
+				String url = appConfig.getArticleImageConfig().getImageServletUrl();
+				articles.forEach(article -> {
+					if(article.getImagePathDesktop() != null) {
+						article.setImagePathDesktop(url + article.getImagePathDesktop());
+					}
+					if(article.getImagePathMobile() != null) {
+						article.setImagePathMobile(url + article.getImagePathMobile());
+					}
+					if(article.getImagePathTab() != null) {
+						article.setImagePathTab(url + article.getImagePathTab());
+					}
+					if(article.getImagePathThumbnail() != null) {
+						article.setImagePathThumbnail(url + article.getImagePathThumbnail());
+					}
+				});
+			}
+		}
+		return list;
 	}
-	
 	
 	
 	public void markArticlesAsPublished(Publication publication) {

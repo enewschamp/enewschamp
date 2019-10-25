@@ -54,14 +54,17 @@ public class NewsArticleGroupDTO extends MaintenanceDTO {
 	
 	private String hashTags;
 	
-	@Size(max=200)
+	@Size(max=500)
 	private String imagePathMobile;
 	
-	@Size(max=200)
+	@Size(max=500)
 	private String imagePathTab;
 	
-	@Size(max=200)
+	@Size(max=500)
 	private String imagePathDesktop;
+	
+	@Size(max=500)
+	private String imagePathThumbnail;
 	
 	private String base64Image;
 	

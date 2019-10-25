@@ -84,14 +84,17 @@ public class NewsArticleGroup extends BaseEntity {
 	@Lob
 	private String hashTags;
 	
-	@Column(name = "ImagePathMobile", length = 200)
+	@Column(name = "ImagePathMobile", length = 500)
 	private String imagePathMobile;
 	
-	@Column(name = "ImagePathTab", length = 200)
+	@Column(name = "ImagePathTab", length = 500)
 	private String imagePathTab;
 	
-	@Column(name = "ImagePathDesktop", length = 200)
+	@Column(name = "ImagePathDesktop", length = 500)
 	private String imagePathDesktop;
+	
+	@Column(name = "ImagePathThumbnail", length = 500)
+	private String imagePathThumbnail;
 	
 	@Transient
 	private String base64Image;

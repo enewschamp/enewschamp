@@ -1,16 +1,26 @@
 package com.enewschamp.app.publisher.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.EnewschampApplicationProperties;
@@ -99,5 +109,17 @@ public class PublisherPageController {
 		String nextPageName = appConfig.getPageNavigationConfig().get(context).get(currentPageName.toLowerCase()).get(actionName.toLowerCase());
 		page.getHeader().setPageName(nextPageName);
 	}
+	
+	@RequestMapping(value = "/images", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+    public void getImage(HttpServletResponse response, @RequestParam String imagePath) throws IOException {
+		if(imagePath.startsWith("/")) {
+			imagePath = imagePath.substring(2, imagePath.length());
+		}
+		String imagesFolderPath =  appConfig.getArticleImageConfig().getImagesRootFolderPath();
+        File imageFile = new File(imagesFolderPath + imagePath);
+        InputStream imageStream = new FileInputStream(imageFile);
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(imageStream, response.getOutputStream());
+    }
 	
 }

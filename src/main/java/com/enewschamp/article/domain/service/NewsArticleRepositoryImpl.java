@@ -49,6 +49,7 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 				  articleGroupRoot.get("imagePathMobile"),
 				  articleGroupRoot.get("imagePathTab"), 
 				  articleGroupRoot.get("imagePathDesktop"),
+				  articleGroupRoot.get("imagePathThumbnail"),
 				  articleGroupRoot.get("cityId")));
 		
 		// Build filter conditions

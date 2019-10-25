@@ -59,10 +59,17 @@ public class NewsArticleGroupService {
 		deriveStatus(articleGroup);
 		articleGroup = repository.save(articleGroup);
 		saveImages(articleGroup.getBase64Image(), articleGroup.getNewsArticleGroupId());
+		String imageName = articleGroup.getNewsArticleGroupId() + "." + appConfig.getArticleImageConfig().getImageType();
+		articleGroup.setImagePathThumbnail(appConfig.getArticleImageConfig().getSize1FolderPath() + imageName);
+		articleGroup.setImagePathMobile(appConfig.getArticleImageConfig().getSize2FolderPath() + imageName);
+		articleGroup.setImagePathTab(appConfig.getArticleImageConfig().getSize3FolderPath() + imageName);
+		articleGroup.setImagePathDesktop(appConfig.getArticleImageConfig().getSize4FolderPath() + imageName);
+		articleGroup = repository.save(articleGroup);
 		return articleGroup;
 	}
 	
 	public NewsArticleGroup update(NewsArticleGroup articleGroup) {
+		deriveStatus(articleGroup);
 		Long articleGroupId = articleGroup.getNewsArticleGroupId();
 		NewsArticleGroup existingEntity = load(articleGroupId);
 		modelMapper.map(articleGroup, existingEntity);
@@ -72,6 +79,7 @@ public class NewsArticleGroupService {
 	}
 	
 	public NewsArticleGroup patch(NewsArticleGroup articleGroup) {
+		deriveStatus(articleGroup);
 		Long articleGroupId = articleGroup.getNewsArticleGroupId();
 		NewsArticleGroup existingEntity = load(articleGroupId);
 		modelMapperForPatch.map(articleGroup, existingEntity);
@@ -182,11 +190,12 @@ public class NewsArticleGroupService {
 		if (base64Image == null || articleGroupId == null) {
 			return;
 		}
-		String size1FileNameWithoutExtension = appConfig.getArticleImageConfig().getSize1FolderPath() + articleGroupId;
-		String size2FileNameWithoutExtension = appConfig.getArticleImageConfig().getSize2FolderPath() + articleGroupId;
-		String size3FileNameWithoutExtension = appConfig.getArticleImageConfig().getSize3FolderPath() + articleGroupId;
-		String size4FileNameWithoutExtension = appConfig.getArticleImageConfig().getSize4FolderPath() + articleGroupId;
-		String outputFileName = appConfig.getArticleImageConfig().getSize1FolderPath() + articleGroupId;
+		String imagesFolderPath =  appConfig.getArticleImageConfig().getImagesRootFolderPath();
+		String size1FileNameWithoutExtension = imagesFolderPath + appConfig.getArticleImageConfig().getSize1FolderPath() + articleGroupId;
+		String size2FileNameWithoutExtension = imagesFolderPath + appConfig.getArticleImageConfig().getSize2FolderPath() + articleGroupId;
+		String size3FileNameWithoutExtension = imagesFolderPath + appConfig.getArticleImageConfig().getSize3FolderPath() + articleGroupId;
+		String size4FileNameWithoutExtension = imagesFolderPath + appConfig.getArticleImageConfig().getSize4FolderPath() + articleGroupId;
+		String outputFileName = imagesFolderPath + "temp-" + articleGroupId;
 
 		File imageFile = null;
 		try {
@@ -222,6 +231,5 @@ public class NewsArticleGroupService {
 			base64Image = null;
 			imageFile = null;
 		}
-
 	}
 }

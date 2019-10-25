@@ -60,6 +60,7 @@ public class EnewschampApplicationProperties {
 	
 	@Data
 	public static class ArticleImageConfig {
+		private String imagesRootFolderPath;
 		private String size1FolderPath;
 		private String size2FolderPath;
 		private String size3FolderPath;
@@ -68,6 +69,8 @@ public class EnewschampApplicationProperties {
 		private List<Integer> size2Dimention;
 		private List<Integer> size3Dimention;
 		private List<Integer> size4Dimention;
+		private String imageType;
+		private String imageServletUrl;
 	}
 	
 	private AuditConfig audit;
