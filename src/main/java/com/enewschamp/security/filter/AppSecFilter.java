@@ -35,48 +35,69 @@ public class AppSecFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
 			throws IOException, ServletException {
-		System.out.println("Entered Filter");
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
+		final MultiReadHttpServletRequest requestWrapper = new MultiReadHttpServletRequest(request);
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
-		String appName = request.getHeader("appName");
-		String appKey = request.getHeader("appKey");
-		PrintWriter writer = response.getWriter();
-		String payLoad = this.getRequestBody(request);
-		PageRequestDTO requestPage = objectMapper.readValue(payLoad, PageRequestDTO.class);
-		System.out.println(requestPage.getHeader().getAction());
 
+		String appName = requestWrapper.getHeader("appName");
+		String appKey = requestWrapper.getHeader("appKey");
+		String payLoad = this.getRequestBody(requestWrapper);
+		PageRequestDTO requestPage = objectMapper.readValue(payLoad, PageRequestDTO.class);
+		// validate the appkey and appname
 		if ("".equals(appName) || null == appName) {
+			response.setContentType("application/json");
+
+			PrintWriter writer = response.getWriter();
+
 			HeaderDTO header = requestPage.getHeader();
 			if (header == null) {
 				header = new HeaderDTO();
 			}
 			header.setRequestStatus(RequestStatusType.F);
-			writer.write(objectMapper.writeValueAsString(header));
+			header.setFailureMessage("Unauthorised access. Contact System administrator.");
+			//throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), new BusinessException(ErrorCodes.APP_SEC_KEY_NOT_FOUND), header);
+			requestPage.setHeader(header);
+			writer.write(objectMapper.writeValueAsString(requestPage));
 			writer.flush();
 			return;
 		}
 		if ("".equals(appKey) || null == appKey) {
+			response.setContentType("application/json");
+
+			PrintWriter writer = response.getWriter();
+
 			HeaderDTO header = requestPage.getHeader();
 			if (header == null) {
 				header = new HeaderDTO();
 			}
 			header.setRequestStatus(RequestStatusType.F);
-			writer.write(objectMapper.writeValueAsString(header));
+			
+			header.setFailureMessage("Unauthorised access. Contact System administrator.");
+			requestPage.setHeader(header);
+
+			writer.write(objectMapper.writeValueAsString(requestPage));
 			writer.flush();
 			return;
 		}
 		boolean isValid = appSecService.isValidKey(appName, appKey);
 		if (!isValid) {
+			response.setContentType("application/json");
+
+			PrintWriter writer = response.getWriter();
+
 			HeaderDTO header = requestPage.getHeader();
 			if (header == null) {
 				header = new HeaderDTO();
 			}
 			header.setRequestStatus(RequestStatusType.F);
-			writer.write(objectMapper.writeValueAsString(header));
+			header.setFailureMessage("Unauthorised access. Contact System administrator.");
+			requestPage.setHeader(header);
+
+			writer.write(objectMapper.writeValueAsString(requestPage));
 			writer.flush();
 			return;
 		}
-		filterChain.doFilter(servletRequest, servletResponse);
+		filterChain.doFilter(requestWrapper, servletResponse);
 	}
 
 	private String getRequestBody(final HttpServletRequest request) {
@@ -95,7 +116,7 @@ public class AppSecFilter extends GenericFilterBean {
 				}
 			}
 		} catch (IOException ex) {
-			// log.error("Error reading the request payload", ex);
+			 System.out.println("Error reading the request payload : "+ ex);
 			// throw new AuthenticationException("Error reading the request payload", ex);
 		} finally {
 			if (bufferedReader != null) {
