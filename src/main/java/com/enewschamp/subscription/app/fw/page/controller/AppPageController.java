@@ -28,6 +28,8 @@ import com.enewschamp.domain.common.AppConstants;
 import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.problem.Fault;
+import com.enewschamp.problem.HttpStatusAdapter;
 import com.enewschamp.publication.domain.service.EditionService;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 
@@ -63,14 +65,26 @@ public class AppPageController {
 	@PostMapping(value = "/app")
 	public ResponseEntity<PageDTO> processAppRequest(@RequestBody PageRequestDTO pageRequest) {
 
-		String pageName = pageRequest.getHeader().getPageName();
-		String actionName = pageRequest.getHeader().getAction();
-		pageRequest.getHeader().setPageName(pageName);
-		pageRequest.getHeader().setAction(actionName);
 
-		PageDTO pageResponse = processRequest(pageName, actionName, pageRequest, "app");
-
-		return new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
+		ResponseEntity<PageDTO> response = null;
+		try {
+			String pageName = pageRequest.getHeader().getPageName();
+			String actionName = pageRequest.getHeader().getAction();
+			pageRequest.getHeader().setPageName(pageName);
+			pageRequest.getHeader().setAction(actionName);
+			
+			PageDTO pageResponse = processRequest(pageName, actionName, pageRequest, "app");
+			response = new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
+		} catch(BusinessException e) {
+			HeaderDTO header = pageRequest.getHeader();
+			if(header == null) {
+				header = new HeaderDTO();
+			}
+			header.setRequestStatus(RequestStatusType.F);
+			throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e, header);
+		}
+		 
+		return response;
 	}
 
 	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest, String context) {

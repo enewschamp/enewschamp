@@ -1,74 +1,38 @@
-package com.enewschamp.security.service;
+package com.enewschamp.security.entity;
 
-import java.util.Optional;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import com.enewschamp.app.common.ErrorCodes;
-import com.enewschamp.problem.BusinessException;
-import com.enewschamp.security.entity.AppSecurity;
-import com.enewschamp.security.repository.AppSecurityRepository;
+@Data
+@EqualsAndHashCode(callSuper=false)
+@Entity
+@Table(name="AppSecurity")
+public class AppSecurity {
 
-@Service
-public class AppSecurityService {
-
-	@Autowired
-	AppSecurityRepository appSecurityRepository;
 	
-	@Autowired
-	ModelMapper modelMapper;
+	private static final long serialVersionUID = -6268188630471167106L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appsec_id_generator")
+	@SequenceGenerator(name="appSec_id_generator", sequenceName = "appsecid_seq", allocationSize=1)
+	@Column(name = "appSecId", updatable = false, nullable = false)
+	private Long appSecId;
 	
-	@Autowired
-	@Qualifier("modelPatcher")
-	ModelMapper modelMapperForPatch;
+	@NotNull
+	@Column(name = "appName", length=130)
+	private String appName;
+
+	@NotNull
+	@Column(name = "appKey", length=256)
+	private String appKey;
 	
-	public AppSecurity create(AppSecurity appSecurityEntity) {
-		return appSecurityRepository.save(appSecurityEntity);
-	}
-
-	public AppSecurity update(AppSecurity appSecurityEntity) {
-		Long appSecurityId = appSecurityEntity.getAppSecId();
-		AppSecurity existingAppSecurity = get(appSecurityId);
-		modelMapper.map(appSecurityEntity, existingAppSecurity);
-		return appSecurityRepository.save(existingAppSecurity);
-	}
-
-	public AppSecurity patch(AppSecurity appSecurity) {
-		Long appSecurityId = appSecurity.getAppSecId();
-		AppSecurity existingEntity = get(appSecurityId);
-		modelMapperForPatch.map(appSecurity, existingEntity);
-		return appSecurityRepository.save(existingEntity);
-	}
-
-	public void delete(Long appSecurityId) {
-		appSecurityRepository.deleteById(appSecurityId);
-	}
-
-	public AppSecurity get(Long appSecurityId) {
-		Optional<AppSecurity> existingEntity = appSecurityRepository.findById(appSecurityId);
-		if (existingEntity.isPresent()) {
-			return existingEntity.get();
-		} else {
-			throw new BusinessException(ErrorCodes.APP_SEC_KEY_NOT_FOUND);
-		}
-	}
-	
-
-	@Cacheable("appSec")
-	public boolean isValidKey(final String appName, final String appKey)
-	{
-		Optional<AppSecurity> existingEntity = appSecurityRepository.getAppSec(appName,appKey);
-		if(existingEntity.isPresent())
-		{
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-
 }
