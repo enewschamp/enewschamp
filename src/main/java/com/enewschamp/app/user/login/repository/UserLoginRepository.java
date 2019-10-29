@@ -15,7 +15,7 @@ public interface UserLoginRepository extends JpaRepository<UserLogin, Long>{
 	@Query("Select s from UserLogin s where s.userId= :userId and s.deviceId= :deviceId and s.userType= :userType")
 	public Optional<UserLogin> getLogin(@Param("userId") String emailId, @Param("deviceId") String deviceId, @Param("userType") UserType userType);
 	
-	@Query("Select s from UserLogin s where s.userId= :userId and s.userType= 'A'")
-	public Optional<UserLogin> getOperatorLogin(@Param("userId") String userId);
+	@Query("Select s from UserLogin s where s.userId= :userId and s.deviceId= :deviceId and s.userType= 'A'")
+	public Optional<UserLogin> getOperatorLogin(@Param("userId") String userId, @Param("deviceId") String deviceId);
 	
 }

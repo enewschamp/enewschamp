@@ -13,13 +13,11 @@ import com.enewschamp.domain.common.RecordInUseType;
 
 @Service
 public class UserLoginBusiness {
-	
-	
+
 	@Autowired
 	UserLoginService loginService;
-	
-	public UserLogin login(final String userId, final String deviceId, UserType userType)
-	{
+
+	public UserLogin login(final String userId, final String deviceId, UserType userType) {
 		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, userType);
 		if (loggedIn == null) {
 			UserLogin userLogin = new UserLogin();
@@ -39,46 +37,40 @@ public class UserLoginBusiness {
 		return loggedIn;
 	}
 
-	public void logout(final String userId, final String deviceId, UserType userType)
-	{
+	public void logout(final String userId, final String deviceId, UserType userType) {
 		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, userType);
 		if (loggedIn != null) {
 			loggedIn.setLoginFlag(AppConstants.NO);
 			loginService.update(loggedIn);
 		}
 	}
-	
-	private UserLogin getUserLoginInstance(final String userId, final String deviceId, UserType userType) {
-		UserLogin loggedIn = null;
-		if(userType.equals(UserType.S)) {
-			loggedIn = loginService.getUserLogin(userId, deviceId,userType);
-		} else {
-			loggedIn = loginService.getOperatorLogin(userId);
-		}
-		return loggedIn;
-	}
-	
-	public UserLogin getLoginDetails(final String deviceId, final String userId, UserType userType)
-	{
+
+	public UserLogin getLoginDetails(final String deviceId, final String userId, UserType userType) {
 		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, userType);
 		return loggedIn;
-		
+
 	}
-	public boolean isUserLoggedIn(final String deviceId, final String userId, UserType userType)
-	{
-		boolean isLoggedIn=false;
+
+	public boolean isUserLoggedIn(final String deviceId, final String userId, UserType userType) {
+		boolean isLoggedIn = false;
 		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, userType);
-		if(loggedIn!=null)
-		{
-			if(AppConstants.YES.toString().equals(loggedIn.getLoginFlag()))
-			{
-				isLoggedIn= true;
-			}
-			else
-			{
-				isLoggedIn= false;
+		if (loggedIn != null) {
+			if (AppConstants.YES.toString().equals(loggedIn.getLoginFlag())) {
+				isLoggedIn = true;
+			} else {
+				isLoggedIn = false;
 			}
 		}
 		return isLoggedIn;
+	}
+
+	private UserLogin getUserLoginInstance(final String userId, final String deviceId, UserType userType) {
+		UserLogin loggedIn = null;
+		if (userType.equals(UserType.S)) {
+			loggedIn = loginService.getUserLogin(userId, deviceId, userType);
+		} else {
+			loggedIn = loginService.getOperatorLogin(userId, deviceId);
+		}
+		return loggedIn;
 	}
 }

@@ -68,8 +68,8 @@ public class UserLoginService  {
 		}
 	}
 	
-	public UserLogin getOperatorLogin(final String userId) {
-		Optional<UserLogin> existingEntity = repository.getOperatorLogin(userId);
+	public UserLogin getOperatorLogin(final String userId, String deviceId) {
+		Optional<UserLogin> existingEntity = repository.getOperatorLogin(userId, deviceId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {

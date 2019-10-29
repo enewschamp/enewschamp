@@ -72,6 +72,7 @@ public class PublisherPageController {
 			String pageName = pageRequest.getHeader().getPageName();
 			String actionName = pageRequest.getHeader().getAction();
 			String userId = pageRequest.getHeader().getUserId();
+			String deviceId = pageRequest.getHeader().getDeviceId();
 			
 			// Check if user has been logged in
 			if (!(pageName.equalsIgnoreCase("Login")
@@ -80,7 +81,7 @@ public class PublisherPageController {
 				if (null == userId || "".equals(userId) || !userService.validateUser(userId)) {
 					throw new BusinessException(ErrorCodes.INVALID_USER_ID, userId);
 				} else {
-					boolean isLogged = userLoginBusiness.isUserLoggedIn(null, userId, UserType.A);
+					boolean isLogged = userLoginBusiness.isUserLoggedIn(deviceId, userId, UserType.A);
 					if (!isLogged) {
 						throw new BusinessException(ErrorCodes.UNAUTH_ACCESS, "UnAuthorised Access");
 					}
