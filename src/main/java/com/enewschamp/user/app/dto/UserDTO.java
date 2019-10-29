@@ -61,5 +61,7 @@ public class UserDTO extends MaintenanceDTO {
 	private String email2;
 	
 	private String comments;
+	
+	private String password;
 
 }

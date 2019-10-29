@@ -42,22 +42,27 @@ public class AppSecFilter extends GenericFilterBean {
 		String appName = requestWrapper.getHeader("appName");
 		String appKey = requestWrapper.getHeader("appKey");
 		String payLoad = this.getRequestBody(requestWrapper);
-		PageRequestDTO requestPage = objectMapper.readValue(payLoad, PageRequestDTO.class);
+		PageRequestDTO requestPage = null;
+		if(payLoad != null && !payLoad.isEmpty()) {
+			requestPage = objectMapper.readValue(payLoad, PageRequestDTO.class);
+		}
+		HeaderDTO header  = new HeaderDTO();
+		if(requestPage != null) {
+			header = requestPage.getHeader();
+		}
 		// validate the appkey and appname
 		if ("".equals(appName) || null == appName) {
 			response.setContentType("application/json");
 
 			PrintWriter writer = response.getWriter();
-
-			HeaderDTO header = requestPage.getHeader();
-			if (header == null) {
-				header = new HeaderDTO();
-			}
 			header.setRequestStatus(RequestStatusType.F);
 			header.setFailureMessage("Unauthorised access. Contact System administrator.");
-			//throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), new BusinessException(ErrorCodes.APP_SEC_KEY_NOT_FOUND), header);
-			requestPage.setHeader(header);
-			writer.write(objectMapper.writeValueAsString(requestPage));
+			if(requestPage != null) {
+				requestPage.setHeader(header);
+				writer.write(objectMapper.writeValueAsString(requestPage));
+			} else {
+				writer.write(objectMapper.writeValueAsString(header));
+			}
 			writer.flush();
 			return;
 		}
@@ -66,16 +71,15 @@ public class AppSecFilter extends GenericFilterBean {
 
 			PrintWriter writer = response.getWriter();
 
-			HeaderDTO header = requestPage.getHeader();
-			if (header == null) {
-				header = new HeaderDTO();
-			}
 			header.setRequestStatus(RequestStatusType.F);
-			
 			header.setFailureMessage("Unauthorised access. Contact System administrator.");
-			requestPage.setHeader(header);
 
-			writer.write(objectMapper.writeValueAsString(requestPage));
+			if(requestPage != null) {
+				requestPage.setHeader(header);
+				writer.write(objectMapper.writeValueAsString(requestPage));
+			} else {
+				writer.write(objectMapper.writeValueAsString(header));
+			}
 			writer.flush();
 			return;
 		}
@@ -85,15 +89,15 @@ public class AppSecFilter extends GenericFilterBean {
 
 			PrintWriter writer = response.getWriter();
 
-			HeaderDTO header = requestPage.getHeader();
-			if (header == null) {
-				header = new HeaderDTO();
-			}
 			header.setRequestStatus(RequestStatusType.F);
 			header.setFailureMessage("Unauthorised access. Contact System administrator.");
-			requestPage.setHeader(header);
 
-			writer.write(objectMapper.writeValueAsString(requestPage));
+			if(requestPage != null) {
+				requestPage.setHeader(header);
+				writer.write(objectMapper.writeValueAsString(requestPage));
+			} else {
+				writer.write(objectMapper.writeValueAsString(header));
+			}
 			writer.flush();
 			return;
 		}

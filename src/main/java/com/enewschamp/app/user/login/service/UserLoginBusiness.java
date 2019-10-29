@@ -20,9 +20,8 @@ public class UserLoginBusiness {
 	
 	public UserLogin login(final String userId, final String deviceId, UserType userType)
 	{
-		UserLogin loggedIn = loginService.getUserLogin(userId, deviceId,userType);
-		if(loggedIn==null)
-		{
+		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, userType);
+		if (loggedIn == null) {
 			UserLogin userLogin = new UserLogin();
 			userLogin.setUserId(userId);
 			userLogin.setDeviceId(deviceId);
@@ -32,37 +31,43 @@ public class UserLoginBusiness {
 			userLogin.setUserType(userType);
 			userLogin.setRecordInUse(RecordInUseType.Y);
 			loggedIn = loginService.create(userLogin);
-		}
-		else
-		{
+		} else {
 			loggedIn.setLastLoginTime(LocalDateTime.now());
 			loggedIn.setLoginFlag(AppConstants.YES);
 			loginService.update(loggedIn);
-			
 		}
 		return loggedIn;
 	}
-	
+
 	public void logout(final String userId, final String deviceId, UserType userType)
 	{
-		UserLogin loggedIn = loginService.getUserLogin(userId, deviceId,userType);
-		if(loggedIn!=null)
-		{
+		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, userType);
+		if (loggedIn != null) {
 			loggedIn.setLoginFlag(AppConstants.NO);
 			loginService.update(loggedIn);
 		}
 	}
 	
+	private UserLogin getUserLoginInstance(final String userId, final String deviceId, UserType userType) {
+		UserLogin loggedIn = null;
+		if(userType.equals(UserType.S)) {
+			loggedIn = loginService.getUserLogin(userId, deviceId,userType);
+		} else {
+			loggedIn = loginService.getOperatorLogin(userId);
+		}
+		return loggedIn;
+	}
+	
 	public UserLogin getLoginDetails(final String deviceId, final String userId, UserType userType)
 	{
-		UserLogin loggedIn = loginService.getUserLogin(userId, deviceId,userType);
+		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, userType);
 		return loggedIn;
 		
 	}
 	public boolean isUserLoggedIn(final String deviceId, final String userId, UserType userType)
 	{
 		boolean isLoggedIn=false;
-		UserLogin loggedIn = loginService.getUserLogin(userId, deviceId,userType);
+		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, userType);
 		if(loggedIn!=null)
 		{
 			if(AppConstants.YES.toString().equals(loggedIn.getLoginFlag()))
@@ -76,5 +81,4 @@ public class UserLoginBusiness {
 		}
 		return isLoggedIn;
 	}
-
 }

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "387abe6c-2176-4842-b503-61ca8232aa6a",
+		"_postman_id": "b6abf267-23e3-4998-ad32-6187c105a314",
 		"name": "eNewsChamp-Users",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -29,11 +29,21 @@
 								"key": "Content-Type",
 								"type": "text",
 								"value": "application/json"
+							},
+							{
+								"key": "appName",
+								"value": "ENEWSCHAMPAPP",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "ABNGYHUKLOIHGTY",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"userId\":\"{{userId}}\",\n\t\"title\":\"{{title}}\",\n\t\"name\":\"{{name}}\",\n\t\"surname\":\"{{surname}}\",\n\t\"gender\":\"{{gender}}\",\n\t\"contractStartDate\":\"{{contractStartDate}}\",\n\t\"contractEndDate\":\"{{contractEndDate}}\",\n\t\"mobile1\":\"{{mobile1}}\",\n\t\"email1\":\"{{email1}}\",\n\t\"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayu\"\n}"
+							"raw": "{\n\t\"userId\":\"{{userId}}\",\n\t\"title\":\"{{title}}\",\n\t\"name\":\"{{name}}\",\n\t\"surname\":\"{{surname}}\",\n\t\"gender\":\"{{gender}}\",\n\t\"contractStartDate\":\"{{contractStartDate}}\",\n\t\"contractEndDate\":\"{{contractEndDate}}\",\n\t\"mobile1\":\"{{mobile1}}\",\n\t\"email1\":\"{{email1}}\",\n\t\"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayu\",\n    \"password\":\"{{password}}\"\n}"
 						},
 						"url": {
 							"raw": "http://{{host}}:{{port}}/{{base-path}}/users",
@@ -76,6 +86,16 @@
 								"key": "Content-Type",
 								"type": "text",
 								"value": "application/json"
+							},
+							{
+								"key": "appName",
+								"value": "ENEWSCHAMPAPP",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "ABNGYHUKLOIHGTY",
+								"type": "text"
 							}
 						],
 						"body": {

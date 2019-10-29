@@ -81,4 +81,7 @@ public class User extends BaseEntity {
 	@Column(name = "Photo")
 	@Lob
 	private String photo;
+	
+	@Column(name = "Password", length = 80)
+	private String password;
 }

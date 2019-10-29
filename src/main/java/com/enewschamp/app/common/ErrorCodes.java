@@ -21,6 +21,7 @@ public interface ErrorCodes {
 	public static String PUBLICATION_MONTHLY_SUMMARY_NOT_FOUND = "PUB_016";
 	public static String RATING_REQD_FOR_PUBLISH = "PUB_017";
 	public static String REWORK_COMMENTS_REQUIRED = "PUB_018";
+	public static String INVALID_USERNAME_OR_PASSWORD="PUB_019";
 	// Error codes for publication APIs end
 
 	public static String STUDENT_DTLS_NOT_FOUND = "STUDDTLS_001";
@@ -35,6 +36,8 @@ public interface ErrorCodes {
 	public static String USER_ROLE_NOT_FOUND = "USER_002";
 	public static String USER_LEAVE_NOT_FOUND = "USER_003";
 	public static String ROLE_NOT_ASSIGNED_TO_USER = "USER_004";
+	public static String USER_IS_INACTIVE = "USER_005";
+	public static String INVALID_USER_ID = "USER_006";
 
 	public static String PAGE_NOT_FOUND= "PAGE_001";
 	public static String NEXT_PAGE_NOT_FOUND= "PAGE_002";

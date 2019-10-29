@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "dc101ce1-1e62-4f57-9c6d-2df9fc58628b",
+		"_postman_id": "4e2ab2e2-4bcf-4084-bd20-c63e82e2cb54",
 		"name": "eNewsChamp-Genre",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -34,6 +34,16 @@
 								"key": "Content-Type",
 								"type": "text",
 								"value": "application/json"
+							},
+							{
+								"key": "appName",
+								"value": "ENEWSCHAMPAPP",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "ABNGYHUKLOIHGTY",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -41,7 +51,7 @@
 							"raw": "{\n    \"locale\": \"{{locale}}\",\n    \"entityName\": \"{{entityName}}\",\n    \"entityColumn\": \"{{entityColumn}}\",\n    \"text\": \"{{text}}\",\n    \"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayu\"\n}"
 						},
 						"url": {
-							"raw": "http://{{host}}:{{port}}/{{base-path}}/multiLanguageTexts",
+							"raw": "http://{{host}}:{{port}}/{{base-path}}/multiLanguageTexts?",
 							"protocol": "http",
 							"host": [
 								"{{host}}"
@@ -50,6 +60,18 @@
 							"path": [
 								"{{base-path}}",
 								"multiLanguageTexts"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -81,6 +103,16 @@
 								"key": "Content-Type",
 								"type": "text",
 								"value": "application/json"
+							},
+							{
+								"key": "appName",
+								"value": "ENEWSCHAMPAPP",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "ABNGYHUKLOIHGTY",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -88,7 +120,7 @@
 							"raw": "{\n\t\"genreId\":\"{{text}}\",\n\t\"nameId\":\"{{nameId}}\",\n\t\"imagePath\":\"http://images/genres/{{text}}.jpg\",\n\t\"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayu\"\n}"
 						},
 						"url": {
-							"raw": "http://{{host}}:{{port}}/{{base-path}}/genres",
+							"raw": "http://{{host}}:{{port}}/{{base-path}}/genres?",
 							"protocol": "http",
 							"host": [
 								"{{host}}"
@@ -97,6 +129,18 @@
 							"path": [
 								"{{base-path}}",
 								"genres"
+							],
+							"query": [
+								{
+									"key": "appName",
+									"value": "ENEWSCHAMPAPP",
+									"disabled": true
+								},
+								{
+									"key": "appKey",
+									"value": "ABNGYHUKLOIHGTY",
+									"disabled": true
+								}
 							]
 						}
 					},

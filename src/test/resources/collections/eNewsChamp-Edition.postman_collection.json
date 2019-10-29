@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "49820ba8-fe83-46d8-8f3f-4372b97a0104",
+		"_postman_id": "f59aeacb-5e10-4bc0-aa2a-5b4d0f1e82ad",
 		"name": "eNewsChamp-Edition",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -26,6 +26,16 @@
 						"key": "Content-Type",
 						"type": "text",
 						"value": "application/json"
+					},
+					{
+						"key": "appName",
+						"value": "ENEWSCHAMPAPP",
+						"type": "text"
+					},
+					{
+						"key": "appKey",
+						"value": "ABNGYHUKLOIHGTY",
+						"type": "text"
 					}
 				],
 				"body": {
@@ -33,7 +43,7 @@
 					"raw": "{\n\t\"editionId\":\"{{editionId}}\",\n\t\"languageId\":\"{{languageId}}\",\n\t\"editionName\":\"{{editionName}}\",\n\t\"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayu\"\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/{{base-path}}/editions",
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/editions?",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -42,6 +52,18 @@
 					"path": [
 						"{{base-path}}",
 						"editions"
+					],
+					"query": [
+						{
+							"key": "appName",
+							"value": "ENEWSCHAMPAPP",
+							"disabled": true
+						},
+						{
+							"key": "appKey",
+							"value": "ABNGYHUKLOIHGTY",
+							"disabled": true
+						}
 					]
 				}
 			},

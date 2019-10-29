@@ -18,6 +18,7 @@ import lombok.EqualsAndHashCode;
 public abstract class MaintenanceDTO extends AbstractDTO {
 	
 	@Size(max=ForeignKeyColumnLength.UserId)
+	@NotNull
 	protected String operatorId;
 	
 	private LocalDateTime operationDateTime;

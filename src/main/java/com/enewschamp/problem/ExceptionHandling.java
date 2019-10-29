@@ -108,14 +108,15 @@ public class ExceptionHandling implements ProblemHandling, ApplicationContextAwa
 		String errorMessage = "";
 		if (errorCode != null) {
 			String msgString = errorMessagesConfig.getErrorMessagesConfig().get(errorCode);
-			
-			try {
-				msgString = new String(msgString.getBytes("ISO-8859-1"), "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			if (errorMessageParams != null) {
-				errorMessage = MessageFormat.format(msgString, errorMessageParams);
+			if(msgString != null) {
+				try {
+					msgString = new String(msgString.getBytes("ISO-8859-1"), "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+				if (errorMessageParams != null) {
+					errorMessage = MessageFormat.format(msgString, errorMessageParams);
+				}
 			}
 		}
 		return errorMessage;

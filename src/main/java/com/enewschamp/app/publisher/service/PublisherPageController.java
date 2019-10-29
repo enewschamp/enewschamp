@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -13,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,11 +28,16 @@ import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.RequestStatusType;
+import com.enewschamp.app.user.login.entity.UserType;
+import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.problem.HttpStatusAdapter;
+import com.enewschamp.user.domain.service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lombok.extern.java.Log;
 
@@ -51,16 +55,42 @@ public class PublisherPageController {
 	@Autowired
 	ModelMapper modelMapper;
 	
+	@Autowired
+	UserLoginBusiness userLoginBusiness;
+
+	@Autowired
+	UserService userService;
+
 	@PostMapping(value = "/publisher")
 	@Transactional
 	public ResponseEntity<PageDTO> processPublisherAppRequest(@RequestBody PageRequestDTO pageRequest) {
 		
 		ResponseEntity<PageDTO> response = null;
 		try {
-			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("deepak", "welcome"));
+			//SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("deepak", "welcome"));
 			
 			String pageName = pageRequest.getHeader().getPageName();
 			String actionName = pageRequest.getHeader().getAction();
+			String userId = pageRequest.getHeader().getUserId();
+			
+			// Check if user has been logged in
+			if (!(pageName.equalsIgnoreCase("Login")
+					&& (actionName.equalsIgnoreCase("login") || actionName.equalsIgnoreCase("logout")))) {
+				
+				if (null == userId || "".equals(userId) || !userService.validateUser(userId)) {
+					throw new BusinessException(ErrorCodes.INVALID_USER_ID, userId);
+				} else {
+					boolean isLogged = userLoginBusiness.isUserLoggedIn(null, userId, UserType.A);
+					if (!isLogged) {
+						throw new BusinessException(ErrorCodes.UNAUTH_ACCESS, "UnAuthorised Access");
+					}
+				}
+				JsonNode dataNode = pageRequest.getData();
+				if(dataNode != null && dataNode instanceof ObjectNode) {
+					((ObjectNode)dataNode).put("operatorId", userId);
+				}
+			}
+			
 			pageRequest.getHeader().setPageName(pageName);
 			pageRequest.getHeader().setAction(actionName);
 			
@@ -82,8 +112,12 @@ public class PublisherPageController {
 		//Process current page
 		PageDTO pageResponse = pageHandlerFactory.getPageHandler(pageName, context).handleAction(actionName, pageRequest);
 		
+		String nextPageName = null;
 		//Load next page
-		String nextPageName = appConfig.getPageNavigationConfig().get(context).get(pageName.toLowerCase()).get(actionName.toLowerCase());
+		Map<String, String> fromPageWiseActions = appConfig.getPageNavigationConfig().get(context).get(pageName.toLowerCase());
+		if(fromPageWiseActions != null) {
+			nextPageName = fromPageWiseActions.get(actionName.toLowerCase());
+		}
 		if(nextPageName == null) {
 			throw new BusinessException(ErrorCodes.NEXT_PAGE_NOT_FOUND, pageName, actionName);
 		}

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
@@ -37,14 +38,14 @@ public class UserService extends AbstractDomainService {
 	
 	public User update(User user) {
 		String userId = user.getUserId();
-		User existingUser = get(userId);
+		User existingUser = load(userId);
 		modelMapper.map(user, existingUser);
 		return repository.save(existingUser);
 	}
 	
 	public User patch(User user) {
 		String userId = user.getUserId();
-		User existingEntity = get(userId);
+		User existingEntity = load(userId);
 		modelMapperForPatch.map(user, existingEntity);
 		return repository.save(existingEntity);
 	}
@@ -53,12 +54,21 @@ public class UserService extends AbstractDomainService {
 		repository.deleteById(userId);
 	}
 	
-	public User get(String userId) {
+	public User load(String userId) {
 		Optional<User> existingEntity = repository.findById(userId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
 			throw new BusinessException(ErrorCodes.USER_NOT_FOUND, userId);
+		}
+	}
+	
+	public User get(String userId) {
+		Optional<User> existingEntity = repository.findById(userId);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
+		} else {
+			return null;
 		}
 	}
 	
@@ -80,4 +90,22 @@ public class UserService extends AbstractDomainService {
 		return auditService.getEntityAudit(user);
 	}
 	
+	public boolean validateUser(String userId) {
+		return get(userId) != null ? true : false;
+	}
+	
+	public boolean validatePassword(final String userId, final String password) {
+		User user = get(userId);
+		if (!user.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodes.USER_IS_INACTIVE, userId);
+		}
+		boolean isValid = false;
+		if (!user.getPassword().equals(password)) {
+			isValid = false;
+		} else {
+			isValid = true;
+		}
+		return isValid;
+	}
+
 }

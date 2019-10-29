@@ -30,6 +30,7 @@ Insert into news_article_quiz (news_article_quiz_id,news_article_id,Question,Opt
 values (4, 3331323, 'Where is Marine Drive ?', 'Delhi','Mumbai','Agra','Chennai', 2, 'SYSTEM', CURRENT_DATE,'Y');
 
 
+INSERT INTO app_security(app_sec_id,app_name, app_key) values (1,'ENEWSCHAMPAPP','ABNGYHUKLOIHGTY')
 
 
 commit;
