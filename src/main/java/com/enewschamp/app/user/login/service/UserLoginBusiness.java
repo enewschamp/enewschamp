@@ -44,7 +44,7 @@ public class UserLoginBusiness {
 			loginService.update(loggedIn);
 		}
 	}
-
+	
 	public UserLogin getLoginDetails(final String deviceId, final String userId, UserType userType) {
 		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, userType);
 		return loggedIn;

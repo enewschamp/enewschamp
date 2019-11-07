@@ -48,7 +48,127 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"header\": {\n        \"pageName\": \"Login\",\n        \"action\": \"login\"\n    },\n    \"data\": {\n        \"userId\": \"mesmayus\",\n\t\t\"password\": \"welcome1\",\n\t\t\"deviceId\": \"{{deviceId}}\"\n    }\n        \n}"
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Login\",\n        \"action\": \"login\",\n        \"userId\": \"mesmayus\",\n        \"deviceId\": \"{{deviceId}}\"\n    },\n    \"data\": {\n\t\t\"password\": \"welcome1\"\n    }\n        \n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Editor Logout",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "0d128b28-3e49-4983-9907-b945c3e0a6d9",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "appName",
+						"value": "{{appName}}"
+					},
+					{
+						"key": "appKey",
+						"value": "{{appKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Login\",\n        \"action\": \"logout\",\n        \"userId\": \"mesmayus\",\n        \"deviceId\": \"{{deviceId}}\"\n    },\n    \"data\": {\n\t\t\n    }\n        \n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Editor Reset Password",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "0d128b28-3e49-4983-9907-b945c3e0a6d9",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "appName",
+						"value": "{{appName}}"
+					},
+					{
+						"key": "appKey",
+						"value": "{{appKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"pageName\": \"Login\",\n        \"action\": \"ResetPassword\",\n        \"userId\": \"mesmayus\",\n        \"deviceId\": \"{{deviceId}}\"\n    },\n    \"data\": {\n\t\t\"password\": \"welcome5\",\n\t\t\"passwordNew\": \"welcome5\",\n\t\t\"passwordRepeat\": \"welcome5\"\n    }\n        \n}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",

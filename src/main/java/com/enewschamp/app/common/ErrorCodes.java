@@ -22,6 +22,10 @@ public interface ErrorCodes {
 	public static String RATING_REQD_FOR_PUBLISH = "PUB_017";
 	public static String REWORK_COMMENTS_REQUIRED = "PUB_018";
 	public static String INVALID_USERNAME_OR_PASSWORD="PUB_019";
+	public static String INVALID_USER_PASSWORD="PUB_020";
+	public static String INVALID_USER_NEW_PASSWORD="PUB_021";
+	public static String BOTH_PASSWORD_DO_NOT_MATCH="PUB_022";
+	public static String OLD_NEW_PASSWORD_SAME="PUB_023";
 	// Error codes for publication APIs end
 
 	public static String STUDENT_DTLS_NOT_FOUND = "STUDDTLS_001";

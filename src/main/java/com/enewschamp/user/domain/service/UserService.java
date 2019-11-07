@@ -107,5 +107,13 @@ public class UserService extends AbstractDomainService {
 		}
 		return isValid;
 	}
-
+	
+	public void resetPassword(final String userId, final String password) {
+		User user = get(userId);
+		if (!user.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodes.USER_IS_INACTIVE, userId);
+		}
+		user.setPassword(password);
+		repository.save(user);
+	}
 }

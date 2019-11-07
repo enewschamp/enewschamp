@@ -15,5 +15,7 @@ public class PublisherLoginPageData extends PageData {
 	private String password;
 	private String deviceId;
 	private String message;
+	private String passwordNew;
+	private String passwordRepeat;
 	
 }

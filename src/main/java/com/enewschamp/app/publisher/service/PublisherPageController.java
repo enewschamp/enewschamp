@@ -76,7 +76,9 @@ public class PublisherPageController {
 			
 			// Check if user has been logged in
 			if (!(pageName.equalsIgnoreCase("Login")
-					&& (actionName.equalsIgnoreCase("login") || actionName.equalsIgnoreCase("logout")))) {
+					&& (actionName.equalsIgnoreCase("login") 
+							|| actionName.equalsIgnoreCase("logout")
+							|| actionName.equalsIgnoreCase("ResetPassword")))) {
 				
 				if (null == userId || "".equals(userId) || !userService.validateUser(userId)) {
 					throw new BusinessException(ErrorCodes.INVALID_USER_ID, userId);

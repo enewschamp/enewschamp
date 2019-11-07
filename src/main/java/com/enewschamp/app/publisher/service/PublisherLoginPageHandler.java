@@ -11,6 +11,7 @@ import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
+import com.enewschamp.app.signin.page.handler.SignInPageData;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.domain.common.IPageHandler;
@@ -75,9 +76,9 @@ public class PublisherLoginPageHandler implements IPageHandler {
 		if (PageAction.login.toString().equalsIgnoreCase(action)) {
 			try {
 				loginPageData = objectMapper.readValue(pageRequest.getData().toString(), PublisherLoginPageData.class);
-				userId = loginPageData.getUserId();
+				userId = pageRequest.getHeader().getUserId();
 				password = loginPageData.getPassword();
-				deviceId = loginPageData.getDeviceId();
+				deviceId = pageRequest.getHeader().getDeviceId();
 
 			} catch (JsonParseException e) {
 				throw new RuntimeException(e);
@@ -98,8 +99,8 @@ public class PublisherLoginPageHandler implements IPageHandler {
 		if (PageAction.logout.toString().equalsIgnoreCase(action)) {
 			try {
 				loginPageData = objectMapper.readValue(pageRequest.getData().toString(), PublisherLoginPageData.class);
-				userId = loginPageData.getUserId();
-				deviceId = loginPageData.getDeviceId();
+				userId = pageRequest.getHeader().getUserId();
+				deviceId = pageRequest.getHeader().getDeviceId();
 
 			} catch (JsonParseException e) {
 				throw new RuntimeException(e);
@@ -111,9 +112,48 @@ public class PublisherLoginPageHandler implements IPageHandler {
 
 			userLoginBusiess.logout(userId, deviceId, UserType.A);
 			pageDto.setData(loginPageData);
-
 		}
+		
+		if (PageAction.ResetPassword.toString().equalsIgnoreCase(action)) {
+			userId = pageRequest.getHeader().getUserId();
+			deviceId = pageRequest.getHeader().getDeviceId();
+			String passwordNew, passwordRepeat = null;
+			try {
+				loginPageData = objectMapper.readValue(pageRequest.getData().toString(), PublisherLoginPageData.class);
+				password = loginPageData.getPassword();
+				passwordNew = loginPageData.getPasswordNew();
+				passwordRepeat = loginPageData.getPasswordRepeat();
+			} catch (JsonParseException e) {
+				throw new RuntimeException(e);
+			} catch (JsonMappingException e) {
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 
+			if (password == null && "".equals(password)) {
+				throw new BusinessException(ErrorCodes.INVALID_USER_PASSWORD);
+			}
+			if (passwordNew == null && "".equals(passwordNew)) {
+				throw new BusinessException(ErrorCodes.INVALID_USER_NEW_PASSWORD);
+			}
+			if (passwordRepeat == null && "".equals(passwordRepeat)) {
+				throw new BusinessException(ErrorCodes.INVALID_USER_NEW_PASSWORD);
+			}
+			if (passwordNew.equals(password)) {
+				throw new BusinessException(ErrorCodes.OLD_NEW_PASSWORD_SAME);
+			}
+			boolean validPassword = userService.validatePassword(userId, password);
+			if (!validPassword) {
+				throw new BusinessException(ErrorCodes.INVALID_USERNAME_OR_PASSWORD, userId);
+			}
+			
+			if (!passwordNew.equals(passwordRepeat)) {
+				throw new BusinessException(ErrorCodes.BOTH_PASSWORD_DO_NOT_MATCH);
+			}
+			userService.resetPassword(userId, passwordNew);
+			userLoginBusiess.logout(userId, deviceId, UserType.A);
+		}
 		return pageDto;
 	}
 
