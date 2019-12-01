@@ -36,7 +36,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name="Publication",uniqueConstraints={@UniqueConstraint(columnNames = {"publicationId", "editionId", "readingLevel", "publishDate"})})
+@Table(name = "Publication", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "publicationId", "editionId", "readingLevel", "publishDate" }) })
 public class Publication extends BaseEntity {
 
 	private static final long serialVersionUID = -6656836773546374871L;
@@ -67,7 +68,7 @@ public class Publication extends BaseEntity {
 	@Column(name = "Status")
 	@Enumerated(EnumType.STRING)
 	private PublicationStatusType status;
-	
+
 	@Column(name = "PreviousStatus")
 	@Enumerated(EnumType.STRING)
 	@DiffIgnore
@@ -76,7 +77,7 @@ public class Publication extends BaseEntity {
 	@Column(name = "Rating")
 	@Enumerated(EnumType.STRING)
 	private PublicationRatingType rating;
-	
+
 	@NotNull
 	@Column(name = "EditorId", length = ForeignKeyColumnLength.UserId)
 	private String editorId;
@@ -88,11 +89,11 @@ public class Publication extends BaseEntity {
 	@Column(name = "Comments")
 	@Lob
 	private String comments;
-	
+
 	@Enumerated(EnumType.STRING)
 	@DiffIgnore
 	private PublicationActionType currentAction;
-	
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "pub_Id")
 	private List<PublicationArticleLinkage> articleLinkages;
@@ -102,19 +103,19 @@ public class Publication extends BaseEntity {
 	public void prePersist() {
 		super.prePersist();
 		new PublicationBusinessPolicy(this).validateAndThrow();
-		if(articleLinkages != null && publicationId != null && publicationId != 0) {
-			for(PublicationArticleLinkage linkage: articleLinkages) {
+		if (articleLinkages != null && publicationId != null && publicationId != 0) {
+			for (PublicationArticleLinkage linkage : articleLinkages) {
 				linkage.setPublicationId(publicationId);
 			}
 		}
 	}
-	
+
 	public String getKeyAsString() {
 		return String.valueOf(this.publicationId);
 	}
-	
-	public void setStatus(PublicationStatusType status) {
-		this.previousStatus = this.status;
+
+	public void setStatus(PublicationStatusType status, PublicationStatusType previousStatus) {
+		this.previousStatus = previousStatus;
 		this.status = status;
 	}
 }

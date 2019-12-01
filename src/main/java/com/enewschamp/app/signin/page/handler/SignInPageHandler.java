@@ -6,16 +6,21 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.EnewschampApplicationErrorProperties;
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.registration.business.StudentRegistrationBusiness;
+import com.enewschamp.app.user.login.entity.UserType;
+import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,28 +35,33 @@ public class SignInPageHandler implements IPageHandler {
 	StudentRegistrationBusiness studentRegBusiness;
 
 	@Autowired
+	StudentControlBusiness studentControlBusiness;
+
+	@Autowired
+	UserLoginBusiness userLoginBusiness;
+
+	@Autowired
 	EnewschampApplicationProperties appConfig;
+
+	@Autowired
+	EnewschampApplicationErrorProperties errorProperties;
 
 	@Autowired
 	ModelMapper modelMapper;
 
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
-		// TODO Auto-generated method stub
-		return null;
+		PageDTO pageDto = new PageDTO();
+		return pageDto;
 	}
 
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
-		// pageDto.setData(pageNavigationContext.getPageRequest().getData());
-		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String action = pageNavigationContext.getPageRequest().getHeader().getAction();
+		HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
+		pageDto.setHeader(header);
 		SignInPageData signInPageData = new SignInPageData();
-
-		signInPageData = modelMapper.map(pageNavigationContext.getPreviousPageResponse().getData(),
-				SignInPageData.class);
-
+		signInPageData.setContactUsText("Contact Us : " + appConfig.getHelpDeskEmail());
 		pageDto.setData(signInPageData);
 		return pageDto;
 	}
@@ -72,8 +82,11 @@ public class SignInPageHandler implements IPageHandler {
 		String password = "";
 		Long securityCode = null;
 		String verifyPassword = "";
+		String deviceId = "";
 
-		if (PageAction.SecurityCode.toString().equalsIgnoreCase(action)) {
+		if (PageAction.CreateAccount.toString().equalsIgnoreCase(actionName)) {
+			pageDto.setData(signInPageData);
+		} else if (PageAction.SecurityCode.toString().equalsIgnoreCase(action)) {
 			// String emailId = pageRequest.getData().
 			try {
 				signInPageData = objectMapper.readValue(pageRequest.getData().toString(), SignInPageData.class);
@@ -91,8 +104,7 @@ public class SignInPageHandler implements IPageHandler {
 			signInPageData.setMessage(appConfig.getOtpMessage());
 
 			pageDto.setData(signInPageData);
-		}
-		if (PageAction.register.toString().equalsIgnoreCase(action)) {
+		} else if (PageAction.register.toString().equalsIgnoreCase(action)) {
 			boolean optValidation = false;
 
 			try {
@@ -145,8 +157,7 @@ public class SignInPageHandler implements IPageHandler {
 
 			pageDto.setData(signInPageData);
 
-		}
-		if (PageAction.DeleteAccount.toString().equalsIgnoreCase(action)) {
+		} else if (PageAction.DeleteAccount.toString().equalsIgnoreCase(action)) {
 			try {
 				signInPageData = objectMapper.readValue(pageRequest.getData().toString(), SignInPageData.class);
 				emailId = signInPageData.getEmailId();
@@ -164,8 +175,7 @@ public class SignInPageHandler implements IPageHandler {
 
 			pageDto.setData(signInPageData);
 
-		}
-		if (PageAction.ResetPassword.toString().equalsIgnoreCase(action)) {
+		} else if (PageAction.ResetPassword.toString().equalsIgnoreCase(action)) {
 			try {
 				signInPageData = objectMapper.readValue(pageRequest.getData().toString(), SignInPageData.class);
 				emailId = signInPageData.getEmailId();
@@ -208,10 +218,7 @@ public class SignInPageHandler implements IPageHandler {
 			pageDto.setData(signInPageData);
 
 			studentRegBusiness.resetPassword(emailId, password);
-		}
-		if (PageAction.ResendSecurityCode.toString().equalsIgnoreCase(action)) {
-
-			// String emailId = pageRequest.getData().
+		} else if (PageAction.ResendSecurityCode.toString().equalsIgnoreCase(action)) {
 			try {
 				signInPageData = objectMapper.readValue(pageRequest.getData().toString(), SignInPageData.class);
 				emailId = signInPageData.getEmailId();
@@ -231,8 +238,44 @@ public class SignInPageHandler implements IPageHandler {
 
 			studentRegBusiness.sendOtp(emailId);
 
-		}
+		} else if (PageAction.LoginStudent.toString().equalsIgnoreCase(action)) {
+			boolean loginSuccess = false;
+			try {
+				signInPageData = objectMapper.readValue(pageRequest.getData().toString(), SignInPageData.class);
+				emailId = signInPageData.getEmailId();
+				password = signInPageData.getPassword();
+				deviceId = pageRequest.getHeader().getDeviceId();
+			} catch (JsonParseException e) {
+				throw new RuntimeException(e);
+			} catch (JsonMappingException e) {
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 
+			loginSuccess = studentRegBusiness.validatePassword(emailId, password);
+			if (loginSuccess) {
+				userLoginBusiness.login(emailId, deviceId, UserType.S);
+			} else {
+				throw new BusinessException(ErrorCodes.INVALID_EMAILID_OR_PASSWORD, "Invalid User Id Or Password");
+			}
+			pageDto.setData(signInPageData);
+		} else if (PageAction.logout.toString().equalsIgnoreCase(action)) {
+			try {
+				signInPageData = objectMapper.readValue(pageRequest.getData().toString(), SignInPageData.class);
+				emailId = signInPageData.getEmailId();
+				deviceId = pageRequest.getHeader().getDeviceId();
+			} catch (JsonParseException e) {
+				throw new RuntimeException(e);
+			} catch (JsonMappingException e) {
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			userLoginBusiness.logout(emailId, deviceId, UserType.S);
+			pageDto.setData(signInPageData);
+
+		}
 		return pageDto;
 	}
 

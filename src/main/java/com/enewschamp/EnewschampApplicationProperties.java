@@ -15,7 +15,6 @@ import lombok.Data;
 @ConfigurationProperties("enewschamp.config")
 public class EnewschampApplicationProperties {
 
-
 	@Data
 	public static class PageHandlerMapping {
 		@NotNull
@@ -23,21 +22,23 @@ public class EnewschampApplicationProperties {
 		@NotNull
 		private String handlerName;
 	}
-	
+
 	private Map<String, Map<String, String>> pageHandlerConfig;
-	
+
 	private Map<String, Map<String, Map<String, String>>> pageNavigationConfig;
-	
-	
+
 	private Map<String, String> subscriptionText;
 	private Map<String, String> studentDetailsPageText;
+	private Map<String, String> paytmDetails;
 	private int evalDays;
+	private int registrationCompletionGraceDays;
 	private int pageSize;
 	private int otpExpirySecs;
 	private int workingDays;
 	private String incompleteFormText;
 	private String premiumSubsMsg;
 	private String helpDeskText;
+	private String aboutUsText;
 	private String helpDeskEmail;
 	private String otpMessage;
 	private String registrationMessage;
@@ -52,12 +53,12 @@ public class EnewschampApplicationProperties {
 	private String otpEmailSubject;
 	private Long monthLov;
 	private String monthLovFormat;
-	
+
 	@Data
 	public static class AuditConfig {
 		private boolean includeSnapShots;
 	}
-	
+
 	@Data
 	public static class ArticleImageConfig {
 		private String imagesRootFolderPath;
@@ -72,13 +73,12 @@ public class EnewschampApplicationProperties {
 		private String imageType;
 		private String imageServletUrl;
 	}
-	
+
 	private AuditConfig audit;
-	
+
 	private ArticleImageConfig articleImageConfig;
-	
+
 	private Map<String, Map<String, Map<String, String>>> statusTransitionConfig;
 	private Map<String, Map<String, Map<String, List<String>>>> actionAccessConfig;
-	
-	
+
 }

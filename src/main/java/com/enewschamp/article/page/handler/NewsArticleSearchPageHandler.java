@@ -13,6 +13,7 @@ import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.city.service.CityService;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
+import com.enewschamp.article.domain.common.ArticleType;
 import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.article.page.data.NewsArticleSearchPageData;
 import com.enewschamp.article.page.data.NewsArticleSearchRequest;
@@ -28,37 +29,38 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component(value="NewsArticleSearchPageHandler")
-public class NewsArticleSearchPageHandler implements IPageHandler  {
+@Component(value = "NewsArticleSearchPageHandler")
+public class NewsArticleSearchPageHandler implements IPageHandler {
 
 	@Autowired
 	private NewsArticleService newsArticleService;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	ObjectMapper objectMapper;
-	
+
 	@Autowired
 	GenreService genreService;
 
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	EditionService editionService;
-	
+
 	@Autowired
 	CityService cityService;
-	
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
-		
+
 		PageDTO pageDTO = new PageDTO();
 		NewsArticleSearchRequest searchRequestData = null;
 		try {
-			searchRequestData = objectMapper.readValue(pageRequest.getData().toString(), NewsArticleSearchRequest.class);
+			searchRequestData = objectMapper.readValue(pageRequest.getData().toString(),
+					NewsArticleSearchRequest.class);
 		} catch (JsonParseException e) {
 			throw new RuntimeException(e);
 		} catch (JsonMappingException e) {
@@ -66,23 +68,24 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		NewsArticleSearchResultData searchResult = new NewsArticleSearchResultData();
 		pageDTO.setData(searchResult);
-		
-		Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData, pageRequest.getHeader());
-		
+
+		Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData,
+				pageRequest.getHeader());
+
 		HeaderDTO header = new HeaderDTO();
 		header.setIsLastPage(pageResult.isLast());
 		header.setPageCount(pageResult.getTotalPages());
 		header.setRecordCount(pageResult.getNumberOfElements());
 		header.setPageNo(pageResult.getNumber() + 1);
 		pageDTO.setHeader(header);
-		
+
 		searchResult.setNewsArticles(pageResult.getContent());
 		return pageDTO;
 	}
-	
+
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO page = new PageDTO();
@@ -95,6 +98,7 @@ public class NewsArticleSearchPageHandler implements IPageHandler  {
 		newsArticleSearchPageData.setDaysLOV(WeekDayType.getLOV());
 		newsArticleSearchPageData.setEditionsLOV(editionService.getLOV());
 		newsArticleSearchPageData.setCityLOV(cityService.getLOVForNewsEvents());
+		newsArticleSearchPageData.setArticleTypeLOV(ArticleType.getLOV());
 		page.setData(newsArticleSearchPageData);
 		return page;
 	}

@@ -19,7 +19,9 @@ import com.enewschamp.subscription.app.dto.StudentPictDetailsPageData;
 import com.enewschamp.subscription.app.dto.StudentPicturePageData;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
+import com.enewschamp.subscription.domain.entity.StudentDetailsWork;
 import com.enewschamp.subscription.domain.service.StudentDetailsService;
+import com.enewschamp.subscription.domain.service.StudentDetailsWorkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "StudentPicturePageHandler")
@@ -29,15 +31,17 @@ public class StudentPicturePageHandler implements IPageHandler {
 	ObjectMapper objectMapper;
 
 	@Autowired
-	StudentControlBusiness StudentControlBusiness;
+	StudentControlBusiness studentControlBusiness;
 
 	@Autowired
 	StudentDetailsService studentDetailsService;
 
 	@Autowired
+	StudentDetailsWorkService studentDetailsWorkService;
+
+	@Autowired
 	ModelMapper modelMapper;
-	
-	
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		// TODO Auto-generated method stub
@@ -50,17 +54,30 @@ public class StudentPicturePageHandler implements IPageHandler {
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String action = pageNavigationContext.getActionName();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
-	
-		Long studentId=0L;
-		if(PageAction.back.toString().equalsIgnoreCase(action))
-		{
-			studentId = StudentControlBusiness.getStudentId(emailId);
-			StudentDetails studentDetails = studentDetailsService.get(studentId);
+
+		Long studentId = 0L;
+		if (PageAction.back.toString().equalsIgnoreCase(action)
+				|| PageAction.PicImage.toString().equalsIgnoreCase(action)) {
+			studentId = studentControlBusiness.getStudentId(emailId);
 			StudentPicturePageData studentPicturePageData = new StudentPicturePageData();
-			StudentPictDetailsPageData studentPicDetailsPageData=new StudentPictDetailsPageData();
-			studentPicDetailsPageData.setAvtarId(studentDetails.getAvtarID());
-			studentPicDetailsPageData.setImage(studentDetails.getPhoto());
-			studentPicturePageData.setPicture(studentPicDetailsPageData);
+			StudentPictDetailsPageData studentPicDetailsPageData = new StudentPictDetailsPageData();
+			StudentDetails studentDetails = studentDetailsService.get(studentId);
+			if (studentDetails != null) {
+				studentPicDetailsPageData.setAvtarId(studentDetails.getAvtarID());
+				studentPicDetailsPageData.setImage(studentDetails.getPhoto());
+				studentPicturePageData.setPicture(studentPicDetailsPageData);
+			} else {
+				StudentDetailsWork studentDetailsWork = studentDetailsWorkService.get(studentId);
+				if (studentDetailsWork != null) {
+					studentPicDetailsPageData.setAvtarId(studentDetailsWork.getAvtarID());
+					studentPicDetailsPageData.setImage(studentDetailsWork.getPhoto());
+					studentPicturePageData.setPicture(studentPicDetailsPageData);
+				} else {
+					studentPicDetailsPageData.setAvtarId(null);
+					studentPicDetailsPageData.setImage("");
+					studentPicturePageData.setPicture(studentPicDetailsPageData);
+				}
+			}
 			pageDto.setData(studentPicturePageData);
 		}
 		return pageDto;
@@ -69,14 +86,14 @@ public class StudentPicturePageHandler implements IPageHandler {
 	@Override
 	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		/*String emailId = pageRequest.getHeader().getEmailID();
-		StudentControlWorkDTO studentControlWorkDTO = StudentControlBusiness.getStudentFromWork(emailId);
-		Long studentId = 0L;
-		if (studentControlWorkDTO != null) {
-			studentId = studentControlWorkDTO.getStudentID();
-		}
-
-		preferenceBusiness.workToMaster(studentId);*/
+		/*
+		 * String emailId = pageRequest.getHeader().getEmailID(); StudentControlWorkDTO
+		 * studentControlWorkDTO = StudentControlBusiness.getStudentFromWork(emailId);
+		 * Long studentId = 0L; if (studentControlWorkDTO != null) { studentId =
+		 * studentControlWorkDTO.getStudentID(); }
+		 * 
+		 * preferenceBusiness.workToMaster(studentId);
+		 */
 		return pageDto;
 	}
 
@@ -89,19 +106,16 @@ public class StudentPicturePageHandler implements IPageHandler {
 		Long studentId = 0L;
 		StudentPicturePageData studentPicturePageData = new StudentPicturePageData();
 		if (PageAction.save.toString().equalsIgnoreCase(actionName)) {
-			
+
 			if (PageSaveTable.M.toString().equals(saveIn)) {
-				
-				studentId  = StudentControlBusiness.getStudentId(emailId);
-				
+				studentId = studentControlBusiness.getStudentId(emailId);
 				StudentDetails studentDetails = studentDetailsService.get(studentId);
 				studentPicturePageData = mapPagedata(pageRequest);
 				studentDetails.setAvtarID(studentPicturePageData.getPicture().getAvtarId());
 				studentDetails.setPhoto(studentPicturePageData.getPicture().getImage());
 				studentDetailsService.create(studentDetails);
-			} 
-			else if (PageSaveTable.W.toString().equals(saveIn)) {
-				
+			} else if (PageSaveTable.W.toString().equals(saveIn)) {
+
 			} // not sure if image is to be saved in work table..
 		}
 

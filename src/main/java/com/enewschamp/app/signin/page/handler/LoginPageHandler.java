@@ -45,12 +45,9 @@ public class LoginPageHandler implements IPageHandler {
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
-
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		LoginPageData loginPageData = new LoginPageData();
-
-		loginPageData = modelMapper.map(pageNavigationContext.getPreviousPageResponse().getData(),
-				LoginPageData.class);
+		loginPageData = modelMapper.map(pageNavigationContext.getPreviousPageResponse().getData(), LoginPageData.class);
 		loginPageData.setPassword("");
 		pageDto.setData(loginPageData);
 		return pageDto;

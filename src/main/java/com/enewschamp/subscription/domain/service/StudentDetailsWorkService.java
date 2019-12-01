@@ -54,7 +54,8 @@ public class StudentDetailsWorkService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.STUDENT_DTLS_NOT_FOUND);
+			//throw new BusinessException(ErrorCodes.STUDENT_DTLS_NOT_FOUND);
+			return null;
 		}
 	}
 	

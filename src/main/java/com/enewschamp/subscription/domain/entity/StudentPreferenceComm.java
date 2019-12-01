@@ -29,7 +29,7 @@ public class StudentPreferenceComm {
 	private String notificationsOverEmail;
 	
 	@JsonProperty(value="over")
-	@Column(name="EmailForComms", length=1)
+	@Column(name="EmailForComms", length=100)
 	private String emailForComms;
 	
 }

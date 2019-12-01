@@ -17,6 +17,8 @@ import com.enewschamp.app.student.monthlytrends.business.TrendsMonthlyByGenreBus
 import com.enewschamp.app.student.monthlytrends.business.TrendsMonthlyTotalBusiness;
 import com.enewschamp.app.student.monthlytrends.dto.TrendsMonthlyByGenreDTO;
 import com.enewschamp.app.student.monthlytrends.dto.TrendsMonthlyTotalDTO;
+import com.enewschamp.app.student.registration.entity.StudentRegistration;
+import com.enewschamp.app.student.registration.service.StudentRegistrationService;
 import com.enewschamp.app.trends.service.TrendsService;
 import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
@@ -67,6 +69,9 @@ public class WelcomePageHandler implements IPageHandler {
 	@Autowired
 	TrendsMonthlyByGenreBusiness trendsMonthlyByGenreBusiness;
 
+	@Autowired
+	StudentRegistrationService regService;
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		return null;
@@ -76,11 +81,7 @@ public class WelcomePageHandler implements IPageHandler {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		//no page number to be returned..
-		
 		pageDto.getHeader().setPageNo(0);
-		
-		String operation = pageNavigationContext.getPageRequest().getHeader().getOperation();
 		String action = pageNavigationContext.getPageRequest().getHeader().getAction();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
@@ -90,50 +91,29 @@ public class WelcomePageHandler implements IPageHandler {
 		Long yearMonth = null;
 		Long pointsToNextBadge = 0L;
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		if (studentId == null || studentId == 0L) {
-			throw new BusinessException(ErrorCodes.STUDENT_DTLS_NOT_FOUND);
-		}
-
-		if (PageAction.WelcomeUser.toString().equalsIgnoreCase(action)) {
+		if (PageAction.WelcomeUser.toString().equalsIgnoreCase(action)
+				|| PageAction.LaunchApp.toString().equalsIgnoreCase(action)) {
 			WelcomePageData pageData = new WelcomePageData();
-
 			StudentDetailsDTO studentDetailsDTO = studentDetailsBusiness.getStudentDetailsFromMaster(studentId);
-			pageData.setStudentName(studentDetailsDTO.getName());
-			pageData.setUserImage(studentDetailsDTO.getPhoto());
-
+			pageData.setStudentName(studentDetailsDTO != null ? studentDetailsDTO.getName() : "");
+			pageData.setUserImage(studentDetailsDTO != null ? studentDetailsDTO.getPhoto() : "");
 			Edition edition = editionService.getEdition(editionId);
 			editionName = edition.getEditionName();
 			pageData.setEditionName(editionName);
-
 			UserLogin studentLogin = studentLoginBusiness.getLoginDetails(deviceId, emailId, UserType.S);
-			if(studentLogin!=null) {
-			LocalDateTime lastLoginTime = studentLogin.getLastLoginTime();
-
-			if (lastLoginTime != null)
-				pageData.setLastLoginDatetime(lastLoginTime);
-			}
-
-			// get Student Badge..
+			pageData.setLastLoginDatetime(studentLogin != null ? studentLogin.getLastLoginTime() : null);
 			StudentBadges studentbadge = studentBadgesBusiness.getLastestBadge(studentId, editionId);
 			Badge badge = null;
 			if (studentbadge != null) {
 				badge = badgeService.get(studentbadge.getBadgeId());
 				badgeGenre = badge.getGenreId();
-				System.out.println(" badgeGenre :"+badgeGenre);
 				yearMonth = studentbadge.getYearMonth();
 				pageData.setBadgeDate(studentbadge.getOperationDateTime().toLocalDate());
 				pageData.setBadgeImage(studentbadge.getBadgeImage());
-
 			}
-
-			// display the next bagde message..
-			// get the existing points for this edition..
 			if (badgeGenre != null && !"".equals(badgeGenre)) {
-				// get data from Trends Monthly by Genre
-
 				TrendsMonthlyByGenreDTO trendsMonthlyByGenreDTO = trendsMonthlyByGenreBusiness
 						.getMonthlyTrend(studentId, editionId, "" + yearMonth, badgeGenre);
-
 				if (trendsMonthlyByGenreDTO != null) {
 					Long points = trendsMonthlyByGenreDTO.getQuizQCorrect();
 					Badge nextbadge = badgeService.getNextBadgeForGenre(editionId, trendsMonthlyByGenreDTO.getGenreId(),
@@ -144,10 +124,7 @@ public class WelcomePageHandler implements IPageHandler {
 					pageData.setNextBadgeMessage(message);
 
 				}
-
 			} else {
-				// get data from Trends Monthly Total
-
 				TrendsMonthlyTotalDTO trendsMonthlyTotalDTO = trendsMonthlyTotalBusiness.getMonthlyTrend(studentId,
 						editionId, "" + yearMonth);
 				if (trendsMonthlyTotalDTO != null) {

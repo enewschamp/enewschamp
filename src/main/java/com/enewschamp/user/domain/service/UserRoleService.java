@@ -79,6 +79,15 @@ public class UserRoleService extends AbstractDomainService {
 		}
 	}
 	
+	public UserRole getByUserId(String userId) {
+		Optional<UserRole> existingEntity = repository.getByUserId(userId);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
+		} else {
+			return null;
+		}
+	}
+	
 	
 	public String getAudit(UserRoleKey userRoleKey) {
 		UserRole userRole = new UserRole();

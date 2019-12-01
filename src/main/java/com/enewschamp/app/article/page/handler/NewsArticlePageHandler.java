@@ -96,7 +96,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 
 			// Load News and Events..
 			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
-			articleTypeList.add(ArticleType.Article);
+			articleTypeList.add(ArticleType.NEWSARTICLE);
 
 			searchRequestData.setArticleTypeList(articleTypeList);
 
@@ -126,7 +126,10 @@ public class NewsArticlePageHandler implements IPageHandler {
 
 			// searchResult.setNewsArticlesSummary(pageResult.getContent());
 
-		} else if (PageAction.clickArticleImage.toString().equalsIgnoreCase(action) || PageAction.ClickSavedArticle.toString().equalsIgnoreCase(action) || PageAction.ClickOpinionArticle.toString().equalsIgnoreCase(action) || PageAction.ClickNewsEvent.toString().equalsIgnoreCase(action)) {
+		} else if (PageAction.ClickArticleImage.toString().equalsIgnoreCase(action)
+				|| PageAction.ClickSavedArticle.toString().equalsIgnoreCase(action)
+				|| PageAction.ClickOpinionArticle.toString().equalsIgnoreCase(action)
+				|| PageAction.ClickNewsEvent.toString().equalsIgnoreCase(action)) {
 			ArticlePageData articlePageData = new ArticlePageData();
 			articlePageData = mapPageData(articlePageData, pageNavigationContext.getPageRequest());
 
@@ -134,7 +137,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 			searchRequestData.setArticleId(articlePageData.getNewsArticleId());
 			// Load News and Events..
 			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
-			articleTypeList.add(ArticleType.Article);
+			articleTypeList.add(ArticleType.NEWSARTICLE);
 
 			searchRequestData.setArticleTypeList(articleTypeList);
 			Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData,
@@ -154,23 +157,25 @@ public class NewsArticlePageHandler implements IPageHandler {
 				newsArticlePageData.setHeadline(newsArticleSummary.getHeadLine());
 				newsArticlePageData.setGenreId(newsArticleSummary.getGenreId());
 				newsArticlePageData.setImage(newsArticleSummary.getImagePathMobile());
+				newsArticlePageData.setContent(newsArticleSummary.getContent());
+				newsArticlePageData.setCredits(newsArticleSummary.getCredits());
 				if (studentId != null && studentId != 0) {
 					StudentActivityDTO stdactivity = studentActivityBusiness.getActivity(studentId,
 							newsArticleSummary.getNewsArticleId());
 					newsArticlePageData.setOpitionText(stdactivity.getOpinion());
 					newsArticlePageData.setReactionType(stdactivity.getLikeLevel());
 					newsArticlePageData.setSaved(stdactivity.getSaved());
-
+					newsArticlePageData.setQuizCompletedIndicator(stdactivity.getQuizScore() > 0 ? true : false);
 				} else {
 					newsArticlePageData.setOpitionText("");
 					newsArticlePageData.setReactionType("");
 					newsArticlePageData.setSaved("false");
+					newsArticlePageData.setQuizCompletedIndicator(false);
 				}
-
 			}
 			pageDto.setData(newsArticlePageData);
 
-		} else if (PageAction.savedarticles.toString().equalsIgnoreCase(action) 
+		} else if (PageAction.savedarticles.toString().equalsIgnoreCase(action)
 				|| PageAction.back.toString().equalsIgnoreCase(action)
 				|| PageAction.FilterSavedArticles.toString().equalsIgnoreCase(action)
 				|| PageAction.ClearFilterSavedArticles.toString().equalsIgnoreCase(action)) {
@@ -251,7 +256,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 			// searchRequestData.setPublishMonth(articlePageData.getPublishMonth());
 			// Load News and Events..
 			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
-			articleTypeList.add(ArticleType.Article);
+			articleTypeList.add(ArticleType.NEWSARTICLE);
 
 			searchRequestData.setArticleTypeList(articleTypeList);
 			Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData,
@@ -299,7 +304,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 			// pageDto.setData(searchResult);
 			// Load News and Events..
 			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
-			articleTypeList.add(ArticleType.Article);
+			articleTypeList.add(ArticleType.NEWSARTICLE);
 
 			searchRequestData.setArticleTypeList(articleTypeList);
 			Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData,
@@ -363,7 +368,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 
 		Long studentId = studentControlBusiness.getStudentId(eMailId);
 
-		if (PageAction.like.toString().equals(actionName)) {
+		if (PageAction.Like.toString().equals(actionName)) {
 			ArticlePageData articlePageData = new ArticlePageData();
 			articlePageData = mapPageData(articlePageData, pageRequest);
 			String likeFlag = articlePageData.getLikeFlag();
@@ -371,14 +376,14 @@ public class NewsArticlePageHandler implements IPageHandler {
 
 			studentActivityBusiness.likeArticle(studentId, newsArticleId, likeFlag);
 
-		} else if (PageAction.opinion.toString().equals(actionName)) {
+		} else if (PageAction.SaveOpinion.toString().equals(actionName)) {
 			ArticlePageData articlePageData = new ArticlePageData();
 			articlePageData = mapPageData(articlePageData, pageRequest);
 			String opinion = articlePageData.getOpinion();
 			Long newsArticleId = articlePageData.getNewsArticleId();
 
 			studentActivityBusiness.saveOpinion(studentId, newsArticleId, opinion);
-		} else if (PageAction.savearticle.toString().equals(actionName)) {
+		} else if (PageAction.SaveArticle.toString().equals(actionName)) {
 			ArticlePageData articlePageData = new ArticlePageData();
 			articlePageData = mapPageData(articlePageData, pageRequest);
 			String saveFlag = articlePageData.getSaveFlag();

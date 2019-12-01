@@ -24,6 +24,7 @@ public class NewsArticlePageData extends PageData {
 	private String reactionType;
 	private String opitionText;
 	private String saved;
+	private boolean quizCompletedIndicator;
 	
 	
 	

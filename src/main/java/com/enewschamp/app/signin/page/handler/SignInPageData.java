@@ -16,4 +16,5 @@ public class SignInPageData extends PageData implements java.io.Serializable {
 	private String password;
 	private String verifyPassword;
 	private String message;
+	private String contactUsText;
 }

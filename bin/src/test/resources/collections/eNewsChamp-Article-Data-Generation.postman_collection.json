@@ -1,0 +1,51 @@
+{
+	"info": {
+		"_postman_id": "177e5333-d3f5-41ee-ab24-4ed6af872118",
+		"name": "eNewsChamp-Article-Data-Generation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Article Group with articles",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "472e4ac5-3af9-4ab9-b8db-d214d227b151",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n    \t\"pageName\": \"NewsArticle\",\n    \t\"action\": \"SaveNewsArticle\"\n    },\n    \"data\": {\n        \"operatorId\": \"{{operatorId}}\",\n        \"recordInUse\": \"{{recordInUse}}\",\n        \"editionId\": \"{{editionId}}\",\n        \"genreId\": \"{{genreId}}\",\n        \"headline\": \"{{headline}}\",\n        \"credits\": \"{{credits}}\",\n        \"status\": \"Unassigned\",\n        \"url\": \"{{url}}\",\n        \"sourceText\": \"{{sourceText}}\",\n        \"hashTags\": \"{{hashTags}}\",\n        \"imagePathMobile\": \"{{imagePathMobile}}\",\n        \"imagePathTab\": \"{{imagePathTab}}\",\n        \"imagePathDesktop\": \"{{imagePathDesktop}}\",\n        \"editorId\": \"{{editorId}}\",\n        \"authorId\": \"{{authorId}}\",\n        \"targetCompletionDate\": \"{{targetCompletionDate}}\",\n        \"publicationDate\": \"{{publicationDate}}\",\n        \"intendedPubMonth\": \"{{intendedPubMonth}}\",\n        \"intendedPubDay\": \"{{intendedPubDay}}\",\n        \"comments\": \"{{comments}}\",\n        \"readingLevel1\": true,\n        \"readingLevel2\": true,\n        \"readingLevel3\": true,\n        \"readingLevel4\": true,\n        \"newsArticles\": [\n            {\n                \"readingLevel\": {{article1-readingLevel}},\n                \"status\": \"Unassigned\",\n                \"content\": \"{{article1-content}}\",\n                \"rating\": \"{{article1-rating}}\",\n                \"likeLCount\": {{article1-likeLCount}},\n                \"likeHCount\": {{article1-likeHCount}},\n                \"likeOCount\": {{article1-likeOCount}},\n                \"likeWCount\": {{article1-likeWCount}},\n                \"likeSCount\": {{article1-likeSCount}},\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"{{article1-quiz1-question}}\",\n                        \"opt1\": \"{{article1-quiz1-opt1}}\",\n                        \"opt2\": \"{{article1-quiz1-opt2}}\",\n                        \"opt3\": \"{{article1-quiz1-opt3}}\",\n                        \"opt4\": \"{{article1-quiz1-opt4}}\",\n                        \"correctOpt\": {{article1-quiz1-correctOpt}}\n                    },\n                    {\n                        \"question\": \"{{article1-quiz2-question}}\",\n                        \"opt1\": \"{{article1-quiz2-opt1}}\",\n                        \"opt2\": \"{{article1-quiz2-opt2}}\",\n                        \"opt3\": \"{{article1-quiz2-opt3}}\",\n                        \"opt4\": \"{{article1-quiz2-opt4}}\",\n                        \"correctOpt\": {{article1-quiz2-correctOpt}}\n                    }\n                ]\n            },\n            {\n                \"readingLevel\": {{article2-readingLevel}},\n                \"status\": \"Unassigned\",\n                \"content\": \"{{article2-content}}\",\n                \"rating\": \"{{article2-rating}}\",\n                \"likeLCount\": {{article2-likeLCount}},\n                \"likeHCount\": {{article2-likeHCount}},\n                \"likeOCount\": {{article2-likeOCount}},\n                \"likeWCount\": {{article2-likeWCount}},\n                \"likeSCount\": {{article2-likeSCount}},\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"{{article2-quiz1-question}}\",\n                        \"opt1\": \"{{article2-quiz1-opt1}}\",\n                        \"opt2\": \"{{article2-quiz1-opt2}}\",\n                        \"opt3\": \"{{article2-quiz1-opt3}}\",\n                        \"opt4\": \"{{article2-quiz1-opt4}}\",\n                        \"correctOpt\": {{article2-quiz1-correctOpt}}\n                    },\n                    {\n                        \"question\": \"{{article2-quiz2-question}}\",\n                        \"opt1\": \"{{article2-quiz2-opt1}}\",\n                        \"opt2\": \"{{article2-quiz2-opt2}}\",\n                        \"opt3\": \"{{article2-quiz2-opt3}}\",\n                        \"opt4\": \"{{article2-quiz2-opt4}}\",\n                        \"correctOpt\": {{article2-quiz2-correctOpt}}\n                    }\n                ]\n            },\n            {\n                \"readingLevel\": {{article3-readingLevel}},\n                \"status\": \"Unassigned\",\n                \"content\": \"{{article3-content}}\",\n                \"rating\": \"{{article3-rating}}\",\n                \"likeLCount\": {{article3-likeLCount}},\n                \"likeHCount\": {{article3-likeHCount}},\n                \"likeOCount\": {{article3-likeOCount}},\n                \"likeWCount\": {{article3-likeWCount}},\n                \"likeSCount\": {{article3-likeSCount}},\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"{{article3-quiz1-question}}\",\n                        \"opt1\": \"{{article3-quiz1-opt1}}\",\n                        \"opt2\": \"{{article3-quiz1-opt2}}\",\n                        \"opt3\": \"{{article3-quiz1-opt3}}\",\n                        \"opt4\": \"{{article3-quiz1-opt4}}\",\n                        \"correctOpt\": {{article3-quiz1-correctOpt}}\n                    },\n                    {\n                        \"question\": \"{{article3-quiz2-question}}\",\n                        \"opt1\": \"{{article3-quiz2-opt1}}\",\n                        \"opt2\": \"{{article3-quiz2-opt2}}\",\n                        \"opt3\": \"{{article3-quiz2-opt3}}\",\n                        \"opt4\": \"{{article3-quiz2-opt4}}\",\n                        \"correctOpt\": {{article3-quiz2-correctOpt}}\n                    }\n                ]\n            },\n            {\n                \"readingLevel\": {{article4-readingLevel}},\n                \"status\": \"Unassigned\",\n                \"content\": \"{{article4-content}}\",\n                \"rating\": \"{{article4-rating}}\",\n                \"likeLCount\": {{article4-likeLCount}},\n                \"likeHCount\": {{article4-likeHCount}},\n                \"likeOCount\": {{article4-likeOCount}},\n                \"likeWCount\": {{article4-likeWCount}},\n                \"likeSCount\": {{article4-likeSCount}},\n                \"newsArticleQuiz\": [\n                    {\n                        \"question\": \"{{article4-quiz1-question}}\",\n                        \"opt1\": \"{{article4-quiz1-opt1}}\",\n                        \"opt2\": \"{{article4-quiz1-opt2}}\",\n                        \"opt3\": \"{{article4-quiz1-opt3}}\",\n                        \"opt4\": \"{{article4-quiz1-opt4}}\",\n                        \"correctOpt\": {{article4-quiz1-correctOpt}}\n                    },\n                    {\n                        \"question\": \"{{article4-quiz2-question}}\",\n                        \"opt1\": \"{{article4-quiz2-opt1}}\",\n                        \"opt2\": \"{{article4-quiz2-opt2}}\",\n                        \"opt3\": \"{{article4-quiz2-opt3}}\",\n                        \"opt4\": \"{{article4-quiz2-opt4}}\",\n                        \"correctOpt\": {{article4-quiz2-correctOpt}}\n                    }\n                ]\n            }\n        ]\n    }\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/{{base-path}}/{{publisherAppPath}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{base-path}}",
+						"{{publisherAppPath}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

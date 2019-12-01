@@ -9,42 +9,46 @@ import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
-import com.enewschamp.publication.domain.service.PublicationService;
+import com.enewschamp.publication.app.dto.PublicationGroupDTO;
+import com.enewschamp.publication.domain.service.PublicationGroupService;
+import com.enewschamp.publication.page.data.PublicationGroupPageData;
 import com.enewschamp.publication.page.data.ReassignPublisherPageData;
 import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component(value="ReassignPublisherPageHandler")
-public class ReassignPublisherPageHandler implements IPageHandler  {
+@Component(value = "ReassignPublisherPageHandler")
+public class ReassignPublisherPageHandler implements IPageHandler {
 
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
-	private PublicationService publicationService;
-	
+	private PublicationGroupService publicationGroupService;
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
-		
+
 		PageDTO pageDTO = new PageDTO();
 		String publisherId = pageRequest.getData().get("publisherId").asText();
-		Long publicationId = pageRequest.getData().get("publicationId").asLong();
-		
-		publicationService.assignPublisher(publicationId, publisherId);
-		
+		Long publicationGroupId = pageRequest.getData().get("publicationGroupId").asLong();
+
+		PublicationGroupPageData data = new PublicationGroupPageData();
+		PublicationGroupDTO groupDTO = publicationGroupService.assignPublisher(publicationGroupId, publisherId);
+		data.setPublicationGroup(groupDTO);
+		pageDTO.setData(data);
 		return pageDTO;
 	}
-	
+
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO page = new PageDTO();
-		
+
 		ReassignPublisherPageData pageData = new ReassignPublisherPageData();
 		pageData.setPublisherLOV(userService.getPublisherLOV());
 		page.setData(pageData);

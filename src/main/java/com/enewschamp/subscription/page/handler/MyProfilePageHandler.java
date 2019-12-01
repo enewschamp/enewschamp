@@ -16,10 +16,13 @@ import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.subscription.app.dto.MyProfilePageData;
 import com.enewschamp.subscription.app.dto.StudentDetailsDTO;
 import com.enewschamp.subscription.app.dto.StudentDetailsPageData;
+import com.enewschamp.subscription.app.dto.StudentDetailsWorkDTO;
 import com.enewschamp.subscription.app.dto.StudentPreferencePageData;
 import com.enewschamp.subscription.app.dto.StudentPreferencesDTO;
+import com.enewschamp.subscription.app.dto.StudentPreferencesWorkDTO;
 import com.enewschamp.subscription.app.dto.StudentSchoolDTO;
 import com.enewschamp.subscription.app.dto.StudentSchoolPageData;
+import com.enewschamp.subscription.app.dto.StudentSchoolWorkDTO;
 import com.enewschamp.subscription.app.dto.StudentShareAchievementsDTO;
 import com.enewschamp.subscription.app.dto.StudentShareAchievementsPageData;
 import com.enewschamp.subscription.app.dto.StudentSubscriptionDTO;
@@ -75,42 +78,61 @@ public class MyProfilePageHandler implements IPageHandler {
 		Long studentId = 0L;
 		MyProfilePageData myProfilePageData = new MyProfilePageData();
 
-		if (PageAction.get.toString().equalsIgnoreCase(action) || PageAction.MyProfile.toString().equalsIgnoreCase(action) ) {
+		if (PageAction.get.toString().equalsIgnoreCase(action)
+				|| PageAction.MyProfile.toString().equalsIgnoreCase(action)) {
 			studentId = studentControlBusiness.getStudentId(emailId);
 			StudentSubscriptionDTO studentSubscriptionDTO = studentSubscriptionBusiness
 					.getStudentSubscriptionFromMaster(studentId, editionId);
 			StudentSubscriptionPageData studentSubscriptionPageData = modelMapper.map(studentSubscriptionDTO,
 					StudentSubscriptionPageData.class);
-
+			StudentDetailsPageData studentDetailsPageData = new StudentDetailsPageData();
 			StudentDetailsDTO studentDetailsDTO = studentDetailsBusiness.getStudentDetailsFromMaster(studentId);
-			StudentDetailsPageData studentDetailsPageData = modelMapper.map(studentDetailsDTO,
-					StudentDetailsPageData.class);
-
+			if (studentDetailsDTO == null) {
+				StudentDetailsWorkDTO studentDetailsWorkDTO = studentDetailsBusiness
+						.getStudentDetailsFromWork(studentId);
+				if (studentDetailsWorkDTO != null) {
+					studentDetailsPageData = modelMapper.map(studentDetailsWorkDTO, StudentDetailsPageData.class);
+				}
+			} else {
+				studentDetailsPageData = modelMapper.map(studentDetailsDTO, StudentDetailsPageData.class);
+			}
+			StudentSchoolPageData studentSchoolPageData = new StudentSchoolPageData();
 			StudentSchoolDTO studentSchoolDTO = schoolDetailsBusiness.getStudentFromMaster(studentId);
-			StudentSchoolPageData studentSchoolPageData = modelMapper.map(studentSchoolDTO,
-					StudentSchoolPageData.class);
-
+			if (studentSchoolDTO == null) {
+				StudentSchoolWorkDTO studentSchoolWorkDTO = schoolDetailsBusiness.getStudentFromWork(studentId);
+				if (studentSchoolWorkDTO != null) {
+					studentSchoolPageData = modelMapper.map(studentSchoolWorkDTO, StudentSchoolPageData.class);
+				}
+			} else {
+				studentSchoolPageData = modelMapper.map(studentSchoolDTO, StudentSchoolPageData.class);
+			}
+			StudentPreferencePageData studentPreferencesPageData = new StudentPreferencePageData();
 			StudentPreferencesDTO studentPreferencesDTO = preferenceBusiness.getPreferenceFromMaster(studentId);
-			StudentPreferencePageData studentPreferencesPageData = modelMapper.map(studentPreferencesDTO,
-					StudentPreferencePageData.class);
-
+			if (studentPreferencesDTO == null) {
+				StudentPreferencesWorkDTO studentPreferencesWorkDTO = preferenceBusiness
+						.getPreferenceFromWork(studentId);
+				if (studentPreferencesWorkDTO != null) {
+					studentPreferencesPageData = modelMapper.map(studentPreferencesWorkDTO,
+							StudentPreferencePageData.class);
+				}
+			} else {
+				studentPreferencesPageData = modelMapper.map(studentPreferencesDTO, StudentPreferencePageData.class);
+			}
+			StudentShareAchievementsPageData studentShareAchievementsPageData = new StudentShareAchievementsPageData();
 			List<StudentShareAchievementsDTO> studentsharedAchievementsList = studentShareAchievementsBusiness
 					.getStudentDetailsFromMaster(studentId);
-			StudentShareAchievementsPageData studentShareAchievementsPageData = new StudentShareAchievementsPageData();
-			studentShareAchievementsPageData = mapDTOtoPage(studentsharedAchievementsList,
-					studentShareAchievementsPageData);
-
+			if (studentsharedAchievementsList != null) {
+				studentShareAchievementsPageData = mapDTOtoPage(studentsharedAchievementsList,
+						studentShareAchievementsPageData);
+			}
 			// add the objects in ProfilePageData..
 			myProfilePageData.setPreferences(studentPreferencesPageData);
 			myProfilePageData.setSchoolDetails(studentSchoolPageData);
 			myProfilePageData.setStudentDetails(studentDetailsPageData);
 			myProfilePageData.setShareAchievements(studentShareAchievementsPageData);
 			myProfilePageData.setSubscription(studentSubscriptionPageData);
-
 			pageDto.setData(myProfilePageData);
-
 		}
-
 		return pageDto;
 	}
 
@@ -158,7 +180,7 @@ public class MyProfilePageHandler implements IPageHandler {
 			contactList.add(contact10);
 
 			StudentShareAchievementsPageData.setContacts(contactList);
-			
+
 		}
 		return StudentShareAchievementsPageData;
 	}

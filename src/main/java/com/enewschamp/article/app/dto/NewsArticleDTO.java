@@ -46,7 +46,7 @@ public class NewsArticleDTO extends MaintenanceDTO {
 	@NotNull
 	private ArticleStatusType status;
 	
-	private ArticleType articleType = ArticleType.Article;
+	private ArticleType articleType = ArticleType.NEWSARTICLE;
 	
 	private String content;
 	

@@ -45,6 +45,7 @@ public class StudentDetailsPageHandler implements IPageHandler {
 	private EnewschampApplicationProperties appConfig;
 	@Autowired
 	PageNavigationService pageNavigationService;
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
@@ -61,48 +62,51 @@ public class StudentDetailsPageHandler implements IPageHandler {
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
 		String operation = pageNavigationContext.getPageRequest().getHeader().getOperation();
 		String pageName = pageNavigationContext.getPreviousPage();
-		
+
 		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
 		if (studentControlDTO != null) {
 			studentId = studentControlDTO.getStudentID();
 		} else {
 			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
-			if(studentControlWorkDTO!=null)
-			studentId = studentControlWorkDTO.getStudentID();
+			if (studentControlWorkDTO != null)
+				studentId = studentControlWorkDTO.getStudentID();
 		}
 
-		if(PageAction.next.toString().equalsIgnoreCase(action))
-		{
+		if (PageAction.next.toString().equalsIgnoreCase(action)) {
 			StudentDetailsPageData studentDetailsPageData = new StudentDetailsPageData();
-			studentDetailsPageData.setCorrectDetailsText(appConfig.getStudentDetailsPageText().get("correctDetailsText"));
+			studentDetailsPageData
+					.setCorrectDetailsText(appConfig.getStudentDetailsPageText().get("correctDetailsText"));
 			studentDetailsPageData.setDobReasonText(appConfig.getStudentDetailsPageText().get("dobReasonText"));
 			studentDetailsPageData.setDobText(appConfig.getStudentDetailsPageText().get("dobText"));
-			studentDetailsPageData.setIncompeleteFormText(appConfig.getStudentDetailsPageText().get("incompeleteFormText"));
+			studentDetailsPageData
+					.setIncompeleteFormText(appConfig.getStudentDetailsPageText().get("incompeleteFormText"));
 			pageDTO.setData(studentDetailsPageData);
-		}
-		else if(PageAction.previous.toString().equalsIgnoreCase(action))
-		{
+		} else if (PageAction.previous.toString().equalsIgnoreCase(action)) {
 			PageNavigatorDTO pageNavDto = pageNavigationService.getNavPage(action, operation, pageName);
-			if(PageSaveTable.M.toString().equalsIgnoreCase(pageNavDto.getUpdationTable()))
-			{
-				//get the data from master table and add static data
+			if (PageSaveTable.M.toString().equalsIgnoreCase(pageNavDto.getUpdationTable())) {
+				// get the data from master table and add static data
 				StudentDetailsDTO studentDetailsDTO = studentDetailsBusiness.getStudentDetailsFromMaster(studentId);
-				StudentDetailsPageData studentDetailsPageData = modelMapper.map(studentDetailsDTO, StudentDetailsPageData.class);
-				studentDetailsPageData.setCorrectDetailsText(appConfig.getStudentDetailsPageText().get("correctDetailsText"));
+				StudentDetailsPageData studentDetailsPageData = modelMapper.map(studentDetailsDTO,
+						StudentDetailsPageData.class);
+				studentDetailsPageData
+						.setCorrectDetailsText(appConfig.getStudentDetailsPageText().get("correctDetailsText"));
 				studentDetailsPageData.setDobReasonText(appConfig.getStudentDetailsPageText().get("dobReasonText"));
 				studentDetailsPageData.setDobText(appConfig.getStudentDetailsPageText().get("dobText"));
-				studentDetailsPageData.setIncompeleteFormText(appConfig.getStudentDetailsPageText().get("incompeleteFormText"));
+				studentDetailsPageData
+						.setIncompeleteFormText(appConfig.getStudentDetailsPageText().get("incompeleteFormText"));
 				pageDTO.setData(studentDetailsPageData);
-			}
-			else if (PageSaveTable.W.toString().equalsIgnoreCase(pageNavDto.getUpdationTable()))
-			{
+			} else if (PageSaveTable.W.toString().equalsIgnoreCase(pageNavDto.getUpdationTable())) {
 				// get the data from work table and add static data
-				StudentDetailsWorkDTO studentDetailsWorkDTO = studentDetailsBusiness.getStudentDetailsFromWork(studentId);
-				StudentDetailsPageData studentDetailsPageData = modelMapper.map(studentDetailsWorkDTO, StudentDetailsPageData.class);
-				studentDetailsPageData.setCorrectDetailsText(appConfig.getStudentDetailsPageText().get("correctDetailsText"));
+				StudentDetailsWorkDTO studentDetailsWorkDTO = studentDetailsBusiness
+						.getStudentDetailsFromWork(studentId);
+				StudentDetailsPageData studentDetailsPageData = modelMapper.map(studentDetailsWorkDTO,
+						StudentDetailsPageData.class);
+				studentDetailsPageData
+						.setCorrectDetailsText(appConfig.getStudentDetailsPageText().get("correctDetailsText"));
 				studentDetailsPageData.setDobReasonText(appConfig.getStudentDetailsPageText().get("dobReasonText"));
 				studentDetailsPageData.setDobText(appConfig.getStudentDetailsPageText().get("dobText"));
-				studentDetailsPageData.setIncompeleteFormText(appConfig.getStudentDetailsPageText().get("incompeleteFormText"));
+				studentDetailsPageData
+						.setIncompeleteFormText(appConfig.getStudentDetailsPageText().get("incompeleteFormText"));
 				pageDTO.setData(studentDetailsPageData);
 
 			}
@@ -140,41 +144,22 @@ public class StudentDetailsPageHandler implements IPageHandler {
 	@Override
 	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
-
-		if (PageAction.next.toString().equals(actionName)) {
+		if (PageAction.next.toString().equals(actionName)
+				|| PageAction.StudentDetailsNext.toString().equals(actionName)) {
 			if (PageSaveTable.M.toString().equals(pageNavigatorDTO.getUpdationTable())) {
 				Long studentId = 0L;
-
 				String emailId = pageRequest.getHeader().getEmailID();
-				/*StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
-				if (studentControlDTO == null) {
-					/// not known..
-				} else {
-					studentId = studentControlDTO.getStudentID();
-				}*/
-				
 				studentId = studentControlBusiness.getStudentId(emailId);
 				StudentDetailsDTO studentDetailsDTO = mapPageToDTO(pageRequest);
-
 				studentDetailsDTO.setStudentID(studentId);
 				studentDetailsBusiness.saveAsMaster(studentDetailsDTO);
-
 			} else if (PageSaveTable.W.toString().equals(pageNavigatorDTO.getUpdationTable())) {
 				Long studentId = 0L;
-
 				String emailId = pageRequest.getHeader().getEmailID();
 				StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
-				/*if (studentControlDTO == null) {
-					/// not known..will have to be added for more conditions
-				} else {
-					studentId = studentControlDTO.getStudentID();
-				}*/
-				
-				studentId=studentControlBusiness.getStudentId(emailId);
-				
+				studentId = studentControlBusiness.getStudentId(emailId);
 				StudentDetailsWorkDTO studentDetailsWorkDTO = null;
 				studentDetailsWorkDTO = mapPageToWorkDTO(pageRequest);
-
 				studentDetailsWorkDTO.setStudentID(studentId);
 				studentDetailsBusiness.saveAsWork(studentDetailsWorkDTO);
 			}

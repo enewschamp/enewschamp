@@ -9,11 +9,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class NewsArticleSearchPageData extends PageData {
 
 	private static final long serialVersionUID = 7566861143124839543L;
-	
+
 	private List<ListOfValuesItem> editionsLOV;
 	private List<ListOfValuesItem> daysLOV;
 	private List<ListOfValuesItem> monthsLOV;
@@ -22,5 +22,6 @@ public class NewsArticleSearchPageData extends PageData {
 	private List<ListOfValuesItem> publisherLOV;
 	private List<ListOfValuesItem> genreLOV;
 	private List<ListOfValuesItem> cityLOV;
+	private List<ListOfValuesItem> articleTypeLOV;
 
 }

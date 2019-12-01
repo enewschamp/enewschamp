@@ -1,0 +1,67 @@
+package com.enewschamp.app.student.badges.repository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+
+import com.enewschamp.app.recognition.page.data.StudentBadgesData;
+import com.enewschamp.app.student.badges.entity.StudentBadges;
+import com.enewschamp.domain.service.RepositoryImpl;
+import com.enewschamp.master.badge.entity.Badge;
+
+@Repository
+public class StudentBadgesCustomRepositoryImpl extends RepositoryImpl implements StudentBadgesCustomRepository{
+
+	@PersistenceContext
+	private EntityManager entityManager;
+	
+	@Override
+	public Page<StudentBadgesData> getStudentBadges(Long studentId, String editionId, Pageable pageable) {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<StudentBadgesData> criteriaQuery = cb.createQuery(StudentBadgesData.class);
+		Root<StudentBadges> studentRoot = criteriaQuery.from(StudentBadges.class);
+		Root<Badge> badgeRoot = criteriaQuery.from(Badge.class);
+
+		criteriaQuery = criteriaQuery.select(cb.construct(StudentBadgesData.class, 
+				studentRoot.get("yearMonth"), 
+				studentRoot.get("badgeImage"),
+				badgeRoot.get("name")));
+			
+		// Build filter conditions
+		List<Predicate> filterPredicates = new ArrayList<>();
+		filterPredicates.add(cb.equal(studentRoot.get("badgeId"), badgeRoot.get("badgeId")));
+		filterPredicates.add(cb.equal(studentRoot.get("studentId"), studentId));
+		filterPredicates.add(cb.equal(badgeRoot.get("editionId"), editionId));
+		
+		
+		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		criteriaQuery.orderBy(cb.desc(studentRoot.get("operationDateTime")));
+		
+		// Build query
+		TypedQuery<StudentBadgesData> q = entityManager.createQuery(criteriaQuery);
+		
+		if(pageable.getPageSize() > 0) {
+			int pageNumber = pageable.getPageNumber();
+			q.setFirstResult(pageNumber * pageable.getPageSize());
+			q.setMaxResults(pageable.getPageSize());
+			
+		}
+		List<StudentBadgesData> list = q.getResultList();
+		long count = getRecordCount(criteriaQuery, filterPredicates, studentRoot);
+		
+		return new PageImpl<>(list, pageable, count);
+	}
+
+}

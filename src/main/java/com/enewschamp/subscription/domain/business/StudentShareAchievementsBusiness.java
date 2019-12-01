@@ -37,7 +37,8 @@ public class StudentShareAchievementsBusiness {
 		List<StudentShareAchievements> studentShareAchievements = studentShareAchievementsService
 				.getStudentAchievements(studentId);
 		if (studentShareAchievements.isEmpty()) {
-			throw new BusinessException(ErrorCodes.STUDENT_SHARE_ACHIEVEMENTS_NOT_FOUND);
+			//throw new BusinessException(ErrorCodes.STUDENT_SHARE_ACHIEVEMENTS_NOT_FOUND);
+			return null;
 		}
 		java.lang.reflect.Type listType = new TypeToken<List<StudentShareAchievementsDTO>>() {
 		}.getType();

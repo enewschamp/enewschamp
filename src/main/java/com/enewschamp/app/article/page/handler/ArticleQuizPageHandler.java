@@ -91,7 +91,7 @@ public class ArticleQuizPageHandler implements IPageHandler {
 			throw new BusinessException(ErrorCodes.STUDENT_DTLS_NOT_FOUND);
 
 		}
-		if (PageAction.quiz.toString().equalsIgnoreCase(action) || PageAction.ok.toString().equalsIgnoreCase(action)) {
+		if (PageAction.Quiz.toString().equalsIgnoreCase(action) || PageAction.ok.toString().equalsIgnoreCase(action)) {
 
 			// load the article quiz
 			ArticleQuizDetailsPageData pageData = new ArticleQuizDetailsPageData();

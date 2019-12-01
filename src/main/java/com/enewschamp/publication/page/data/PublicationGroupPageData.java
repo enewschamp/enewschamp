@@ -16,7 +16,7 @@ public class PublicationGroupPageData extends PageData {
 	private static final long serialVersionUID = 2946660959822945736L;
 
 	private PublicationGroupDTO publicationGroup;
-	
 	private List<ListOfValuesItem> editorLOV;
 	private List<ListOfValuesItem> publisherLOV;
+	private List<ListOfValuesItem> editionsLOV;
 }

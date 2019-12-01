@@ -27,12 +27,12 @@ public class StudentRegistration extends BaseEntity {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studReg_id_generator")
 	@SequenceGenerator(name = "studReg_id_generator", sequenceName = "studRegId_seq", allocationSize = 1)
 	@Column(name = "studRegId", updatable = false, nullable = false)
 	private Long studRegId;
 
-	@Id
 	@NotNull
 	@Column(name = "emailId", length = 80)
 	private String emailId;

@@ -62,12 +62,10 @@ public class StudentRegistrationService {
 		}
 	}
 	public boolean userExists(String emailId) {
-		boolean exists=false;
+		boolean exists = false;
 		Optional<StudentRegistration> existingEntity = repository.getStudent(emailId);
 		if (existingEntity.isPresent()) {
-			exists=true;
-		} else {
-			exists=true;
+			exists = true;
 		}
 		return exists;
 	}

@@ -1,0 +1,86 @@
+[
+    {
+        "userId":"govisaxe",
+        "title":"1234",
+        "name":"Govind",
+        "surname":"Saxena",
+        "gender": "M",
+        "contractStartDate": "2019-05-18",
+        "contractEndDate": "2020-05-18",
+        "mobile1": "1234567890",
+        "email1": "govind.saxena@enewschamp.com",
+        "password": "welcome1"
+    },
+    {
+        "userId":"deepsem",
+        "title":"1234",
+        "name":"Deepak",
+        "surname":"Semwal",
+        "gender": "M",
+        "contractStartDate": "2019-05-18",
+        "contractEndDate": "2020-05-18",
+        "mobile1": "1234567890",
+        "email1": "deepak.semwal@enewschamp.com",
+        "password": "welcome1"
+    },
+    {
+        "userId":"mesmayus",
+        "title":"1234",
+        "name":"Mahendra",
+        "surname":"Shetake",
+        "gender": "M",
+        "contractStartDate": "2019-05-18",
+        "contractEndDate": "2020-05-18",
+        "mobile1": "1234567890",
+        "email1": "mahendra.shetake@enewschamp.com",
+        "password": "welcome1"
+    },
+    {
+        "userId":"author1",
+        "title":"1234",
+        "name":"Author",
+        "surname":"One",
+        "gender": "M",
+        "contractStartDate": "2019-05-18",
+        "contractEndDate": "2020-05-18",
+        "mobile1": "1234567890",
+        "email1": "author.one@enewschamp.com",
+        "password": "welcome1"
+    },
+    {
+        "userId":"author2",
+        "title":"1234",
+        "name":"Author",
+        "surname":"Two",
+        "gender": "M",
+        "contractStartDate": "2019-05-18",
+        "contractEndDate": "2020-05-18",
+        "mobile1": "1234567890",
+        "email1": "author.two@enewschamp.com",
+        "password": "welcome1"
+    },
+    {
+        "userId":"editor1",
+        "title":"1234",
+        "name":"Editor",
+        "surname":"One",
+        "gender": "M",
+        "contractStartDate": "2019-05-18",
+        "contractEndDate": "2020-05-18",
+        "mobile1": "1234567890",
+        "email1": "editor.one@enewschamp.com",
+        "password": "welcome1"
+    },
+    {
+        "userId":"editor2",
+        "title":"1234",
+        "name":"Editor",
+        "surname":"Two",
+        "gender": "M",
+        "contractStartDate": "2019-05-18",
+        "contractEndDate": "2020-05-18",
+        "mobile1": "1234567890",
+        "email1": "editor.two@enewschamp.com",
+        "password": "welcome1"
+    }
+]

@@ -23,4 +23,5 @@ public class PageDTO implements Serializable {
 	
 	private PageData data;
 	private List<UIControlsDTO> screenProperties;
-} 
+	private String errorMessage;
+}

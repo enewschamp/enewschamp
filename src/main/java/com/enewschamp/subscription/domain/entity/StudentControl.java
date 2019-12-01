@@ -26,11 +26,10 @@ public class StudentControl extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "StudentControl_id_generator")
-	@SequenceGenerator(name="StudentControl_id_generator", sequenceName = "StudentControl_seq", allocationSize=1)
-	@Column(name = "StudentID", length=10)
-	private Long studentID= 0L;
-	
+	@NotNull
+	@Column(name = "StudentID", length = 10)
+	private Long studentID = 0L;
+
 	@NotNull
 	@Column(name = "eMail", length=99)
 	private String emailID;

@@ -37,116 +37,114 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name="NewsArticle",
-	   uniqueConstraints= {
-	    @UniqueConstraint(columnNames = {"newsArticleGroupId", "readingLevel"})
-	})
-public class NewsArticle extends BaseEntity {	
-	
+@Table(name = "NewsArticle", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "newsArticleGroupId", "readingLevel" }) })
+public class NewsArticle extends BaseEntity {
+
 	private static final long serialVersionUID = 4067120832023693933L;
-	
+
 	@Autowired
 	@Transient
 	private StatusTransitionHandler stateTransitionHandler;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "article_id_generator")
-	@SequenceGenerator(name="article_id_generator", sequenceName = "art_id_seq", allocationSize=1)
+	@SequenceGenerator(name = "article_id_generator", sequenceName = "art_id_seq", allocationSize = 1)
 	@Column(name = "NewsArticleId", updatable = false, nullable = false)
 	private Long newsArticleId;
-	
+
 	@NotNull
-	@Column(name = "NewsArticleGroupId", length=10)
+	@Column(name = "NewsArticleGroupId", length = 10)
 	private Long newsArticleGroupId = 0L;
-	
+
 	@NotNull
-	@Column(name = "ReadingLevel", length=1)
+	@Column(name = "ReadingLevel", length = 1)
 	private Integer readingLevel = 0;
-	
+
 	@NotNull
 	@Column(name = "Status")
 	@Enumerated(EnumType.STRING)
-	private ArticleStatusType status = ArticleStatusType.Unassigned;
-	
+	private ArticleStatusType status;// = ArticleStatusType.Unassigned;
+
 	@NotNull
 	@Column(name = "ArticleType")
 	@Enumerated(EnumType.STRING)
-	private ArticleType articleType = ArticleType.Article;
-	
+	private ArticleType articleType;// = ArticleType.NEWSARTICLE;
+
 	@Column(name = "PreviousStatus")
 	@Enumerated(EnumType.STRING)
 	@DiffIgnore
 	private ArticleStatusType previousStatus;
-	
+
 	@Column(name = "Content")
 	@Lob
 	private String content;
-	
+
 	@Column(name = "Rating")
 	@Enumerated(EnumType.STRING)
 	private ArticleRatingType rating;
-	
+
 	@Column(name = "LikeLCount")
 	private Integer likeLCount = 0;
-	
+
 	@Column(name = "LikeHCount")
 	private Integer likeHCount = 0;
-	
+
 	@Column(name = "LikeOCount")
 	private Integer likeOCount = 0;
-	
+
 	@Column(name = "LikeWCount")
 	private Integer likeWCount = 0;
-	
+
 	@Column(name = "LikeSCount")
 	private Integer likeSCount = 0;
 
 	@Column(name = "PublishDate")
 	private LocalDate publishDate;
-	
+
 	@Column(name = "PublisherId", length = ForeignKeyColumnLength.UserId)
 	private String publisherId;
 
 	@Column(name = "PublicationId")
 	private Long publicationId;
-	
+
 	@Column(name = "EditorId", length = ForeignKeyColumnLength.UserId)
 	private String editorId;
-	
+
 	@Column(name = "AuthorId", length = ForeignKeyColumnLength.UserId)
 	private String authorId;
-	
+
 	@Enumerated(EnumType.STRING)
 	@DiffIgnore
 	private ArticleActionType currentAction;
-	
+
 	@Transient
 	private String currentComments;
-	
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "article_Id")
 	private List<NewsArticleQuiz> newsArticleQuiz;
-	
+
 	@PrePersist
 	@PreUpdate
 	public void prePersist() {
 		super.prePersist();
-		if(newsArticleQuiz != null && newsArticleId  != null && newsArticleId != 0) {
-			for(NewsArticleQuiz question: newsArticleQuiz) {
+		if (newsArticleQuiz != null && newsArticleId != null && newsArticleId != 0) {
+			for (NewsArticleQuiz question : newsArticleQuiz) {
 				question.setNewsArticleId(newsArticleId);
 			}
 		}
 	}
-	
+
 	public String getKeyAsString() {
 		return String.valueOf(this.newsArticleId);
 	}
-	
-	public void setStatus(ArticleStatusType status) {
-		this.previousStatus = this.status;
+
+	public void setStatus(ArticleStatusType status, ArticleStatusType previousStatus) {
+		this.previousStatus = previousStatus;
 		this.status = status;
 	}
-	
+
 }

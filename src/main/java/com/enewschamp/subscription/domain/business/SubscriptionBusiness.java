@@ -50,9 +50,11 @@ public class SubscriptionBusiness {
 		
 		//studentSubscription.create(subscripionDto);
 	}
-	public StudentSubscriptionWork updateSubscriptionPeriodInWork(StudentSubscriptionWorkDTO studentSubscpritionWorkDTO)
-	{
-		StudentSubscriptionWork  studentSubscriptionWork = modelMapper.map(studentSubscpritionWorkDTO, StudentSubscriptionWork.class);
+
+	public StudentSubscriptionWork updateSubscriptionPeriodInWork(
+			StudentSubscriptionWorkDTO studentSubscpritionWorkDTO) {
+		StudentSubscriptionWork studentSubscriptionWork = modelMapper.map(studentSubscpritionWorkDTO,
+				StudentSubscriptionWork.class);
 		// TO Do // change the operator id..
 		
 		studentSubscriptionWork.setOperatorId("APP");
@@ -61,11 +63,10 @@ public class SubscriptionBusiness {
 		studentSubscriptionWork = studentWorkSubscription.create(studentSubscriptionWork);
 		return studentSubscriptionWork;
 	}
-	public void saveAsWork(Long studentId, PageRequestDTO pageRequestDTO)
-	{
+
+	public void saveAsWork(Long studentId, PageRequestDTO pageRequestDTO) {
 		HeaderDTO header = pageRequestDTO.getHeader();
-		 
-		StudentSubscription subscripionDto=null;
+		StudentSubscription subscripionDto = null;
 		try {
 			subscripionDto = objectMapper.readValue(pageRequestDTO.getData().toString(),StudentSubscription.class);
 		} catch (JsonParseException e) {
@@ -79,87 +80,64 @@ public class SubscriptionBusiness {
 			e.printStackTrace();
 		}
 		String subscriptionType = subscripionDto.getSubscriptionSelected();
-		String operation = header.getOperation();
 		String editionId = header.getEditionID();
-		boolean studentExist = studentControlBusiness.isStudentExist(studentId);
-		
-		//if student exists already
-		if(studentExist)
-		{
-			if("S".equals(subscriptionType))
-			{
-				subscripionDto.setEditionID(editionId);
+		if ("E".equals(subscriptionType)) {
+			subscripionDto.setEditionID(editionId);
+			subscripionDto.setStudentID(studentId);
+			int evalDays = appConfig.getEvalDays();
+			// set the evaluation type as E
+			subscripionDto.setSubscriptionSelected("E");
+			Date startDate = new Date();
+			Calendar c = Calendar.getInstance();
+			c.setTime(startDate);
+			c.add(Calendar.DATE, evalDays);
 
-				int evalDays = 10;
-				//set the evaluation type as E
-				subscripionDto.setSubscriptionSelected("E");
-				Date startDate = new Date();
-				Calendar c = Calendar.getInstance();
-				c.setTime(startDate);
-				c.add(Calendar.DATE, evalDays);
-				
-				Date endDate = c.getTime();
-				subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-				subscripionDto.setEndDate(endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-				subscripionDto.setRecordInUse(RecordInUseType.Y);
-				subscripionDto.setAutoRenewal("Y");
-				//to be corrected with actual value
-				subscripionDto.setOperatorId("APP");
-				StudentSubscriptionWork subsWork = modelMapper.map(subscripionDto,StudentSubscriptionWork.class );
+			Date endDate = c.getTime();
+			subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+			subscripionDto.setEndDate(endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+			subscripionDto.setRecordInUse(RecordInUseType.Y);
+			subscripionDto.setAutoRenewal("Y");
 
-				studentWorkSubscription.create(subsWork);
-			}
+			// to be corrected with actual value
+			subscripionDto.setOperatorId("APP");
+			StudentSubscriptionWork subsWork = modelMapper.map(subscripionDto, StudentSubscriptionWork.class);
+			subsWork.setStudentID(studentId);
+			studentWorkSubscription.create(subsWork);
+		} else if ("P".equals(subscriptionType)) {
+			subscripionDto.setEditionID(editionId);
+			subscripionDto.setStudentID(studentId);
+			Date startDate = new Date();
+
+			subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+			subscripionDto.setRecordInUse(RecordInUseType.Y);
+
+			// to be corrected with actual value
+			subscripionDto.setOperatorId("APP");
+			StudentSubscriptionWork subsWork = modelMapper.map(subscripionDto, StudentSubscriptionWork.class);
+			subsWork.setStudentID(studentId);
+			studentWorkSubscription.create(subsWork);
+		} else if ("S".equals(subscriptionType)) {
+			subscripionDto.setEditionID(editionId);
+			subscripionDto.setStudentID(studentId);
+			Date startDate = new Date();
+
+			subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+			subscripionDto.setRecordInUse(RecordInUseType.Y);
+
+			// to be corrected with actual value
+			subscripionDto.setOperatorId("APP");
+			StudentSubscriptionWork subsWork = modelMapper.map(subscripionDto, StudentSubscriptionWork.class);
+			subsWork.setStudentID(studentId);
+			studentWorkSubscription.create(subsWork);
 		}
-		else
-		{
-			if("S".equals(subscriptionType))
-			{
-				subscripionDto.setEditionID(editionId);
-				int evalDays = appConfig.getEvalDays();
-				//set the evaluation type as E
-				subscripionDto.setSubscriptionSelected("E");
-				Date startDate = new Date();
-				Calendar c = Calendar.getInstance();
-				c.setTime(startDate);
-				c.add(Calendar.DATE, evalDays);
-				
-				Date endDate = c.getTime();
-				subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-				subscripionDto.setEndDate(endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-				subscripionDto.setRecordInUse(RecordInUseType.Y);
-				subscripionDto.setAutoRenewal("Y");
 
-				//to be corrected with actual value
-				subscripionDto.setOperatorId("APP");
-				StudentSubscriptionWork subsWork = modelMapper.map(subscripionDto,StudentSubscriptionWork.class );
-				subsWork.setStudentID(studentId);
-				studentWorkSubscription.create(subsWork);
-			}
-			else if("P".equals(subscriptionType))
-			{
-				subscripionDto.setEditionID(editionId);
-				Date startDate = new Date();
-				
-				subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-				subscripionDto.setRecordInUse(RecordInUseType.Y);
-
-				//to be corrected with actual value
-				subscripionDto.setOperatorId("APP");
-				StudentSubscriptionWork subsWork = modelMapper.map(subscripionDto,StudentSubscriptionWork.class );
-				subsWork.setStudentID(studentId);
-				studentWorkSubscription.create(subsWork);
-				
-			}
-
-		}
-		
 	}
+
 	public void saveAsMaster(Long studentId, PageRequestDTO pageRequestDTO) {
-		
 
 		HeaderDTO header = pageRequestDTO.getHeader();
-		 
-		StudentSubscription subscripionDto=null;
+
+		StudentSubscription subscripionDto = null;
 		try {
 			subscripionDto = objectMapper.readValue(pageRequestDTO.getData().toString(),StudentSubscription.class);
 		} catch (JsonParseException e) {
@@ -176,22 +154,20 @@ public class SubscriptionBusiness {
 		String operation = header.getOperation();
 		String editionId = header.getEditionID();
 		boolean studentExist = studentControlBusiness.isStudentExist(studentId);
-		
-		//if student exists already
-		if(studentExist)
-		{
-			if("S".equals(subscriptionType))
-			{
+
+		// if student exists already
+		if (studentExist) {
+			if ("S".equals(subscriptionType)) {
 				subscripionDto.setEditionID(editionId);
 
 				int evalDays = 10;
-				//set the evaluation type as E
+				// set the evaluation type as E
 				subscripionDto.setSubscriptionSelected("E");
 				Date startDate = new Date();
 				Calendar c = Calendar.getInstance();
 				c.setTime(startDate);
 				c.add(Calendar.DATE, evalDays);
-				
+
 				Date endDate = c.getTime();
 				subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 				subscripionDto.setEndDate(endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
@@ -204,20 +180,17 @@ public class SubscriptionBusiness {
 
 				studentSubscription.create(subsmast);
 			}
-		}
-		else
-		{
-			if("S".equals(subscriptionType))
-			{
+		} else {
+			if ("S".equals(subscriptionType)) {
 				subscripionDto.setEditionID(editionId);
 				int evalDays = appConfig.getEvalDays();
-				//set the evaluation type as E
+				// set the evaluation type as E
 				subscripionDto.setSubscriptionSelected("E");
 				Date startDate = new Date();
 				Calendar c = Calendar.getInstance();
 				c.setTime(startDate);
 				c.add(Calendar.DATE, evalDays);
-				
+
 				Date endDate = c.getTime();
 				subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 				subscripionDto.setEndDate(endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
@@ -229,48 +202,44 @@ public class SubscriptionBusiness {
 				StudentSubscription subsmast = modelMapper.map(subscripionDto,StudentSubscription.class );
 				subsmast.setStudentID(studentId);
 				studentSubscription.create(subsmast);
-			}
-			else if("P".equals(subscriptionType))
-			{
+			} else if ("P".equals(subscriptionType)) {
 				subscripionDto.setEditionID(editionId);
 				Date startDate = new Date();
-				
+
 				subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 				subscripionDto.setRecordInUse(RecordInUseType.Y);
 
-				//to be corrected with actual value
+				// to be corrected with actual value
 				subscripionDto.setOperatorId("APP");
-				StudentSubscription subsmast = modelMapper.map(subscripionDto,StudentSubscription.class );
+				StudentSubscription subsmast = modelMapper.map(subscripionDto, StudentSubscription.class);
 				subsmast.setStudentID(studentId);
 				studentSubscription.create(subsmast);
-				
+
 			}
 
 		}
-		
-	
+
 	}
 
-	
-	public StudentSubscription saveAsMaster(StudentSubscriptionDTO StudentSubscriptionDTO)
-	{
-		StudentSubscription studentSubscriptionentity = modelMapper.map(StudentSubscriptionDTO, StudentSubscription.class);
-		
+	public StudentSubscription saveAsMaster(StudentSubscriptionDTO StudentSubscriptionDTO) {
+		StudentSubscription studentSubscriptionentity = modelMapper.map(StudentSubscriptionDTO,
+				StudentSubscription.class);
+
 		StudentSubscription updatedEntity = studentSubscription.create(studentSubscriptionentity);
 		return updatedEntity;
 	}
-	public void saveWorkToMaster(Long studentId, String eidtionId)
-	{
-		StudentSubscriptionWork subsWork = studentWorkSubscription.get(studentId, eidtionId);
+
+	public void saveWorkToMaster(Long studentId, String editionId) {
+		StudentSubscriptionWork subsWork = studentWorkSubscription.get(studentId, editionId);
 		StudentSubscription studSubsDto = modelMapper.map(subsWork, StudentSubscription.class);
 		studentSubscription.create(studSubsDto);
 	}
-	
-	public StudentSubscriptionDTO getStudentSubscriptionFromMaster(Long studentId, String eidtionId)
-	{
+
+	public StudentSubscriptionDTO getStudentSubscriptionFromMaster(Long studentId, String eidtionId) {
 		StudentSubscription studentSubscriptionEntity = studentSubscription.get(studentId, eidtionId);
-		StudentSubscriptionDTO studentSubscriptionDTO = modelMapper.map(studentSubscriptionEntity, StudentSubscriptionDTO.class);
-		return  studentSubscriptionDTO;
+		StudentSubscriptionDTO studentSubscriptionDTO = modelMapper.map(studentSubscriptionEntity,
+				StudentSubscriptionDTO.class);
+		return studentSubscriptionDTO;
 	}
 	
 	public boolean isStudentSubscriptionValid(String emailId, String eidtionId)
@@ -280,7 +249,7 @@ public class SubscriptionBusiness {
 		StudentSubscription studentSubscriptionEntity = studentSubscription.get(studentId, eidtionId);
 		LocalDate startDate = studentSubscriptionEntity.getStartDate();
 		LocalDate endDate = studentSubscriptionEntity.getEndDate();
-		long diffDays  = ChronoUnit.DAYS.between(startDate, endDate);
+		long diffDays = ChronoUnit.DAYS.between(startDate, endDate);
 		long evalDays = appConfig.getEvalDays();
 		if(evalDays>=diffDays)
 		{
@@ -292,7 +261,8 @@ public class SubscriptionBusiness {
 	public StudentSubscriptionWorkDTO getStudentSubscriptionFromWork(Long studentId, String eidtionId)
 	{
 		StudentSubscriptionWork studentSubscriptionEntity = studentWorkSubscription.get(studentId, eidtionId);
-		StudentSubscriptionWorkDTO studentSubscriptionWorkDTO = modelMapper.map(studentSubscriptionEntity, StudentSubscriptionWorkDTO.class);
-		return  studentSubscriptionWorkDTO;
+		StudentSubscriptionWorkDTO studentSubscriptionWorkDTO = modelMapper.map(studentSubscriptionEntity,
+				StudentSubscriptionWorkDTO.class);
+		return studentSubscriptionWorkDTO;
 	}
 }

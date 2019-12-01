@@ -62,9 +62,11 @@ public class NewsEventsPageHandler implements IPageHandler {
 		String action = pageNavigationContext.getActionName();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
+		if (pageNavigationContext.getPageRequest().getHeader().getPageNo() == null) {
+			pageNavigationContext.getPageRequest().getHeader().setPageNo(0);
+		}
 		int pageNumber = pageNavigationContext.getPageRequest().getHeader().getPageNo();
 
-		
 		if (PageAction.NewsEvents.toString().equalsIgnoreCase(action)
 				|| PageAction.back.toString().equalsIgnoreCase(action)
 				|| PageAction.ClearFilterNewsEvents.toString().equalsIgnoreCase(action)) {
@@ -74,7 +76,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 
 			// Load News and Events..
 			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
-			articleTypeList.add(ArticleType.News_Event);
+			articleTypeList.add(ArticleType.NEWSEVENT);
 
 			searchRequestData.setArticleTypeList(articleTypeList);
 
@@ -103,16 +105,16 @@ public class NewsEventsPageHandler implements IPageHandler {
 			searchRequestData.setCity(newsEventsSearchPageData.getCity());
 			// Load News and Events..
 			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
-			articleTypeList.add(ArticleType.News_Event);
+			articleTypeList.add(ArticleType.NEWSEVENT);
 
 			searchRequestData.setHeadline(newsEventsSearchPageData.getHeadline());
 			String monthYear = newsEventsSearchPageData.getMonth();
-			
+
 			// format is MMM-yyyy
 			if (monthYear != null && !"".equals(monthYear)) {
 				String monthStr = monthYear.substring(0, 3);
 				String year = monthYear.substring(4, 7);
-				//int month = Month.valueOf(monthStr.toUpperCase()).monthStr();
+				// int month = Month.valueOf(monthStr.toUpperCase()).monthStr();
 				SimpleDateFormat inputFormat = new SimpleDateFormat("MMMM");
 				Calendar cal = Calendar.getInstance();
 				try {
@@ -124,8 +126,8 @@ public class NewsEventsPageHandler implements IPageHandler {
 				SimpleDateFormat outputFormat = new SimpleDateFormat("MM"); // 01-12
 				String day1 = "01";
 				// form date..
-				LocalDate startDate = LocalDate.of(Integer.parseInt(year),Integer.parseInt(outputFormat.format(cal.getTime())),
-						Integer.parseInt(day1));
+				LocalDate startDate = LocalDate.of(Integer.parseInt(year),
+						Integer.parseInt(outputFormat.format(cal.getTime())), Integer.parseInt(day1));
 				LocalDate endDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1).plusMonths(12)
 						.minusDays(1);
 				searchRequestData.setPublicationDateFrom(startDate);
@@ -153,7 +155,8 @@ public class NewsEventsPageHandler implements IPageHandler {
 			pageDto.setData(newsEventsPageData);
 
 		}
-		if (PageAction.next.toString().equalsIgnoreCase(action)|| PageAction.upswipe.toString().equalsIgnoreCase(action)) {
+		if (PageAction.next.toString().equalsIgnoreCase(action)
+				|| PageAction.upswipe.toString().equalsIgnoreCase(action)) {
 
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 			searchRequestData.setEditionId(editionId);
@@ -161,7 +164,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 
 			// Load News and Events..
 			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
-			articleTypeList.add(ArticleType.News_Event);
+			articleTypeList.add(ArticleType.NEWSEVENT);
 
 			searchRequestData.setArticleTypeList(articleTypeList);
 
@@ -172,7 +175,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 			header.setIsLastPage(pageResult.isLast());
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
-			header.setPageNo(pageNumber+1);
+			header.setPageNo(pageNumber + 1);
 			pageDto.setHeader(header);
 
 			NewsEventsPageData newsEventsPageData = new NewsEventsPageData();
@@ -182,10 +185,10 @@ public class NewsEventsPageHandler implements IPageHandler {
 			pageDto.setData(newsEventsPageData);
 
 		}
-		if(PageAction.RightSwipe.toString().equalsIgnoreCase(action) || PageAction.previous.toString().equalsIgnoreCase(action) )
-		{
-			if(pageNumber>1) {
-			pageNumber = pageNumber - 1;
+		if (PageAction.RightSwipe.toString().equalsIgnoreCase(action)
+				|| PageAction.previous.toString().equalsIgnoreCase(action)) {
+			if (pageNumber > 1) {
+				pageNumber = pageNumber - 1;
 			}
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 			searchRequestData.setEditionId(editionId);
@@ -193,7 +196,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 
 			// Load News and Events..
 			List<ArticleType> articleTypeList = new ArrayList<ArticleType>();
-			articleTypeList.add(ArticleType.News_Event);
+			articleTypeList.add(ArticleType.NEWSEVENT);
 
 			searchRequestData.setArticleTypeList(articleTypeList);
 

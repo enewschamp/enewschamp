@@ -22,106 +22,105 @@ public class PublicationHelper {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	private PublicationService publicationService;
-	
+
 	@Autowired
 	private PublicationRepository publicationRepository;
-	
+
 	@Autowired
 	PublicationArticleLinkageRepository publicationLinkageRepository;
-	
+
 	@Autowired
 	private PublicationArticleLinkageHelper publicationLinkageHelper;
-	
+
 	@Transactional
 	public PublicationDTO createPublication(PublicationDTO publicationDTO) {
-		
+
 		List<PublicationArticleLinkageDTO> articleLinkages = publicationDTO.getArticleLinkages();
 		for (PublicationArticleLinkageDTO articleLinkageDTO : articleLinkages) {
 			articleLinkageDTO.setRecordInUse(publicationDTO.getRecordInUse());
 			articleLinkageDTO.setOperatorId(publicationDTO.getOperatorId());
 		}
-		
+
 		Publication publication;
-		
+
 		// Remove articles which have been deleted on the UI
 		removeDelinkedArticles(publicationDTO.getPublicationId(), articleLinkages);
-		
+
 		publication = modelMapper.map(publicationDTO, Publication.class);
 		publication = publicationService.create(publication);
 		publicationDTO = modelMapper.map(publication, PublicationDTO.class);
-		
-		articleLinkages = publicationDTO.getArticleLinkages(); 
-		for(PublicationArticleLinkageDTO articleLinkageDTO: articleLinkages) {
+
+		articleLinkages = publicationDTO.getArticleLinkages();
+		for (PublicationArticleLinkageDTO articleLinkageDTO : articleLinkages) {
 			articleLinkageDTO.setPublicationId(publicationDTO.getPublicationId());
 		}
-		
+
 		return publicationDTO;
 	}
 
-	private void removeDelinkedArticles(Long publicationId,
-										List<PublicationArticleLinkageDTO> articleLinkages) {
-		if(publicationId == null || publicationId <= 0) {
+	private void removeDelinkedArticles(Long publicationId, List<PublicationArticleLinkageDTO> articleLinkages) {
+		if (publicationId == null || publicationId <= 0) {
 			return;
 		}
 		Publication publication = publicationService.get(publicationId);
-		if(publication == null) {
+		if (publication == null) {
 			return;
 		}
 		for (PublicationArticleLinkage existingArticleLinkage : publication.getArticleLinkages()) {
 			if (!isExistingLinkageFound(existingArticleLinkage.getLinkageId(), articleLinkages)) {
-				System.out.println("Delete linkage for id: " + existingArticleLinkage.getLinkageId());
 				publicationLinkageRepository.deleteById(existingArticleLinkage.getLinkageId());
 			}
 		}
 	}
-	
+
 	private boolean isExistingLinkageFound(long linkageId, List<PublicationArticleLinkageDTO> existingLinkages) {
-		
-		for(PublicationArticleLinkageDTO articleLinkage: existingLinkages) {
-			if(articleLinkage.getLinkageId() == linkageId) {
+
+		for (PublicationArticleLinkageDTO articleLinkage : existingLinkages) {
+			if (articleLinkage.getLinkageId() == linkageId) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
 	public PublicationDTO getPublication(Long publicationId) {
 		Publication publication = publicationService.get(publicationId);
 		PublicationDTO publicationDTO = modelMapper.map(publication, PublicationDTO.class);
-		
+
 		List<PublicationArticleLinkageDTO> articles = publicationLinkageHelper.getByPublicationId(publicationId);
 		publicationDTO.setArticleLinkages(articles);
 		return publicationDTO;
 	}
-	
+
 	public List<PublicationDTO> getByPublicationGroupId(long publicationGroupId) {
 		List<Publication> publications = publicationRepository.findByPublicationGroupId(publicationGroupId);
 		List<PublicationDTO> publicationDTOs = new ArrayList<PublicationDTO>();
-		for(Publication publication: publications) {
+		for (Publication publication : publications) {
 			PublicationDTO publicationDTO = modelMapper.map(publication, PublicationDTO.class);
-			//publicationDTO = fillArticleLinkages(publicationDTO);
+			// publicationDTO = fillArticleLinkages(publicationDTO);
 			publicationDTOs.add(publicationDTO);
 		}
 		return publicationDTOs;
 	}
-	
+
 	private PublicationDTO fillArticleLinkages(PublicationDTO publicationDTO) {
-		List<PublicationArticleLinkage> articleLinkageList = publicationLinkageRepository.findByPublicationId(publicationDTO.getPublicationId());
+		List<PublicationArticleLinkage> articleLinkageList = publicationLinkageRepository
+				.findByPublicationId(publicationDTO.getPublicationId());
 		List<PublicationArticleLinkageDTO> linkageDTOs = new ArrayList<PublicationArticleLinkageDTO>();
-		for(PublicationArticleLinkage linkage: articleLinkageList) {
+		for (PublicationArticleLinkage linkage : articleLinkageList) {
 			PublicationArticleLinkageDTO linkageDTO = modelMapper.map(linkage, PublicationArticleLinkageDTO.class);
 			linkageDTOs.add(linkageDTO);
 		}
 		publicationDTO.setArticleLinkages(linkageDTOs);
 		return publicationDTO;
 	}
-	
+
 	public void deleteByPublicationGroupId(long publicationGroupId) {
 		publicationRepository.deleteByPublicationGroupId(publicationGroupId);
 	}
-	
+
 }

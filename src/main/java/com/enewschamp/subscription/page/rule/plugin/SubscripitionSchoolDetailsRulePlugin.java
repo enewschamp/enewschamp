@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.rules.plugin.IPageNavRuleDataPlugin;
 import com.enewschamp.app.school.entity.SchoolPricing;
@@ -35,7 +36,7 @@ public class SubscripitionSchoolDetailsRulePlugin implements IPageNavRuleDataPlu
 	SchoolPricingService schoolPricingService;
 	
 	@Override
-	public Map<String, String> loadPluginData(PageRequestDTO pageRequest, Map<String, String> dataMap) {
+	public Map<String, String> loadPluginData(PageRequestDTO pageRequest, PageDTO page, Map<String, String> dataMap) {
 
 		StudentSchoolPageData studentSchoolPageData = null;
 		try {

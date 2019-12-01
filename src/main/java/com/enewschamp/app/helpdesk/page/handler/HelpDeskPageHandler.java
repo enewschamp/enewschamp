@@ -40,6 +40,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.enewschamp.domain.service.LOVService;
+
 @Component(value = "HelpDeskPageHandler")
 public class HelpDeskPageHandler implements IPageHandler {
 
@@ -75,10 +76,10 @@ public class HelpDeskPageHandler implements IPageHandler {
 
 	@Autowired
 	SubscriptionBusiness SubscriptionBusiness;
-	
+
 	@Autowired
 	HelpDeskService helpDeskService;
-	
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		return null;
@@ -111,8 +112,10 @@ public class HelpDeskPageHandler implements IPageHandler {
 
 			List<ListOfValuesItem> categoryLOV = getCategoryLov("HelpDeskCategory");
 			StudentDetailsDTO studentDto = studentDetails.getStudentDetailsFromMaster(studentId);
-			String mobileNo = studentDto.getMobileNumber();
-
+			String mobileNo = "";
+			if (studentDto != null) {
+				mobileNo = studentDto.getMobileNumber();
+			}
 			HelpDeskPageData pageData = new HelpDeskPageData();
 			pageData.setEmailId(helpdeskEmailId);
 			pageData.setStudentMobile(mobileNo);
@@ -155,8 +158,7 @@ public class HelpDeskPageHandler implements IPageHandler {
 			try {
 				helpDeskInputPageData = objectMapper.readValue(pageRequest.getData().toString(),
 						HelpDeskInputPageData.class);
-				System.out.println("helpDeskInputPageData: " + helpDeskInputPageData);
-				
+
 			} catch (JsonParseException e) {
 				throw new RuntimeException(e);
 			} catch (JsonMappingException e) {
@@ -164,42 +166,41 @@ public class HelpDeskPageHandler implements IPageHandler {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			
+
 			HelpDeskDTO helpDeskDTO = new HelpDeskDTO();
 			helpDeskDTO.setCategoryId(helpDeskInputPageData.getCategoryId());
 			helpDeskDTO.setDetails(helpDeskInputPageData.getDetails());
 			helpDeskDTO.setEditionId(editionId);
-			
-			StudentSubscriptionDTO subscriptionDto = SubscriptionBusiness.getStudentSubscriptionFromMaster(studentId, editionId);
-			
+
+			StudentSubscriptionDTO subscriptionDto = SubscriptionBusiness.getStudentSubscriptionFromMaster(studentId,
+					editionId);
+
 			String subsType = subscriptionDto.getSubscriptionSelected();
-			if(!"S".equals(subsType))
-			{
+			if (!"S".equals(subsType)) {
 				helpDeskDTO.setCallbackRequest("Y");
 			}
-			if(helpDeskDTO.getCallbackRequest()!=null)
-			{
-				if(helpDeskInputPageData.getPhoneNumber()==null)
-				{
+			if (helpDeskDTO.getCallbackRequest() != null) {
+				if (helpDeskInputPageData.getPhoneNumber() == null) {
 					throw new BusinessException(ErrorCodes.MOBILE_IS_MANDATORY);
 				}
 			}
 			helpDeskDTO.setPhoneNumber(helpDeskInputPageData.getPhoneNumber());
-			
+
 			String preferredDate = helpDeskInputPageData.getPreferredDate().toString();
 			String prefererdTime = helpDeskInputPageData.getPreferredTime();
-			String preferredCallback = preferredDate + " "+prefererdTime;
+			String preferredCallback = preferredDate + " " + prefererdTime;
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 			LocalDateTime callbackTime = LocalDateTime.parse(preferredCallback, formatter);
 			helpDeskDTO.setCallBackTime(callbackTime);
-			
+
 			helpDeskDTO.setStudentId(studentId);
 			helpDeskDTO.setRecordInUse(RecordInUseType.Y);
-			helpDeskDTO.setOperatorId(""+studentId);
-			
+			helpDeskDTO.setOperatorId("" + studentId);
+			helpDeskDTO.setCreateDateTime(LocalDateTime.now());
+
 			HelpDesk helpdesk = modelMapper.map(helpDeskDTO, HelpDesk.class);
 			helpdesk = helpDeskService.create(helpdesk);
-			
+
 		}
 		return pageDto;
 	}
@@ -229,8 +230,7 @@ public class HelpDeskPageHandler implements IPageHandler {
 	}
 
 	public List<ListOfValuesItem> getCategoryLov(String type) {
-		
 		List<ListOfValuesItem> lovList = lovService.getLOV(type);
-				return lovList;
+		return lovList;
 	}
 }

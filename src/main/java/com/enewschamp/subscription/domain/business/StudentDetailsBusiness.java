@@ -53,18 +53,22 @@ public class StudentDetailsBusiness {
 		studentDetailsService.create(studentEntity);
 		return studentEntity;
 	}
-	
-	public StudentDetailsWorkDTO getStudentDetailsFromWork(Long studentId)
-	{
+
+	public StudentDetailsWorkDTO getStudentDetailsFromWork(Long studentId) {
+		StudentDetailsWorkDTO studentDetailsWorkDTO = null;
 		StudentDetailsWork studentDetailsWork = studentDetailsWorkService.get(studentId);
-		StudentDetailsWorkDTO studentDetailsWorkDTO = modelMapper.map(studentDetailsWork, StudentDetailsWorkDTO.class);
+		if (studentDetailsWork != null) {
+			studentDetailsWorkDTO = modelMapper.map(studentDetailsWork, StudentDetailsWorkDTO.class);
+		}
 		return studentDetailsWorkDTO;
 	}
-	
-	public StudentDetailsDTO getStudentDetailsFromMaster(Long studentId)
-	{
+
+	public StudentDetailsDTO getStudentDetailsFromMaster(Long studentId) {
+		StudentDetailsDTO studentDetailsDTO = null;
 		StudentDetails studentDetails = studentDetailsService.get(studentId);
-		StudentDetailsDTO studentDetailsDTO = modelMapper.map(studentDetails, StudentDetailsDTO.class);
+		if (studentDetails != null) {
+			studentDetailsDTO = modelMapper.map(studentDetails, StudentDetailsDTO.class);
+		}
 		return studentDetailsDTO;
 	}
 	

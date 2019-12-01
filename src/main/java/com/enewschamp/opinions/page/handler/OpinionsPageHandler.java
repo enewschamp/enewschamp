@@ -76,6 +76,11 @@ public class OpinionsPageHandler implements IPageHandler {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		System.out.println("OpinionsPageHandler  loadPage()");
 		PageDTO pageDto = new PageDTO();
+		// if page number is not passed, load the first page
+		if (pageNavigationContext.getPageRequest().getHeader().getPageNo() == null) {
+			pageNavigationContext.getPageRequest().getHeader().setPageNo(0);
+
+		}
 		int pageNo = pageNavigationContext.getPageRequest().getHeader().getPageNo();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
@@ -88,15 +93,15 @@ public class OpinionsPageHandler implements IPageHandler {
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
 
-		if (PageAction.upswipe.toString().equalsIgnoreCase(action) || PageAction.next.toString().equalsIgnoreCase(action)) {
+		if (PageAction.upswipe.toString().equalsIgnoreCase(action)
+				|| PageAction.next.toString().equalsIgnoreCase(action)) {
 			pageNo++;
 			pageNavigationContext.getPageRequest().getHeader().setPageNo(pageNo);
-		}
-		else if(PageAction.previous.toString().equalsIgnoreCase(action) || PageAction.RightSwipe.toString().equalsIgnoreCase(action))
-		{
-			if(pageNo>0) {
-			pageNo--;
-			pageNavigationContext.getPageRequest().getHeader().setPageNo(pageNo);
+		} else if (PageAction.previous.toString().equalsIgnoreCase(action)
+				|| PageAction.RightSwipe.toString().equalsIgnoreCase(action)) {
+			if (pageNo > 0) {
+				pageNo--;
+				pageNavigationContext.getPageRequest().getHeader().setPageNo(pageNo);
 			}
 		}
 		// if(PageAction.home.toString().equalsIgnoreCase(action) )
@@ -113,7 +118,7 @@ public class OpinionsPageHandler implements IPageHandler {
 		searchRequestData.setHeadline(articlePageData.getHeadlineKeyWord());
 		searchRequestData.setPublishMonth(articlePageData.getPublishMonth());
 		searchRequestData.setPublicationDate(publicationDate);
-		
+
 		searchRequestData.setStudentId(studentId);
 
 		Page<SavedNewsArticleSummaryDTO> pageResult = savedNewsArticleService.findSavedArticles(searchRequestData,
@@ -144,8 +149,8 @@ public class OpinionsPageHandler implements IPageHandler {
 
 		}
 		savedPageData.setGenreLOV(genreService.getLOV());
-		
-		//savedPageData.setMonthsLOV(MonthType.getLOV());
+
+		// savedPageData.setMonthsLOV(MonthType.getLOV());
 		savedPageData.setMonthsLOV(getMonthsLov());
 
 		savedPageData.setSavedNewsArticles(savedArticleList);
@@ -157,13 +162,12 @@ public class OpinionsPageHandler implements IPageHandler {
 
 		return pageDto;
 	}
-	private List<MonthsLovData> getMonthsLov()
-	{
+
+	private List<MonthsLovData> getMonthsLov() {
 		List<MonthsLovData> monthsLovList = new ArrayList<MonthsLovData>();
 		LocalDate currdate = LocalDate.now();
-		//LocalDate startDate = currdate.minusMonths(appConfig.getMonthLov());
-		for(int i=0;i<appConfig.getMonthLov();i++)
-		{
+		// LocalDate startDate = currdate.minusMonths(appConfig.getMonthLov());
+		for (int i = 0; i < appConfig.getMonthLov(); i++) {
 			String key = currdate.toString();
 			String value = currdate.format(DateTimeFormatter.ofPattern(appConfig.getMonthLovFormat()));
 			MonthsLovData monthlov = new MonthsLovData();
@@ -172,9 +176,10 @@ public class OpinionsPageHandler implements IPageHandler {
 			monthsLovList.add(monthlov);
 			currdate = currdate.minusMonths(1);
 		}
-		
+
 		return monthsLovList;
 	}
+
 	@Override
 	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();

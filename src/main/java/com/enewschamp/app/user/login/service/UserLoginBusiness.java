@@ -7,15 +7,19 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
-import com.enewschamp.app.user.login.service.UserLoginService;
 import com.enewschamp.domain.common.AppConstants;
 import com.enewschamp.domain.common.RecordInUseType;
+import com.enewschamp.user.domain.entity.UserRole;
+import com.enewschamp.user.domain.service.UserRoleService;
 
 @Service
 public class UserLoginBusiness {
 
 	@Autowired
 	UserLoginService loginService;
+
+	@Autowired
+	UserRoleService userRoleService;
 
 	public UserLogin login(final String userId, final String deviceId, UserType userType) {
 		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, userType);
@@ -35,6 +39,15 @@ public class UserLoginBusiness {
 			loginService.update(loggedIn);
 		}
 		return loggedIn;
+	}
+
+	public String getUserRole(final String userId) {
+		UserRole userRole = userRoleService.getByUserId(userId);
+		if (userRole != null) {
+			return userRole.getUserRoleKey().getRoleId();
+		} else {
+			return "";
+		}
 	}
 
 	public void logout(final String userId, final String deviceId, UserType userType) {

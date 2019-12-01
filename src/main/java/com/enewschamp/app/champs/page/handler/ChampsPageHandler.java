@@ -28,22 +28,22 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "ChampsPageHandler")
-public class ChampsPageHandler implements IPageHandler{
+public class ChampsPageHandler implements IPageHandler {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	ObjectMapper objectMapper;
-	
+
 	@Autowired
 	StudentChampService studentChampService;
-	
+
 	@Autowired
 	StudentControlBusiness studentControlBusiness;
 	@Autowired
 	PreferenceBusiness preferenceBusiness;
-	
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		// TODO Auto-generated method stub
@@ -58,11 +58,12 @@ public class ChampsPageHandler implements IPageHandler{
 		String action = pageNavigationContext.getActionName();
 		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
 		int pageNo = pageNavigationContext.getPageRequest().getHeader().getPageNo();
-		
+
 		ChampsSearchData searchData = new ChampsSearchData();
-		
+
 		try {
-			searchData = objectMapper.readValue(pageNavigationContext.getPageRequest().getData().toString(), ChampsSearchData.class);
+			searchData = objectMapper.readValue(pageNavigationContext.getPageRequest().getData().toString(),
+					ChampsSearchData.class);
 		} catch (JsonParseException e) {
 			throw new RuntimeException(e);
 		} catch (JsonMappingException e) {
@@ -70,78 +71,73 @@ public class ChampsPageHandler implements IPageHandler{
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
-		if(PageAction.Champs.toString().equalsIgnoreCase(action))
-		{
+
+		if (PageAction.Champs.toString().equalsIgnoreCase(action)) {
 			Long studentId = studentControlBusiness.getStudentId(eMailId);
 			if (studentId == null || studentId == 0L) {
 				throw new BusinessException(ErrorCodes.STUDENT_DTLS_NOT_FOUND);
 			}
 			StudentPreferencesDTO studPref = preferenceBusiness.getPreferenceFromMaster(studentId);
 			searchData.setReadingLevel(studPref.getReadingLevel());
-			//set month year to last Month..
+			// set month year to last Month..
 			LocalDate currdate = LocalDate.now();
 			LocalDate prevMonth = currdate.minusMonths(1);
 			int month = prevMonth.getMonthValue();
-			String monthStr = (month<10) ? "0"+month :""+month;
-			
+			String monthStr = (month < 10) ? "0" + month : "" + month;
+
 			int year = prevMonth.getYear();
-			String newYearMonth = year+monthStr;
+			String newYearMonth = year + monthStr;
 			searchData.setMonthYear(newYearMonth);
-			
+
 		}
-		if(PageAction.Level1.toString().equalsIgnoreCase(action))
-		{
+		if (PageAction.Level1.toString().equalsIgnoreCase(action)) {
 			searchData.setReadingLevel("1");
 			LocalDate currdate = LocalDate.now();
 			int month = currdate.getMonthValue();
-			String monthStr = (month<10) ? "0"+month :""+month;
+			String monthStr = (month < 10) ? "0" + month : "" + month;
 			int year = currdate.getYear();
-			String newYearMonth = year+monthStr;
+			String newYearMonth = year + monthStr;
 			searchData.setMonthYear(newYearMonth);
-			
+
 		}
-		if(PageAction.Level2.toString().equalsIgnoreCase(action))
-		{
+		if (PageAction.Level2.toString().equalsIgnoreCase(action)) {
 			searchData.setReadingLevel("2");
 			LocalDate currdate = LocalDate.now();
 			int month = currdate.getMonthValue();
-			String monthStr = (month<10) ? "0"+month :""+month;
+			String monthStr = (month < 10) ? "0" + month : "" + month;
 			int year = currdate.getYear();
-			String newYearMonth = year+monthStr;
+			String newYearMonth = year + monthStr;
 			searchData.setMonthYear(newYearMonth);
 
 		}
-		if(PageAction.Level3.toString().equalsIgnoreCase(action))
-		{
+		if (PageAction.Level3.toString().equalsIgnoreCase(action)) {
 			searchData.setReadingLevel("3");
 			LocalDate currdate = LocalDate.now();
 			int month = currdate.getMonthValue();
-			String monthStr = (month<10) ? "0"+month :""+month;
+			String monthStr = (month < 10) ? "0" + month : "" + month;
 			int year = currdate.getYear();
-			String newYearMonth = year+monthStr;
+			String newYearMonth = year + monthStr;
 			searchData.setMonthYear(newYearMonth);
 
 		}
-		if(PageAction.next.toString().equalsIgnoreCase(action) || PageAction.LeftSwipe.toString().equalsIgnoreCase(action))
-		{
-			pageNo ++;
+		if (PageAction.next.toString().equalsIgnoreCase(action)
+				|| PageAction.LeftSwipe.toString().equalsIgnoreCase(action)) {
+			pageNo++;
 		}
-		if(PageAction.previous.toString().equalsIgnoreCase(action)  || PageAction.RightSwipe.toString().equalsIgnoreCase(action))
-		{
-			if(pageNo>1)
-			pageNo--;
+		if (PageAction.previous.toString().equalsIgnoreCase(action)
+				|| PageAction.RightSwipe.toString().equalsIgnoreCase(action)) {
+			if (pageNo > 1)
+				pageNo--;
 		}
-		
-		List<ChampStudentDTO> champList = studentChampService.findChampStudents(searchData,pageNo);
-		//List<ChampStudentDTO> champList = studentChampService.findChampions(searchRequest)(searchData);
+
+		List<ChampStudentDTO> champList = studentChampService.findChampStudents(searchData, pageNo);
 		ChampsPageData pageData = new ChampsPageData();
 		pageData.setChamps(champList);
 		pageData.setMonthYear(searchData.getMonthYear());
 		pageData.setReadingLevel(searchData.getReadingLevel());
 		pageData.setPageNo(pageNo++);
 		pageDto.setData(pageData);
-		
+
 		return pageDto;
 	}
 

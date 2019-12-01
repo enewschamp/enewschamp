@@ -1,0 +1,44 @@
+[
+    {
+        "locale": "en",
+        "entityName": "Genre",
+        "entityColumn": "NameId",
+        "text": "SCIENCE"
+    },
+    {
+        "locale": "en",
+        "entityName": "Genre",
+        "entityColumn": "NameId",
+        "text": "SPORTS"
+    },
+    {
+        "locale": "en",
+        "entityName": "Genre",
+        "entityColumn": "NameId",
+        "text": "TECHNOLOGY"
+    },
+    {
+        "locale": "en",
+        "entityName": "Genre",
+        "entityColumn": "NameId",
+        "text": "FINANCE"
+    },
+    {
+        "locale": "en",
+        "entityName": "Genre",
+        "entityColumn": "NameId",
+        "text": "HUMOUR"
+    },
+    {
+        "locale": "en",
+        "entityName": "Genre",
+        "entityColumn": "NameId",
+        "text": "HISTORY"
+    },
+    {
+        "locale": "en",
+        "entityName": "Genre",
+        "entityColumn": "NameId",
+        "text": "POLITICS"
+    }
+]

@@ -46,14 +46,12 @@ public class PublisherLoginPageHandler implements IPageHandler {
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
-
-		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		PublisherLoginPageData loginPageData = new PublisherLoginPageData();
 
 		loginPageData = modelMapper.map(pageNavigationContext.getPreviousPageResponse().getData(),
 				PublisherLoginPageData.class);
-		loginPageData.setPassword("");
 		pageDto.setData(loginPageData);
+		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDto;
 	}
 
@@ -79,7 +77,10 @@ public class PublisherLoginPageHandler implements IPageHandler {
 				userId = pageRequest.getHeader().getUserId();
 				password = loginPageData.getPassword();
 				deviceId = pageRequest.getHeader().getDeviceId();
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 			} catch (JsonParseException e) {
 				throw new RuntimeException(e);
 			} catch (JsonMappingException e) {
@@ -87,7 +88,6 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-
 			loginSuccess = userService.validatePassword(userId, password);
 			if (loginSuccess) {
 				userLoginBusiess.login(userId, deviceId, UserType.A);
@@ -95,13 +95,15 @@ public class PublisherLoginPageHandler implements IPageHandler {
 				throw new BusinessException(ErrorCodes.INVALID_USERNAME_OR_PASSWORD, userId);
 			}
 			pageDto.setData(loginPageData);
-		}
-		if (PageAction.logout.toString().equalsIgnoreCase(action)) {
+		} else if (PageAction.logout.toString().equalsIgnoreCase(action)) {
 			try {
 				loginPageData = objectMapper.readValue(pageRequest.getData().toString(), PublisherLoginPageData.class);
 				userId = pageRequest.getHeader().getUserId();
 				deviceId = pageRequest.getHeader().getDeviceId();
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 			} catch (JsonParseException e) {
 				throw new RuntimeException(e);
 			} catch (JsonMappingException e) {
@@ -109,10 +111,48 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-
 			userLoginBusiess.logout(userId, deviceId, UserType.A);
+			loginPageData = new PublisherLoginPageData();
+			loginPageData.setMessage("Session Logout Successfully");
+			pageDto.setData(loginPageData);
+		} else if (PageAction.ResetPassword.toString().equalsIgnoreCase(action)) {
+			userId = pageRequest.getHeader().getUserId();
+			deviceId = pageRequest.getHeader().getDeviceId();
+			String passwordNew, passwordRepeat = null;
+			try {
+				loginPageData = objectMapper.readValue(pageRequest.getData().toString(), PublisherLoginPageData.class);
+				password = loginPageData.getPassword();
+				passwordNew = loginPageData.getPasswordNew();
+				passwordRepeat = loginPageData.getPasswordRepeat();
+			} catch (JsonParseException e) {
+				throw new RuntimeException(e);
+			} catch (JsonMappingException e) {
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			if (password == null && "".equals(password)) {
+				throw new BusinessException(ErrorCodes.INVALID_USER_PASSWORD);
+			} else if (passwordNew == null && "".equals(passwordNew)) {
+				throw new BusinessException(ErrorCodes.INVALID_USER_NEW_PASSWORD);
+			} else if (passwordRepeat == null && "".equals(passwordRepeat)) {
+				throw new BusinessException(ErrorCodes.INVALID_USER_NEW_PASSWORD);
+			} else if (passwordNew.equals(password)) {
+				throw new BusinessException(ErrorCodes.OLD_NEW_PASSWORD_SAME);
+			}
+			boolean validPassword = userService.validatePassword(userId, password);
+			if (!validPassword) {
+				throw new BusinessException(ErrorCodes.INVALID_USERNAME_OR_PASSWORD, userId);
+			} else if (!passwordNew.equals(passwordRepeat)) {
+				throw new BusinessException(ErrorCodes.BOTH_PASSWORD_DO_NOT_MATCH);
+			}
+			userService.resetPassword(userId, passwordNew);
+			userLoginBusiess.logout(userId, deviceId, UserType.A);
+			loginPageData = new PublisherLoginPageData();
+			loginPageData.setMessage("Password Reset Successfully");
 			pageDto.setData(loginPageData);
 		}
+<<<<<<< Updated upstream
 		
 		if (PageAction.ResetPassword.toString().equalsIgnoreCase(action)) {
 			userId = pageRequest.getHeader().getUserId();
@@ -154,6 +194,8 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			userService.resetPassword(userId, passwordNew);
 			userLoginBusiess.logout(userId, deviceId, UserType.A);
 		}
+=======
+>>>>>>> Stashed changes
 		return pageDto;
 	}
 

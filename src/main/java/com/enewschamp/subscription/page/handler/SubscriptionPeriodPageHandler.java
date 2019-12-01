@@ -1,13 +1,17 @@
 package com.enewschamp.subscription.page.handler;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.TreeMap;
 
+import org.joda.time.LocalDateTime;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,7 +28,9 @@ import com.enewschamp.app.school.entity.SchoolPricing;
 import com.enewschamp.app.school.service.SchoolPricingService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.subscription.app.dto.PaymentPageData;
 import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.app.dto.StudentControlWorkDTO;
 import com.enewschamp.subscription.app.dto.StudentSchoolDTO;
@@ -36,9 +42,13 @@ import com.enewschamp.subscription.domain.business.SchoolDetailsBusiness;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionPeriodBusiness;
+import com.enewschamp.subscription.domain.entity.StudentPaymentWork;
+import com.enewschamp.subscription.domain.service.StudentPaymentWorkService;
+import com.enewschamp.subscription.domain.service.StudentSubscriptionWorkService;
 import com.enewschamp.subscription.pricing.entity.IndividualPricing;
 import com.enewschamp.subscription.pricing.service.IndividualPricingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.paytm.pg.merchant.CheckSumServiceHelper;
 
 @Component(value = "SubscriptionPeriodPageHandler")
 public class SubscriptionPeriodPageHandler implements IPageHandler {
@@ -57,23 +67,28 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 
 	@Autowired
 	SubscriptionPeriodBusiness subscriptionPeriodBusiness;
-	
+
 	@Autowired
 	SchoolPricingService schoolPricingService;
-	
+
+	@Autowired
+	StudentPaymentWorkService studentPaymentWorkService;
+
 	@Autowired
 	IndividualPricingService individualPricingService;
-	
+
 	@Autowired
 	private EnewschampApplicationProperties appConfig;
-	
+
 	@Autowired
 	PageNavigationService pageNavigationService;
-	
+
 	@Autowired
 	SchoolDetailsBusiness schoolDetailsBusiness;
-	
-	
+
+	@Autowired
+	StudentSubscriptionWorkService studentSubscriptionWorkService;
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		// TODO Auto-generated method stub
@@ -88,57 +103,60 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
 		String operation = pageNavigationContext.getPageRequest().getHeader().getOperation();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
-		Long studentId=0L;
+		Long studentId = 0L;
 		String pageName = pageNavigationContext.getPreviousPage();
 		String subscriptionType = "";
 		SubscriptionPeriodPageData subscriptionPeriodPageData = new SubscriptionPeriodPageData();
-
 		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
 		if (studentControlDTO != null) {
 			studentId = studentControlDTO.getStudentID();
-			subscriptionType=studentControlDTO.getSubscriptionType();
+			subscriptionType = studentControlDTO.getSubscriptionType();
 			emailId = studentControlDTO.getEmailID();
 
 		} else {
 			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
-			if(studentControlWorkDTO!=null) {
+			if (studentControlWorkDTO != null) {
 				studentId = studentControlWorkDTO.getStudentID();
-				subscriptionType=studentControlWorkDTO.getSubscriptionType();
+				subscriptionType = studentControlWorkDTO.getSubscriptionTypeW();
 				emailId = studentControlWorkDTO.getEmailID();
 
 			}
 		}
-		
-		
-		if (PageAction.next.toString().equalsIgnoreCase(action)) {
-			
 
-			//get data from master table, fee text and fee
-			subscriptionPeriodPageData = mapPricingDetails(subscriptionPeriodPageData, subscriptionType, studentId, editionId);
-			subscriptionPeriodPageData.setIncompeleteFormText(appConfig.getStudentDetailsPageText().get("incompeleteFormText"));
+		if (PageAction.next.toString().equalsIgnoreCase(action)
+				|| PageAction.SubscriptionNext.toString().equalsIgnoreCase(action)) {
+
+			// get data from master table, fee text and fee
+			subscriptionPeriodPageData = mapPricingDetails(subscriptionPeriodPageData, subscriptionType, studentId,
+					editionId);
+			subscriptionPeriodPageData
+					.setIncompeleteFormText(appConfig.getStudentDetailsPageText().get("incompeleteFormText"));
 			pageDto.setData(subscriptionPeriodPageData);
-			
 
 		} else if (PageAction.previous.toString().equalsIgnoreCase(action)) {
 			PageNavigatorDTO pageNavDto = pageNavigationService.getNavPage(action, operation, pageName);
-			if(PageSaveTable.M.toString().equalsIgnoreCase(pageNavDto.getUpdationTable()))
-			{
-				//get data from master table, fee text and fee
-				
-				subscriptionPeriodPageData = mapPricingDetails(subscriptionPeriodPageData, subscriptionType, studentId, editionId);
-				StudentSubscriptionDTO studentSubscriptionDTO = subscriptionBusiness.getStudentSubscriptionFromMaster(studentId, editionId);
-				subscriptionPeriodPageData = modelMapper.map(studentSubscriptionDTO, SubscriptionPeriodPageData.class);
-				subscriptionPeriodPageData.setIncompeleteFormText(appConfig.getStudentDetailsPageText().get("incompeleteFormText"));
-				pageDto.setData(subscriptionPeriodPageData);
-			}
-			else if (PageSaveTable.W.toString().equalsIgnoreCase(pageNavDto.getUpdationTable()))
-			{
-				//get data from work table, fee text and fee
-				subscriptionPeriodPageData = mapPricingDetails(subscriptionPeriodPageData, subscriptionType, studentId, editionId);
-				StudentSubscriptionWorkDTO studentSubscriptionWorkDTO = subscriptionBusiness.getStudentSubscriptionFromWork(studentId, editionId);
-				subscriptionPeriodPageData = modelMapper.map(studentSubscriptionWorkDTO, SubscriptionPeriodPageData.class);
+			if (PageSaveTable.M.toString().equalsIgnoreCase(pageNavDto.getUpdationTable())) {
+				// get data from master table, fee text and fee
 
-				subscriptionPeriodPageData.setIncompeleteFormText(appConfig.getStudentDetailsPageText().get("incompeleteFormText"));
+				subscriptionPeriodPageData = mapPricingDetails(subscriptionPeriodPageData, subscriptionType, studentId,
+						editionId);
+				StudentSubscriptionDTO studentSubscriptionDTO = subscriptionBusiness
+						.getStudentSubscriptionFromMaster(studentId, editionId);
+				subscriptionPeriodPageData = modelMapper.map(studentSubscriptionDTO, SubscriptionPeriodPageData.class);
+				subscriptionPeriodPageData
+						.setIncompeleteFormText(appConfig.getStudentDetailsPageText().get("incompeleteFormText"));
+				pageDto.setData(subscriptionPeriodPageData);
+			} else if (PageSaveTable.W.toString().equalsIgnoreCase(pageNavDto.getUpdationTable())) {
+				// get data from work table, fee text and fee
+				subscriptionPeriodPageData = mapPricingDetails(subscriptionPeriodPageData, subscriptionType, studentId,
+						editionId);
+				StudentSubscriptionWorkDTO studentSubscriptionWorkDTO = subscriptionBusiness
+						.getStudentSubscriptionFromWork(studentId, editionId);
+				subscriptionPeriodPageData = modelMapper.map(studentSubscriptionWorkDTO,
+						SubscriptionPeriodPageData.class);
+
+				subscriptionPeriodPageData
+						.setIncompeleteFormText(appConfig.getStudentDetailsPageText().get("incompeleteFormText"));
 				pageDto.setData(subscriptionPeriodPageData);
 			}
 		}
@@ -161,13 +179,13 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 		StudentSubscriptionDTO studentSubscriotionDTO = subscriptionBusiness.getStudentSubscriptionFromMaster(studentId,
 				eidtionId);
 		SubscriptionPeriodPageData subscriptionPeriodPageData = null;
-		//map the request data
+		// map the request data
 		subscriptionPeriodPageData = mapPagedata(pageRequest);
-		
-		int subscriptionPeriod = subscriptionPeriodPageData.getSubscriptionPeriodSelected();
-		// TODO Use Fee amount .. logic not known ...
-		Long feeAmount = subscriptionPeriodPageData.getFeeAmount();
 
+		int subscriptionPeriod = subscriptionPeriodPageData.getSubscriptionPeriodSelected();
+		Double feeAmount = subscriptionPeriodPageData.getFeeAmount();
+		Double payAmount = subscriptionPeriodPageData.getPayAmount();
+		String payCurrency = subscriptionPeriodPageData.getPayCurrency();
 		String autoRenew = subscriptionPeriodPageData.getAutoRenew();
 
 		// calculate the start and end date..
@@ -194,29 +212,25 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 
 		PageDTO pageDTO = new PageDTO();
-
+		Long studentId = 0L;
+		String emailId = pageRequest.getHeader().getEmailID();
+		String editionId = pageRequest.getHeader().getEditionID();
 		String saveIn = pageNavigatorDTO.getUpdationTable();
-		if (PageAction.next.toString().equals(actionName)) {
+
+		if (PageAction.next.toString().equals(actionName)
+				|| PageAction.SubscriptionPeriodNext.toString().equals(actionName)) {
 			if (PageSaveTable.W.toString().equals(saveIn)) {
-				Long studentId = 0L;
-				String emailId = pageRequest.getHeader().getEmailID();
 				StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
 				if (studentControlWorkDTO != null) {
-					String eidtionId = pageRequest.getHeader().getEditionID();
-
 					studentId = studentControlWorkDTO.getStudentID();
-					// get subscription dto from master
 					StudentSubscriptionWorkDTO studentSubscpritionWorkDTO = subscriptionBusiness
-							.getStudentSubscriptionFromWork(studentId, eidtionId);
-					SubscriptionPeriodPageData subscriptionPeriodPageData = null;
+							.getStudentSubscriptionFromWork(studentId, editionId);
+					SubscriptionPeriodPageData subscriptionPeriodPageData = mapPagedata(pageRequest);
 
-					//map the request data
-					subscriptionPeriodPageData = mapPagedata(pageRequest);
-					
 					int subscriptionPeriod = subscriptionPeriodPageData.getSubscriptionPeriodSelected();
-					// TODO Use Fee amount .. logic not known ...
-					Long feeAmount = subscriptionPeriodPageData.getFeeAmount();
-
+					// Double feeAmount = subscriptionPeriodPageData.getFeeAmount();
+					Double payAmount = subscriptionPeriodPageData.getPayAmount();
+					String payCurrency = subscriptionPeriodPageData.getPayCurrency();
 					String autoRenew = subscriptionPeriodPageData.getAutoRenew();
 
 					// calculate the start and end date..
@@ -224,32 +238,37 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 					Calendar c = Calendar.getInstance();
 					c.setTime(startDate);
 					c.add(Calendar.DATE, subscriptionPeriod);
-
 					Date endDate = c.getTime();
-
-					// set the calculated dates in the subscription object..
-
 					studentSubscpritionWorkDTO
 							.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 					studentSubscpritionWorkDTO
 							.setEndDate(endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 					studentSubscpritionWorkDTO.setAutoRenewal(autoRenew);
+					StudentPaymentWork studentPaymentWork = new StudentPaymentWork();
+					studentPaymentWork.setStudentID(studentId);
+					studentPaymentWork.setEditionID(editionId);
+					studentPaymentWork.setPayAmount(payAmount);
+					studentPaymentWork.setPayCurrency(payCurrency);
+					studentPaymentWork.setStartDate(startDate);
+					studentPaymentWork.setEndDate(endDate);
+					studentPaymentWork.setOperatorId("APP");
+					studentPaymentWork.setRecordInUse(RecordInUseType.Y);
+					studentPaymentWork.setSubscriptionType(studentSubscpritionWorkDTO.getSubscriptionSelected());
+					studentPaymentWork.setOrderId(
+							generateOrderId(studentId, studentSubscpritionWorkDTO.getSubscriptionSelected()));
 					subscriptionBusiness.updateSubscriptionPeriodInWork(studentSubscpritionWorkDTO);
+					studentPaymentWork = studentPaymentWorkService.create(studentPaymentWork);
+					studentPaymentWork.getPaymentID();
 				}
-
 			}
 			if (PageSaveTable.M.toString().equals(saveIn)) {
-				String emailId = pageRequest.getHeader().getEmailID();
 				StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
-				Long studentId = 0L;
 				if (studentControlWorkDTO != null) {
 					studentId = studentControlWorkDTO.getStudentID();
 				}
-				String eidtionId = pageRequest.getHeader().getEditionID();
-
 				// get subscription dto from master
-				StudentSubscriptionDTO studentSubscriotionDTO = subscriptionBusiness
-						.getStudentSubscriptionFromMaster(studentId, eidtionId);
+				StudentSubscriptionDTO studentSubscriptionDTO = subscriptionBusiness
+						.getStudentSubscriptionFromMaster(studentId, editionId);
 				SubscriptionPeriodPageData subscriptionPeriodPageData = null;
 				try {
 					subscriptionPeriodPageData = objectMapper.readValue(pageRequest.getData().toString(),
@@ -259,9 +278,9 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 					e.printStackTrace();
 				}
 				int subscriptionPeriod = subscriptionPeriodPageData.getSubscriptionPeriodSelected();
-				// TODO Use Fee amount .. logic not known ...
-				Long feeAmount = subscriptionPeriodPageData.getFeeAmount();
-
+				// Double feeAmount = subscriptionPeriodPageData.getFeeAmount();
+				Double payAmount = subscriptionPeriodPageData.getPayAmount();
+				String payCurrency = subscriptionPeriodPageData.getPayCurrency();
 				String autoRenew = subscriptionPeriodPageData.getAutoRenew();
 
 				// calculate the start and end date..
@@ -274,64 +293,80 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 
 				// set the calculated dates in the subscription object..
 
-				studentSubscriotionDTO.setStartDate(startDate);
-				studentSubscriotionDTO.setEndDate(endDate);
-				studentSubscriotionDTO.setAutoRenewal(autoRenew);
-
-				subscriptionBusiness.saveAsMaster(studentSubscriotionDTO);
+				studentSubscriptionDTO.setStartDate(startDate);
+				studentSubscriptionDTO.setEndDate(endDate);
+				studentSubscriptionDTO.setAutoRenewal(autoRenew);
+				subscriptionBusiness.saveAsMaster(studentSubscriptionDTO);
 			}
-		} else if (PageAction.previous.toString().equals(actionName)) {
-			// TO DO may want to delete work data
+		} else if (PageAction.previous.toString().equals(actionName)
+				|| PageAction.SubscriptionPeriodPrevious.toString().equals(actionName)) {
+			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+			if (studentControlWorkDTO != null) {
+				studentSubscriptionWorkService.delete(studentControlWorkDTO.getStudentID());
+				studentControlBusiness.deleteFromWork(studentControlWorkDTO);
+			}
 		}
 		pageDTO.setHeader(pageRequest.getHeader());
 		return pageDTO;
 	}
 
-	public SubscriptionPeriodPageData mapPagedata(PageRequestDTO pageRequest)
-	{
-		SubscriptionPeriodPageData subscriptionPeriodPageData=null;
+	private String generateOrderId(Long studentId, String subscriptionType) {
+		String orderId = subscriptionType + "" + new Date().getTime() + "_" + studentId;
+		return orderId;
+
+	}
+
+	public SubscriptionPeriodPageData mapPagedata(PageRequestDTO pageRequest) {
+		SubscriptionPeriodPageData subscriptionPeriodPageData = null;
 		try {
-			subscriptionPeriodPageData = objectMapper.readValue(pageRequest.getData().toString(),SubscriptionPeriodPageData.class);
-		}catch(IOException e) {
+			subscriptionPeriodPageData = objectMapper.readValue(pageRequest.getData().toString(),
+					SubscriptionPeriodPageData.class);
+		} catch (IOException e) {
 			throw new BusinessException(ErrorCodes.SREVER_ERROR);
 		}
 		return subscriptionPeriodPageData;
 	}
-	
-	private SubscriptionPeriodPageData mapPricingDetails(SubscriptionPeriodPageData subscriptionPeriodPageData, String subscriptionType, Long studentId, String editionId) 
-	{
-		if(SubscriptionType.P.toString().equalsIgnoreCase(subscriptionType))
-		{
+
+	private SubscriptionPeriodPageData mapPricingDetails(SubscriptionPeriodPageData subscriptionPeriodPageData,
+			String subscriptionType, Long studentId, String editionId) {
+		System.out.println(">>>>>>>>>>>>>" + editionId);
+		System.out.println(">>>>>>>>>>>>>" + studentId);
+		System.out.println(">>>>>>>>>>>>>" + subscriptionType);
+		if (SubscriptionType.P.toString().equalsIgnoreCase(subscriptionType)) {
 			// fetch individual pricing
 			IndividualPricing individualPricing = individualPricingService.getPricingForIndividual(editionId);
+			System.out.println(">>>>>>individualPricing>>>>>>>" + individualPricing);
 			subscriptionPeriodPageData = modelMapper.map(individualPricing, SubscriptionPeriodPageData.class);
-		}
-		else if(SubscriptionType.S.toString().equalsIgnoreCase(subscriptionType))
-		{
-			//fetch the student school
+		} else if (SubscriptionType.S.toString().equalsIgnoreCase(subscriptionType)) {
+			// fetch the student school
 			StudentSchoolDTO studentSchoolDTO = schoolDetailsBusiness.getStudentFromMaster(studentId);
 			Long schoolId = studentSchoolDTO.getSchoolId();
 			// fetch school pricing
-			
+
 			SchoolPricing schoolPricing = schoolPricingService.getPricingForInstitution(schoolId, editionId);
 			subscriptionPeriodPageData = modelMapper.map(schoolPricing, SubscriptionPeriodPageData.class);
 
 		}
-		HashMap<String,String> feeMap = new HashMap<String,String>();
-		feeMap.put("1Month",subscriptionPeriodPageData.getFeeCurrency()+" "+subscriptionPeriodPageData.getFeeMonthly().toString());
-		feeMap.put("3Months",subscriptionPeriodPageData.getFeeCurrency()+" "+subscriptionPeriodPageData.getFeeQuarterly().toString());
-		feeMap.put("6Months",subscriptionPeriodPageData.getFeeCurrency()+" "+subscriptionPeriodPageData.getFeeHalfYearly().toString());
-		feeMap.put("12Months",subscriptionPeriodPageData.getFeeCurrency()+" "+subscriptionPeriodPageData.getFeeYearly().toString());
+		System.out.println(">>>>>>>>>>>>>" + subscriptionPeriodPageData);
+		HashMap<String, String> feeMap = new HashMap<String, String>();
+		feeMap.put("1Month", subscriptionPeriodPageData.getFeeCurrency() + " "
+				+ subscriptionPeriodPageData.getFeeMonthly().toString());
+		feeMap.put("3Months", subscriptionPeriodPageData.getFeeCurrency() + " "
+				+ subscriptionPeriodPageData.getFeeQuarterly().toString());
+		feeMap.put("6Months", subscriptionPeriodPageData.getFeeCurrency() + " "
+				+ subscriptionPeriodPageData.getFeeHalfYearly().toString());
+		feeMap.put("12Months", subscriptionPeriodPageData.getFeeCurrency() + " "
+				+ subscriptionPeriodPageData.getFeeYearly().toString());
 		subscriptionPeriodPageData.setFeeText(feeMap);
-		
+
 		List<String> feeList = new ArrayList<String>();
 		feeList.add(subscriptionPeriodPageData.getFeeMonthly().toString());
 		feeList.add(subscriptionPeriodPageData.getFeeQuarterly().toString());
 		feeList.add(subscriptionPeriodPageData.getFeeHalfYearly().toString());
 		feeList.add(subscriptionPeriodPageData.getFeeYearly().toString());
 		subscriptionPeriodPageData.setFee(feeList);
-		
+
 		return subscriptionPeriodPageData;
 	}
-	 
+
 }

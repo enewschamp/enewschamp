@@ -39,7 +39,10 @@ public class StudentSubscriptionWorkService  {
 
 	}
 
-	
+	public void delete(Long studentId) {
+		repository.deleteById(studentId);
+	}
+
 	public StudentSubscriptionWork update(StudentSubscriptionWork StudentSubscriptionWork) {
 		Long studentId = StudentSubscriptionWork.getStudentID();
 		String editionId = StudentSubscriptionWork.getEditionID();

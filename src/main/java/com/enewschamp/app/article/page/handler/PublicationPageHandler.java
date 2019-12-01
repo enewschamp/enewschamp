@@ -17,6 +17,7 @@ import com.enewschamp.app.article.page.dto.PublicationPageData;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.uicontrols.rules.plugin.PublicationRulePlugin;
 import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.savedarticle.service.SavedNewsArticleService;
@@ -66,8 +67,12 @@ public class PublicationPageHandler implements IPageHandler {
 
 	@Autowired
 	PublicationService publicationService;
+
 	@Autowired
 	PreferenceBusiness preferenceBusiness;
+
+	@Autowired
+	PublicationRulePlugin publicationRulePlugin;
 
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
@@ -84,22 +89,29 @@ public class PublicationPageHandler implements IPageHandler {
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
 		int readingLevel = 0;
-		StudentPreferencesDTO preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
-
+		StudentPreferencesDTO preferenceDto = null;
+		if (studentId > 0 && (!publicationRulePlugin.isIncompleteUserRegistration(eMailId,
+				pageNavigationContext.getPageRequest()))) {
+			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
+		}
 		if (preferenceDto != null) {
-
 			readingLevel = Integer.parseInt(preferenceDto.getReadingLevel());
+		} else {
+			readingLevel = 3;
 		}
 		if (PageAction.load.toString().equalsIgnoreCase(action) || PageAction.home.toString().equalsIgnoreCase(action)
 				|| PageAction.back.toString().equalsIgnoreCase(action)
 				|| PageAction.save.toString().equalsIgnoreCase(action)
-				|| PageAction.Cancel.toString().equalsIgnoreCase(action)) {
-			System.out.println("Inside load in Publication Handler");
+				|| PageAction.Cancel.toString().equalsIgnoreCase(action)
+				|| PageAction.LoadPublication.toString().equalsIgnoreCase(action)
+				|| PageAction.LoginStudent.toString().equalsIgnoreCase(action)
+				|| PageAction.SubscriptionPrevious.toString().equalsIgnoreCase(action)
+				|| PageAction.PreferencesSave.toString().equalsIgnoreCase(action)
+				|| PageAction.LaunchApp.toString().equalsIgnoreCase(action)) {
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 
 			// if publication date is null, load the latest publication... TO DO
 			if (publicationDate == null) {
-
 				publicationDate = publicationService.getLatestPublication(editionId, readingLevel);
 
 			}
@@ -124,6 +136,7 @@ public class PublicationPageHandler implements IPageHandler {
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
 			header.setPageNo(pageResult.getNumber() + 1);
+			header.setPublicationdate(publicationDate);
 			pageDto.setHeader(header);
 
 			List<PublicationData> publicationData = null;
@@ -297,7 +310,8 @@ public class PublicationPageHandler implements IPageHandler {
 
 	@Override
 	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
-		return null;
+		PageDTO pageDto = new PageDTO();
+		return pageDto;
 	}
 
 	private List<PublicationData> mapData(Page<NewsArticleSummaryDTO> page) {
@@ -342,7 +356,7 @@ public class PublicationPageHandler implements IPageHandler {
 
 			if (stdactivity != null) {
 				Long quizScore = stdactivity.getQuizScore();
-				if (quizScore > 0) {
+				if (quizScore != null && quizScore > 0) {
 					publicationata.setQuizCompletedIndicator(true);
 				} else {
 					publicationata.setQuizCompletedIndicator(false);

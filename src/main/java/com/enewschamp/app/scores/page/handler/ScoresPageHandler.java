@@ -48,7 +48,7 @@ public class ScoresPageHandler implements IPageHandler {
 
 	@Autowired
 	NewsArticlePageHandler newsArticlePageHandler;
-	
+
 	@Autowired
 	ScoreTrendService scoreTrendService;
 
@@ -62,12 +62,6 @@ public class ScoresPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String action = pageNavigationContext.getActionName();
-		
-		//String action = pageNavigationContext.getActionName();
-		//if (PageAction.home.toString().equalsIgnoreCase(action)) {
-//			pageDto = newsArticlePageHandler.loadPage(pageNavigationContext);
-
-//		}
 		String operation = pageNavigationContext.getPageRequest().getHeader().getOperation();
 		if ("ListMonthlyScores".equals(operation) || PageAction.Scores.toString().equalsIgnoreCase(action)) {
 			pageDto = handleScoreTrends(pageNavigationContext);
@@ -77,10 +71,8 @@ public class ScoresPageHandler implements IPageHandler {
 		}
 		return pageDto;
 	}
-	
-	public PageDTO handleYearlyScoreTrends(PageNavigationContext pageNavigationContext) {
-		
 
+	public PageDTO handleYearlyScoreTrends(PageNavigationContext pageNavigationContext) {
 
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
@@ -111,11 +103,12 @@ public class ScoresPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		if (PageAction.Year.toString().equalsIgnoreCase(action) || PageAction.Month.toString().equalsIgnoreCase(action) ) {
+		if (PageAction.Year.toString().equalsIgnoreCase(action)
+				|| PageAction.Month.toString().equalsIgnoreCase(action)) {
 
 			List<YearlyScoresGenreDTO> yearlyScoresByGenre = scoreTrendService.findYearlyScoresByGenre(searchData);
 			List<MonthlyScoresDTO> monthlyScores = scoreTrendService.findYMonthlyScores(searchData);
-			
+
 			YearlyScorePageData pageData = new YearlyScorePageData();
 			pageData.setYearMonth("" + searchData.getMonthYear());
 			pageData.setYearlyScoresByGenre(yearlyScoresByGenre);
@@ -139,16 +132,16 @@ public class ScoresPageHandler implements IPageHandler {
 
 			List<YearlyScoresGenreDTO> yearlyScoresByGenre = scoreTrendService.findYearlyScoresByGenre(searchData);
 			List<MonthlyScoresDTO> monthlyScores = scoreTrendService.findYMonthlyScores(searchData);
-			
+
 			YearlyScorePageData pageData = new YearlyScorePageData();
 			pageData.setYearMonth("" + searchData.getMonthYear());
 			pageData.setYearlyScoresByGenre(yearlyScoresByGenre);
 			pageData.setMonthlyScores(monthlyScores);
-			
+
 			pageDto.setData(pageData);
 		}
-		if (PageAction.previous.toString().equalsIgnoreCase(action) || PageAction.RightSwipe.toString().equalsIgnoreCase(action)
-				) {
+		if (PageAction.previous.toString().equalsIgnoreCase(action)
+				|| PageAction.RightSwipe.toString().equalsIgnoreCase(action)) {
 
 			String yearMonth = searchData.getMonthYear();
 			System.out.println("yearMonth :" + yearMonth);
@@ -166,7 +159,7 @@ public class ScoresPageHandler implements IPageHandler {
 
 			List<YearlyScoresGenreDTO> yearlyScoresByGenre = scoreTrendService.findYearlyScoresByGenre(searchData);
 			List<MonthlyScoresDTO> monthlyScores = scoreTrendService.findYMonthlyScores(searchData);
-			
+
 			YearlyScorePageData pageData = new YearlyScorePageData();
 			pageData.setYearMonth("" + searchData.getMonthYear());
 			pageData.setYearlyScoresByGenre(yearlyScoresByGenre);
@@ -176,13 +169,11 @@ public class ScoresPageHandler implements IPageHandler {
 		}
 		return pageDto;
 
-	
 	}
-	public PageDTO handleScoreTrends(PageNavigationContext pageNavigationContext) {
 
+	public PageDTO handleScoreTrends(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-
 		String action = pageNavigationContext.getActionName();
 		ScoresSearchData searchData = new ScoresSearchData();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
@@ -201,18 +192,17 @@ public class ScoresPageHandler implements IPageHandler {
 				if (yearMonth.length() < 6) {
 					throw new BusinessException(ErrorCodes.INVALID_YEARMONTH_FORMAT, "Invalid Year Month Format");
 				}
-			}else
-			{
-				
-				// if the year month is null, default with current year month... 
+			} else {
+
+				// if the year month is null, default with current year month...
 				LocalDate now = LocalDate.now();
 				int month = now.getMonthValue();
-				String monthStr = (month<10) ? "0"+month : ""+month; 
-				String year = ""+now.getYear();
-				yearMonth = year+monthStr;
-				System.out.println("year month "+yearMonth);
+				String monthStr = (month < 10) ? "0" + month : "" + month;
+				String year = "" + now.getYear();
+				yearMonth = year + monthStr;
+				System.out.println("year month " + yearMonth);
 				searchData.setMonthYear(yearMonth);
-				action="month";
+				action = "month";
 			}
 		} catch (JsonParseException e) {
 			throw new RuntimeException(e);
@@ -221,11 +211,12 @@ public class ScoresPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		if (PageAction.Month.toString().equalsIgnoreCase(action) || PageAction.Year.toString().equalsIgnoreCase(action)) {
+		if (PageAction.Month.toString().equalsIgnoreCase(action)
+				|| PageAction.Year.toString().equalsIgnoreCase(action)) {
 
 			List<DailyScoreDTO> dailyScores = scoreTrendService.findDailyScores(searchData);
 			List<MonthlyScoreGenreDTO> monthlyScoresByGenre = scoreTrendService.findMonthlyScoresByGenre(searchData);
-			
+
 			ScorePageData pageData = new ScorePageData();
 			pageData.setYearMonth("" + searchData.getMonthYear());
 			pageData.setDailyScores(dailyScores);
@@ -239,15 +230,14 @@ public class ScoresPageHandler implements IPageHandler {
 			String year = yearMonth.substring(0, 4);
 			String monthStr = yearMonth.substring(yearMonth.length() - 2, yearMonth.length());
 			int month = Integer.parseInt(monthStr);
-			if(month>12 || month <1)
-			{
+			if (month > 12 || month < 1) {
 				throw new BusinessException(ErrorCodes.INVALID_MONTH, "Invalid Month (Month should be between 1 - 12)");
 
 			}
-			if(month<12)
-			month = month + 1;
+			if (month < 12)
+				month = month + 1;
 
-			monthStr = (month>=10) ? ""+month : "0"+monthStr;
+			monthStr = (month >= 10) ? "" + month : "0" + monthStr;
 //			
 //			if (month >= 10) {
 //				monthStr = "" + month;
@@ -262,7 +252,7 @@ public class ScoresPageHandler implements IPageHandler {
 
 			List<DailyScoreDTO> dailyScores = scoreTrendService.findDailyScores(searchData);
 			List<MonthlyScoreGenreDTO> monthlyScoresByGenre = scoreTrendService.findMonthlyScoresByGenre(searchData);
-			
+
 			ScorePageData pageData = new ScorePageData();
 			pageData.setYearMonth("" + searchData.getMonthYear());
 			pageData.setDailyScores(dailyScores);
@@ -283,8 +273,8 @@ public class ScoresPageHandler implements IPageHandler {
 				month = month - 1;
 			}
 
-			monthStr = (month >=10) ? ""+month : "0"+month;
-			
+			monthStr = (month >= 10) ? "" + month : "0" + month;
+
 //			if (month >= 10) {
 //				monthStr = "" + month;
 //			} else {
@@ -298,7 +288,7 @@ public class ScoresPageHandler implements IPageHandler {
 
 			List<DailyScoreDTO> dailyScores = scoreTrendService.findDailyScores(searchData);
 			List<MonthlyScoreGenreDTO> monthlyScoresByGenre = scoreTrendService.findMonthlyScoresByGenre(searchData);
-			
+
 			ScorePageData pageData = new ScorePageData();
 			pageData.setYearMonth("" + searchData.getMonthYear());
 			pageData.setDailyScores(dailyScores);
@@ -308,6 +298,7 @@ public class ScoresPageHandler implements IPageHandler {
 		return pageDto;
 
 	}
+
 	@Override
 	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();

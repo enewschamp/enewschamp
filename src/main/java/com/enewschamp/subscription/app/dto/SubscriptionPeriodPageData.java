@@ -21,13 +21,15 @@ public class SubscriptionPeriodPageData  extends PageData {
 	private Long studentID;
 	
 	private int subscriptionPeriodSelected;
-	private Long feeAmount=0L;
+	private Double feeAmount;
 	private String autoRenew;
 	private String incompeleteFormText;
 	//private  List<String> feeText;
 	private Map<String, String > feeText;
 	private List<String> fee;
-	
+	private Double payAmount;
+	private String payCurrency;
+
 	@JsonIgnore
 	private String feeMonthly;
 	@JsonIgnore

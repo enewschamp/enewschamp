@@ -13,7 +13,7 @@ import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
-import com.enewschamp.publication.app.dto.PublicationDTO;
+import com.enewschamp.publication.app.dto.PublicationSummaryDTO;
 import com.enewschamp.publication.domain.service.EditionService;
 import com.enewschamp.publication.domain.service.GenreService;
 import com.enewschamp.publication.domain.service.PublicationService;
@@ -25,34 +25,35 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component(value="PublicationSearchPageHandler")
-public class PublicationSearchPageHandler implements IPageHandler  {
+@Component(value = "PublicationSearchPageHandler")
+public class PublicationSearchPageHandler implements IPageHandler {
 
 	@Autowired
 	private PublicationService publicationService;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	ObjectMapper objectMapper;
-	
+
 	@Autowired
 	GenreService genreService;
 
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	EditionService editionService;
-	
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
-		
+
 		PageDTO pageDTO = new PageDTO();
 		PublicationSearchRequest searchRequestData = null;
 		try {
-			searchRequestData = objectMapper.readValue(pageRequest.getData().toString(), PublicationSearchRequest.class);
+			searchRequestData = objectMapper.readValue(pageRequest.getData().toString(),
+					PublicationSearchRequest.class);
 		} catch (JsonParseException e) {
 			throw new RuntimeException(e);
 		} catch (JsonMappingException e) {
@@ -60,23 +61,24 @@ public class PublicationSearchPageHandler implements IPageHandler  {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		PublicationSearchResultData searchResult = new PublicationSearchResultData();
 		pageDTO.setData(searchResult);
-		
-		Page<PublicationDTO> pageResult = publicationService.findPublications(searchRequestData, pageRequest.getHeader());
-		
+
+		Page<PublicationSummaryDTO> pageResult = publicationService.findPublications(searchRequestData,
+				pageRequest.getHeader());
+
 		HeaderDTO header = new HeaderDTO();
 		header.setIsLastPage(pageResult.isLast());
 		header.setPageCount(pageResult.getTotalPages());
 		header.setRecordCount(pageResult.getNumberOfElements());
 		header.setPageNo(pageResult.getNumber() + 1);
 		pageDTO.setHeader(header);
-		
+
 		searchResult.setPublications(pageResult.getContent());
 		return pageDTO;
 	}
-	
+
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO page = new PageDTO();

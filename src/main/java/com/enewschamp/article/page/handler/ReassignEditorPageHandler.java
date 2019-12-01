@@ -13,65 +13,70 @@ import com.enewschamp.article.page.data.NewsArticleGroupPageData;
 import com.enewschamp.article.page.data.ReassignEditorPageData;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
+import com.enewschamp.publication.app.dto.PublicationGroupDTO;
 import com.enewschamp.publication.domain.service.PublicationService;
 import com.enewschamp.publication.page.data.PublicationGroupPageData;
 import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component(value="ReassignEditorPageHandler")
-public class ReassignEditorPageHandler implements IPageHandler  {
+@Component(value = "ReassignEditorPageHandler")
+public class ReassignEditorPageHandler implements IPageHandler {
 
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private NewsArticleGroupService articleGroupService;
-	
+
 	@Autowired
 	private PublicationService publicationService;
-	
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
-		
+
 		PageDTO pageDTO = new PageDTO();
 		String editorId = pageRequest.getData().get("editorId").asText();
-		
+
 		// Handle editor assignment from article group page
 		Long articleGroupId = null;
 		JsonNode node = pageRequest.getData().get("newsArticleGroupId");
-		if(node != null) {
+		if (node != null) {
 			articleGroupId = node.asLong();
 		}
-		if(articleGroupId != null) {
+		if (articleGroupId != null) {
 			NewsArticleGroupPageData data = new NewsArticleGroupPageData();
-			pageDTO.setData(data);
-			NewsArticleGroupDTO groupDTO = modelMapper.map(articleGroupService.assignEditor(articleGroupId, editorId), NewsArticleGroupDTO.class);
+			NewsArticleGroupDTO groupDTO = modelMapper.map(articleGroupService.assignEditor(articleGroupId, editorId),
+					NewsArticleGroupDTO.class);
 			data.setNewsArticleGroup(groupDTO);
+			pageDTO.setData(data);
 		}
-		
-		Long publicationId = null;
-		node = pageRequest.getData().get("publicationId");
-		if(node != null) {
-			publicationId = node.asLong();
+
+		Long publicationGroupId = null;
+		node = pageRequest.getData().get("publicationGroupId");
+		if (node != null) {
+			publicationGroupId = node.asLong();
 		}
-		if(publicationId != null) {
-			publicationService.assignEditor(publicationId, editorId);
+		if (publicationGroupId != null) {
+			PublicationGroupPageData data = new PublicationGroupPageData();
+			PublicationGroupDTO groupDTO = modelMapper
+					.map(publicationService.assignEditor(publicationGroupId, editorId), PublicationGroupDTO.class);
+			data.setPublicationGroup(groupDTO);
+			pageDTO.setData(data);
 		}
-		
 		return pageDTO;
 	}
-	
+
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO page = new PageDTO();
-		
+
 		ReassignEditorPageData pageData = new ReassignEditorPageData();
 		pageData.setEditorLOV(userService.getEditorLOV());
 		page.setData(pageData);

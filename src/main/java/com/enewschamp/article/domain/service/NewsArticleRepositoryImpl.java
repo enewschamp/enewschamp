@@ -34,29 +34,23 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 		Root<NewsArticleGroup> articleGroupRoot = criteriaQuery.from(NewsArticleGroup.class);
 		Root<NewsArticle> articleRoot = criteriaQuery.from(NewsArticle.class);
 
-		criteriaQuery = criteriaQuery.select(cb.construct(NewsArticleSummaryDTO.class, 
-				  articleRoot.get("newsArticleId"), 
-				  articleRoot.get("newsArticleGroupId"),
-				  articleRoot.get("publishDate"),
-				  articleRoot.get("readingLevel"),
-				  articleRoot.get("authorId"),
-				  articleRoot.get("editorId"),
-				  articleRoot.get("publisherId"),
-				  articleRoot.get("status"),
-				  articleRoot.get("articleType"),
-				  articleGroupRoot.get("genreId"),
-				  articleGroupRoot.get("headline"),
-				  articleGroupRoot.get("imagePathMobile"),
-				  articleGroupRoot.get("imagePathTab"), 
-				  articleGroupRoot.get("imagePathDesktop"),
-				  articleGroupRoot.get("imagePathThumbnail"),
-				  articleGroupRoot.get("cityId")));
-		
+		criteriaQuery = criteriaQuery.select(cb.construct(NewsArticleSummaryDTO.class, articleRoot.get("newsArticleId"),
+				articleRoot.get("newsArticleGroupId"), articleRoot.get("publishDate"), articleRoot.get("readingLevel"),
+				articleRoot.get("authorId"), articleRoot.get("editorId"), articleRoot.get("publisherId"),
+				articleRoot.get("status"), articleRoot.get("articleType"), articleRoot.get("content"),
+				articleRoot.get("rating"), articleGroupRoot.get("genreId"), articleGroupRoot.get("headline"),
+				articleGroupRoot.get("imagePathMobile"), articleGroupRoot.get("imagePathTab"),
+				articleGroupRoot.get("imagePathDesktop"), articleGroupRoot.get("imagePathThumbnail"),
+				articleGroupRoot.get("cityId"), articleGroupRoot.get("credits"),
+				articleGroupRoot.get("intendedPubMonth"), articleGroupRoot.get("intendedPubDay"),
+				articleGroupRoot.get("targetCompletionDate"), articleGroupRoot.get("url")));
+
 		// Build filter conditions
 		List<Predicate> filterPredicates = new ArrayList<>();
 
-		filterPredicates.add(cb.equal(articleGroupRoot.get("newsArticleGroupId"), articleRoot.get("newsArticleGroupId")));
-		
+		filterPredicates
+				.add(cb.equal(articleGroupRoot.get("newsArticleGroupId"), articleRoot.get("newsArticleGroupId")));
+
 		if (searchRequest.getArticleId() != null) {
 			filterPredicates.add(cb.equal(articleRoot.get("newsArticleId"), searchRequest.getArticleId()));
 		}
@@ -64,16 +58,28 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 			filterPredicates.add(cb.equal(articleRoot.get("newsArticleGroupId"), searchRequest.getArticleGroupId()));
 		}
 		if (searchRequest.getPublicationDate() != null) {
-			filterPredicates.add(cb.equal(articleRoot.get("publishDate"), searchRequest.getPublicationDate()));
+			// filterPredicates.add(cb.equal(articleRoot.get("publishDate"),
+			// searchRequest.getPublicationDate()));
 		}
+		if (searchRequest.getIntendedPubMonth() != null) {
+			filterPredicates.add(cb.equal(articleRoot.get("intendedPubMonth"), searchRequest.getIntendedPubMonth()));
+		}
+
+		if (searchRequest.getIntendedPublicationDay() != null) {
+			filterPredicates
+					.add(cb.equal(articleRoot.get("intendedPubDay"), searchRequest.getIntendedPublicationDay()));
+		}
+
 		if (searchRequest.getPublicationDateFrom() != null) {
-			filterPredicates.add(cb.greaterThanOrEqualTo(articleRoot.get("publishDate"), searchRequest.getPublicationDateFrom()));
+			filterPredicates.add(
+					cb.greaterThanOrEqualTo(articleRoot.get("publishDate"), searchRequest.getPublicationDateFrom()));
 		}
 		if (searchRequest.getPublicationDateTo() != null) {
-			filterPredicates.add(cb.lessThanOrEqualTo(articleRoot.get("publishDate"), searchRequest.getPublicationDateTo()));
+			filterPredicates
+					.add(cb.lessThanOrEqualTo(articleRoot.get("publishDate"), searchRequest.getPublicationDateTo()));
 		}
 		List<Predicate> readingLevelPredicates = buildReadingLevelPredicate(searchRequest, cb, articleRoot);
-		if(readingLevelPredicates != null && !readingLevelPredicates.isEmpty()) {
+		if (readingLevelPredicates != null && !readingLevelPredicates.isEmpty()) {
 			readingLevelPredicates.forEach(predicate -> {
 				filterPredicates.add(predicate);
 			});
@@ -90,8 +96,8 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 		if (searchRequest.getArticleStatusList() != null && searchRequest.getArticleStatusList().size() > 0) {
 			filterPredicates.add(articleRoot.get("status").in(searchRequest.getArticleStatusList()));
 		}
-		if (searchRequest.getArticleTypeList() != null && searchRequest.getArticleTypeList().size() > 0) {
-			filterPredicates.add(articleRoot.get("articleType").in(searchRequest.getArticleTypeList()));
+		if (searchRequest.getArticleType() != null) {
+			filterPredicates.add(cb.equal(articleRoot.get("articleType"), searchRequest.getArticleType()));
 		}
 		if (searchRequest.getGenreId() != null) {
 			filterPredicates.add(cb.equal(articleGroupRoot.get("genreId"), searchRequest.getGenreId()));
@@ -109,61 +115,60 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 			filterPredicates.add(cb.like(articleGroupRoot.get("cityId"), searchRequest.getCity()));
 		}
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
-		
+
 		// Build query
 		TypedQuery<NewsArticleSummaryDTO> q = entityManager.createQuery(criteriaQuery);
-		
-		if(pageable.getPageSize() > 0) {
+
+		if (pageable.getPageSize() > 0) {
 			int pageNumber = pageable.getPageNumber();
 			q.setFirstResult(pageNumber * pageable.getPageSize());
 			q.setMaxResults(pageable.getPageSize());
-			
+
 		}
 		List<NewsArticleSummaryDTO> list = q.getResultList();
 		long count = getRecordCount(criteriaQuery, filterPredicates, articleRoot);
-		
+
 		return new PageImpl<>(list, pageable, count);
 	}
 
-	private List<Predicate> buildReadingLevelPredicate(NewsArticleSearchRequest searchRequest, 
-												 CriteriaBuilder cb,
-												 Root<NewsArticle> articleRoot) {
+	private List<Predicate> buildReadingLevelPredicate(NewsArticleSearchRequest searchRequest, CriteriaBuilder cb,
+			Root<NewsArticle> articleRoot) {
 		List<Predicate> readingLevelOrPredicates = new ArrayList<>();
 		List<Predicate> readingLevelAndPredicates = new ArrayList<>();
-		
+
 		if (searchRequest.getReadingLevel1() != null) {
-			if(searchRequest.getReadingLevel1().equals(AppConstants.YES)) {
+			if (searchRequest.getReadingLevel1().equals(AppConstants.YES)) {
 				readingLevelOrPredicates.add(cb.equal(articleRoot.get("readingLevel"), 1));
 			} else {
 				readingLevelAndPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 1));
 			}
 		}
 		if (searchRequest.getReadingLevel2() != null) {
-			if(searchRequest.getReadingLevel2().equals(AppConstants.YES)) {
+			if (searchRequest.getReadingLevel2().equals(AppConstants.YES)) {
 				readingLevelOrPredicates.add(cb.equal(articleRoot.get("readingLevel"), 2));
 			} else {
 				readingLevelAndPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 2));
 			}
 		}
 		if (searchRequest.getReadingLevel3() != null) {
-			if(searchRequest.getReadingLevel3().equals(AppConstants.YES)) {
+			if (searchRequest.getReadingLevel3().equals(AppConstants.YES)) {
 				readingLevelOrPredicates.add(cb.equal(articleRoot.get("readingLevel"), 3));
 			} else {
 				readingLevelAndPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 3));
 			}
 		}
 		if (searchRequest.getReadingLevel4() != null) {
-			if(searchRequest.getReadingLevel4().equals(AppConstants.YES)) {
+			if (searchRequest.getReadingLevel4().equals(AppConstants.YES)) {
 				readingLevelOrPredicates.add(cb.equal(articleRoot.get("readingLevel"), 4));
 			} else {
 				readingLevelAndPredicates.add(cb.notEqual(articleRoot.get("readingLevel"), 4));
 			}
 		}
 		List<Predicate> predicates = new ArrayList<Predicate>();
-		if(readingLevelOrPredicates.size() > 0) {
+		if (readingLevelOrPredicates.size() > 0) {
 			predicates.add(cb.or(readingLevelOrPredicates.toArray(new Predicate[0])));
 		}
-		if(readingLevelAndPredicates.size() > 0) {
+		if (readingLevelAndPredicates.size() > 0) {
 			predicates.add(cb.and(readingLevelAndPredicates.toArray(new Predicate[0])));
 		}
 		return predicates;

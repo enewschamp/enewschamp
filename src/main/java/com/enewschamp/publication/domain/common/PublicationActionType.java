@@ -4,6 +4,7 @@ public enum PublicationActionType {
 
 	SavePublicationGrp,
 	AssignEditor,
+	AssignPublisher,
 	SaveAsDraft,
 	Rework,
 	ReadyToPublish,

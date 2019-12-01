@@ -35,10 +35,18 @@ public class StudentControlBusiness {
 		studentControlWork = studentControlWorkService.create(studentControlWork);
 		return studentControlWork;
 	}
-	public StudentControl saveAsMaster(StudentControlDTO studenControlDto)
-	{
-		
-		StudentControl studentControl =modelMapper.map(studenControlDto,StudentControl.class);
+
+	public StudentControlWork updateAsWork(StudentControlWorkDTO studenControlWorkDto) {
+		StudentControlWork studentControlWork = modelMapper.map(studenControlWorkDto, StudentControlWork.class);
+		studentControlWork.setOperatorId("APP");
+		studentControlWork.setRecordInUse(RecordInUseType.Y);
+		studentControlWork = studentControlWorkService.update(studentControlWork);
+		return studentControlWork;
+	}
+
+	public StudentControl saveAsMaster(StudentControlDTO studenControlDto) {
+
+		StudentControl studentControl = modelMapper.map(studenControlDto, StudentControl.class);
 		// to be changed
 		studentControl.setOperatorId("APP");
 		

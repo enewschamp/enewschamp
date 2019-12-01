@@ -37,7 +37,6 @@ public class StudentShareAchievementsPageHandler implements IPageHandler {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
 
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
@@ -91,7 +90,8 @@ public class StudentShareAchievementsPageHandler implements IPageHandler {
 		String saveIn = pageNavigatorDTO.getUpdationTable();
 		String emailId = pageRequest.getHeader().getEmailID();
 
-		if (PageAction.save.toString().equalsIgnoreCase(actionName)) {
+		if (PageAction.save.toString().equalsIgnoreCase(actionName)
+				|| PageAction.ShareAchievementsSave.toString().equalsIgnoreCase(actionName)) {
 
 			if (PageSaveTable.M.toString().equals(saveIn)) {
 
@@ -160,30 +160,30 @@ public class StudentShareAchievementsPageHandler implements IPageHandler {
 		StudentShareAchievementsDTO studentShareAchievementsDTO = new StudentShareAchievementsDTO();
 		List<String> contactList = studentShareAchievementsPageData.getContacts();
 		studentShareAchievementsDTO.setPersonalMessage(studentShareAchievementsPageData.getPersonalMsg());
-		
+
 		if (!contactList.isEmpty())
 			studentShareAchievementsDTO.setContact1(contactList.get(0));
 
-		if (contactList.size()>1 && contactList.get(1) != null)
+		if (contactList.size() > 1 && contactList.get(1) != null)
 			studentShareAchievementsDTO.setContact2(contactList.get(1));
 
-		if (contactList.size()>2 && contactList.get(2) != null)
+		if (contactList.size() > 2 && contactList.get(2) != null)
 			studentShareAchievementsDTO.setContact3(contactList.get(2));
 
-		if (contactList.size()>3 && contactList.get(3) != null)
+		if (contactList.size() > 3 && contactList.get(3) != null)
 			studentShareAchievementsDTO.setContact4(contactList.get(3));
 
-		if (contactList.size()>4 && contactList.get(4) != null)
+		if (contactList.size() > 4 && contactList.get(4) != null)
 			studentShareAchievementsDTO.setContact5(contactList.get(4));
-		if ( contactList.size()>5 && contactList.get(5) != null)
+		if (contactList.size() > 5 && contactList.get(5) != null)
 			studentShareAchievementsDTO.setContact6(contactList.get(5));
-		if (contactList.size()>6 && contactList.get(6) != null)
+		if (contactList.size() > 6 && contactList.get(6) != null)
 			studentShareAchievementsDTO.setContact7(contactList.get(6));
-		if (contactList.size()>7 && contactList.get(7) != null)
+		if (contactList.size() > 7 && contactList.get(7) != null)
 			studentShareAchievementsDTO.setContact8(contactList.get(7));
-		if (contactList.size()>8 && contactList.get(8) != null)
+		if (contactList.size() > 8 && contactList.get(8) != null)
 			studentShareAchievementsDTO.setContact9(contactList.get(8));
-		if (contactList.size()>9 && contactList.get(9) != null)
+		if (contactList.size() > 9 && contactList.get(9) != null)
 			studentShareAchievementsDTO.setContact10(contactList.get(9));
 
 		return studentShareAchievementsDTO;

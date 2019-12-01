@@ -28,10 +28,9 @@ public class StudentPayment extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studentPay_id_generator")
-	@SequenceGenerator(name="studentPay_id_generator", sequenceName = "studentPay_seq", allocationSize=1)
-	private Long paymentID=0L;
-	
+	@NotNull
+	private Long paymentID = 0L;
+
 	@NotNull
 	@Column(name="StudentID", length=10)
 	private Long studentID=0L;

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.enewschamp.app.common.PageData;
-import com.enewschamp.publication.domain.common.PublicationStatusType;
+import com.enewschamp.publication.domain.common.PublicationGroupStatusType;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,7 +23,7 @@ public class PublicationSearchRequest extends PageData {
 	private String editorId;
 	private String editionId;
 	private String publisherId;
-	private List<PublicationStatusType> publicationStatusList;
+	private List<PublicationGroupStatusType> publicationStatusList;
 	
 	public int getReadingLevel() {
 		if(readingLevel1 != null && readingLevel1.equals("Y")) {

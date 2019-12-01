@@ -44,13 +44,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class SchoolDetailsPageHandler implements IPageHandler {
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	ObjectMapper objectMapper;
 
 	@Autowired
 	SchoolDetailsBusiness schoolDetailsBusiness;
-	
+
 	@Autowired
 	StudentControlBusiness studentControlBusiness;
 
@@ -65,15 +65,13 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 
 	@Autowired
 	CityService cityService;
-	
+
 	@Autowired
 	private EnewschampApplicationProperties appConfig;
 
-	
-	
 	@Autowired
 	PageNavigationService pageNavigationService;
-	
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 		// TODO Auto-generated method stub
@@ -88,174 +86,150 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
 		String operation = pageNavigationContext.getPageRequest().getHeader().getOperation();
 		String pageName = pageNavigationContext.getPreviousPage();
-		
-		//StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
-	/*	if (studentControlDTO != null) {
-			studentId = studentControlDTO.getStudentID();
-		} else {
-			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
-			if(studentControlWorkDTO!=null)
-			studentId = studentControlWorkDTO.getStudentID();
-		}*/
 		studentId = studentControlBusiness.getStudentId(emailId);
-		if(PageAction.next.toString().equalsIgnoreCase(action))
-		{
+		if (PageAction.next.toString().equalsIgnoreCase(action)) {
 			StudentSchoolPageData studentSchoolPageData = new StudentSchoolPageData();
 			List<CountryPageData> countries = countryService.getCountries();
 			studentSchoolPageData.setCountryLOV(countries);
 			pageDTO.setData(studentSchoolPageData);
-		}
-		else if(PageAction.previous.toString().equalsIgnoreCase(action))
-		{
+		} else if (PageAction.previous.toString().equalsIgnoreCase(action)) {
 			PageNavigatorDTO pageNavDto = pageNavigationService.getNavPage(action, operation, pageName);
-			if(PageSaveTable.M.toString().equalsIgnoreCase(pageNavDto.getUpdationTable()))
-			{
+			if (PageSaveTable.M.toString().equalsIgnoreCase(pageNavDto.getUpdationTable())) {
 				StudentSchoolDTO studentSchoolDTO = schoolDetailsBusiness.getStudentFromMaster(studentId);
-				StudentSchoolPageData studentSchoolPageData = modelMapper.map(studentSchoolDTO, StudentSchoolPageData.class);
+				StudentSchoolPageData studentSchoolPageData = modelMapper.map(studentSchoolDTO,
+						StudentSchoolPageData.class);
 
 				// set the state, country and cities...
 				List<CountryPageData> countries = countryService.getCountries();
 				studentSchoolPageData.setCountryLOV(countries);
 
 				pageDTO.setData(studentSchoolPageData);
-			}
-			else if(PageSaveTable.W.toString().equalsIgnoreCase(pageNavDto.getUpdationTable()))
-			{
+			} else if (PageSaveTable.W.toString().equalsIgnoreCase(pageNavDto.getUpdationTable())) {
 				StudentSchoolWorkDTO studentSchoolWorkDTO = schoolDetailsBusiness.getStudentFromWork(studentId);
-					StudentSchoolPageData studentSchoolPageData = modelMapper.map(studentSchoolWorkDTO, StudentSchoolPageData.class);
+				StudentSchoolPageData studentSchoolPageData = modelMapper.map(studentSchoolWorkDTO,
+						StudentSchoolPageData.class);
 				// set the state, country and cities...
 				List<CountryPageData> countries = countryService.getCountries();
 				studentSchoolPageData.setCountryLOV(countries);
 
 				pageDTO.setData(studentSchoolPageData);
 			}
-		}
-		else if(PageAction.schooldetails.toString().equalsIgnoreCase(action))
-		{
+		} else if (PageAction.schooldetails.toString().equalsIgnoreCase(action)) {
 			StudentSchoolDTO studentSchoolDTO = schoolDetailsBusiness.getStudentFromMaster(studentId);
 			Long schoolId = studentSchoolDTO.getSchoolId();
-			School school= schoolService.get(schoolId);
+			School school = schoolService.get(schoolId);
 			SchoolData schoolData = new SchoolData();
 			schoolData.setId(school.getSchoolId());
 			schoolData.setName(school.getName());
 			String countryId = school.getCountryId();
 			String stateId = school.getStateId();
 			String cityId = school.getCityId();
-			
-			StudentSchoolPageData studentSchoolPageData = modelMapper.map(studentSchoolDTO, StudentSchoolPageData.class);
+
+			StudentSchoolPageData studentSchoolPageData = modelMapper.map(studentSchoolDTO,
+					StudentSchoolPageData.class);
 			studentSchoolPageData.setSchool(schoolData);
-			
+
 			// set the state, country and cities...
 			List<CountryPageData> countries = countryService.getCountries();
 			studentSchoolPageData.setCountryLOV(countries);
 
 			CountryPageData schoolCountryData = countryService.getCountry(countryId);
 			studentSchoolPageData.setCountry(schoolCountryData);
-			
+
 			StatePageData statePageData = stateService.getState(stateId);
 			studentSchoolPageData.setState(statePageData);
-			
-			City city  = cityService.getCity(cityId);
-			if(city!=null)
-			studentSchoolPageData.setCityID(city.getDescription());
-			
+
+			City city = cityService.getCity(cityId);
+			if (city != null)
+				studentSchoolPageData.setCityID(city.getDescription());
+
 			studentSchoolPageData.setIncompeleteFormText(appConfig.getIncompleteFormText());
-			
+
 			pageDTO.setData(studentSchoolPageData);
-		}
-		else if(PageAction.stateLov.toString().equalsIgnoreCase(action))
-		{
-			String countryId="";
+		} else if (PageAction.stateLov.toString().equalsIgnoreCase(action)) {
+			String countryId = "";
 			try {
-				SchoolDetailsRequestData	schoolDetailsRequestData = objectMapper.readValue(pageNavigationContext.getPageRequest().getData().toString(),
-						SchoolDetailsRequestData.class);
+				SchoolDetailsRequestData schoolDetailsRequestData = objectMapper.readValue(
+						pageNavigationContext.getPageRequest().getData().toString(), SchoolDetailsRequestData.class);
 				countryId = schoolDetailsRequestData.getCountryID();
-				
+
 			} catch (IOException e) {
 				throw new BusinessException(ErrorCodes.SREVER_ERROR);
 
 			}
-			
+
 			StateLOVDTO stateLov = new StateLOVDTO();
 			List<State> stateList = stateService.getStateForCountry(countryId);
 			List<StatePageData> statePageDataList = new ArrayList<StatePageData>();
-			for(State state:stateList)
-			{
+			for (State state : stateList) {
 				StatePageData statePageData = new StatePageData();
 				statePageData.setId(state.getNameId());
 				statePageData.setName(state.getDescription());
 				statePageDataList.add(statePageData);
 			}
-			stateLov.setStateLOV(statePageDataList);	
+			stateLov.setStateLOV(statePageDataList);
 			stateLov.setCountryID(countryId);
-			
+
 			pageDTO.setData(stateLov);
-		}
-		else if(PageAction.cityLov.toString().equalsIgnoreCase(action))
-		{
-			String countryId="";
-			String stateId="";
-			
+		} else if (PageAction.cityLov.toString().equalsIgnoreCase(action)) {
+			String countryId = "";
+			String stateId = "";
+
 			try {
-				SchoolDetailsRequestData	schoolDetailsRequestData = objectMapper.readValue(pageNavigationContext.getPageRequest().getData().toString(),
-						SchoolDetailsRequestData.class);
+				SchoolDetailsRequestData schoolDetailsRequestData = objectMapper.readValue(
+						pageNavigationContext.getPageRequest().getData().toString(), SchoolDetailsRequestData.class);
 				countryId = schoolDetailsRequestData.getCountryID();
-				stateId=schoolDetailsRequestData.getStateID();
-				
+				stateId = schoolDetailsRequestData.getStateID();
+
 			} catch (IOException e) {
 				throw new BusinessException(ErrorCodes.SREVER_ERROR);
 			}
-			
-			List<City> cityList = cityService.getCitiesForState(stateId );
+
+			List<City> cityList = cityService.getCitiesForState(stateId);
 			CityLOVDTO cityDto = new CityLOVDTO();
 			List<String> cities = new ArrayList<String>();
-			
-			for(City city:cityList)
-			{
+
+			for (City city : cityList) {
 				cities.add(city.getNameId());
 			}
 			cityDto.setCityLOV(cities);
 			cityDto.setStateID(stateId);
 			pageDTO.setData(cityDto);
-		}
-		else if(PageAction.schoolLov.toString().equalsIgnoreCase(action))
-		{
-			String countryId="";
-			String stateId="";
-			String cityId="";
+		} else if (PageAction.schoolLov.toString().equalsIgnoreCase(action)) {
+			String countryId = "";
+			String stateId = "";
+			String cityId = "";
 			try {
-				SchoolDetailsRequestData	schoolDetailsRequestData = objectMapper.readValue(pageNavigationContext.getPageRequest().getData().toString(),
-						SchoolDetailsRequestData.class);
+				SchoolDetailsRequestData schoolDetailsRequestData = objectMapper.readValue(
+						pageNavigationContext.getPageRequest().getData().toString(), SchoolDetailsRequestData.class);
 				countryId = schoolDetailsRequestData.getCountryID();
-				stateId=schoolDetailsRequestData.getStateID();
+				stateId = schoolDetailsRequestData.getStateID();
 				cityId = schoolDetailsRequestData.getCityID();
-				
+
 			} catch (IOException e) {
 				throw new BusinessException(ErrorCodes.SREVER_ERROR);
 			}
-			
+
 			List<School> schools = schoolService.getSchools(cityId, stateId, countryId);
 			SchoolLovDTO schoolLovData = new SchoolLovDTO();
 			List<SchoolData> schoolDataList = new ArrayList<SchoolData>();
-			
-			for(School school:schools)
-			{
+
+			for (School school : schools) {
 				SchoolData schoolData = new SchoolData();
 				schoolData.setId(school.getSchoolId());
 				schoolData.setName(school.getName());
 				schoolDataList.add(schoolData);
-				
+
 			}
-			
+
 			schoolLovData.setSchoolLOV(schoolDataList);
 			schoolLovData.setCityID(cityId);
 			schoolLovData.setCountryID(countryId);
 			schoolLovData.setStateID(stateId);
-			
+
 			pageDTO.setData(schoolLovData);
 		}
-			
-			
+
 		// set the header as is...
 		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
@@ -272,8 +246,9 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 
 		// get student ID from student control..
 		String emailId = pageRequest.getHeader().getEmailID();
-		//StudentControlWorkDTO StudentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
-		//studentId = StudentControlWorkDTO.getStudentID();
+		// StudentControlWorkDTO StudentControlWorkDTO =
+		// studentControlBusiness.getStudentFromWork(emailId);
+		// studentId = StudentControlWorkDTO.getStudentID();
 		studentId = studentControlBusiness.getStudentId(emailId);
 		StudentSchoolDTO studSchool = modelMapper.map(studentSchoolPageData, StudentSchoolDTO.class);
 		studSchool.setStudentID(studentId);
@@ -290,7 +265,8 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		String action = pageRequest.getHeader().getAction();
 
-		if (PageAction.next.toString().equalsIgnoreCase(action)) {
+		if (PageAction.next.toString().equalsIgnoreCase(action)
+				|| PageAction.SchoolDetailsNext.toString().equals(action)) {
 
 			String saveIn = pageNavigatorDTO.getUpdationTable();
 			if (PageSaveTable.M.toString().equals(saveIn)) {
@@ -301,9 +277,10 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 				// get student ID from student control..
 				String emailId = pageRequest.getHeader().getEmailID();
 
-				//StudentControlWorkDTO StudentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+				// StudentControlWorkDTO StudentControlWorkDTO =
+				// studentControlBusiness.getStudentFromWork(emailId);
 
-				//Long studentId = StudentControlWorkDTO.getStudentID();
+				// Long studentId = StudentControlWorkDTO.getStudentID();
 				Long studentId = studentControlBusiness.getStudentId(emailId);
 				StudentSchoolDTO studSchool = modelMapper.map(studentSchoolPageData, StudentSchoolDTO.class);
 				studSchool.setStudentID(studentId);
@@ -316,9 +293,10 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 
 				// get student ID from student control..
 				String emailId = pageRequest.getHeader().getEmailID();
-				//StudentControlWorkDTO StudentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+				// StudentControlWorkDTO StudentControlWorkDTO =
+				// studentControlBusiness.getStudentFromWork(emailId);
 
-				//Long studentId = StudentControlWorkDTO.getStudentID();
+				// Long studentId = StudentControlWorkDTO.getStudentID();
 				Long studentId = studentControlBusiness.getStudentId(emailId);
 
 				StudentSchoolWorkDTO studenSchool = modelMapper.map(studentSchoolPageData, StudentSchoolWorkDTO.class);

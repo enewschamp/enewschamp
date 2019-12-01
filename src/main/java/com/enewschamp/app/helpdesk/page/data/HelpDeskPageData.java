@@ -10,8 +10,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class HelpDeskPageData extends PageData{
+@EqualsAndHashCode(callSuper = false)
+public class HelpDeskPageData extends PageData {
 
 	/**
 	 * 
@@ -24,7 +24,5 @@ public class HelpDeskPageData extends PageData{
 	private String emailId;
 	private String helpDeskText;
 	private List<ListOfValuesItem> categoryLOV;
-private String studentMobile;
-
-	
+	private String studentMobile;
 }

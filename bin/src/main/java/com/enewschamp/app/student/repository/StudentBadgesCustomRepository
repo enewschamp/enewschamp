@@ -1,0 +1,11 @@
+package com.enewschamp.app.student.badges.repository;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.enewschamp.app.recognition.page.data.StudentBadgesData;
+
+public interface StudentBadgesCustomRepository {
+
+	public Page<StudentBadgesData> getStudentBadges(Long studentId,String editionId, Pageable pageable);
+}

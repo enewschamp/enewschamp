@@ -1,9 +1,12 @@
 package com.enewschamp.app.student.registration.business;
 
+import java.time.LocalDateTime;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.otp.service.OTPService;
 import com.enewschamp.app.student.registration.dto.StudentRegistrationDTO;
@@ -25,29 +28,25 @@ public class StudentRegistrationBusiness {
 
 	@Autowired
 	OTPService otpService;
-	
+
+	@Autowired
+	EnewschampApplicationProperties appConfig;
+
 	public StudentRegistrationDTO register(final String emailId, final String password) {
-		
 		StudentRegistrationDTO studentDTO = new StudentRegistrationDTO();
 		studentDTO.setEmailId(emailId);
 		studentDTO.setPassword(password);
 		studentDTO.setOperatorId("SYSTEM");
 		studentDTO.setStatus(RegistrationStatus.A);
-		
-		
 		// check if Email ID already exists..
 		if (regService.userExists(studentDTO.getEmailId())) {
 			throw new BusinessException(ErrorCodes.STUD_ALREADY_REGISTERED, "Student Already Registered");
-		}
-		// check password length..
-		if (studentDTO.getPassword().length() > 20 || studentDTO.getPassword().length() < 8) {
+		} else if (studentDTO.getPassword().length() > 20 || studentDTO.getPassword().length() < 8) {
 			throw new BusinessException(ErrorCodes.INVALID_PWD_LEN, "Password Length must be between 8 and 20");
 
 		}
-
 		StudentRegistration student = modelMapper.map(studentDTO, StudentRegistration.class);
 		student.setRecordInUse(RecordInUseType.Y);
-		
 		student = regService.create(student);
 		studentDTO = modelMapper.map(student, StudentRegistrationDTO.class);
 		return studentDTO;
@@ -136,6 +135,18 @@ public class StudentRegistrationBusiness {
 		}*/
 		
 		return otpService.validateOtp(otp, emailId);
+	}
+
+	public boolean checkIfEvalPeriodExpired(String emailId) {
+		boolean evalExprired = false;
+		StudentRegistration student = regService.getStudentReg(emailId);
+		int evalPeriod = appConfig.getEvalDays();
+		LocalDateTime evalEndDate = student.getOperationDateTime().plusDays(evalPeriod);
+		LocalDateTime todaysDate = LocalDateTime.now();
+		if (todaysDate.toLocalDate().isAfter(evalEndDate.toLocalDate())) {
+			evalExprired = true;
+		}
+		return evalExprired;
 	}
 
 }

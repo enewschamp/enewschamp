@@ -9,6 +9,7 @@ import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
+import com.enewschamp.app.notification.page.data.NotificationsPageData;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
@@ -40,13 +41,14 @@ public class NotificationsPageHandler implements IPageHandler {
 
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
-		PageDTO pageDto = null;
+		PageDTO pageDto = new PageDTO();
 		String action = pageNavigationContext.getActionName();
-		if (PageAction.home.toString().equalsIgnoreCase(action)) {
-			pageDto = newsArticlePageHandler.loadPage(pageNavigationContext);
-
+		NotificationsPageData notificationsPageData = new NotificationsPageData();
+		if (PageAction.home.toString().equalsIgnoreCase(action)
+				|| PageAction.Notifications.toString().equalsIgnoreCase(action)) {
+			// pageDto = newsArticlePageHandler.loadPage(pageNavigationContext);
 		}
-
+		pageDto.setData(notificationsPageData);
 		return pageDto;
 	}
 

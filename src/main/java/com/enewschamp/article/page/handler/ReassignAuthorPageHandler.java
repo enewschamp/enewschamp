@@ -16,40 +16,38 @@ import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component(value="ReassignAuthorPageHandler")
-public class ReassignAuthorPageHandler implements IPageHandler  {
+@Component(value = "ReassignAuthorPageHandler")
+public class ReassignAuthorPageHandler implements IPageHandler {
 
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private NewsArticleGroupService articleGroupService;
-	
+
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
-		
+
 		PageDTO pageDTO = new PageDTO();
 		String authorId = pageRequest.getData().get("authorId").asText();
 		Long articleGroupId = pageRequest.getData().get("newsArticleGroupId").asLong();
-		
+
 		NewsArticleGroupPageData data = new NewsArticleGroupPageData();
-		pageDTO.setData(data);
-		NewsArticleGroupDTO groupDTO = modelMapper.map(articleGroupService.assignAuthor(articleGroupId, authorId), NewsArticleGroupDTO.class);
+		NewsArticleGroupDTO groupDTO = articleGroupService.assignAuthor(articleGroupId, authorId);
 		data.setNewsArticleGroup(groupDTO);
-		
+		pageDTO.setData(data);
 		return pageDTO;
 	}
-	
+
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO page = new PageDTO();
-		
 		ReassignAuthorPageData pageData = new ReassignAuthorPageData();
 		pageData.setAuthorLOV(userService.getAuthorLOV());
 		page.setData(pageData);
