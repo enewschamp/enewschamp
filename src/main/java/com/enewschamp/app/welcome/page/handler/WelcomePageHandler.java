@@ -83,8 +83,8 @@ public class WelcomePageHandler implements IPageHandler {
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		pageDto.getHeader().setPageNo(0);
 		String action = pageNavigationContext.getPageRequest().getHeader().getAction();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
-		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		String editionName = "";
 		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
 		String badgeGenre = "";

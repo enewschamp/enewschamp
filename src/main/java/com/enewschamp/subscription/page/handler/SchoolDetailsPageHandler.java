@@ -83,7 +83,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		Long studentId = 0L;
 		String action = pageNavigationContext.getActionName();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String operation = pageNavigationContext.getPageRequest().getHeader().getOperation();
 		String pageName = pageNavigationContext.getPreviousPage();
 		studentId = studentControlBusiness.getStudentId(emailId);
@@ -245,7 +245,11 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 		studentSchoolPageData = mapPagedata(pageRequest);
 
 		// get student ID from student control..
+<<<<<<< Updated upstream
 		String emailId = pageRequest.getHeader().getEmailID();
+=======
+		String emailId = pageRequest.getHeader().getEmailId();
+>>>>>>> Stashed changes
 		// StudentControlWorkDTO StudentControlWorkDTO =
 		// studentControlBusiness.getStudentFromWork(emailId);
 		// studentId = StudentControlWorkDTO.getStudentID();
@@ -275,7 +279,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 				studentSchoolPageData = mapPagedata(pageRequest);
 
 				// get student ID from student control..
-				String emailId = pageRequest.getHeader().getEmailID();
+				String emailId = pageRequest.getHeader().getEmailId();
 
 				// StudentControlWorkDTO StudentControlWorkDTO =
 				// studentControlBusiness.getStudentFromWork(emailId);
@@ -292,7 +296,11 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 				studentSchoolPageData = mapPagedata(pageRequest);
 
 				// get student ID from student control..
+<<<<<<< Updated upstream
 				String emailId = pageRequest.getHeader().getEmailID();
+=======
+				String emailId = pageRequest.getHeader().getEmailId();
+>>>>>>> Stashed changes
 				// StudentControlWorkDTO StudentControlWorkDTO =
 				// studentControlBusiness.getStudentFromWork(emailId);
 

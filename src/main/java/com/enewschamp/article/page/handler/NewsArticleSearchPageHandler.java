@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.EnewschampApplicationProperties;
+import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -22,6 +24,7 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.MonthType;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.WeekDayType;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.service.EditionService;
 import com.enewschamp.publication.domain.service.GenreService;
 import com.enewschamp.user.domain.service.UserService;
@@ -53,6 +56,12 @@ public class NewsArticleSearchPageHandler implements IPageHandler {
 	@Autowired
 	CityService cityService;
 
+<<<<<<< Updated upstream
+=======
+	@Autowired
+	EnewschampApplicationProperties appConfig;
+
+>>>>>>> Stashed changes
 	@Override
 	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
 
@@ -74,12 +83,19 @@ public class NewsArticleSearchPageHandler implements IPageHandler {
 
 		Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData,
 				pageRequest.getHeader());
+<<<<<<< Updated upstream
 
+=======
+		if (pageResult.getNumberOfElements() > appConfig.getMaxSearchResultsForPublisher()) {
+			throw new BusinessException(ErrorCodes.MAX_SEARCH_LIMIT_EXCEEDED,
+					"Search results excceeds max allowed records. Please narrow down your search.");
+		}
+>>>>>>> Stashed changes
 		HeaderDTO header = new HeaderDTO();
-		header.setIsLastPage(pageResult.isLast());
-		header.setPageCount(pageResult.getTotalPages());
-		header.setRecordCount(pageResult.getNumberOfElements());
-		header.setPageNo(pageResult.getNumber() + 1);
+		// header.setIsLastPage(pageResult.isLast());
+		// header.setPageCount(pageResult.getTotalPages());
+		// header.setRecordCount(pageResult.getNumberOfElements());
+		// header.setPageNo(pageResult.getNumber() + 1);
 		pageDTO.setHeader(header);
 
 		searchResult.setNewsArticles(pageResult.getContent());

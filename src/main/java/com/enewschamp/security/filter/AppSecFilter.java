@@ -39,15 +39,21 @@ public class AppSecFilter extends GenericFilterBean {
 		final MultiReadHttpServletRequest requestWrapper = new MultiReadHttpServletRequest(request);
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
+		response.setHeader("Access-Control-Allow-Headers", "*");
+		response.setHeader("Access-Control-Allow-Credentials", "true");
+		response.setHeader("Access-Control-Max-Age", "180");
+
 		String appName = requestWrapper.getHeader("appName");
 		String appKey = requestWrapper.getHeader("appKey");
 		String payLoad = this.getRequestBody(requestWrapper);
 		PageRequestDTO requestPage = null;
-		if(payLoad != null && !payLoad.isEmpty()) {
+		if (payLoad != null && !payLoad.isEmpty()) {
 			requestPage = objectMapper.readValue(payLoad, PageRequestDTO.class);
 		}
-		HeaderDTO header  = new HeaderDTO();
-		if(requestPage != null) {
+		HeaderDTO header = new HeaderDTO();
+		if (requestPage != null) {
 			header = requestPage.getHeader();
 		}
 		// validate the appkey and appname
@@ -57,7 +63,7 @@ public class AppSecFilter extends GenericFilterBean {
 			PrintWriter writer = response.getWriter();
 			header.setRequestStatus(RequestStatusType.F);
 			header.setFailureMessage("Unauthorised access. Contact System administrator.");
-			if(requestPage != null) {
+			if (requestPage != null) {
 				requestPage.setHeader(header);
 				writer.write(objectMapper.writeValueAsString(requestPage));
 			} else {
@@ -74,7 +80,7 @@ public class AppSecFilter extends GenericFilterBean {
 			header.setRequestStatus(RequestStatusType.F);
 			header.setFailureMessage("Unauthorised access. Contact System administrator.");
 
-			if(requestPage != null) {
+			if (requestPage != null) {
 				requestPage.setHeader(header);
 				writer.write(objectMapper.writeValueAsString(requestPage));
 			} else {
@@ -92,7 +98,7 @@ public class AppSecFilter extends GenericFilterBean {
 			header.setRequestStatus(RequestStatusType.F);
 			header.setFailureMessage("Unauthorised access. Contact System administrator.");
 
-			if(requestPage != null) {
+			if (requestPage != null) {
 				requestPage.setHeader(header);
 				writer.write(objectMapper.writeValueAsString(requestPage));
 			} else {
@@ -120,7 +126,7 @@ public class AppSecFilter extends GenericFilterBean {
 				}
 			}
 		} catch (IOException ex) {
-			 System.out.println("Error reading the request payload : "+ ex);
+			System.out.println("Error reading the request payload : " + ex);
 			// throw new AuthenticationException("Error reading the request payload", ex);
 		} finally {
 			if (bufferedReader != null) {

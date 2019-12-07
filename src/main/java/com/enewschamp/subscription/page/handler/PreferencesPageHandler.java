@@ -63,7 +63,11 @@ public class PreferencesPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String action = pageNavigationContext.getActionName();
+<<<<<<< Updated upstream
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+=======
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+>>>>>>> Stashed changes
 		Long studentId = 0L;
 
 		if (PageAction.SubscriptionNext.toString().equalsIgnoreCase(action)) {
@@ -92,7 +96,11 @@ public class PreferencesPageHandler implements IPageHandler {
 	@Override
 	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
+<<<<<<< Updated upstream
 		String emailId = pageRequest.getHeader().getEmailID();
+=======
+		String emailId = pageRequest.getHeader().getEmailId();
+>>>>>>> Stashed changes
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 
 		preferenceBusiness.workToMaster(studentId);
@@ -103,8 +111,13 @@ public class PreferencesPageHandler implements IPageHandler {
 	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDto = new PageDTO();
 		Long studentId = 0L;
+<<<<<<< Updated upstream
 		String emailId = pageRequest.getHeader().getEmailID();
 		String editionID = pageRequest.getHeader().getEditionID();
+=======
+		String emailId = pageRequest.getHeader().getEmailId();
+		String editionID = pageRequest.getHeader().getEditionId();
+>>>>>>> Stashed changes
 		if (PageAction.PreferencesSave.toString().equalsIgnoreCase(actionName)) {
 			StudentPreferencePageData studentPreferencePageData = mapPagedata(pageRequest);
 			StudentPreferencesDTO studPref = modelMapper.map(studentPreferencePageData, StudentPreferencesDTO.class);

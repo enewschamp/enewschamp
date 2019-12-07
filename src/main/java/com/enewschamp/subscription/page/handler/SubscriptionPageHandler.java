@@ -62,9 +62,13 @@ public class SubscriptionPageHandler implements IPageHandler {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String action = pageNavigationContext.getActionName();
+<<<<<<< Updated upstream
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
+=======
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
+>>>>>>> Stashed changes
 		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(eMailId);
 		StudentControlWorkDTO studentControlWorkDTO = null;
 		Long studentId = 0L;
@@ -141,8 +145,8 @@ public class SubscriptionPageHandler implements IPageHandler {
 	@Override
 	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		String emailId = pageRequest.getHeader().getEmailID();
-		String eidtionId = pageRequest.getHeader().getEditionID();
+		String emailId = pageRequest.getHeader().getEmailId();
+		String eidtionId = pageRequest.getHeader().getEditionId();
 
 		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
 		Long studentId = 0L;

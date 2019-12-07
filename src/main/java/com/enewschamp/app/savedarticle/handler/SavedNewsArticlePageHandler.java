@@ -74,7 +74,11 @@ public class SavedNewsArticlePageHandler implements IPageHandler {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
+<<<<<<< Updated upstream
 		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+=======
+		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+>>>>>>> Stashed changes
 		if (eMailId == null || "".equals(eMailId)) {
 			throw new BusinessException(ErrorCodes.INVALID_NOT_PRESENT);
 
@@ -82,8 +86,13 @@ public class SavedNewsArticlePageHandler implements IPageHandler {
 		Long studentId = studentControlBusiness.getStudentId(eMailId);
 
 		String action = pageNavigationContext.getActionName();
+<<<<<<< Updated upstream
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
+=======
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
+		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
+>>>>>>> Stashed changes
 
 		if (PageAction.savedarticles.toString().equalsIgnoreCase(action)
 				|| PageAction.back.toString().equalsIgnoreCase(action)
@@ -173,7 +182,11 @@ public class SavedNewsArticlePageHandler implements IPageHandler {
 	@Override
 	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
+<<<<<<< Updated upstream
 		String eMailId = pageRequest.getHeader().getEmailID();
+=======
+		String eMailId = pageRequest.getHeader().getEmailId();
+>>>>>>> Stashed changes
 
 		Long studentId = studentControlBusiness.getStudentId(eMailId);
 

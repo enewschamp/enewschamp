@@ -60,8 +60,13 @@ public class NewsEventsPageHandler implements IPageHandler {
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 
 		String action = pageNavigationContext.getActionName();
+<<<<<<< Updated upstream
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
+=======
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
+		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
+>>>>>>> Stashed changes
 		if (pageNavigationContext.getPageRequest().getHeader().getPageNo() == null) {
 			pageNavigationContext.getPageRequest().getHeader().setPageNo(0);
 		}

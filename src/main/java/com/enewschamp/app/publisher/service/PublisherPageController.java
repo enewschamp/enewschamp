@@ -74,10 +74,16 @@ public class PublisherPageController {
 			// SecurityContextHolder.getContext().setAuthentication(new
 			// UsernamePasswordAuthenticationToken("deepak", "welcome"));
 
+<<<<<<< Updated upstream
+=======
+			String module = pageRequest.getHeader().getModule();
+>>>>>>> Stashed changes
 			String pageName = pageRequest.getHeader().getPageName();
 			String actionName = pageRequest.getHeader().getAction();
+			String loginCredentials = pageRequest.getHeader().getLoginCredentials();
 			String userId = pageRequest.getHeader().getUserId();
 			String deviceId = pageRequest.getHeader().getDeviceId();
+<<<<<<< Updated upstream
 
 			// Check if user has been logged in
 <<<<<<< Updated upstream
@@ -87,6 +93,25 @@ public class PublisherPageController {
 							|| actionName.equalsIgnoreCase("ResetPassword")))) {
 				
 =======
+			if (!(pageName.equalsIgnoreCase("Login") && (actionName.equalsIgnoreCase("login")
+					|| actionName.equalsIgnoreCase("logout") || actionName.equalsIgnoreCase("ResetPassword")))) {
+
+>>>>>>> Stashed changes
+=======
+			String operation = pageRequest.getHeader().getOperation();
+
+			if (module == null || pageName == null || actionName == null || userId == null || deviceId == null
+					|| operation == null || loginCredentials == null
+					|| (!appConfig.getPublisherModuleName().equals(module)) || pageName.trim().isEmpty()
+					|| actionName.trim().isEmpty() || deviceId.trim().isEmpty()) {
+				throw new BusinessException(ErrorCodes.INVALID_REQUEST,
+						"Invalid Request. Missing mandatory request parameters.");
+
+			}
+
+			pageRequest.getHeader().setPageSize(appConfig.getPageSize());
+
+			// Check if user has been logged in
 			if (!(pageName.equalsIgnoreCase("Login") && (actionName.equalsIgnoreCase("login")
 					|| actionName.equalsIgnoreCase("logout") || actionName.equalsIgnoreCase("ResetPassword")))) {
 
@@ -107,13 +132,34 @@ public class PublisherPageController {
 
 			pageRequest.getHeader().setPageName(pageName);
 			pageRequest.getHeader().setAction(actionName);
+<<<<<<< Updated upstream
 			pageRequest.getHeader().setUserRole(userLoginBusiness.getUserRole(userId));
 			User user = userService.get(userId);
 			pageRequest.getHeader().setUserName(user.getName() + " " + user.getSurname());
 			pageRequest.getHeader().setUserPic(user.getPhoto() == null ? "" : user.getPhoto());
 			pageRequest.getHeader().setTodaysDate(LocalDate.now());
 
+=======
+			User user = userService.get(userId);
+			if (actionName.equalsIgnoreCase("login")) {
+				pageRequest.getHeader().setUserName(user.getName() + " " + user.getSurname());
+				pageRequest.getHeader().setUserPic(user.getPhoto() == null ? "" : user.getPhoto());
+				pageRequest.getHeader().setTodaysDate(LocalDate.now());
+				pageRequest.getHeader().setUserRole(userLoginBusiness.getUserRole(userId));
+			}
+>>>>>>> Stashed changes
 			PageDTO pageResponse = processRequest(pageName, actionName, pageRequest, "publisher");
+			pageResponse.getHeader().setLoginCredentials(null);
+			pageResponse.getHeader().setPageSize(null);
+			pageResponse.getHeader().setDeviceId(null);
+			if (!actionName.equalsIgnoreCase("login")) {
+				pageResponse.getHeader().setUserId(null);
+				pageResponse.getHeader().setUserName(null);
+				pageResponse.getHeader().setUserPic(null);
+				pageResponse.getHeader().setTodaysDate(null);
+				pageResponse.getHeader().setUserRole(null);
+				pageResponse.getHeader().setEditionId(null);
+			}
 			response = new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
 		} catch (BusinessException e) {
 			HeaderDTO header = pageRequest.getHeader();
@@ -121,7 +167,19 @@ public class PublisherPageController {
 				header = new HeaderDTO();
 			}
 			header.setRequestStatus(RequestStatusType.F);
-			throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e, header);
+			header.setUserId(null);
+			header.setUserName(null);
+			header.setUserPic(null);
+			header.setTodaysDate(null);
+			header.setUserRole(null);
+			header.setEditionId(null);
+			header.setLoginCredentials(null);
+			header.setPageSize(null);
+			header.setDeviceId(null);
+
+			// throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e,
+			// header);
+			throw new Fault(new HttpStatusAdapter(HttpStatus.OK), e, header);
 		}
 
 		return response;
@@ -136,9 +194,19 @@ public class PublisherPageController {
 		// Load next page
 		Map<String, String> fromPageWiseActions = appConfig.getPageNavigationConfig().get(context)
 				.get(pageName.toLowerCase());
+<<<<<<< Updated upstream
 		if (fromPageWiseActions != null) {
 			nextPageName = fromPageWiseActions.get(actionName.toLowerCase());
 		}
+=======
+		System.out.println(">>>>>>fromPageWiseActions>>>>>>>>" + fromPageWiseActions);
+		if (fromPageWiseActions != null) {
+			nextPageName = fromPageWiseActions.get(actionName.toLowerCase());
+		}
+		System.out.println(">>>>>>nextPageName>>>>>>>>" + nextPageName);
+		System.out.println(">>>>>>actionName>>>>>>>>" + actionName);
+		System.out.println(">>>>>>pageName>>>>>>>>" + pageName);
+>>>>>>> Stashed changes
 		if (nextPageName == null) {
 			throw new BusinessException(ErrorCodes.NEXT_PAGE_NOT_FOUND, pageName, actionName);
 		}
@@ -147,7 +215,9 @@ public class PublisherPageController {
 			pageNavigationContext.setActionName(actionName);
 			pageNavigationContext.setPageRequest(pageRequest);
 			pageNavigationContext.setPreviousPageResponse(pageResponse);
+			System.out.println(">>>>>>pageResponse1>>>>>>>>" + pageResponse);
 			pageResponse = pageHandlerFactory.getPageHandler(nextPageName, context).loadPage(pageNavigationContext);
+			System.out.println(">>>>>>pageResponse2>>>>>>>>" + pageResponse);
 		}
 		addSuccessHeader(pageName, actionName, pageResponse, context);
 		return pageResponse;

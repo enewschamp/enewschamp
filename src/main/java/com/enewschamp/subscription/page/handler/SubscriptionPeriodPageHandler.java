@@ -100,9 +100,13 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String action = pageNavigationContext.getActionName();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String operation = pageNavigationContext.getPageRequest().getHeader().getOperation();
+<<<<<<< Updated upstream
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
+=======
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
+>>>>>>> Stashed changes
 		Long studentId = 0L;
 		String pageName = pageNavigationContext.getPreviousPage();
 		String subscriptionType = "";
@@ -167,13 +171,13 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 	@Override
 	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		String emailId = pageRequest.getHeader().getEmailID();
+		String emailId = pageRequest.getHeader().getEmailId();
 		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
 		Long studentId = 0L;
 		if (studentControlWorkDTO != null) {
 			studentId = studentControlWorkDTO.getStudentID();
 		}
-		String eidtionId = pageRequest.getHeader().getEditionID();
+		String eidtionId = pageRequest.getHeader().getEditionId();
 
 		// get subscription dto from master
 		StudentSubscriptionDTO studentSubscriotionDTO = subscriptionBusiness.getStudentSubscriptionFromMaster(studentId,
@@ -213,8 +217,13 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 
 		PageDTO pageDTO = new PageDTO();
 		Long studentId = 0L;
+<<<<<<< Updated upstream
 		String emailId = pageRequest.getHeader().getEmailID();
 		String editionId = pageRequest.getHeader().getEditionID();
+=======
+		String emailId = pageRequest.getHeader().getEmailId();
+		String editionId = pageRequest.getHeader().getEditionId();
+>>>>>>> Stashed changes
 		String saveIn = pageNavigatorDTO.getUpdationTable();
 
 		if (PageAction.next.toString().equals(actionName)

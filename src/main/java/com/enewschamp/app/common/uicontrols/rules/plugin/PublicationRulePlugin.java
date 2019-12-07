@@ -63,7 +63,11 @@ public class PublicationRulePlugin implements IPageNavRuleDataPlugin {
 
 	public Map<String, String> checkIfIncompleteRegistration(PageRequestDTO pageRequest, PageDTO page,
 			Map<String, String> dataMap) {
+<<<<<<< Updated upstream
 		String emailId = pageRequest.getHeader().getEmailID();
+=======
+		String emailId = pageRequest.getHeader().getEmailId();
+>>>>>>> Stashed changes
 		// String deviceId = pageRequest.getHeader().getDeviceId();
 		dataMap.put("Fn_IncompleteRegistrationByStudent",
 				isIncompleteUserRegistration(emailId, pageRequest) ? "True" : "False");
@@ -72,8 +76,13 @@ public class PublicationRulePlugin implements IPageNavRuleDataPlugin {
 
 	public Map<String, String> getNextPageIncompleteRegistration(PageRequestDTO pageRequest, PageDTO page,
 			Map<String, String> dataMap) {
+<<<<<<< Updated upstream
 		String emailId = pageRequest.getHeader().getEmailID();
 		String editionId = pageRequest.getHeader().getEditionID();
+=======
+		String emailId = pageRequest.getHeader().getEmailId();
+		String editionId = pageRequest.getHeader().getEditionId();
+>>>>>>> Stashed changes
 		StudentControl studentEntity = studentControlService.getStudentByEmail(emailId);
 		StudentControlWork studentEntityWork = studentControlWorkService.getStudentByEmail(emailId);
 		StudentPaymentWork studentPaymentWork = studentPaymentWorkService
@@ -127,8 +136,13 @@ public class PublicationRulePlugin implements IPageNavRuleDataPlugin {
 	public Map<String, String> checkPrevDayPublications(PageRequestDTO pageRequest, PageDTO page,
 			Map<String, String> dataMap) {
 		String previousDayPublicationsAvailable = "False";
+<<<<<<< Updated upstream
 		String editionId = pageRequest.getHeader().getEditionID();
 		LocalDate publicationDate = pageRequest.getHeader().getPublicationdate();
+=======
+		String editionId = pageRequest.getHeader().getEditionId();
+		LocalDate publicationDate = pageRequest.getHeader().getPublicationDate();
+>>>>>>> Stashed changes
 		NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 		searchRequestData.setEditionId(editionId);
 		LocalDate newDate = publicationDate.minusDays(1);
@@ -145,8 +159,13 @@ public class PublicationRulePlugin implements IPageNavRuleDataPlugin {
 	public Map<String, String> checkNextDayPublications(PageRequestDTO pageRequest, PageDTO page,
 			Map<String, String> dataMap) {
 		String nextDayPublicationsAvailable = "False";
+<<<<<<< Updated upstream
 		String editionId = pageRequest.getHeader().getEditionID();
 		LocalDate publicationDate = pageRequest.getHeader().getPublicationdate();
+=======
+		String editionId = pageRequest.getHeader().getEditionId();
+		LocalDate publicationDate = pageRequest.getHeader().getPublicationDate();
+>>>>>>> Stashed changes
 		NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 		searchRequestData.setEditionId(editionId);
 		LocalDate newDate = publicationDate.plusDays(1);

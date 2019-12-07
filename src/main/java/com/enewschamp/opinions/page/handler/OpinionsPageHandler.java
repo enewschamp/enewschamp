@@ -83,15 +83,15 @@ public class OpinionsPageHandler implements IPageHandler {
 		}
 		int pageNo = pageNavigationContext.getPageRequest().getHeader().getPageNo();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(eMailId);
 		if (studentId == null || studentId == 0L) {
 			throw new BusinessException(ErrorCodes.STUDENT_DTLS_NOT_FOUND);
 
 		}
 		String action = pageNavigationContext.getActionName();
-		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
-		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
+		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 
 		if (PageAction.upswipe.toString().equalsIgnoreCase(action)
 				|| PageAction.next.toString().equalsIgnoreCase(action)) {

@@ -22,11 +22,10 @@ public class SubscripitionSchoolDetailsRulePlugin implements IPageNavRuleDataPlu
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	ObjectMapper objectMapper;
 
-	
 	/**
 	 * 
 	 */
@@ -34,7 +33,7 @@ public class SubscripitionSchoolDetailsRulePlugin implements IPageNavRuleDataPlu
 
 	@Autowired
 	SchoolPricingService schoolPricingService;
-	
+
 	@Override
 	public Map<String, String> loadPluginData(PageRequestDTO pageRequest, PageDTO page, Map<String, String> dataMap) {
 
@@ -48,21 +47,16 @@ public class SubscripitionSchoolDetailsRulePlugin implements IPageNavRuleDataPlu
 
 		}
 		Long schoolId = studentSchoolPageData.getSchoolId();
-		String editionId = pageRequest.getHeader().getEditionID();
-		
+		String editionId = pageRequest.getHeader().getEditionId();
+
 		SchoolPricing schoolpricing = schoolPricingService.getPricingForInstitution(schoolId, editionId);
-		if(schoolpricing!=null)
-		{
+		if (schoolpricing != null) {
 			dataMap.put("schoolPayment", "Y");
-		}
-		else
-		{
+		} else {
 			dataMap.put("schoolPayment", "N");
-	
+
 		}
 		return dataMap;
 	}
-	
-	
 
 }

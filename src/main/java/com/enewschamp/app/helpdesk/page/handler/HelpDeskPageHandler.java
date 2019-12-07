@@ -91,8 +91,8 @@ public class HelpDeskPageHandler implements IPageHandler {
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 
 		String action = pageNavigationContext.getActionName();
-		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		if (studentId == null || studentId == 0L) {
@@ -146,8 +146,8 @@ public class HelpDeskPageHandler implements IPageHandler {
 		pageDto.setHeader(pageRequest.getHeader());
 
 		String action = actionName;
-		String editionId = pageRequest.getHeader().getEditionID();
-		String emailId = pageRequest.getHeader().getEmailID();
+		String editionId = pageRequest.getHeader().getEditionId();
+		String emailId = pageRequest.getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		if (studentId == null || studentId == 0L) {
 			throw new BusinessException(ErrorCodes.STUDENT_DTLS_NOT_FOUND);

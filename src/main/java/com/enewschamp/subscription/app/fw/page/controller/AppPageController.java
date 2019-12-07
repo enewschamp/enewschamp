@@ -68,6 +68,7 @@ public class AppPageController {
 
 	@Autowired
 	EditionService editionService;
+
 	@Autowired
 	EnewschampApplicationProperties appConfig;
 
@@ -92,7 +93,9 @@ public class AppPageController {
 				header = new HeaderDTO();
 			}
 			header.setRequestStatus(RequestStatusType.F);
-			throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e, header);
+			// throw new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e,
+			// header);
+			throw new Fault(new HttpStatusAdapter(HttpStatus.OK), e, header);
 		}
 
 		return response;
@@ -100,7 +103,7 @@ public class AppPageController {
 
 	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest, String context) {
 		String operation = pageRequest.getHeader().getOperation();
-		String edition = pageRequest.getHeader().getEditionID();
+		String edition = pageRequest.getHeader().getEditionId();
 		// check if the edition exist..
 		editionService.getEdition(edition);
 
@@ -114,7 +117,7 @@ public class AppPageController {
 		// is valid...
 		if (pageNavDto != null && AppConstants.YES.toString().equals(pageNavDto.getSecured())) {
 			// validate of the user is already logged in..
-			String emailId = pageRequest.getHeader().getEmailID();
+			String emailId = pageRequest.getHeader().getEmailId();
 			String deviceId = pageRequest.getHeader().getDeviceId();
 
 			if ("".equals(emailId) || null == emailId) {

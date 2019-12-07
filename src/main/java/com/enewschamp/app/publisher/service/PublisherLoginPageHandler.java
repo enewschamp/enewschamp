@@ -78,7 +78,10 @@ public class PublisherLoginPageHandler implements IPageHandler {
 				password = loginPageData.getPassword();
 				deviceId = pageRequest.getHeader().getDeviceId();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 			} catch (JsonParseException e) {
@@ -101,7 +104,10 @@ public class PublisherLoginPageHandler implements IPageHandler {
 				userId = pageRequest.getHeader().getUserId();
 				deviceId = pageRequest.getHeader().getDeviceId();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 			} catch (JsonParseException e) {
@@ -153,6 +159,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			pageDto.setData(loginPageData);
 		}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 		
 		if (PageAction.ResetPassword.toString().equalsIgnoreCase(action)) {
 			userId = pageRequest.getHeader().getUserId();
@@ -194,6 +201,8 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			userService.resetPassword(userId, passwordNew);
 			userLoginBusiess.logout(userId, deviceId, UserType.A);
 		}
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 		return pageDto;

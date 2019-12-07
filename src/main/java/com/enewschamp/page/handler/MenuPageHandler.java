@@ -55,10 +55,15 @@ public class MenuPageHandler extends AbstractPageHandler {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String action = pageNavigationContext.getActionName();
+<<<<<<< Updated upstream
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
+=======
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
+		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
+>>>>>>> Stashed changes
 		if (PageAction.home.toString().equalsIgnoreCase(action)) {
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 			searchRequestData.setEditionId(editionId);

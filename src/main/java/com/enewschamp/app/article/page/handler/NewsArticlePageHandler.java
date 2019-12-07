@@ -79,12 +79,13 @@ public class NewsArticlePageHandler implements IPageHandler {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(eMailId);
 
 		String action = pageNavigationContext.getActionName();
-		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
-		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
+		System.out.println(">>>>>>>>>action>>>>>>>>>" + action);
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
+		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		if (PageAction.load.toString().equalsIgnoreCase(action)
 				|| PageAction.home.toString().equalsIgnoreCase(action)) {
 			NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
@@ -364,7 +365,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 	@Override
 	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
-		String eMailId = pageRequest.getHeader().getEmailID();
+		String eMailId = pageRequest.getHeader().getEmailId();
 
 		Long studentId = studentControlBusiness.getStudentId(eMailId);
 

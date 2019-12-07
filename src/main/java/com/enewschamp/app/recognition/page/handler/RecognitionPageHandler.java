@@ -53,9 +53,9 @@ public class RecognitionPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		String action = pageNavigationContext.getActionName();
 		int pageNo = pageNavigationContext.getPageRequest().getHeader().getPageNo();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 
 		// if (PageAction.upswipe.toString().equalsIgnoreCase(action)) {
 		// pageDto = newsArticlePageHandler.loadPage(pageNavigationContext);

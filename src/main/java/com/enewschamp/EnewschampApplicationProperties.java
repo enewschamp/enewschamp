@@ -35,6 +35,9 @@ public class EnewschampApplicationProperties {
 	private int pageSize;
 	private int otpExpirySecs;
 	private int workingDays;
+	private int maxSearchResultsForPublisher;
+	private String publisherModuleName;
+	private String studentAppModuleName;
 	private String incompleteFormText;
 	private String premiumSubsMsg;
 	private String helpDeskText;

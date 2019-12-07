@@ -79,7 +79,7 @@ public class ScoresPageHandler implements IPageHandler {
 
 		String action = pageNavigationContext.getActionName();
 		ScoresSearchData searchData = new ScoresSearchData();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		if (studentId == null || studentId == 0L) {
@@ -176,7 +176,7 @@ public class ScoresPageHandler implements IPageHandler {
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String action = pageNavigationContext.getActionName();
 		ScoresSearchData searchData = new ScoresSearchData();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		if (studentId == null || studentId == 0L) {

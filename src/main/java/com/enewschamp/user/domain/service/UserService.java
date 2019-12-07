@@ -114,6 +114,9 @@ public class UserService extends AbstractDomainService {
 	
 =======
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 	public void resetPassword(final String userId, final String password) {
 		User user = get(userId);

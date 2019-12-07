@@ -56,7 +56,7 @@ public class ChampsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String action = pageNavigationContext.getActionName();
-		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		int pageNo = pageNavigationContext.getPageRequest().getHeader().getPageNo();
 
 		ChampsSearchData searchData = new ChampsSearchData();

@@ -19,9 +19,15 @@ public class HeaderDTO implements Serializable {
 	private String pageName;
 	private String action;
 	private String operation;
+<<<<<<< Updated upstream
 	private String editionID;
 	private LocalDate publicationdate;
 	private String emailID;
+=======
+	private String editionId;
+	private LocalDate publicationDate;
+	private String emailId;
+>>>>>>> Stashed changes
 	private String appVersion;
 	private Integer pageNo;
 	private Integer pageSize;

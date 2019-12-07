@@ -82,12 +82,12 @@ public class PublicationPageHandler implements IPageHandler {
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
-		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(eMailId);
 
 		String action = pageNavigationContext.getActionName();
-		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
-		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationdate();
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
+		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
 		if (studentId > 0 && (!publicationRulePlugin.isIncompleteUserRegistration(eMailId,
@@ -136,7 +136,11 @@ public class PublicationPageHandler implements IPageHandler {
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
 			header.setPageNo(pageResult.getNumber() + 1);
+<<<<<<< Updated upstream
 			header.setPublicationdate(publicationDate);
+=======
+			header.setPublicationDate(publicationDate);
+>>>>>>> Stashed changes
 			pageDto.setHeader(header);
 
 			List<PublicationData> publicationData = null;
@@ -174,7 +178,7 @@ public class PublicationPageHandler implements IPageHandler {
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
 			header.setPageNo(pageResult.getNumber() + 1);
-			header.setPublicationdate(newDate);
+			header.setPublicationDate(newDate);
 			pageDto.setHeader(header);
 
 			List<PublicationData> publicationData = null;
@@ -209,7 +213,7 @@ public class PublicationPageHandler implements IPageHandler {
 			header.setPageCount(pageResult.getTotalPages());
 			header.setRecordCount(pageResult.getNumberOfElements());
 			header.setPageNo(pageResult.getNumber() + 1);
-			header.setPublicationdate(newDate);
+			header.setPublicationDate(newDate);
 			pageDto.setHeader(header);
 
 			List<PublicationData> publicationData = null;

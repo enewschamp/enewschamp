@@ -85,11 +85,19 @@ public class PageNavRuleExecutionService {
 	private Map<String, String> enrichData(Map<String, String> dataMap, final PageRequestDTO pageRequest) {
 		dataMap.put("operation", pageRequest.getHeader().getOperation());
 		dataMap.put("action", pageRequest.getHeader().getAction());
+<<<<<<< Updated upstream
 		dataMap.put("editionId", pageRequest.getHeader().getEditionID());
 		dataMap.put("currentPageName", pageRequest.getHeader().getPageName());
 		// dataMap.put("publicationDate",
 		// pageRequest.getHeader().getPublicationdate().toString());
 		dataMap.put("emailId", pageRequest.getHeader().getEmailID());
+=======
+		dataMap.put("editionId", pageRequest.getHeader().getEditionId());
+		dataMap.put("currentPageName", pageRequest.getHeader().getPageName());
+		// dataMap.put("publicationDate",
+		// pageRequest.getHeader().getPublicationDate().toString());
+		dataMap.put("emailId", pageRequest.getHeader().getEmailId());
+>>>>>>> Stashed changes
 
 		return dataMap;
 	}

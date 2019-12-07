@@ -59,7 +59,7 @@ public class StudentDetailsPageHandler implements IPageHandler {
 
 		Long studentId = 0L;
 		String action = pageNavigationContext.getActionName();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String operation = pageNavigationContext.getPageRequest().getHeader().getOperation();
 		String pageName = pageNavigationContext.getPreviousPage();
 
@@ -121,7 +121,7 @@ public class StudentDetailsPageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		Long studentId = 0L;
 
-		String emailId = pageRequest.getHeader().getEmailID();
+		String emailId = pageRequest.getHeader().getEmailId();
 		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
 		if (studentControlDTO == null) {
 			/// not known..
@@ -148,14 +148,22 @@ public class StudentDetailsPageHandler implements IPageHandler {
 				|| PageAction.StudentDetailsNext.toString().equals(actionName)) {
 			if (PageSaveTable.M.toString().equals(pageNavigatorDTO.getUpdationTable())) {
 				Long studentId = 0L;
+<<<<<<< Updated upstream
 				String emailId = pageRequest.getHeader().getEmailID();
+=======
+				String emailId = pageRequest.getHeader().getEmailId();
+>>>>>>> Stashed changes
 				studentId = studentControlBusiness.getStudentId(emailId);
 				StudentDetailsDTO studentDetailsDTO = mapPageToDTO(pageRequest);
 				studentDetailsDTO.setStudentID(studentId);
 				studentDetailsBusiness.saveAsMaster(studentDetailsDTO);
 			} else if (PageSaveTable.W.toString().equals(pageNavigatorDTO.getUpdationTable())) {
 				Long studentId = 0L;
+<<<<<<< Updated upstream
 				String emailId = pageRequest.getHeader().getEmailID();
+=======
+				String emailId = pageRequest.getHeader().getEmailId();
+>>>>>>> Stashed changes
 				StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
 				studentId = studentControlBusiness.getStudentId(emailId);
 				StudentDetailsWorkDTO studentDetailsWorkDTO = null;

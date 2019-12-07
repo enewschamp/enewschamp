@@ -81,7 +81,7 @@ public class TrendsPageHandler implements IPageHandler {
 
 		String action = pageNavigationContext.getActionName();
 		TrendsSearchData searchData = new TrendsSearchData();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		if (studentId == null || studentId == 0L) {
@@ -105,7 +105,8 @@ public class TrendsPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		if (PageAction.Year.toString().equalsIgnoreCase(action) || PageAction.Month.toString().equalsIgnoreCase(action)) {
+		if (PageAction.Year.toString().equalsIgnoreCase(action)
+				|| PageAction.Month.toString().equalsIgnoreCase(action)) {
 
 			List<MonthlyArticleDTO> monthlyArticlesTrend = trendsService.findMonthlyNewsArticlesTrend(searchData);
 			List<MonthlyQuizScoresDTO> monthlyQuizScoresTrend = trendsService.findMonthlyQuizScoreTrend(searchData);
@@ -192,7 +193,7 @@ public class TrendsPageHandler implements IPageHandler {
 
 		String action = pageNavigationContext.getActionName();
 		TrendsSearchData searchData = new TrendsSearchData();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		if (studentId == null || studentId == 0L) {
@@ -208,19 +209,17 @@ public class TrendsPageHandler implements IPageHandler {
 				if (yearMonth.length() < 6) {
 					throw new BusinessException(ErrorCodes.INVALID_YEARMONTH_FORMAT, "Invalid Year Month Format");
 				}
-			}
-			else
-			{
+			} else {
 				// Default load monthly data..
-				
+
 				LocalDate now = LocalDate.now();
 				int month = now.getMonthValue();
-				String monthStr = (month<10) ? "0"+month : ""+month; 
-				String year = ""+now.getYear();
-				yearMonth = year+monthStr;
-				System.out.println("year month "+yearMonth);
+				String monthStr = (month < 10) ? "0" + month : "" + month;
+				String year = "" + now.getYear();
+				yearMonth = year + monthStr;
+				System.out.println("year month " + yearMonth);
 				searchData.setMonthYear(yearMonth);
-				action="month";
+				action = "month";
 			}
 		} catch (JsonParseException e) {
 			throw new RuntimeException(e);
@@ -229,7 +228,8 @@ public class TrendsPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		if (PageAction.Month.toString().equalsIgnoreCase(action) || PageAction.Year.toString().equalsIgnoreCase(action)) {
+		if (PageAction.Month.toString().equalsIgnoreCase(action)
+				|| PageAction.Year.toString().equalsIgnoreCase(action)) {
 
 			List<DailyArticleDTO> dailyArticlesTrend = trendsService.findDailyNewsArticlesTrend(searchData);
 			List<DailyQuizScoresDTO> dailyQuizScoresTrend = trendsService.findDailyQuizScoreTrend(searchData);
@@ -245,23 +245,22 @@ public class TrendsPageHandler implements IPageHandler {
 
 			pageDto.setData(pageData);
 		}
-		if (PageAction.next.toString().equalsIgnoreCase(action) || PageAction.LeftSwipe.toString().equalsIgnoreCase(action)
-				) {
+		if (PageAction.next.toString().equalsIgnoreCase(action)
+				|| PageAction.LeftSwipe.toString().equalsIgnoreCase(action)) {
 
 			String yearMonth = searchData.getMonthYear();
 			String year = yearMonth.substring(0, 4);
 			String monthStr = yearMonth.substring(yearMonth.length() - 2, yearMonth.length());
 			int month = Integer.parseInt(monthStr);
-			
-			if(month>12 || month <1)
-			{
+
+			if (month > 12 || month < 1) {
 				throw new BusinessException(ErrorCodes.INVALID_MONTH, "Invalid Month (Month should be between 1 - 12)");
 
 			}
-			if(month<12)
-			month = month + 1;
-			
-			monthStr = (month>=10) ? ""+month :"0"+month;
+			if (month < 12)
+				month = month + 1;
+
+			monthStr = (month >= 10) ? "" + month : "0" + month;
 
 			yearMonth = year + monthStr;
 			System.out.println("yearMonth :" + yearMonth);
@@ -294,7 +293,7 @@ public class TrendsPageHandler implements IPageHandler {
 			if (month > 1) {
 				month = month - 1;
 			}
-			monthStr = (month >= 10) ? ""+month : "0"+month;
+			monthStr = (month >= 10) ? "" + month : "0" + month;
 
 			yearMonth = year + monthStr;
 			System.out.println("yearMonth :" + yearMonth);

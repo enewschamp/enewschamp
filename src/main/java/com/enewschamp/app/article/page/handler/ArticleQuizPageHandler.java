@@ -84,7 +84,7 @@ public class ArticleQuizPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String action = pageNavigationContext.getActionName();
-		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
+		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(eMailId);
 
 		if (studentId == null || studentId == 0L) {
@@ -140,8 +140,8 @@ public class ArticleQuizPageHandler implements IPageHandler {
 	@Override
 	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
-		String eMailId = pageRequest.getHeader().getEmailID();
-		String editionId = pageRequest.getHeader().getEditionID();
+		String eMailId = pageRequest.getHeader().getEmailId();
+		String editionId = pageRequest.getHeader().getEditionId();
 		List<QuizScoreDTO> quizScoreDTOList = null;
 
 		if (PageAction.save.toString().equals(actionName)) {

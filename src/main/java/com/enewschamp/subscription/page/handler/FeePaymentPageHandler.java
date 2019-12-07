@@ -90,8 +90,13 @@ public class FeePaymentPageHandler implements IPageHandler {
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
+<<<<<<< Updated upstream
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
+=======
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
+>>>>>>> Stashed changes
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		PaymentPageData pageData = new PaymentPageData();
 		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
@@ -194,8 +199,13 @@ public class FeePaymentPageHandler implements IPageHandler {
 
 		PageDTO pageDTO = new PageDTO();
 		Long studentId = 0L;
+<<<<<<< Updated upstream
 		String emailId = pageRequest.getHeader().getEmailID();
 		String editionId = pageRequest.getHeader().getEditionID();
+=======
+		String emailId = pageRequest.getHeader().getEmailId();
+		String editionId = pageRequest.getHeader().getEditionId();
+>>>>>>> Stashed changes
 		PaymentPageData paymentPagedata = mapPagedata(pageRequest);
 		if (PageAction.OnTransactionResponse.toString().equals(actionName)) {
 			TreeMap<String, String> inResponse = paymentPagedata.getInResponse();

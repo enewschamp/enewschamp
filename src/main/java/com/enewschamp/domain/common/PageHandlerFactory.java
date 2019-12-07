@@ -5,27 +5,29 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.EnewschampApplicationProperties;
+import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.problem.BusinessException;
 
 @Component
 public class PageHandlerFactory {
 
 	@Autowired
-	private EnewschampApplicationProperties appConfig; 
-	
+	private EnewschampApplicationProperties appConfig;
+
 	@Autowired
 	private ApplicationContext context;
-	
+
 	public IPageHandler getPageHandler(String pageName, String context) {
-		
+
 		String pageHandlerName = appConfig.getPageHandlerConfig().get(context).get(pageName.toLowerCase());
-	
-		if(pageHandlerName == null) {
-			throw new RuntimeException("Page handler not found for page: " + pageName);
+
+		if (pageHandlerName == null) {
+			throw new BusinessException(ErrorCodes.PAGE_NOT_FOUND, "Page handler not found for page: " + pageName);
 		}
-		
+		System.out.println(">>>>>pageHandlerName>>>>>>>" + pageHandlerName);
 		return getPageHandlerBean(pageHandlerName);
 	}
-	
+
 //	public IPageHandler getNextPageHandler(String currentPageName, String actionName) {
 //
 //		// Read next page from properties file based on current page and action. 
@@ -41,7 +43,7 @@ public class PageHandlerFactory {
 //		
 //		return getPageHandlerBean(pageHandlerName);
 //	}
-	
+
 	private IPageHandler getPageHandlerBean(String pageHandlerName) {
 		return (IPageHandler) context.getBean(pageHandlerName);
 	}

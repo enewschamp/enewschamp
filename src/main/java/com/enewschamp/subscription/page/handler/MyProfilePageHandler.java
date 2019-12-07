@@ -73,8 +73,8 @@ public class MyProfilePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String action = pageNavigationContext.getActionName();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
-		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		Long studentId = 0L;
 		MyProfilePageData myProfilePageData = new MyProfilePageData();
 

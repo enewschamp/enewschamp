@@ -148,7 +148,11 @@ public class PublicationGroupService {
 	public PublicationGroupDTO reinstatePublicationGroup(Long pubicationGroupId, String userId) {
 		PublicationGroup publicationGroup = load(pubicationGroupId);
 		List<PublicationDTO> publicationList = publicationService.reinstateArticles(pubicationGroupId, userId);
+<<<<<<< Updated upstream
 		publicationGroup.setStatus(PublicationGroupStatusType.Unassigned);
+=======
+		publicationGroup.setStatus(PublicationGroupStatusType.Assigned);
+>>>>>>> Stashed changes
 		publicationGroup = repository.save(publicationGroup);
 		PublicationGroupDTO publicationGroupDTO = modelMapper.map(publicationGroup, PublicationGroupDTO.class);
 		publicationGroupDTO.setPublications(publicationList);

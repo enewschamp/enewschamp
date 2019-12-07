@@ -7,7 +7,7 @@ public enum PublicationStatusType {
 	Rework,
 	ReadyToPublish,
 	Published,
-	Closed;;
+	Closed;
 	
 	public static PublicationStatusType fromValue(String status) {
 		for(PublicationStatusType statusType : PublicationStatusType.values()) {

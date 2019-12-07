@@ -72,7 +72,7 @@ public class PublicationService {
 	UserRoleService userRoleService;
 
 	public Publication create(Publication publication) {
-		derivePublicationStatus(publication, true);
+		publication.setStatus(derivePublicationStatus(publication, true), publication.getStatus());
 		publication = repository.save(publication);
 		checkAndPerformPublishActions(publication);
 		return publication;
@@ -158,13 +158,19 @@ public class PublicationService {
 			transition = new StatusTransitionDTO(Publication.class.getSimpleName(),
 					String.valueOf(publication.getPublicationId()), existingStatus.toString(), currentAction.toString(),
 					null);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 			String nextStatus = statusTransitionHandler.findNextStatus(transition);
 			if (nextStatus.equals(StatusTransitionDTO.REVERSE_STATE)) {
 				PublicationStatusType previousStatus = repository.getPreviousStatus(publication.getPublicationId());
 				nextStatus = previousStatus.toString();
 			}
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 			status = PublicationStatusType.fromValue(nextStatus);
 		}
 		if (transition != null && validateAccess) {
@@ -172,7 +178,6 @@ public class PublicationService {
 					publication.getPublisherId(), publication.getOperatorId());
 			validateStateTransition(publication, transition, status);
 		}
-		publication.setStatus(status);
 		return status;
 	}
 
@@ -249,7 +254,11 @@ public class PublicationService {
 	}
 
 	public List<PublicationDTO> reinstateArticles(Long publicationGroupId, String userId) {
+<<<<<<< Updated upstream
 		List<PublicationDTO> articleList = new ArrayList<PublicationDTO>();
+=======
+		List<PublicationDTO> publicationList = new ArrayList<PublicationDTO>();
+>>>>>>> Stashed changes
 		if (userRoleService.getByUserIdAndRole(userId, CommonConstants.EDITOR_ROLE) == null
 				&& userRoleService.getByUserIdAndRole(userId, CommonConstants.PUBLISHER_ROLE) == null) {
 			throw new BusinessException(ErrorCodes.ROLE_NOT_ASSIGNED_TO_USER,
@@ -262,9 +271,15 @@ public class PublicationService {
 			publication.setStatus(status, publication.getStatus());
 			publication = repository.save(publication);
 			PublicationDTO publicationDTO = modelMapper.map(publication, PublicationDTO.class);
+<<<<<<< Updated upstream
 			articleList.add(publicationDTO);
 		}
 		return articleList;
+=======
+			publicationList.add(publicationDTO);
+		}
+		return publicationList;
+>>>>>>> Stashed changes
 	}
 
 	public List<PropertyAuditData> getPreviousComments(Long publicationId) {

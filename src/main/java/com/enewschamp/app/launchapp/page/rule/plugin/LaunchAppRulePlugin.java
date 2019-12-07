@@ -41,8 +41,13 @@ public class LaunchAppRulePlugin implements IPageNavRuleDataPlugin {
 	public Map<String, String> validateLoginCredentials(PageRequestDTO pageRequest, PageDTO page,
 			Map<String, String> dataMap) {
 		String Fn_ValidateLoginCredentials = "Pass";
+<<<<<<< Updated upstream
 		String emailId = pageRequest.getHeader().getEmailID();
 		//String deviceId = pageRequest.getHeader().getDeviceId();
+=======
+		String emailId = pageRequest.getHeader().getEmailId();
+		// String deviceId = pageRequest.getHeader().getDeviceId();
+>>>>>>> Stashed changes
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		if (studentId == null || studentId == 0L) {
 			Fn_ValidateLoginCredentials = "Fail";
