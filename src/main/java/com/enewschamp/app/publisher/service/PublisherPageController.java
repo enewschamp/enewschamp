@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -67,12 +69,13 @@ public class PublisherPageController {
 		
 		ResponseEntity<PageDTO> response = null;
 		try {
-			//SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("deepak", "welcome"));
 			
 			String pageName = pageRequest.getHeader().getPageName();
 			String actionName = pageRequest.getHeader().getAction();
 			String userId = pageRequest.getHeader().getUserId();
 			String deviceId = pageRequest.getHeader().getDeviceId();
+			
+			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userId, null));
 			
 			// Check if user has been logged in
 			if (!(pageName.equalsIgnoreCase("Login")
