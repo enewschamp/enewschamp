@@ -18,20 +18,15 @@ import lombok.Data;
 public class MonthlyQuizGenre {
 
 	@Id
-	@Column(name = "publishDate", updatable = false, nullable = false)
-	private LocalDate publishDate;
-	
-	
-	@Column(name = "quizpublished")
-	private Long quizpublished;
+	@Column(name = "genreId")
+	private String genreId;
+
+	@Column(name = "quizPublished")
+	private Long quizPublished;
 
 	@Column(name = "quizAttempted")
 	private Long quizAttempted;
-	
-	@Column(name = "quizcorrect")
-	private Long quizcorrect;
-	
-	@Column(name = "genreid")
-	private String genreid;
-	
+
+	@Column(name = "quizCorrect")
+	private Long quizCorrect;
 }

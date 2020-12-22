@@ -33,7 +33,7 @@ public class LOV extends BaseEntity {
 	@NotNull
 	@Column(name = "Type", length = 20)
 	private String type;
-	
+
 	@NotNull
 	@Column(name = "NameId", length = ForeignKeyColumnLength.MultiLanguageId)
 	private String nameId;

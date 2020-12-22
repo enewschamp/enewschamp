@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.student.dailytrends.entity.TrendsDaily;
 import com.enewschamp.app.student.dailytrends.repository.TrendsDailyRepository;
 import com.enewschamp.problem.BusinessException;
@@ -21,22 +21,20 @@ public class TrendsDailyService {
 
 	@Autowired
 	TrendsDailyRepository trendsDailyRepository;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
-	
+
 	public TrendsDaily create(TrendsDaily trendsDailyEntity) {
-		TrendsDaily existing = getDailyTrend(trendsDailyEntity.getStudentId(),trendsDailyEntity.getEditionId(),trendsDailyEntity.getQuizDate());
-		if(existing==null)
-		{
+		TrendsDaily existing = getDailyTrend(trendsDailyEntity.getStudentId(), trendsDailyEntity.getEditionId(),
+				trendsDailyEntity.getReadingLevel(), trendsDailyEntity.getQuizPublicationDate());
+		if (existing == null) {
 			existing = trendsDailyRepository.save(trendsDailyEntity);
-		}
-		else
-		{
+		} else {
 			existing = update(trendsDailyEntity);
 		}
 		return existing;
@@ -44,9 +42,9 @@ public class TrendsDailyService {
 
 	public TrendsDaily update(TrendsDaily trendsDailyEntity) {
 		Long trendsDailyId = trendsDailyEntity.getTrendsDailyId();
-		System.out.println("trendsDailyId in update(): "+trendsDailyId);
+		System.out.println("trendsDailyId in update(): " + trendsDailyId);
 		TrendsDaily existingTrendsDaily = get(trendsDailyId);
-		
+
 		modelMapper.map(trendsDailyEntity, existingTrendsDaily);
 		return trendsDailyRepository.save(existingTrendsDaily);
 	}
@@ -55,7 +53,7 @@ public class TrendsDailyService {
 		Long navId = trendsDaily.getTrendsDailyId();
 		TrendsDaily existingEntity = get(navId);
 		modelMapperForPatch.map(trendsDaily, existingEntity);
-		
+
 		return trendsDailyRepository.save(existingEntity);
 	}
 
@@ -68,19 +66,20 @@ public class TrendsDailyService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.TREND_DAILY_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.TREND_DAILY_NOT_FOUND);
 		}
 	}
-	public TrendsDaily getDailyTrend(Long studentId, String editionId, LocalDate quizdate) {
-		Optional<TrendsDaily> existingEntity = trendsDailyRepository.getDailyTrend(studentId, editionId, quizdate);
+
+	public TrendsDaily getDailyTrend(Long studentId, String editionId, int readingLevel, LocalDate quizdate) {
+		Optional<TrendsDaily> existingEntity = trendsDailyRepository.getDailyTrend(studentId, editionId, readingLevel,
+				quizdate);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
 			return null;
-			//throw new BusinessException(ErrorCodes.TREND_DAILY_NOT_FOUND);
+			// throw new BusinessException(ErrorCodes.TREND_DAILY_NOT_FOUND);
 
 		}
 	}
-	
-	
+
 }

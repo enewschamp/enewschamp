@@ -9,10 +9,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class AuditQueryCriteria extends AbstractDTO {
-	
-	private static final long serialVersionUID = -7724430529197618591L;	
+
+	private static final long serialVersionUID = -7724430529197618591L;
 
 	private CommitId commitId;
 	private SnapshotType snapshotType;
@@ -21,5 +21,4 @@ public class AuditQueryCriteria extends AbstractDTO {
 	private String objectName;
 	private String propertyName;
 
-	
 }

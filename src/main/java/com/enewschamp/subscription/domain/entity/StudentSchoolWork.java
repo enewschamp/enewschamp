@@ -13,9 +13,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@EqualsAndHashCode(callSuper=false)
-@Table(name="StudentSchool_Work")
-public class StudentSchoolWork extends BaseEntity{
+@EqualsAndHashCode(callSuper = false)
+@Table(name = "StudentSchoolWork")
+public class StudentSchoolWork extends BaseEntity {
 
 	/**
 	 * 
@@ -24,19 +24,34 @@ public class StudentSchoolWork extends BaseEntity{
 
 	@Id
 	@NotNull
-	@Column(name = "StudentID", length=10)
-	private long studentID = 0L;
-	
+	@Column(name = "studentId", length = 10)
+	private long studentId = 0L;
+
 	@NotNull
-	@Column(name = "SchoolID", length=10)
-	private long schoolId = 0L;
-	
+	private String country;
+
+	private String countryNotInTheList;
+
 	@NotNull
-	@Column(name="Grade", length=10)
-	private String grade;
-	
+	private String state;
+
+	private String stateNotInTheList;
+
 	@NotNull
-	@Column(name="Section", length=20)
+	private String city;
+
+	private String cityNotInTheList;
+
+	private String school;
+
+	private String schoolNotInTheList;
+
+	@NotNull
+	@Column(name = "section", length = 20)
 	private String section;
-	
+
+	@NotNull
+	@Column(name = "grade", length = 10)
+	private String grade;
+
 }

@@ -9,27 +9,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.country.dto.CountryDTO;
 import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.app.common.country.repository.CountryRepository;
+import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.CountryPageData;
 import com.google.common.reflect.TypeToken;
 
 @Service
-public class CountryService {
+public class CountryService extends AbstractDomainService {
 
 	@Autowired
 	CountryRepository countryRepository;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
-	
+
 	public Country create(Country countryEntity) {
 		return countryRepository.save(countryEntity);
 	}
@@ -57,44 +58,43 @@ public class CountryService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.COUNTRY_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.COUNTRY_NOT_FOUND);
 		}
 	}
-	public List<CountryDTO> getAll()
-	{
-		List<Country> existingEntity = countryRepository.getAll();
-		java.lang.reflect.Type listType = new TypeToken<List<CountryDTO>>(){}.getType();
 
-		List<CountryDTO> countryDtoList = modelMapper.map(existingEntity,listType);
+	public List<CountryDTO> getAll() {
+		List<Country> existingEntity = countryRepository.getAll();
+		java.lang.reflect.Type listType = new TypeToken<List<CountryDTO>>() {
+		}.getType();
+
+		List<CountryDTO> countryDtoList = modelMapper.map(existingEntity, listType);
 		return countryDtoList;
 	}
-	public List<CountryPageData> getCountries()
-	{
+
+	public List<CountryPageData> getCountries() {
 		List<Country> existingEntity = countryRepository.getCountries();
 		List<CountryPageData> countryPageDataList = new ArrayList<CountryPageData>();
-		for(Country country:existingEntity)
-		{
+		for (Country country : existingEntity) {
 			CountryPageData countryData = new CountryPageData();
 			countryData.setId(country.getNameId());
 			countryData.setName(country.getDescription());
 			countryPageDataList.add(countryData);
 		}
-		
+
 		return countryPageDataList;
 	}
-	public CountryPageData getCountry(String countryId)
-	{
+
+	public CountryPageData getCountry(String countryId) {
 		Optional<Country> existingEntity = countryRepository.getCountry(countryId);
 		CountryPageData countryData = new CountryPageData();
 
-		if(existingEntity.isPresent())
-		{
+		if (existingEntity.isPresent()) {
 			Country country = existingEntity.get();
 			countryData.setId(country.getNameId());
 			countryData.setName(country.getDescription());
-			
+
 		}
-		
+
 		return countryData;
 	}
 }

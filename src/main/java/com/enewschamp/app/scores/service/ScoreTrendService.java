@@ -11,27 +11,25 @@ import com.enewschamp.app.scores.dto.MonthlyScoresDTO;
 import com.enewschamp.app.scores.dto.YearlyScoresGenreDTO;
 import com.enewschamp.app.scores.page.data.ScoresSearchData;
 import com.enewschamp.app.scores.repository.ScoresCustomRepositoryImpl;
-import com.enewschamp.app.trends.dto.TrendsSearchData;
 
 @Service
 public class ScoreTrendService {
 
 	@Autowired
 	ScoresCustomRepositoryImpl scoresCustomRepositoryImpl;
-	
-	public List<DailyScoreDTO> findDailyScores(ScoresSearchData searchRequest){
+
+	public List<DailyScoreDTO> findDailyScores(ScoresSearchData searchRequest) {
 		return scoresCustomRepositoryImpl.findDailyScores(searchRequest);
 	}
+
 	public List<MonthlyScoreGenreDTO> findMonthlyScoresByGenre(ScoresSearchData searchRequest) {
 		return scoresCustomRepositoryImpl.findMonthlyScoresByGenre(searchRequest);
 	}
 
-	
 	public List<YearlyScoresGenreDTO> findYearlyScoresByGenre(ScoresSearchData searchRequest) {
 		return scoresCustomRepositoryImpl.findYearlyScoresByGenre(searchRequest);
 	}
 
-	
 	public List<MonthlyScoresDTO> findYMonthlyScores(ScoresSearchData searchRequest) {
 		return scoresCustomRepositoryImpl.findYMonthlyScores(searchRequest);
 	}

@@ -18,9 +18,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class HolidayDTO extends BaseEntity{
-	
+@EqualsAndHashCode(callSuper = false)
+public class HolidayDTO extends BaseEntity {
+
 	/**
 	 * 
 	 */
@@ -29,5 +29,5 @@ public class HolidayDTO extends BaseEntity{
 	private String editionId;
 	private LocalDate holdidayDate;
 	private String holiday;
-	
+
 }

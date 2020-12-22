@@ -15,13 +15,19 @@ import com.enewschamp.app.trends.dto.YearlyQuizGenreDTO;
 public interface TrendsCustomRepository {
 
 	public List<DailyArticleDTO> findDailyNewsArticlesTrend(TrendsSearchData searchRequest);
-	public List<DailyQuizScoresDTO> findDailyQuizScoreTrend(TrendsSearchData searchRequest) ;
+
+	public List<DailyQuizScoresDTO> findDailyQuizScoreTrend(TrendsSearchData searchRequest);
+
 	public List<MonthlyArticlesGenreDTO> findMonthlyArticlesByGenreTrend(TrendsSearchData searchRequest);
+
 	public List<MonthlyQuizGenreDTO> findMonthlyQuizScoreByGenre(TrendsSearchData searchRequest);
-	
+
 	public List<MonthlyArticleDTO> findMonthlyNewsArticlesTrend(TrendsSearchData searchRequest);
-	public List<MonthlyQuizScoresDTO> findMonthlyQuizScoreTrend(TrendsSearchData searchRequest) ;
+
+	public List<MonthlyQuizScoresDTO> findMonthlyQuizScoreTrend(TrendsSearchData searchRequest);
+
 	public List<YearlyArticlesGenreDTO> findYearlyArticlesByGenreTrend(TrendsSearchData searchRequest);
+
 	public List<YearlyQuizGenreDTO> findYearlyQuizScoreByGenre(TrendsSearchData searchRequest);
 
 }

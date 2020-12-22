@@ -10,19 +10,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class HelpDeskInputPageData extends PageData{
+@EqualsAndHashCode(callSuper = false)
+public class HelpDeskInputPageData extends PageData {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String categoryId;
+	private String category;
 	private String details;
 	private String phoneNumber;
 	private LocalDate preferredDate;
 	private String preferredTime;
-	
-	
-	
+
 }

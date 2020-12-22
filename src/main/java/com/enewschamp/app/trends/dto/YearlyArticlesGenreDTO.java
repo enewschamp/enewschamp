@@ -16,12 +16,11 @@ public class YearlyArticlesGenreDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer year;
-	
+
 	private Long articlesRead;
-	
-	private Long articlePublished;
-	
-	private String genreid;
-	
-	
+
+	private Long articlesPublished;
+
+	private String genreId;
+
 }

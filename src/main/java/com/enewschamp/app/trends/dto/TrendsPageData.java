@@ -8,8 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class TrendsPageData extends PageData{
+@EqualsAndHashCode(callSuper = false)
+public class TrendsPageData extends PageData {
 
 	/**
 	 * 
@@ -19,6 +19,6 @@ public class TrendsPageData extends PageData{
 	private List<DailyArticleDTO> dailyNewsArticles;
 	private List<DailyQuizScoresDTO> dailyQuizScores;
 	private List<MonthlyArticlesGenreDTO> monthlyArticlesByGenre;
-	private List<MonthlyQuizGenreDTO> monthlyQuizByGenre ; 
-	
+	private List<MonthlyQuizGenreDTO> monthlyQuizByGenre;
+
 }

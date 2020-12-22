@@ -1,20 +1,18 @@
 package com.enewschamp.article.domain.service;
 
-import java.awt.Dimension;
-import java.io.File;
-import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.io.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.EnewschampApplicationProperties;
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.CommonService;
+import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.article.app.dto.NewsArticleDTO;
+import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
 import com.enewschamp.article.domain.common.ArticleGroupStatusType;
 import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.article.domain.entity.NewsArticle;
@@ -23,86 +21,111 @@ import com.enewschamp.article.page.data.PropertyAuditData;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditQueryCriteria;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.common.domain.service.PropertiesService;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.utils.ImageUtils;
+import com.enewschamp.user.domain.service.UserRoleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.SneakyThrows;
 
 @Service
 public class NewsArticleGroupService {
 
 	@Autowired
 	NewsArticleGroupRepository repository;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
+	@Autowired
+	CommonService commonService;
+
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
-	
+
 	@Autowired
 	AuditService auditService;
-	
-	@Autowired 
+
+	@Autowired
 	private NewsArticleService newsArticleService;
-	
+
+	@Autowired
+	private NewsArticleRepository newsArticleRepository;
+
+	@Autowired
+	private PropertiesService propertiesService;
+
 	@Autowired
 	private EnewschampApplicationProperties appConfig;
-	
-	
+
+	@Autowired
+	UserRoleService userRoleService;
+
 	public NewsArticleGroup create(NewsArticleGroup articleGroup) {
 		deriveStatus(articleGroup);
 		articleGroup = repository.save(articleGroup);
-		saveImages(articleGroup.getBase64Image(), articleGroup.getNewsArticleGroupId());
-		String imageName = articleGroup.getNewsArticleGroupId() + "." + appConfig.getArticleImageConfig().getImageType();
-		articleGroup.setImagePathThumbnail(appConfig.getArticleImageConfig().getSize1FolderPath() + imageName);
-		articleGroup.setImagePathMobile(appConfig.getArticleImageConfig().getSize2FolderPath() + imageName);
-		articleGroup.setImagePathTab(appConfig.getArticleImageConfig().getSize3FolderPath() + imageName);
-		articleGroup.setImagePathDesktop(appConfig.getArticleImageConfig().getSize4FolderPath() + imageName);
-		articleGroup = repository.save(articleGroup);
+		String newImageName = articleGroup.getNewsArticleGroupId() + "_" + System.currentTimeMillis();
+		String imageType = "jpg";
+		boolean saveFlag = commonService.saveImages("article", imageType, articleGroup.getBase64Image(), newImageName,
+				articleGroup.getImageName());
+		if (saveFlag) {
+			articleGroup.setImageName(newImageName + "." + imageType);
+			repository.save(articleGroup);
+		}
 		return articleGroup;
 	}
-	
+
 	public NewsArticleGroup update(NewsArticleGroup articleGroup) {
 		deriveStatus(articleGroup);
 		Long articleGroupId = articleGroup.getNewsArticleGroupId();
 		NewsArticleGroup existingEntity = load(articleGroupId);
 		modelMapper.map(articleGroup, existingEntity);
 		articleGroup = repository.save(existingEntity);
-		saveImages(articleGroup.getBase64Image(), articleGroup.getNewsArticleGroupId());
-		return repository.save(existingEntity);
+		String newImageName = articleGroup.getNewsArticleGroupId() + "_" + System.currentTimeMillis();
+		String imageType = "jpg";
+		boolean saveFlag = commonService.saveImages("article", imageType, articleGroup.getBase64Image(), newImageName,
+				articleGroup.getImageName());
+		if (saveFlag) {
+			articleGroup.setImageName(newImageName + "." + imageType);
+			repository.save(articleGroup);
+		}
+		return articleGroup;
 	}
-	
+
 	public NewsArticleGroup patch(NewsArticleGroup articleGroup) {
 		deriveStatus(articleGroup);
 		Long articleGroupId = articleGroup.getNewsArticleGroupId();
 		NewsArticleGroup existingEntity = load(articleGroupId);
 		modelMapperForPatch.map(articleGroup, existingEntity);
 		articleGroup = repository.save(existingEntity);
-		saveImages(articleGroup.getBase64Image(), articleGroup.getNewsArticleGroupId());
+		String newImageName = articleGroup.getNewsArticleGroupId() + "_" + System.currentTimeMillis();
+		String imageType = "jpg";
+		boolean saveFlag = commonService.saveImages("article", imageType, articleGroup.getBase64Image(), newImageName,
+				articleGroup.getImageName());
+		if (saveFlag) {
+			articleGroup.setImageName(newImageName + "." + imageType);
+			repository.save(articleGroup);
+		}
 		return articleGroup;
 	}
-	
+
 	public void delete(Long articleId) {
 		repository.deleteById(articleId);
 	}
-	
+
 	public NewsArticleGroup load(Long articleGroupId) {
 		Optional<NewsArticleGroup> existingEntity = repository.findById(articleGroupId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
-		} else { 
-			throw new BusinessException(ErrorCodes.ARTICLE_GROUP_NOT_FOUND, String.valueOf(articleGroupId));
+		} else {
+			throw new BusinessException(ErrorCodeConstants.ARTICLE_GROUP_NOT_FOUND, String.valueOf(articleGroupId));
 		}
 	}
-	
+
 	public NewsArticleGroup get(Long articleGroupId) {
-		if(articleGroupId == null) {
+		if (articleGroupId == null) {
 			return null;
 		}
 		Optional<NewsArticleGroup> existingEntity = repository.findById(articleGroupId);
@@ -112,14 +135,15 @@ public class NewsArticleGroupService {
 			return null;
 		}
 	}
-	
+
 	public String getAudit(Long articleGroupId) {
 		NewsArticleGroup articleGroup = new NewsArticleGroup();
 		articleGroup.setNewsArticleGroupId(articleGroupId);
-		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig).forParentObject(articleGroup);
+		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig)
+				.forParentObject(articleGroup);
 		return auditBuilder.build();
 	}
-	
+
 	public String getCommentsAudit(Long articleGroupId) {
 		NewsArticleGroup articleGroup = new NewsArticleGroup();
 		articleGroup.setNewsArticleGroupId(articleGroupId);
@@ -128,29 +152,29 @@ public class NewsArticleGroupService {
 		queryCriteria.setWithNewObjectChanges(true);
 		return auditService.getEntityAuditByCriteria(articleGroup, queryCriteria);
 	}
-	
+
 	public ArticleGroupStatusType deriveStatus(NewsArticleGroup articleGroup) {
-		ArticleGroupStatusType newStatus = deriveStatus(articleGroup.getNewsArticles());
+		ArticleGroupStatusType newStatus = deriveStatus(articleGroup, articleGroup.getNewsArticles());
 		articleGroup.setStatus(newStatus);
 		return newStatus;
 	}
-	
-	private ArticleGroupStatusType deriveStatus(List<NewsArticle> articles) {
+
+	private ArticleGroupStatusType deriveStatus(NewsArticleGroup articleGroup, List<NewsArticle> articles) {
 		ArticleGroupStatusType newStatus = null;
-		if(articles != null) {
-			for(NewsArticle article: articles) {
-				ArticleStatusType articleStatus = newsArticleService.deriveArticleStatus(article, false);
-				if(articleStatus != null) {
+		if (articles != null) {
+			for (NewsArticle article : articles) {
+				ArticleStatusType articleStatus = newsArticleService.deriveArticleStatus(articleGroup, article, false);
+				if (articleStatus != null) {
 					ArticleGroupStatusType status = ArticleGroupStatusType.fromArticleStatus(articleStatus);
-					if(status.equals(ArticleGroupStatusType.WIP)) {
+					if (status.equals(ArticleGroupStatusType.WIP)) {
 						newStatus = status;
 						break;
 					}
-					if(newStatus == null) {
+					if (newStatus == null) {
 						newStatus = status;
 						continue;
 					}
-					if(status.getOrder() < newStatus.getOrder()) {
+					if (status.getOrder() < newStatus.getOrder()) {
 						newStatus = status;
 					}
 				}
@@ -158,78 +182,164 @@ public class NewsArticleGroupService {
 		}
 		return newStatus;
 	}
-	
-	public NewsArticleGroup assignAuthor(Long articleGroupId, String authorId) {
+
+	public ArticleGroupStatusType deriveNewStatus(List<NewsArticle> articles) {
+		ArticleGroupStatusType newStatus = null;
+		if (isAllClosed(articles)) {
+			newStatus = ArticleGroupStatusType.Closed;
+		} else if (isAllPublished(articles)) {
+			newStatus = ArticleGroupStatusType.Published;
+		} else if (isAllReadyToPublish(articles)) {
+			newStatus = ArticleGroupStatusType.ReadyToPublish;
+		} else if (isAllAssigned(articles)) {
+			newStatus = ArticleGroupStatusType.Assigned;
+		} else if (isAllUnAssigned(articles)) {
+			newStatus = ArticleGroupStatusType.Unassigned;
+		} else {
+			newStatus = ArticleGroupStatusType.WIP;
+		}
+
+		return newStatus;
+	}
+
+	private boolean isAllClosed(List<NewsArticle> articles) {
+		boolean flag = true;
+		for (NewsArticle article : articles) {
+			if (!ArticleStatusType.Closed.equals(article.getStatus())) {
+				flag = false;
+				break;
+			}
+		}
+		return flag;
+	}
+
+	private boolean isAllReadyToPublish(List<NewsArticle> articles) {
+		boolean flag = true;
+		for (NewsArticle article : articles) {
+			if (!ArticleStatusType.ReadyToPublish.equals(article.getStatus())
+					&& !ArticleStatusType.Published.equals(article.getStatus())
+					&& !ArticleStatusType.Closed.equals(article.getStatus())) {
+				flag = false;
+				break;
+			}
+		}
+		return flag;
+	}
+
+	private boolean isAllPublished(List<NewsArticle> articles) {
+		boolean flag = true;
+		for (NewsArticle article : articles) {
+			if (!ArticleStatusType.Published.equals(article.getStatus())
+					&& !ArticleStatusType.Closed.equals(article.getStatus())) {
+				flag = false;
+				break;
+			}
+		}
+		return flag;
+	}
+
+	private boolean isAllAssigned(List<NewsArticle> articles) {
+		boolean flag = true;
+		for (NewsArticle article : articles) {
+			if (!ArticleStatusType.Assigned.equals(article.getStatus())
+					&& !ArticleStatusType.Closed.equals(article.getStatus())) {
+				flag = false;
+				break;
+			}
+		}
+		return flag;
+	}
+
+	private boolean isAllUnAssigned(List<NewsArticle> articles) {
+		boolean flag = true;
+		for (NewsArticle article : articles) {
+			if (!ArticleStatusType.Unassigned.equals(article.getStatus())
+					&& !ArticleStatusType.Closed.equals(article.getStatus())) {
+				flag = false;
+				break;
+			}
+		}
+		return flag;
+	}
+
+	public NewsArticleGroupDTO assignAuthor(Long articleGroupId, String authorId, String operatorId) {
 		NewsArticleGroup articleGroup = load(articleGroupId);
+		String currentAuthorId = articleGroup.getAuthorId();
+		if (ArticleGroupStatusType.Published.equals((articleGroup.getStatus()))) {
+			throw new BusinessException(ErrorCodeConstants.NO_CHANGES_ALLOWED);
+		} else if (authorId.equalsIgnoreCase(currentAuthorId)) {
+			throw new BusinessException(ErrorCodeConstants.NOT_CHANGES_FOUND);
+		}
+		articleGroup.setOperatorId(operatorId);
+		newsArticleService.assignAuthor(articleGroupId, operatorId);
+		NewsArticleGroupDTO articleGroupDTO = modelMapper.map(articleGroup, NewsArticleGroupDTO.class);
+		ArticleGroupStatusType newStatus = deriveNewStatus(
+				newsArticleRepository.findByNewsArticleGroupId(articleGroup.getNewsArticleGroupId()));
 		articleGroup.setAuthorId(authorId);
-		List<NewsArticle> articles = newsArticleService.assignAuthor(articleGroupId, authorId);
-		articleGroup.setStatus(deriveStatus(articles));
-		repository.save(articleGroup);
-		return articleGroup;
+		articleGroup.setStatus(newStatus);
+		articleGroup = repository.save(articleGroup);
+		articleGroupDTO.setStatus(articleGroup.getStatus());
+		return articleGroupDTO;
 	}
-	
-	public NewsArticleGroup assignEditor(Long articleGroupId, String editorId) {
+
+	public NewsArticleGroupDTO assignEditor(Long articleGroupId, String editorId, String operatorId) {
 		NewsArticleGroup articleGroup = load(articleGroupId);
+		String currentEditorId = articleGroup.getEditorId();
+		if (ArticleGroupStatusType.Published.equals((articleGroup.getStatus()))) {
+			throw new BusinessException(ErrorCodeConstants.NO_CHANGES_ALLOWED);
+		} else if (editorId.equalsIgnoreCase(currentEditorId)) {
+			throw new BusinessException(ErrorCodeConstants.NOT_CHANGES_FOUND);
+		}
+		articleGroup.setOperatorId(operatorId);
+		NewsArticleGroupDTO articleGroupDTO = modelMapper.map(articleGroup, NewsArticleGroupDTO.class);
+		ArticleGroupStatusType newStatus = deriveNewStatus(
+				newsArticleRepository.findByNewsArticleGroupId(articleGroup.getNewsArticleGroupId()));
 		articleGroup.setEditorId(editorId);
-		newsArticleService.assignEditor(articleGroupId, editorId);
+		articleGroup.setStatus(newStatus);
 		repository.save(articleGroup);
-		return articleGroup;
+		return articleGroupDTO;
 	}
-	
+
+	public NewsArticleGroupDTO closeNewsArticleGroup(Long articleGroupId, String userId) {
+		NewsArticleGroup articleGroup = load(articleGroupId);
+		if (ArticleGroupStatusType.Published.equals((articleGroup.getStatus()))) {
+			throw new BusinessException(ErrorCodeConstants.NO_CHANGES_ALLOWED);
+		}
+		articleGroup.setOperatorId(userId);
+		List<NewsArticleDTO> articleList = newsArticleService.closeArticles(articleGroupId, userId);
+		ArticleGroupStatusType newStatus = deriveNewStatus(
+				newsArticleRepository.findByNewsArticleGroupId(articleGroup.getNewsArticleGroupId()));
+		articleGroup.setStatus(newStatus);
+		articleGroup = repository.save(articleGroup);
+		NewsArticleGroupDTO articleGroupDTO = modelMapper.map(articleGroup, NewsArticleGroupDTO.class);
+
+		articleGroupDTO.setNewsArticles(articleList);
+		return articleGroupDTO;
+	}
+
+	public NewsArticleGroupDTO reinstateNewsArticleGroup(Long articleGroupId, String userId) {
+		NewsArticleGroup articleGroup = load(articleGroupId);
+		if (!ArticleGroupStatusType.Closed.equals((articleGroup.getStatus()))) {
+			throw new BusinessException(ErrorCodeConstants.NO_CHANGES_ALLOWED);
+		}
+		articleGroup.setOperatorId(userId);
+		List<NewsArticleDTO> articleList = newsArticleService.reinstateArticles(articleGroup, articleGroupId, userId);
+		ArticleGroupStatusType newStatus = deriveNewStatus(
+				newsArticleRepository.findByNewsArticleGroupId(articleGroup.getNewsArticleGroupId()));
+		articleGroup.setStatus(newStatus);
+		articleGroup = repository.save(articleGroup);
+		NewsArticleGroupDTO articleGroupDTO = modelMapper.map(articleGroup, NewsArticleGroupDTO.class);
+		articleGroupDTO.setNewsArticles(articleList);
+		return articleGroupDTO;
+	}
+
 	public List<PropertyAuditData> getPreviousComments(Long articleGroupId) {
 		NewsArticleGroup articleGroup = new NewsArticleGroup();
 		articleGroup.setNewsArticleGroupId(articleGroupId);
-		
-		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig).forParentObject(articleGroup);
+		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig)
+				.forParentObject(articleGroup);
 		auditBuilder.forProperty("comments");
-		
 		return auditBuilder.buildPropertyAudit();
 	}
-	
-	private void saveImages(String base64Image, Long articleGroupId) {
-		if (base64Image == null || articleGroupId == null) {
-			return;
-		}
-		String imagesFolderPath =  appConfig.getArticleImageConfig().getImagesRootFolderPath();
-		String size1FileNameWithoutExtension = imagesFolderPath + appConfig.getArticleImageConfig().getSize1FolderPath() + articleGroupId;
-		String size2FileNameWithoutExtension = imagesFolderPath + appConfig.getArticleImageConfig().getSize2FolderPath() + articleGroupId;
-		String size3FileNameWithoutExtension = imagesFolderPath + appConfig.getArticleImageConfig().getSize3FolderPath() + articleGroupId;
-		String size4FileNameWithoutExtension = imagesFolderPath + appConfig.getArticleImageConfig().getSize4FolderPath() + articleGroupId;
-		String outputFileName = imagesFolderPath + "temp-" + articleGroupId;
 
-		File imageFile = null;
-		try {
-			byte[] decodedBytes = Base64.getDecoder().decode(base64Image);
-			imageFile = new File(outputFileName);
-
-			FileUtils.writeByteArrayToFile(imageFile, decodedBytes);
-
-			// Size 1
-			List<Integer> size1Dimension = appConfig.getArticleImageConfig().getSize1Dimention();
-			ImageUtils.resizeImage(imageFile, new Dimension(size1Dimension.get(0), size1Dimension.get(1)),
-					ImageUtils.JPG_IMAGE_TYPE, size1FileNameWithoutExtension);
-
-			// Size 2
-			List<Integer> size2Dimension = appConfig.getArticleImageConfig().getSize2Dimention();
-			ImageUtils.resizeImage(imageFile, new Dimension(size2Dimension.get(0), size2Dimension.get(1)),
-					ImageUtils.JPG_IMAGE_TYPE, size2FileNameWithoutExtension);
-
-			// Size 3
-			List<Integer> size3Dimension = appConfig.getArticleImageConfig().getSize3Dimention();
-			ImageUtils.resizeImage(imageFile, new Dimension(size3Dimension.get(0), size3Dimension.get(1)),
-					ImageUtils.JPG_IMAGE_TYPE, size3FileNameWithoutExtension);
-
-			// Size 4
-			List<Integer> size4Dimension = appConfig.getArticleImageConfig().getSize4Dimention();
-			ImageUtils.resizeImage(imageFile, new Dimension(size4Dimension.get(0), size4Dimension.get(1)),
-					ImageUtils.JPG_IMAGE_TYPE, size4FileNameWithoutExtension);
-
-			FileUtils.forceDelete(imageFile);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} finally {
-			base64Image = null;
-			imageFile = null;
-		}
-	}
 }

@@ -9,119 +9,178 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.enewschamp.publication.app.dto.PublicationArticleLinkageDTO;
+import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.article.app.dto.NewsArticleDTO;
+import com.enewschamp.article.app.service.NewsArticleHelper;
+import com.enewschamp.article.domain.entity.NewsArticle;
+import com.enewschamp.article.domain.entity.NewsArticleGroup;
+import com.enewschamp.article.domain.service.NewsArticleGroupService;
+import com.enewschamp.article.domain.service.NewsArticleRepository;
+import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.enewschamp.publication.domain.entity.Publication;
-import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
-import com.enewschamp.publication.domain.service.PublicationArticleLinkageRepository;
 import com.enewschamp.publication.domain.service.PublicationRepository;
 import com.enewschamp.publication.domain.service.PublicationService;
+import com.enewschamp.user.domain.service.UserRoleService;
 
 @Component
 public class PublicationHelper {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	private PublicationService publicationService;
-	
+
 	@Autowired
 	private PublicationRepository publicationRepository;
-	
+
 	@Autowired
-	PublicationArticleLinkageRepository publicationLinkageRepository;
-	
+	private NewsArticleHelper newsArticleHelper;
+
 	@Autowired
-	private PublicationArticleLinkageHelper publicationLinkageHelper;
-	
+	private NewsArticleRepository newsArticleRepository;
+
+	@Autowired
+	private NewsArticleService newsArticleService;
+
+	@Autowired
+	private UserRoleService userRoleService;
+
+	@Autowired
+	private NewsArticleGroupService newsArticleGroupService;
+
 	@Transactional
 	public PublicationDTO createPublication(PublicationDTO publicationDTO) {
-		
-		List<PublicationArticleLinkageDTO> articleLinkages = publicationDTO.getArticleLinkages();
-		for (PublicationArticleLinkageDTO articleLinkageDTO : articleLinkages) {
-			articleLinkageDTO.setRecordInUse(publicationDTO.getRecordInUse());
-			articleLinkageDTO.setOperatorId(publicationDTO.getOperatorId());
+		List<NewsArticleDTO> articleLinked = publicationDTO.getNewsArticles();
+		if (articleLinked != null) {
+			for (NewsArticleDTO newsArticleDTO : articleLinked) {
+				newsArticleDTO.setRecordInUse(publicationDTO.getRecordInUse());
+				newsArticleDTO.setOperatorId(publicationDTO.getOperatorId());
+			}
 		}
-		
-		Publication publication;
-		
 		// Remove articles which have been deleted on the UI
-		removeDelinkedArticles(publicationDTO.getPublicationId(), articleLinkages);
-		
-		publication = modelMapper.map(publicationDTO, Publication.class);
+		removeDelinkedArticles(publicationDTO, articleLinked);
+		publicationDTO.setNewsArticlesLinked(articleLinked);
+		Publication publication = modelMapper.map(publicationDTO, Publication.class);
 		publication = publicationService.create(publication);
 		publicationDTO = modelMapper.map(publication, PublicationDTO.class);
-		
-		articleLinkages = publicationDTO.getArticleLinkages(); 
-		for(PublicationArticleLinkageDTO articleLinkageDTO: articleLinkages) {
-			articleLinkageDTO.setPublicationId(publicationDTO.getPublicationId());
+		List<NewsArticleDTO> newsArticleDTO = new ArrayList<NewsArticleDTO>();
+		if (articleLinked != null) {
+			for (NewsArticleDTO articleLinkageDTO : articleLinked) {
+				articleLinkageDTO.setPublicationId(publicationDTO.getPublicationId());
+				articleLinkageDTO.setPublicationDate(publicationDTO.getPublicationDate());
+				if (userRoleService.getByUserIdAndRole(publicationDTO.getOperatorId(),
+						CommonConstants.PUBLISHER_ROLE) != null) {
+					articleLinkageDTO.setPublisherWorked(publicationDTO.getOperatorId());
+				} else if (userRoleService.getByUserIdAndRole(publicationDTO.getOperatorId(),
+						CommonConstants.EDITOR_ROLE) != null) {
+					articleLinkageDTO.setEditorWorked(publicationDTO.getOperatorId());
+				}
+				NewsArticle newsArticle = newsArticleHelper.updatePublicationId(articleLinkageDTO,
+						publication.getStatus(), publication.getPublicationDate());
+				NewsArticleDTO articleDTO = modelMapper.map(newsArticle, NewsArticleDTO.class);
+				newsArticleDTO.add(articleDTO);
+			}
 		}
-		
+		publicationDTO.setNewsArticles(newsArticleDTO);
 		return publicationDTO;
 	}
 
-	private void removeDelinkedArticles(Long publicationId,
-										List<PublicationArticleLinkageDTO> articleLinkages) {
-		if(publicationId == null || publicationId <= 0) {
+	private void removeDelinkedArticles(PublicationDTO publicationDTO, List<NewsArticleDTO> articleLinkages) {
+		Long publicationId = publicationDTO.getPublicationId();
+		if (publicationId == null || publicationId <= 0) {
 			return;
 		}
 		Publication publication = publicationService.get(publicationId);
-		if(publication == null) {
+		if (publication == null) {
 			return;
 		}
-		for (PublicationArticleLinkage existingArticleLinkage : publication.getArticleLinkages()) {
-			if (!isExistingLinkageFound(existingArticleLinkage.getLinkageId(), articleLinkages)) {
-				System.out.println("Delete linkage for id: " + existingArticleLinkage.getLinkageId());
-				publicationLinkageRepository.deleteById(existingArticleLinkage.getLinkageId());
+		for (NewsArticle existingArticleLinkage : publication.getNewsArticles()) {
+			if (!isExistingLinkageFound(existingArticleLinkage.getPublicationId(), articleLinkages)) {
+				existingArticleLinkage = newsArticleService.get(existingArticleLinkage.getNewsArticleId());
+				existingArticleLinkage.setPublicationDate(null);
+				existingArticleLinkage.setPublicationId(null);
+				existingArticleLinkage.setSequence(0);
+				if (userRoleService.getByUserIdAndRole(publicationDTO.getOperatorId(),
+						CommonConstants.PUBLISHER_ROLE) != null) {
+					existingArticleLinkage.setPublisherWorked(publicationDTO.getOperatorId());
+				} else if (userRoleService.getByUserIdAndRole(publicationDTO.getOperatorId(),
+						CommonConstants.EDITOR_ROLE) != null) {
+					existingArticleLinkage.setEditorWorked(publicationDTO.getOperatorId());
+				}
+				existingArticleLinkage.setOperatorId(publication.getOperatorId());
+				newsArticleRepository.save(existingArticleLinkage);
 			}
 		}
 	}
-	
-	private boolean isExistingLinkageFound(long linkageId, List<PublicationArticleLinkageDTO> existingLinkages) {
-		
-		for(PublicationArticleLinkageDTO articleLinkage: existingLinkages) {
-			if(articleLinkage.getLinkageId() == linkageId) {
+
+	private boolean isExistingLinkageFound(long publicationId, List<NewsArticleDTO> existingLinkages) {
+		for (NewsArticleDTO articleLinkage : existingLinkages) {
+			if (articleLinkage.getPublicationId() != null && articleLinkage.getPublicationId() == publicationId) {
 				return true;
 			}
 		}
-		
 		return false;
 	}
 
 	public PublicationDTO getPublication(Long publicationId) {
 		Publication publication = publicationService.get(publicationId);
 		PublicationDTO publicationDTO = modelMapper.map(publication, PublicationDTO.class);
-		
-		List<PublicationArticleLinkageDTO> articles = publicationLinkageHelper.getByPublicationId(publicationId);
-		publicationDTO.setArticleLinkages(articles);
+		List<NewsArticleDTO> articles = newsArticleHelper.getByPublicationId(publicationId);
+		publicationDTO.setNewsArticles(articles);
 		return publicationDTO;
 	}
-	
+
 	public List<PublicationDTO> getByPublicationGroupId(long publicationGroupId) {
 		List<Publication> publications = publicationRepository.findByPublicationGroupId(publicationGroupId);
 		List<PublicationDTO> publicationDTOs = new ArrayList<PublicationDTO>();
-		for(Publication publication: publications) {
+		for (Publication publication : publications) {
 			PublicationDTO publicationDTO = modelMapper.map(publication, PublicationDTO.class);
-			//publicationDTO = fillArticleLinkages(publicationDTO);
+			for (NewsArticleDTO newsArticleDTO : publicationDTO.getNewsArticles()) {
+				NewsArticleGroup newsArticleGroup = newsArticleGroupService.get(newsArticleDTO.getNewsArticleGroupId());
+				newsArticleDTO.setEditorId(newsArticleGroup.getEditorId());
+				newsArticleDTO.setAuthorId(newsArticleGroup.getAuthorId());
+				newsArticleDTO.setArticleType(newsArticleGroup.getArticleType());
+				newsArticleDTO.setCityId(newsArticleGroup.getCityId());
+				newsArticleDTO.setCredits(newsArticleGroup.getCredits());
+				newsArticleDTO.setGenreId(newsArticleGroup.getGenreId());
+				newsArticleDTO.setHashTags(newsArticleGroup.getHashTags());
+				newsArticleDTO.setNoQuiz(newsArticleGroup.isNoQuiz());
+				newsArticleDTO.setImageOnly(newsArticleGroup.isImageOnly());
+				newsArticleDTO.setHeadline(newsArticleGroup.getHeadline());
+				newsArticleDTO.setUrl(newsArticleGroup.getUrl());
+				newsArticleDTO.setSourceText(newsArticleGroup.getSourceText());
+				newsArticleDTO.setTargetCompletionDate(newsArticleGroup.getTargetCompletionDate());
+				newsArticleDTO.setIntendedPubDate(newsArticleGroup.getIntendedPubDate());
+				newsArticleDTO.setIntendedPubMonth(newsArticleGroup.getIntendedPubMonth());
+				newsArticleDTO.setIntendedPubDay(newsArticleGroup.getIntendedPubDay());
+			}
 			publicationDTOs.add(publicationDTO);
 		}
 		return publicationDTOs;
 	}
-	
+
 	private PublicationDTO fillArticleLinkages(PublicationDTO publicationDTO) {
-		List<PublicationArticleLinkage> articleLinkageList = publicationLinkageRepository.findByPublicationId(publicationDTO.getPublicationId());
-		List<PublicationArticleLinkageDTO> linkageDTOs = new ArrayList<PublicationArticleLinkageDTO>();
-		for(PublicationArticleLinkage linkage: articleLinkageList) {
-			PublicationArticleLinkageDTO linkageDTO = modelMapper.map(linkage, PublicationArticleLinkageDTO.class);
+		List<NewsArticle> articleLinkageList = newsArticleRepository
+				.findByPublicationId(publicationDTO.getPublicationId());
+		List<NewsArticleDTO> linkageDTOs = new ArrayList<NewsArticleDTO>();
+		for (NewsArticle linkage : articleLinkageList) {
+			NewsArticleDTO linkageDTO = modelMapper.map(linkage, NewsArticleDTO.class);
 			linkageDTOs.add(linkageDTO);
 		}
-		publicationDTO.setArticleLinkages(linkageDTOs);
+		publicationDTO.setNewsArticles(linkageDTOs);
 		return publicationDTO;
 	}
-	
+
+	public PublicationDTO get(Long publicationId) {
+		Publication publication = publicationService.get(publicationId);
+		PublicationDTO publicationDTO = modelMapper.map(publication, PublicationDTO.class);
+		publicationDTO = fillArticleLinkages(publicationDTO);
+		return publicationDTO;
+	}
+
 	public void deleteByPublicationGroupId(long publicationGroupId) {
 		publicationRepository.deleteByPublicationGroupId(publicationGroupId);
 	}
-	
 }

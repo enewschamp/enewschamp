@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.enewschamp.subscription.domain.entity.StudentSchoolWork;
 
-public interface StudentSchoolWorkRepository extends JpaRepository<StudentSchoolWork, Long>{
+public interface StudentSchoolWorkRepository extends JpaRepository<StudentSchoolWork, Long> {
 
 }

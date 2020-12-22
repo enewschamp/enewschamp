@@ -15,10 +15,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name="Country")
-public class Country extends BaseEntity{
+@Table(name = "Country")
+public class Country extends BaseEntity {
 
 	/**
 	 * 
@@ -27,31 +27,28 @@ public class Country extends BaseEntity{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "country_id_generator")
-	@SequenceGenerator(name="country_id_generator", sequenceName = "countryid_seq", allocationSize=1)
-	@Column(name = "COUNTRYID", updatable = false, nullable = false)
+	@SequenceGenerator(name = "country_id_generator", sequenceName = "country_id_seq", allocationSize = 1)
+	@Column(name = "countryId", updatable = false, nullable = false)
 	private Long countryId;
-	
+
 	@NotNull
-	@Column(name = "nameId", length=10)
+	@Column(name = "nameId", length = 50)
 	private String nameId;
 
 	@NotNull
-	@Column(name = "description", length=50)
+	@Column(name = "description", length = 50)
 	private String description;
-	
+
 	@NotNull
-	@Column(name = "isd", length=4)
+	@Column(name = "isd", length = 4)
 	private int isd;
-	
+
 	@NotNull
-	@Column(name = "currencyId", length=3)
+	@Column(name = "currencyId", length = 3)
 	private String currencyId;
-	
+
 	@NotNull
-	@Column(name = "language", length=3)
+	@Column(name = "language", length = 3)
 	private String language;
-	
-	
-	
-	
+
 }

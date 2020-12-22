@@ -15,11 +15,11 @@ import lombok.Data;
 @Entity
 @Immutable
 
-public class YearlyScoresGenre implements Serializable{
+public class YearlyScoresGenre implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private String genreid;
+	private String genreId;
 	private Long articlesPublished;
 	private Long articlesRead;
 	private Long quizPublished;

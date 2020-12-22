@@ -15,11 +15,11 @@ import lombok.Data;
 @Table(name = "monthly_score_vw")
 @Entity
 @Immutable
-public class MonthlyScores implements Serializable{
+public class MonthlyScores implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private LocalDate publish_date;
+	private String month;
 	private Long articlesPublished;
 	private Long articlesRead;
 	private Long quizPublished;

@@ -15,34 +15,38 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name="MultiLanguageText")
-public class MultiLanguageText extends BaseEntity {	
-	
+@Table(name = "MultiLanguageText")
+public class MultiLanguageText extends BaseEntity {
+
 	private static final long serialVersionUID = 5418795295175530388L;
 
 	@Id
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "multi_lang_text_id_generator")
-	@SequenceGenerator(name="multi_lang_text_id_generator", sequenceName = "lang_text_id_seq", allocationSize=1)
+	@SequenceGenerator(name = "multi_lang_text_id_generator", sequenceName = "lang_text_id_seq", allocationSize = 1)
 	@Column(name = "MultiLanguageTextId", updatable = false, nullable = false)
 	private long multiLanguageTextId = 0L;
-	
+
 	@NotNull
-	@Column(name = "Locale", length=5)
+	@Column(name = "NameId", length = 5)
+	private Long nameId;
+
+	@NotNull
+	@Column(name = "Locale", length = 5)
 	private String locale;
 
 	@NotNull
-	@Column(name = "EntityName", length=50)
-	private String entityName;
-	
-	@NotNull
-	@Column(name = "EntityColumn", length=50)
-	private String entityColumn;
-	
-	@NotNull
-	@Column(name = "Text", length=200)
+	@Column(name = "Text", length = 200)
 	private String text;
-	
+
+	@NotNull
+	@Column(name = "EntityName", length = 50)
+	private String entityName;
+
+	@NotNull
+	@Column(name = "EntityColumn", length = 50)
+	private String entityColumn;
+
 }

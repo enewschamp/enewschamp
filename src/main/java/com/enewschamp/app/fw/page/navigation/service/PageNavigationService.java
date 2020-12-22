@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.fw.page.navigation.entity.PageNavigator;
 import com.enewschamp.app.fw.page.navigation.repository.PageNavigatorRepository;
@@ -21,8 +21,6 @@ public class PageNavigationService {
 
 	@Autowired
 	PageNavigatorRepository pageNavigatorRepository;
-
-	
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -61,17 +59,17 @@ public class PageNavigationService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.PAGE_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.PAGE_NOT_FOUND);
 		}
 	}
 
 	public List<PageNavigatorDTO> getNavList(String action, String operation, String currentPage) {
-		List<PageNavigator> existingEntity = pageNavigatorRepository.getNavList( operation, currentPage);
+		List<PageNavigator> existingEntity = pageNavigatorRepository.getNavList(operation, currentPage);
 		java.lang.reflect.Type listType = new TypeToken<List<PageNavigatorDTO>>() {
 		}.getType();
 		List<PageNavigatorDTO> pageNavList = modelMapper.map(existingEntity, listType);
 		if (pageNavList.size() == 0) {
-			throw new BusinessException(ErrorCodes.PAGE_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.PAGE_NOT_FOUND);
 		}
 		return pageNavList;
 	}
@@ -79,10 +77,9 @@ public class PageNavigationService {
 	public PageNavigatorDTO getNavPage(String action, String operation, String currentPage) {
 		PageNavigator existingEntity = pageNavigatorRepository.getNavPage(action, operation, currentPage);
 		if (existingEntity == null) {
-			throw new BusinessException(ErrorCodes.PAGE_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.PAGE_NOT_FOUND);
 		}
 		PageNavigatorDTO pageNav = modelMapper.map(existingEntity, PageNavigatorDTO.class);
-		
 		return pageNav;
 	}
 

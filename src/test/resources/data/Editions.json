@@ -1,7 +1,7 @@
 [
     {
-        "editionId":"INDIAN",
-        "languageId":123,
-        "editionName":"Indian National Edition"
+        "editionId":"INDIAN",        
+        "editionName":"Indian National Edition",
+		"languageId":1
     }
 ]

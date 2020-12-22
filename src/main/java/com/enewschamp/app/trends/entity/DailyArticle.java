@@ -18,13 +18,13 @@ import lombok.Data;
 public class DailyArticle {
 
 	@Id
-	@Column(name = "publishDate", updatable = false, nullable = false)
-	private LocalDate publishDate;
-	
+	@Column(name = "publicationDate", updatable = false, nullable = false)
+	private LocalDate publicationDate;
+
 	@Column(name = "articlesRead")
 	private Long articlesRead;
-	
-	@Column(name = "articlePublished")
-	private Long articlePublished;
-	
+
+	@Column(name = "articlesPublished")
+	private Long articlesPublished;
+
 }

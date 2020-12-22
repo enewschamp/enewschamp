@@ -8,24 +8,20 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class StudentSubscriptionPeriodWorkDTO extends AbstractDTO{
+@EqualsAndHashCode(callSuper = false)
+public class StudentSubscriptionPeriodWorkDTO extends AbstractDTO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Long studentID;
+	private Long studentId;
 	private String emailId;
-	private int subscriptionPeriodSelected;
-	private Long feeAmount=0L;
+	private String subscriptionPeriodSelected;
+	private Long feeAmount = 0L;
 	private String autoRenew;
-	private String incompeleteFormText;
-	private  List<String> feeText;
+	private String incompleteFormText;
+	private List<String> feeText;
 	private List<String> fee;
-	
-	
-
-	
 }

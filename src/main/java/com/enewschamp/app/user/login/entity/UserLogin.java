@@ -28,19 +28,17 @@ public class UserLogin extends BaseEntity {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userLogin_id_generator")
 	@SequenceGenerator(name = "userLogin_id_generator", sequenceName = "userLogin_id_seq", allocationSize = 1)
 	@Column(name = "userLoginId", updatable = false, nullable = false)
 	private Long userLoginId;
 
-	
 	@NotNull
 	@Column(name = "userId", length = 80)
 	private String userId;
 
-	
 	@Column(name = "loginFlag", length = 1)
 	private String loginFlag;
 
@@ -49,10 +47,16 @@ public class UserLogin extends BaseEntity {
 
 	@Column(name = "lastLoginTime")
 	private LocalDateTime lastLoginTime;
-	
-	@Column(name = "deviceId", length=50)
+
+	@Column(name = "tokenExpirationTime")
+	private LocalDateTime tokenExpirationTime;
+
+	@Column(name = "tokenId", length = 50)
+	private String tokenId;
+
+	@Column(name = "deviceId", length = 50)
 	private String deviceId;
-	
+
 	@Column(name = "userType")
 	@Enumerated(EnumType.STRING)
 	private UserType userType;

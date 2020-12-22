@@ -18,52 +18,52 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name="TrendsMonthlyByGenre",uniqueConstraints={@UniqueConstraint(columnNames = {"studentId" , "editionId","trendyearMonth","genreId"})})
-@EqualsAndHashCode(callSuper=false)
-public class TrendsMonthlyByGenre extends BaseEntity{
+@Table(name = "TrendsMonthlyByGenre", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "studentId", "editionId", "trendyearMonth", "genreId" }) })
+@EqualsAndHashCode(callSuper = false)
+public class TrendsMonthlyByGenre extends BaseEntity {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trendsMonthlyGenre_id_generator")
-	@SequenceGenerator(name="trendsMonthlyGenre_id_generator", sequenceName = "trendsMonthlyGenre_seq", allocationSize=1)
+	@SequenceGenerator(name = "trendsMonthlyGenre_id_generator", sequenceName = "trendsMonthlyGenre_seq", allocationSize = 1)
 	@Column(name = "trendsMonthlyGenreId", updatable = false, nullable = false)
 	private Long trendsMonthlyGenreId;
-	
+
 	@NotNull
-	@Column(name = "studentId", length=10)
+	@Column(name = "studentId", length = 10)
 	private Long studentId;
-	
+
 	@NotNull
-	@Column(name = "editionId", length=6)
+	@Column(name = "editionId", length = 6)
 	private String editionId;
-	
+
 	@Column(name = "trendyearMonth")
 	private Long yearMonth;
-	
-	
-	@Column(name = "genreId", length=12)
+
+	@Column(name = "genreId", length = 12)
 	private String genreId;
-	
-	@Column(name = "articlesRead", length=3)
-	private Long articlesRead=0L;
-	
-	
-	@Column(name = "quizAttempted", length=2)
+
+	@Column(name = "readingLevel", length = 1)
+	private int readingLevel;
+
+	@Column(name = "articlesRead", length = 3)
+	private Long articlesRead = 0L;
+
+	@Column(name = "quizAttempted", length = 2)
 	private Long quizAttempted;
-	
-	@Column(name = "quizCorrect", length=2)
+
+	@Column(name = "quizCorrect", length = 2)
 	private Long quizCorrect;
-	
+
 	@PrePersist
-	protected void beforePersist()
-	{
-		if(articlesRead==null) articlesRead=0L;
+	protected void beforePersist() {
+		if (articlesRead == null)
+			articlesRead = 0L;
 	}
-	
-	
+
 }

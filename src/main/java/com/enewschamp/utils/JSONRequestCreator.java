@@ -27,10 +27,9 @@ public class JSONRequestCreator {
 		ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.ALWAYS);
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
-		
 		try {
-			//instantiateFields(model);
-			
+			// instantiateFields(model);
+
 			listCollectionProperties(model);
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
@@ -47,26 +46,27 @@ public class JSONRequestCreator {
 		System.out.println(response);
 		return response;
 	}
-	
+
 	private void listCollectionProperties(Object o) throws IllegalAccessException {
 		Field[] fields = o.getClass().getDeclaredFields();
 
 		for (Field field : fields) {
-			//System.out.println("Processing field: " + field.getName() + " -- Type: " + field.getType());
+			// System.out.println("Processing field: " + field.getName() + " -- Type: " +
+			// field.getType());
 			field.setAccessible(true);
 
 			if (field.get(o) == null) {
 				Type type = field.getType();
 
 //				try {
-					Class<?> clazz = (Class<?>) type;
-					if (clazz == List.class) {
-						
-						ParameterizedType listType = (ParameterizedType) field.getGenericType();
-						Class<?> listClass = (Class<?>) listType.getActualTypeArguments()[0];
-						
-						System.out.println(field.getName() + " : " + List.class.getName() + " : + " + listClass.getName());
-					}
+				Class<?> clazz = (Class<?>) type;
+				if (clazz == List.class) {
+
+					ParameterizedType listType = (ParameterizedType) field.getGenericType();
+					Class<?> listClass = (Class<?>) listType.getActualTypeArguments()[0];
+
+					System.out.println(field.getName() + " : " + List.class.getName() + " : + " + listClass.getName());
+				}
 //				} catch (ClassCastException ) {
 //					// Handle this or leave field null
 //				}
@@ -78,7 +78,8 @@ public class JSONRequestCreator {
 		Field[] fields = o.getClass().getDeclaredFields();
 
 		for (Field field : fields) {
-			//System.out.println("Processing field: " + field.getName() + " -- Type: " + field.getType());
+			// System.out.println("Processing field: " + field.getName() + " -- Type: " +
+			// field.getType());
 			field.setAccessible(true);
 
 			if (field.get(o) == null) {
@@ -93,26 +94,26 @@ public class JSONRequestCreator {
 						clazz = HashMap.class;
 					}
 					Object instance = null;
-					
-					if(type.getTypeName().equals("java.lang.String")) {
+
+					if (type.getTypeName().equals("java.lang.String")) {
 						instance = "{{" + field.getName() + "}}";
-					} else if(type.getTypeName().equals("java.net.URI")) {
+					} else if (type.getTypeName().equals("java.net.URI")) {
 						try {
 							instance = new URI("http://article-url");
 						} catch (URISyntaxException e) {
 							e.printStackTrace();
 						}
-					} else if(type.getTypeName().equals("java.lang.Long")) {
+					} else if (type.getTypeName().equals("java.lang.Long")) {
 						instance = new Long("1234");
-					} else if(type.getTypeName().equals("java.time.LocalDate")) {
+					} else if (type.getTypeName().equals("java.time.LocalDate")) {
 						CharSequence sequence = new String("2019-12-12");
 						instance = java.time.LocalDate.parse(sequence);
-					} else if(field.getType().isEnum()) {
+					} else if (field.getType().isEnum()) {
 						instance = field.getType().getEnumConstants()[0];
 					} else {
 						instance = clazz.newInstance();
 					}
-					
+
 					if (List.class.isAssignableFrom(clazz)) {
 						instantiateList(clazz, field, instance);
 					}
@@ -120,7 +121,7 @@ public class JSONRequestCreator {
 					if (Map.class.isAssignableFrom(clazz)) {
 						instantiateMap(clazz, field, instance);
 					}
-					
+
 					if (Set.class.isAssignableFrom(clazz)) {
 						instantiateSet(clazz, field, instance);
 					}
@@ -154,7 +155,7 @@ public class JSONRequestCreator {
 		List<Object> list = (List<Object>) instance;
 		list.add(listTypeInstance);
 	}
-	
+
 	private void instantiateSet(Class<?> clazz, Field field, Object instance)
 			throws IllegalAccessException, InstantiationException {
 

@@ -3,6 +3,8 @@ package com.enewschamp.app.trends.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -15,16 +17,16 @@ public class MonthlyQuizGenreDTO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@JsonInclude
+	private String month;
 
-	private LocalDate publishDate;
-	
-	
-	private Long quizpublished;
+	@JsonInclude
+	private Long quizPublished;
 
+	@JsonInclude
 	private Long quizAttempted;
-	
-	private Long quizcorrect;
-	
-	private String genreid;
-	
+
+	@JsonInclude
+	private Long quizCorrect;
+
 }

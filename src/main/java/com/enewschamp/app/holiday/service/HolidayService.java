@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.holiday.entity.Holiday;
 import com.enewschamp.app.holiday.repository.HolidayRepository;
 import com.enewschamp.problem.BusinessException;
@@ -18,14 +18,14 @@ public class HolidayService {
 
 	@Autowired
 	HolidayRepository holidayRepository;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
-	
+
 	public Holiday create(Holiday holidayEntity) {
 		return holidayRepository.save(holidayEntity);
 	}
@@ -53,21 +53,20 @@ public class HolidayService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.HOLIDAY_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.HOLIDAY_NOT_FOUND);
 		}
 	}
-	
-	public boolean isHoliday(LocalDate date, String editionId)
-	{
-		System.out.println("date in isHoliday is "+date);
+
+	public boolean isHoliday(LocalDate date, String editionId) {
+		System.out.println("date in isHoliday is " + date);
 
 		Optional<Holiday> holiday = holidayRepository.getHoliday(date, editionId);
-		System.out.println("Holiday is "+holiday);
-		
-		if(holiday.isPresent())
+		System.out.println("Holiday is " + holiday);
+
+		if (holiday.isPresent())
 			return true;
-		else 
+		else
 			return false;
 	}
-	
+
 }

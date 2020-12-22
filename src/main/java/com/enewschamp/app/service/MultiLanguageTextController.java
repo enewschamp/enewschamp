@@ -29,7 +29,7 @@ public class MultiLanguageTextController {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	private MultiLanguageTextService multiLanguageTextService;
 
@@ -42,29 +42,31 @@ public class MultiLanguageTextController {
 	}
 
 	@PutMapping(value = "/multiLanguageTexts/{multiLanguageTextId}")
-	public ResponseEntity<MultiLanguageTextDTO> update(@RequestBody @Valid MultiLanguageTextDTO multiLanguageTextDTO, @PathVariable Long multiLanguageTextId) {
+	public ResponseEntity<MultiLanguageTextDTO> update(@RequestBody @Valid MultiLanguageTextDTO multiLanguageTextDTO,
+			@PathVariable Long multiLanguageTextId) {
 		multiLanguageTextDTO.setMultiLanguageTextId(multiLanguageTextId);
 		MultiLanguageText multiLanguageText = modelMapper.map(multiLanguageTextDTO, MultiLanguageText.class);
 		multiLanguageText = multiLanguageTextService.update(multiLanguageText);
 		multiLanguageTextDTO = modelMapper.map(multiLanguageText, MultiLanguageTextDTO.class);
 		return new ResponseEntity<MultiLanguageTextDTO>(multiLanguageTextDTO, HttpStatus.OK);
 	}
-	
+
 	@PatchMapping(value = "/multiLanguageTexts/{multiLanguageTextId}")
-	public ResponseEntity<MultiLanguageTextDTO> patch(@RequestBody MultiLanguageTextDTO multiLanguageTextDTO, @PathVariable Long multiLanguageTextId) {
+	public ResponseEntity<MultiLanguageTextDTO> patch(@RequestBody MultiLanguageTextDTO multiLanguageTextDTO,
+			@PathVariable Long multiLanguageTextId) {
 		multiLanguageTextDTO.setMultiLanguageTextId(multiLanguageTextId);
 		MultiLanguageText multiLanguageText = modelMapper.map(multiLanguageTextDTO, MultiLanguageText.class);
 		multiLanguageText = multiLanguageTextService.patch(multiLanguageText);
 		multiLanguageTextDTO = modelMapper.map(multiLanguageText, MultiLanguageTextDTO.class);
 		return new ResponseEntity<MultiLanguageTextDTO>(multiLanguageTextDTO, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping(value = "/multiLanguageTexts/{multiLanguageTextId}")
 	public ResponseEntity<Void> delete(@PathVariable Long multiLanguageTextId) {
 		multiLanguageTextService.delete(multiLanguageTextId);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/multiLanguageTexts/{multiLanguageTextId}")
 	public ResponseEntity<MultiLanguageTextDTO> get(@PathVariable Long multiLanguageTextId) {
 		MultiLanguageText multiLanguageText = multiLanguageTextService.get(multiLanguageTextId);
@@ -72,13 +74,11 @@ public class MultiLanguageTextController {
 		multiLanguageTextService.get(multiLanguageTextId);
 		return new ResponseEntity<MultiLanguageTextDTO>(multiLanguageTextDTO, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/multiLanguageTexts/{multiLanguageTextId}/audit")
 	public ResponseEntity<String> getAudit(@PathVariable Long multiLanguageTextId) {
 		String audit = multiLanguageTextService.getAudit(multiLanguageTextId);
 		return new ResponseEntity<String>(audit, HttpStatus.OK);
 	}
-	
-	
 
 }

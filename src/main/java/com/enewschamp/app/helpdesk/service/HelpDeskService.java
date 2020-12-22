@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.helpdesk.entity.HelpDesk;
 import com.enewschamp.app.helpdesk.repository.HelpDeskRepository;
 import com.enewschamp.problem.BusinessException;
@@ -17,14 +17,14 @@ public class HelpDeskService {
 
 	@Autowired
 	HelpDeskRepository helpDeskRespository;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
-	
+
 	public HelpDesk create(HelpDesk helpDeskEntity) {
 		return helpDeskRespository.save(helpDeskEntity);
 	}
@@ -52,9 +52,8 @@ public class HelpDeskService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.REQUESTID_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.REQUESTID_NOT_FOUND);
 		}
 	}
-	
-	
+
 }

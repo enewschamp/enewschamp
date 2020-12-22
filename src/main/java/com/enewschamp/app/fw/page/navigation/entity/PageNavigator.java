@@ -15,44 +15,47 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@EqualsAndHashCode(callSuper=false)
-@Table(name="PageNavigator")
-public class PageNavigator extends BaseEntity{/**
-	 * 
-	 */
+@EqualsAndHashCode(callSuper = false)
+@Table(name = "PageNavigator")
+public class PageNavigator extends BaseEntity {
+	/**
+	* 
+	*/
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PageNavigator_id_generator")
-	@SequenceGenerator(name="navId_generator", sequenceName = "PageNavigator_seq", allocationSize=1)
-	@Column(name = "navId", length=10)
-	private Long navId= 0L;
-	
-	@Column(name="action")
-	private String action;
-	
-	@Column(name="currentPage")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pagenavigator_id_generator")
+	@SequenceGenerator(name = "pagenavigator_id_generator", sequenceName = "pagenavigator_id_seq", allocationSize = 1)
+	@Column(name = "navId", length = 10)
+	private Long navId = 0L;
+
+	@Column(name = "currentPage")
 	private String currentPage;
-	
-	@Column(name="nextpage")
-	private String nextpage;
-	
-	@Column(name="previousPage")
-	private String previousPage;
-	
-	@Column(name="operation")	
+
+	@Column(name = "operation")
 	private String operation;
-	
-	@Column(name="commitMasterData")	
-	private String commitMasterData;
-	
-	@Column(name="updationTable", length=1)	
+
+	@Column(name = "action")
+	private String action;
+
+	@Column(name = "nextPage")
+	private String nextPage;
+
+	@Column(name = "submissionMethod")
+	private String submissionMethod;
+
+	@Column(name = "workToMaster", length = 200)
+	private String workToMaster;
+
+	@Column(name = "nextPageOperation")
+	private String nextPageOperation;
+
+	@Column(name = "nextPageLoadMethod")
+	private String nextPageLoadMethod;
+
+	@Column(name = "controlWorkEntryOrExit", length = 10)
+	private String controlWorkEntryOrExit;
+
+	@Column(name = "updationTable", length = 1)
 	private String updationTable;
-	
-	@Column(name="processSeq", length=1)	
-	private int processSeq;
-	
-	@Column(name="secured", length=1)	
-	private String secured;
-	
 }

@@ -19,45 +19,44 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name="TrendsDaily",uniqueConstraints={@UniqueConstraint(columnNames = {"studentId" , "editionId","quizDate"})})
-@EqualsAndHashCode(callSuper=false)
-public class TrendsDaily extends BaseEntity{
+@Table(name = "TrendsDaily", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "studentId", "editionId", "quizPublicationDate" }) })
+@EqualsAndHashCode(callSuper = false)
+public class TrendsDaily extends BaseEntity {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trendsDaily_id_generator")
-	@SequenceGenerator(name="trendsDaily_id_generator", sequenceName = "trendsDaily_seq", allocationSize=1)
+	@SequenceGenerator(name = "trendsDaily_id_generator", sequenceName = "trendsDaily_seq", allocationSize = 1)
 	@Column(name = "trendsDailyId", updatable = false, nullable = false)
 	private Long trendsDailyId;
-	
+
 	@NotNull
-	@Column(name = "studentId", length=10)
+	@Column(name = "studentId", length = 10)
 	private Long studentId;
-	
+
 	@NotNull
-	@Column(name = "editionId", length=6)
+	@Column(name = "editionId", length = 6)
 	private String editionId;
-	
+
 	@NotNull
-	@Column(name = "quizDate")
-	private LocalDate quizDate;
-	
-	
-	@Column(name = "articleRead", length=2)
-	private Long articleRead;
-	
-	@Column(name = "quizAttempted", length=2)
+	@Column(name = "quizPublicationDate")
+	private LocalDate quizPublicationDate;
+
+	@Column(name = "articlesRead", length = 2)
+	private Long articlesRead;
+
+	@Column(name = "quizAttempted", length = 2)
 	private Long quizAttempted;
-	
-	@Column(name = "quizCorrect", length=2)
+
+	@Column(name = "quizCorrect", length = 2)
 	private Long quizCorrect;
-	
-	
-	
-	
+
+	@Column(name = "readingLevel", length = 1)
+	private int readingLevel;
+
 }

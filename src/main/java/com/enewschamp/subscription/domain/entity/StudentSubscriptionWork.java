@@ -1,7 +1,5 @@
 package com.enewschamp.subscription.domain.entity;
 
-import java.time.LocalDate;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,33 +13,27 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@EqualsAndHashCode(callSuper=false)
-@Table(name="StudentSubscription_Work")
-public class StudentSubscriptionWork extends BaseEntity{
-	
+@EqualsAndHashCode(callSuper = false)
+@Table(name = "StudentSubscriptionWork")
+public class StudentSubscriptionWork extends BaseEntity {
+
 	@Id
 	@NotNull
-	@Column(name = "StudentID", length=10)
-	private long studentID = 0L;
-	
+	@Column(name = "StudentId", length = 10)
+	private long studentId = 0L;
+
 	@NotNull
-	@Column(name = "EditionID", length=6)
-	private String editionID ;
-	
+	@Column(name = "EditionId", length = 6)
+	private String editionId;
+
 	@NotNull
-	@Column(name = "SubscriptionType",length=1)
+	@Column(name = "SubscriptionType", length = 1)
 	private String subscriptionSelected;
-	
-	@NotNull
-	@Column(name = "StartDate")
-	private LocalDate startDate;
-	
-	@Column(name = "EndDate")
-	private LocalDate endDate;
-	
-	@Column(name = "AutoRenewal",length=1)
+
+	@Column(name = "SubscriptionPeriod")
+	private String subscriptionPeriod;
+
+	@Column(name = "AutoRenewal", length = 1)
 	private String autoRenewal;
-	
-	
-	
+
 }

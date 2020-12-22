@@ -1,6 +1,6 @@
 package com.enewschamp.subscription.app.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -11,8 +11,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class StudentSubscriptionDTO extends AbstractDTO{
+@EqualsAndHashCode(callSuper = false)
+public class StudentSubscriptionDTO extends AbstractDTO {
 
 	/**
 	 * 
@@ -20,28 +20,25 @@ public class StudentSubscriptionDTO extends AbstractDTO{
 	private static final long serialVersionUID = 1L;
 
 	@NotNull
-	@Size(max=10)
-	private long studentID = 0L;
-	
-	@NotNull
-	@Size(max=6)
-	private String editionID ;
-	
-	@NotNull
-	@Size(max=1)
-	private String subscriptionSelected;
-	
-	@NotNull
-	private Date startDate;
-	
-	@NotNull
-	private Date endDate;
-	
-	@NotNull
-	@Size(max=1)
-	private String autoRenewal;
-	
-	
+	@Size(max = 10)
+	private long studentId = 0L;
 
-	
+	@NotNull
+	@Size(max = 6)
+	private String editionId;
+
+	@NotNull
+	@Size(max = 1)
+	private String subscriptionSelected;
+
+	@NotNull
+	private LocalDate startDate;
+
+	@NotNull
+	private LocalDate endDate;
+
+	@NotNull
+	@Size(max = 1)
+	private String autoRenewal;
+
 }

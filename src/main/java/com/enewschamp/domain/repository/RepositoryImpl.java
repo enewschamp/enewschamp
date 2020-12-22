@@ -16,9 +16,7 @@ public class RepositoryImpl {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	protected Long getRecordCount(CriteriaQuery criteriaQuery,
-							   	  List<Predicate> filterPredicates, 
-							   	  Root originalRoot) {
+	protected Long getRecordCount(CriteriaQuery criteriaQuery, List<Predicate> filterPredicates, Root originalRoot) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
 

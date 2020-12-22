@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -16,9 +17,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@EqualsAndHashCode(callSuper=false)
-@Table(name="StudentDetails_Work")
-public class StudentDetailsWork extends BaseEntity{
+@EqualsAndHashCode(callSuper = false)
+@Table(name = "StudentDetailsWork")
+public class StudentDetailsWork extends BaseEntity {
 
 	/**
 	 * 
@@ -27,34 +28,30 @@ public class StudentDetailsWork extends BaseEntity{
 
 	@Id
 	@NotNull
-	@Column(name = "StudentID", length=10)
-	private Long studentID= 0L;
-	
-	@NotNull
-	@Column(name = "Name", length=50)
+	@Column(name = "StudentId", length = 10)
+	private Long studentId = 0L;
+
+	@Column(name = "Name", length = 50)
 	private String name;
-	@NotNull
-	@Column(name = "Surname", length=50)
+
+	@Column(name = "Surname", length = 50)
 	private String surname;
-	
-	@Column(name = "OtherName", length=100)
-	private String otherName;
-	@NotNull
-	@Column(name = "gender", length=1)
+
+	@Column(name = "OtherNames", length = 100)
+	private String otherNames;
+
+	@Column(name = "gender", length = 1)
 	private String gender;
-	@NotNull
+
 	@Column(name = "DoB")
-	private LocalDate dob;
-	
-	@NotNull
-	@Column(name = "MobileNumer", length=15)
+	private LocalDate doB;
+
+	@Column(name = "MobileNumer", length = 15)
 	private String mobileNumber;
-	
-	@Lob
-	@Column(name = "Photo")
-	private String photo;
-	
-	@Column(name = "AvtarID", length=10)
-	private Long avtarID;
-	
+
+	@Column(name = "AvatarId", length = 10)
+	private Long avatarId;
+
+	@Transient
+	private String photoBase64;
 }

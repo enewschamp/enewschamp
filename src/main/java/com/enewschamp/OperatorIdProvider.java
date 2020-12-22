@@ -8,7 +8,8 @@ public class OperatorIdProvider implements AuthorProvider {
 
 	@Override
 	public String provide() {
-		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("mahendra", "welcome"));
+		SecurityContextHolder.getContext()
+				.setAuthentication(new UsernamePasswordAuthenticationToken("mahendra", "welcome"));
 		return "Mahendra";
 	}
 

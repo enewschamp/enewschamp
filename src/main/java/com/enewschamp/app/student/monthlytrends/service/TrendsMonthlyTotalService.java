@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.student.monthlytrends.entity.TrendsMonthlyTotal;
 import com.enewschamp.app.student.monthlytrends.repository.TrendsMonthlyTotalRepository;
 import com.enewschamp.problem.BusinessException;
@@ -20,22 +20,21 @@ public class TrendsMonthlyTotalService {
 
 	@Autowired
 	TrendsMonthlyTotalRepository trendsMonthlyTotalRepository;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
-	
+
 	public TrendsMonthlyTotal create(TrendsMonthlyTotal trendsMonthlyEntity) {
-		TrendsMonthlyTotal existing = getMonthlyTrends(trendsMonthlyEntity.getStudentId(),trendsMonthlyEntity.getEditionId(),trendsMonthlyEntity.getYearMonth().toString());
-		if(existing==null)
-		{
+		TrendsMonthlyTotal existing = getMonthlyTrends(trendsMonthlyEntity.getStudentId(),
+				trendsMonthlyEntity.getEditionId(), trendsMonthlyEntity.getReadingLevel(),
+				trendsMonthlyEntity.getYearMonth().toString());
+		if (existing == null) {
 			existing = trendsMonthlyTotalRepository.save(trendsMonthlyEntity);
-		}
-		else
-		{
+		} else {
 			existing = update(trendsMonthlyEntity);
 		}
 		return existing;
@@ -64,19 +63,20 @@ public class TrendsMonthlyTotalService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.TREND_MONTHLY_TOTAL_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.TREND_MONTHLY_TOTAL_NOT_FOUND);
 		}
 	}
-	public TrendsMonthlyTotal getMonthlyTrends(Long studentId, String editionId, String monthYear) {
-		Optional<TrendsMonthlyTotal> existingEntity = trendsMonthlyTotalRepository.getMonthlyTrends(studentId, editionId, Long.valueOf(monthYear));
+
+	public TrendsMonthlyTotal getMonthlyTrends(Long studentId, String editionId, int readingLevel, String monthYear) {
+		Optional<TrendsMonthlyTotal> existingEntity = trendsMonthlyTotalRepository.getMonthlyTrends(studentId,
+				editionId, readingLevel, Long.valueOf(monthYear));
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
 			return null;
-			//throw new BusinessException(ErrorCodes.TREND_MONTHLY_TOTAL_NOT_FOUND);
+			// throw new BusinessException(ErrorCodes.TREND_MONTHLY_TOTAL_NOT_FOUND);
 
 		}
 	}
-	
-	
+
 }

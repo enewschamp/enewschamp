@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorRulesDTO;
 import com.enewschamp.app.fw.page.navigation.entity.PageNavigatorRules;
 import com.enewschamp.app.fw.page.navigation.repository.PageNavigatorRulesRepository;
@@ -24,8 +24,6 @@ public class PageNavigationRulesService {
 
 	@Autowired
 	PageNavigatorRulesRepository PageNavigatorRulesRepository;
-
-	
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -64,7 +62,7 @@ public class PageNavigationRulesService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw  new BusinessException(ErrorCodes.PAGE_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.PAGE_NOT_FOUND);
 
 		}
 	}
@@ -74,11 +72,9 @@ public class PageNavigationRulesService {
 		java.lang.reflect.Type listType = new TypeToken<List<PageNavigatorRulesDTO>>() {
 		}.getType();
 		List<PageNavigatorRulesDTO> pageNavList = modelMapper.map(existingEntity, listType);
-		
+
 		return pageNavList;
 	}
-
-	
 
 	public String getAudit(Long navId) {
 		PageNavigatorRules PageNavigatorRules = new PageNavigatorRules();

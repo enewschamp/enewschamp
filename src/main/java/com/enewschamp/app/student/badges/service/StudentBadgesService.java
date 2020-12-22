@@ -1,5 +1,6 @@
 package com.enewschamp.app.student.badges.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,8 +12,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.app.recognition.page.data.RecognitionData;
 import com.enewschamp.app.student.badges.entity.StudentBadges;
+import com.enewschamp.app.student.badges.repository.StudentBadgesCustomRepository;
 import com.enewschamp.app.student.badges.repository.StudentBadgesRepository;
 import com.enewschamp.problem.BusinessException;
 
@@ -21,15 +24,17 @@ public class StudentBadgesService {
 
 	@Autowired
 	StudentBadgesRepository studentBadgesRepository;
-	
+
+	@Autowired
+	StudentBadgesCustomRepository studentBadgesCustomRepository;
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
-	
-	
+
 	public StudentBadges create(StudentBadges studentBadgesEntity) {
 		return studentBadgesRepository.save(studentBadgesEntity);
 	}
@@ -57,47 +62,52 @@ public class StudentBadgesService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.STUD_BADGES_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.STUD_BADGES_NOT_FOUND);
 
 		}
 	}
+
 	public StudentBadges getStudentBadges(Long studentId, String editionId, Long monthYear) {
-		Optional<StudentBadges> existingEntity = studentBadgesRepository.getStudentBadges(studentId, editionId, monthYear);
+		Optional<StudentBadges> existingEntity = studentBadgesRepository.getStudentBadges(studentId, monthYear);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.STUD_BADGES_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.STUD_BADGES_NOT_FOUND);
 		}
 	}
-	
-	public Page<StudentBadges> getStudetbadges(Long StudentId, String editionId, int pageNo)
-	{
-		
-		Pageable pageable = PageRequest.of(pageNo, 10);
-		Page<StudentBadges> studentPage = studentBadgesRepository.getStudentBadges(StudentId, editionId, pageable);
-		//if(!studentPage.isEmpty())
-		//{
-			return studentPage;
-		//}
-		//else
-		//{
-			//throw new BusinessException(ErrorCodes.STUD_BADGES_NOT_FOUND);
 
-		//}
-
-				
+	public List<RecognitionData> getStudentBadgeDetails(Long studentId, String editionId, int readingLevel,
+			Long monthYear) {
+		List<RecognitionData> studentBadges = studentBadgesCustomRepository.getStudentBadgeDetails(studentId,
+				monthYear);
+		return studentBadges;
 	}
-	public StudentBadges getLastestbadge(Long studentId, String editionId)
-	{
-		
-		List<StudentBadges> studentBadgeList = studentBadgesRepository.getLatestBadges(studentId, editionId);
-		StudentBadges badge = null;
-		if(!studentBadgeList.isEmpty())
-		{
+
+	public Page<RecognitionData> getStudentbadges(Long studentId, String editionId, LocalDate limitDate, int pageNo,
+			int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<RecognitionData> studentPage = studentBadgesCustomRepository.getStudentBadges(studentId, editionId,
+				limitDate, pageable);
+		return studentPage;
+	}
+
+	public RecognitionData getLastestbadge(Long studentId, String editionId, int readingLevel) {
+		List<RecognitionData> studentBadgeList = studentBadgesCustomRepository.getLatestBadges(studentId, editionId,
+				readingLevel);
+		RecognitionData badge = null;
+		if (!studentBadgeList.isEmpty()) {
 			badge = studentBadgeList.get(0);
 		}
-
 		return badge;
-				
+	}
+
+	public RecognitionData getBadgeDetails(Long studentId, String editionId, int readingLevel) {
+		List<RecognitionData> studentBadgeList = studentBadgesCustomRepository.getLatestBadges(studentId, editionId,
+				readingLevel);
+		RecognitionData badge = null;
+		if (!studentBadgeList.isEmpty()) {
+			badge = studentBadgeList.get(0);
+		}
+		return badge;
 	}
 }

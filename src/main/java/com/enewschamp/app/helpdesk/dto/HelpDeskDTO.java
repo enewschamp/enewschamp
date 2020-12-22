@@ -8,9 +8,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class HelpDeskDTO extends BaseEntity{
-	
+@EqualsAndHashCode(callSuper = false)
+public class HelpDeskDTO extends BaseEntity {
+
 	/**
 	 * 
 	 */
@@ -21,11 +21,10 @@ public class HelpDeskDTO extends BaseEntity{
 	private String editionId;
 	private String categoryId;
 	private String details;
-	private String callbackRequest;
 	private String phoneNumber;
 	private String supportingComments;
 	private String closeFlag;
 	private LocalDateTime callBackTime;
 	private LocalDateTime createDateTime;
-	
+
 }

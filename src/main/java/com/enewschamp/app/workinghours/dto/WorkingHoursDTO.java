@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class WorkingHoursDTO extends BaseEntity{
+@EqualsAndHashCode(callSuper = false)
+public class WorkingHoursDTO extends BaseEntity {
 
 	/**
 	 * 
@@ -18,5 +18,5 @@ public class WorkingHoursDTO extends BaseEntity{
 	private Long timeZone;
 	private Long startTime;
 	private Long endTime;
-	
+
 }

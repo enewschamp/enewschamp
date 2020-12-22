@@ -2,19 +2,31 @@ package com.enewschamp.app.scores.dto;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Data;
 
 @Data
-public class MonthlyScoreGenreDTO implements Serializable{
+public class MonthlyScoreGenreDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String genreid;
-	private Long articlesPiblished;
+	@JsonInclude
+	private String genreId;
+
+	@JsonInclude
+	private Long articlesPublished;
+
+	@JsonInclude
 	private Long articlesRead;
+
+	@JsonInclude
 	private Long quizPublished;
+
+	@JsonInclude
 	private Long quizAttempted;
-	private Long quizCorerct;
-	
-	
+
+	@JsonInclude
+	private Long quizCorrect;
+
 }

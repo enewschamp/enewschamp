@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class ArticleQuizAnswers extends PageData {
 
 	/**
@@ -14,6 +14,5 @@ public class ArticleQuizAnswers extends PageData {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Long newsArticleQuizId;
-	private Long chosenOptSeq;
-	
+	private Long chosenOpt;
 }

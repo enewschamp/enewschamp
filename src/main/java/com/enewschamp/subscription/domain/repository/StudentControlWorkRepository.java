@@ -6,8 +6,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.enewschamp.subscription.domain.entity.StudentControlWork;
 
-public interface StudentControlWorkRepository extends JpaRepository<StudentControlWork, Long>{
+public interface StudentControlWorkRepository extends JpaRepository<StudentControlWork, Long> {
 
-	@Query("Select c from StudentControlWork c where c.emailID = :emailID")
-	public StudentControlWork searchByEmail(@Param("emailID")String eMail);
+	@Query("Select c from StudentControlWork c where c.email = :email")
+	public StudentControlWork searchByEmail(@Param("email") String email);
 }

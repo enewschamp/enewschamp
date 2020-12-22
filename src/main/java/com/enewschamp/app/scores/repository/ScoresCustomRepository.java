@@ -10,8 +10,10 @@ import com.enewschamp.app.scores.page.data.ScoresSearchData;
 
 public interface ScoresCustomRepository {
 	public List<DailyScoreDTO> findDailyScores(ScoresSearchData searchRequest);
+
 	public List<MonthlyScoreGenreDTO> findMonthlyScoresByGenre(ScoresSearchData searchRequest);
-	
+
 	public List<YearlyScoresGenreDTO> findYearlyScoresByGenre(ScoresSearchData searchRequest);
+
 	public List<MonthlyScoresDTO> findYMonthlyScores(ScoresSearchData searchRequest);
 }

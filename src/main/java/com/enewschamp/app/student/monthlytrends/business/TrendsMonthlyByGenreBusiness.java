@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.student.monthlytrends.dto.TrendsMonthlyByGenreDTO;
 import com.enewschamp.app.student.monthlytrends.entity.TrendsMonthlyByGenre;
 import com.enewschamp.app.student.monthlytrends.service.TrendsMonthlyByGenreService;
@@ -49,55 +49,62 @@ public class TrendsMonthlyByGenreBusiness {
 		return trendsMonthlyByGenreDTOnew;
 	}
 
-	public TrendsMonthlyByGenreDTO getMonthlyTrend(Long studentId, String editionId, String monthYear, String genreId) {
+	public TrendsMonthlyByGenreDTO getMonthlyTrend(Long studentId, String editionId, int readingLevel, String monthYear,
+			String genreId) {
 		TrendsMonthlyByGenre trendsMonthlyByGenre = null;
 		try {
-			trendsMonthlyByGenre = trendsMonthlyService.getDailyTrend(studentId, editionId, monthYear, genreId);
+			trendsMonthlyByGenre = trendsMonthlyService.getMonthlyTrend(studentId, editionId, readingLevel, monthYear,
+					genreId);
 		} catch (Exception e) {
 			return null;
 		}
-		if(trendsMonthlyByGenre!=null) {
-		TrendsMonthlyByGenreDTO trendsMonthlyByGenreDTO = modelMapper.map(trendsMonthlyByGenre,
-				TrendsMonthlyByGenreDTO.class);
-		return trendsMonthlyByGenreDTO;
-		}
-		else return null;
+		if (trendsMonthlyByGenre != null) {
+			TrendsMonthlyByGenreDTO trendsMonthlyByGenreDTO = modelMapper.map(trendsMonthlyByGenre,
+					TrendsMonthlyByGenreDTO.class);
+			return trendsMonthlyByGenreDTO;
+		} else
+			return null;
 	}
 
-	public TrendsMonthlyByGenreDTO saveQuizData(Long newsArticleId, Long studentId, String editionId,
+	public TrendsMonthlyByGenreDTO saveQuizData(Long newsArticleId, Long studentId, String editionId, int readingLevel,
 			Long quizQAttempted, Long quizQCorrect) {
 		// get the genre Id..
 		String genreId = getGenreId(newsArticleId);
 
-		Date date = new Date();
-		LocalDate currDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		NewsArticle newsArticle = newsArticleService.get(newsArticleId);
+		LocalDate publicationDate = newsArticle.getPublicationDate();
+		int year = publicationDate.getYear();
+		int month = publicationDate.getMonthValue();
+		String monthYear = year + "" + (month > 9 ? month : "0" + month);
 
-		int year = currDate.getYear();
-		int month = currDate.getMonthValue();
-		String monthYear = year + "" + month;
-		System.out.println("monthYear :"+monthYear);
-		TrendsMonthlyByGenreDTO trendsMonthlyByGenreDTO = getMonthlyTrend(studentId, editionId, monthYear, genreId);
+		TrendsMonthlyByGenreDTO trendsMonthlyByGenreDTO = getMonthlyTrend(studentId, editionId, readingLevel, monthYear,
+				genreId);
 		if (trendsMonthlyByGenreDTO == null) {
 			TrendsMonthlyByGenreDTO trendsMonthlyByGenreDTONew = new TrendsMonthlyByGenreDTO();
 			trendsMonthlyByGenreDTONew.setStudentId(studentId);
 			trendsMonthlyByGenreDTONew.setEditionId(editionId);
 			trendsMonthlyByGenreDTONew.setGenreId(genreId);
-			trendsMonthlyByGenreDTONew.setQuizQAttempted(quizQAttempted);
-			trendsMonthlyByGenreDTONew.setQuizQCorrect(quizQCorrect);
+			trendsMonthlyByGenreDTONew.setArticlesRead(Long.valueOf(1));
+			trendsMonthlyByGenreDTONew.setReadingLevel(readingLevel);
+			trendsMonthlyByGenreDTONew.setQuizAttempted(quizQAttempted);
+			trendsMonthlyByGenreDTONew.setQuizCorrect(quizQCorrect);
 			trendsMonthlyByGenreDTONew.setYearMonth(Long.valueOf(monthYear));
 			trendsMonthlyByGenreDTO = saveMonthlyTrend(trendsMonthlyByGenreDTONew);
-			
 
 		} else {
-			Long quizQAttemptedTmp = (trendsMonthlyByGenreDTO.getQuizQAttempted() == null) ? 0
-					: trendsMonthlyByGenreDTO.getQuizQAttempted();
+			Long quizQAttemptedTmp = (trendsMonthlyByGenreDTO.getQuizAttempted() == null) ? 0
+					: trendsMonthlyByGenreDTO.getQuizAttempted();
+			Long articlesReadTmp = (trendsMonthlyByGenreDTO.getArticlesRead() == null) ? 0
+					: trendsMonthlyByGenreDTO.getArticlesRead();
+			articlesReadTmp = articlesReadTmp + 1;
 			quizQAttemptedTmp = quizQAttemptedTmp + quizQAttempted;
-			trendsMonthlyByGenreDTO.setQuizQAttempted(quizQAttemptedTmp);
+			trendsMonthlyByGenreDTO.setArticlesRead(articlesReadTmp);
+			trendsMonthlyByGenreDTO.setQuizAttempted(quizQAttemptedTmp);
 
-			Long quizQCorrectTmp = (trendsMonthlyByGenreDTO.getQuizQCorrect() == null) ? 0
-					: trendsMonthlyByGenreDTO.getQuizQCorrect();
+			Long quizQCorrectTmp = (trendsMonthlyByGenreDTO.getQuizCorrect() == null) ? 0
+					: trendsMonthlyByGenreDTO.getQuizCorrect();
 			quizQCorrectTmp = quizQCorrectTmp + quizQCorrect;
-			trendsMonthlyByGenreDTO.setQuizQCorrect(quizQCorrectTmp);
+			trendsMonthlyByGenreDTO.setQuizCorrect(quizQCorrectTmp);
 
 			trendsMonthlyByGenreDTO = saveMonthlyTrend(trendsMonthlyByGenreDTO);
 		}
@@ -105,17 +112,17 @@ public class TrendsMonthlyByGenreBusiness {
 	}
 
 	public String getGenreId(Long newsArticleId) {
-		// TO DO Code to be written to fetch the genre ID..
+		// TO DO Code to be written to fetch the genre Id..
 		NewsArticle newsArticle = newsArticleService.get(newsArticleId);
 		if (newsArticle == null) {
-			throw new BusinessException(ErrorCodes.ARTICLE_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.ARTICLE_NOT_FOUND);
 
 		}
 		Long groupId = newsArticle.getNewsArticleGroupId();
 
 		NewsArticleGroup newsArticleGroup = newsArticleGroupService.get(groupId);
 		if (newsArticleGroup == null) {
-			throw new BusinessException(ErrorCodes.ARTICLE_GROUP_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.ARTICLE_GROUP_NOT_FOUND);
 
 		}
 		String genre = newsArticleGroup.getGenreId();

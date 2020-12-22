@@ -1,38 +1,29 @@
 package com.enewschamp.subscription.app.dto;
 
-import javax.validation.constraints.NotNull;
-
 import com.enewschamp.app.common.PageData;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class StudentSubscriptionPageData extends PageData{
+@EqualsAndHashCode(callSuper = false)
+public class StudentSubscriptionPageData extends PageData {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@NotNull
-	private String eMailID;
-	
-	@NotNull
-	private String terms;
-	
-	@NotNull
+	@JsonInclude
+	private String emailId;
+
+	@JsonInclude
 	private String subscriptionSelected;
-	
-	@NotNull
-	private String eMailId;
-	@NotNull
-	private String emailID;
-	private String incompeleteFormText;
-	private String whatYouGetTextStandard;
-	private String whatYouGetTextPremium;
-	private String TermsOfUseText;
-	private String PrivacyPolicy;
-	
+
+	@JsonInclude
+	private String tncChecked;
+
+	@JsonInclude
+	private String validity;
 }

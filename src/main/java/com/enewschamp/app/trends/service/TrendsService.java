@@ -21,42 +21,45 @@ public class TrendsService {
 
 	@Autowired
 	TrendsCustomRepositoryImpl trendsCustomRepositoryImpl;
-	
-	public List<DailyArticleDTO> findDailyNewsArticlesTrend(TrendsSearchData searchRequest)
-	{
+
+	public List<DailyArticleDTO> findDailyNewsArticlesTrend(TrendsSearchData searchRequest) {
 		return trendsCustomRepositoryImpl.findDailyNewsArticlesTrend(searchRequest);
-		
+
 	}
-	public List<DailyQuizScoresDTO> findDailyQuizScoreTrend(TrendsSearchData searchRequest) 
-	{
+
+	public List<DailyQuizScoresDTO> findDailyQuizScoreTrend(TrendsSearchData searchRequest) {
 		return trendsCustomRepositoryImpl.findDailyQuizScoreTrend(searchRequest);
-		
+
 	}
-	public List<MonthlyArticlesGenreDTO> findMonthlyArticlesByGenreTrend(TrendsSearchData searchRequest)
-	{
+
+	public List<MonthlyArticlesGenreDTO> findMonthlyArticlesByGenreTrend(TrendsSearchData searchRequest) {
 		return trendsCustomRepositoryImpl.findMonthlyArticlesByGenreTrend(searchRequest);
-		
+
 	}
-	public List<MonthlyQuizGenreDTO> findMonthlyQuizScoreByGenre(TrendsSearchData searchRequest){
-		
+
+	public List<MonthlyQuizGenreDTO> findMonthlyQuizScoreByGenre(TrendsSearchData searchRequest) {
+
 		return trendsCustomRepositoryImpl.findMonthlyQuizScoreByGenre(searchRequest);
-		
+
 	}
-	
-	public List<MonthlyArticleDTO> findMonthlyNewsArticlesTrend(TrendsSearchData searchRequest){
-		
+
+	public List<MonthlyArticleDTO> findMonthlyNewsArticlesTrend(TrendsSearchData searchRequest) {
+
 		return trendsCustomRepositoryImpl.findMonthlyNewsArticlesTrend(searchRequest);
 	}
+
 	public List<MonthlyQuizScoresDTO> findMonthlyQuizScoreTrend(TrendsSearchData searchRequest) {
 		return trendsCustomRepositoryImpl.findMonthlyQuizScoreTrend(searchRequest);
 
 	}
-	public List<YearlyArticlesGenreDTO> findYearlyArticlesByGenreTrend(TrendsSearchData searchRequest){
+
+	public List<YearlyArticlesGenreDTO> findYearlyArticlesByGenreTrend(TrendsSearchData searchRequest) {
 		return trendsCustomRepositoryImpl.findYearlyArticlesByGenreTrend(searchRequest);
 
 	}
-	public List<YearlyQuizGenreDTO> findYearlyQuizScoreByGenre(TrendsSearchData searchRequest){
-		
+
+	public List<YearlyQuizGenreDTO> findYearlyQuizScoreByGenre(TrendsSearchData searchRequest) {
+
 		return trendsCustomRepositoryImpl.findYearlyQuizScoreByGenre(searchRequest);
 
 	}

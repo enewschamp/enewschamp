@@ -8,104 +8,116 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
-import com.enewschamp.master.badge.entity.Badge;
+import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.master.badge.repository.BadgeRepository;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.publication.domain.entity.Badge;
 
 @Service
 public class BadgeService {
 
 	@Autowired
 	BadgeRepository badgeRepository;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
-	
+
+	@Autowired
+	AuditService auditService;
+
 	public Badge create(Badge badgeEntity) {
 		return badgeRepository.save(badgeEntity);
 	}
 
 	public Badge update(Badge badgeEntity) {
-		String trendsDailyId = badgeEntity.getBadgeId();
-		Badge existingBadge = get(trendsDailyId);
+		Long badgeId = badgeEntity.getBadgeId();
+		Badge existingBadge = get(badgeId);
 		modelMapper.map(badgeEntity, existingBadge);
 		return badgeRepository.save(existingBadge);
 	}
 
-	public Badge patch(Badge trendsDaily) {
-		String navId = trendsDaily.getBadgeId();
-		Badge existingEntity = get(navId);
-		modelMapperForPatch.map(trendsDaily, existingEntity);
+	public Badge patch(Badge badgeEntity) {
+		Long badgeId = badgeEntity.getBadgeId();
+		Badge existingEntity = get(badgeId);
+		modelMapperForPatch.map(badgeEntity, existingEntity);
 		return badgeRepository.save(existingEntity);
 	}
 
-	public void delete(String BadgeId) {
+	public void delete(Long BadgeId) {
 		badgeRepository.deleteById(BadgeId);
 	}
 
-	public Badge get(String badgeId) {
+	public Badge get(Long badgeId) {
 		Optional<Badge> existingEntity = badgeRepository.findById(badgeId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException( ErrorCodes.STUD_BADGES_NOT_FOUND,
-					"Badge not found!");
+			throw new BusinessException(ErrorCodeConstants.STUD_BADGES_NOT_FOUND);
 		}
 	}
-	public Badge getBadgeForEdition( String editionId) {
+
+	public Badge getBadgeForEdition(String editionId) {
 		Optional<Badge> existingEntity = badgeRepository.getBadgeForEdition(editionId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException( ErrorCodes.BADGE_NOT_FOUND,
-					"Badge not found!");
+			throw new BusinessException(ErrorCodeConstants.BADGE_NOT_FOUND);
 		}
 	}
-	public Badge getBadgeForGenreAndEdition( String editionId, String genreId) {
+
+	public Badge getBadgeForGenreAndEdition(String editionId, String genreId) {
 		Optional<Badge> existingEntity = badgeRepository.getBadgeForGenreAndEdition(editionId, genreId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException( ErrorCodes.BADGE_NOT_FOUND,
-					"Badge not found!");
+			throw new BusinessException(ErrorCodeConstants.BADGE_NOT_FOUND);
 		}
 	}
-	
-	public Badge getBadgeForStudent( String editionId, String genreId, Long studPoints) {
-		Optional<Badge> existingEntity = badgeRepository.getBadgeForStudent(editionId, genreId,studPoints);
+
+	public Badge getBadgeDetails(String badgeName, int readingLevel, String editionId, String genreId) {
+		Optional<Badge> existingEntity = badgeRepository.getBadgeDetails(badgeName, genreId, readingLevel, editionId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			return null;
+			throw new BusinessException(ErrorCodeConstants.BADGE_NOT_FOUND);
 		}
 	}
-	
-	public Badge getNextBadge(String editionId, Long studPoints)
-	{
-		List<Badge> badgeList = badgeRepository.getNextBadge(editionId, studPoints);
-		Badge bade=null;
-		
+
+	public Badge getBadgeForStudent(String editionId, int readingLevel, String genreId, Long studPoints) {
+		List<Badge> badgeList = badgeRepository.getBadgeForStudent(editionId, readingLevel, genreId, studPoints);
+		Badge badge = null;
 		if (!badgeList.isEmpty()) {
-			bade = badgeList.get(0);
-		} 
-		
-		return bade;
+			badge = badgeList.get(0);
+		}
+		return badge;
 	}
-	
-	public Badge getNextBadgeForGenre(String editionId, String genreId, Long studPoints)
-	{
-		List<Badge> badgeList = badgeRepository.getNextBadgeForGenre(editionId, genreId, studPoints);
-		Badge bade=null;
-		
+
+	public Badge getNextBadge(String editionId, Long studPoints) {
+		List<Badge> badgeList = badgeRepository.getNextBadge(editionId, studPoints);
+		Badge badge = null;
 		if (!badgeList.isEmpty()) {
-			bade = badgeList.get(0);
-		} 
-		
-		return bade;
+			badge = badgeList.get(0);
+		}
+		return badge;
+	}
+
+	public Badge getNextBadgeForGenre(String editionId, String genreId, int readingLevel, Long studPoints) {
+		List<Badge> badgeList = badgeRepository.getNextBadgeForGenre(editionId, genreId, readingLevel, studPoints);
+		Badge badge = null;
+		if (!badgeList.isEmpty()) {
+			badge = badgeList.get(0);
+		}
+		return badge;
+	}
+
+	public String getAudit(Long badgeId) {
+		Badge badge = new Badge();
+		badge.setBadgeId(badgeId);
+		return auditService.getEntityAudit(badge);
 	}
 }

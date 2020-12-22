@@ -8,9 +8,9 @@ import org.springframework.data.repository.query.Param;
 
 import com.enewschamp.app.student.quiz.entity.QuizScore;
 
-public interface QuizScoreRepository extends JpaRepository<QuizScore, Long>{
+public interface QuizScoreRepository extends JpaRepository<QuizScore, Long> {
 
 	@Query("Select q from QuizScore q where q.studentId= :studentId and q.newsArticleQuizId= :articleQuizId and q.recordInUse= 'Y'")
 	public Optional<QuizScore> getQuizScore(@Param("studentId") Long studentId, @Param("articleQuizId") Long articleId);
-	
+
 }

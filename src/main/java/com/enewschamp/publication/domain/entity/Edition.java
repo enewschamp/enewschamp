@@ -13,24 +13,24 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name="Edition")
+@Table(name = "Edition")
 public class Edition extends BaseEntity {
-	
+
 	private static final long serialVersionUID = 4703046794189386714L;
 
 	@Id
 	@NotNull
-	@Column(name = "EditionId", length=ForeignKeyColumnLength.EditionId)
+	@Column(name = "EditionId", length = ForeignKeyColumnLength.EditionId)
 	private String editionId;
-	
-	@NotNull
-	@Column(name = "LanguageId", length = 3)
-	private Long languageId;
-	
+
 	@NotNull
 	@Column(name = "EditionName", length = 255)
 	private String editionName;
-	
+
+	@NotNull
+	@Column(name = "LanguageId", length = 3)
+	private Long languageId;
+
 }

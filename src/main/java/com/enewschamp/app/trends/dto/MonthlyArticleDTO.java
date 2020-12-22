@@ -1,24 +1,28 @@
 package com.enewschamp.app.trends.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class MonthlyArticleDTO implements Serializable{
+public class MonthlyArticleDTO implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Integer month;
-	
+	@JsonInclude
+	private String month;
+
+	@JsonInclude
 	private Long articlesRead;
-	
-	private Long articlePublished;
-	
+
+	@JsonInclude
+	private Long articlesPublished;
+
 }

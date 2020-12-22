@@ -6,18 +6,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class MyProfilePageData  extends PageData {
+@EqualsAndHashCode(callSuper = false)
+public class MyProfilePageData extends PageData {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	private MyPicturePageData myPicture;
 	private StudentDetailsPageData studentDetails;
 	private StudentSchoolPageData schoolDetails;
 	private StudentSubscriptionPageData subscription;
 	private StudentShareAchievementsPageData shareAchievements;
-	private StudentPreferencePageData preferences;
-	
+	private StudentPreferencesPageData preferences;
+
 }

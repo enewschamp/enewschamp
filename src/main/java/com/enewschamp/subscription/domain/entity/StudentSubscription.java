@@ -15,11 +15,10 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@EqualsAndHashCode(callSuper=false)
-@Table(name="StudentSubscription")
-public class StudentSubscription extends BaseEntity{
-	
-	
+@EqualsAndHashCode(callSuper = false)
+@Table(name = "StudentSubscription")
+public class StudentSubscription extends BaseEntity {
+
 	/**
 	 * 
 	 */
@@ -27,27 +26,25 @@ public class StudentSubscription extends BaseEntity{
 
 	@Id
 	@NotNull
-	@Column(name = "StudentID", length=10)
-	private long studentID = 0L;
-	
+	@Column(name = "StudentId", length = 10)
+	private long studentId = 0L;
+
 	@NotNull
-	@Column(name = "EditionID", length=6)
-	private String editionID ;
-	
+	@Column(name = "EditionId", length = 6)
+	private String editionId;
+
 	@NotNull
-	@Column(name = "SubscriptionType",length=1)
+	@Column(name = "SubscriptionType", length = 1)
 	private String subscriptionSelected;
-	
+
 	@NotNull
 	@Column(name = "StartDate")
 	private LocalDate startDate;
-	
+
 	@Column(name = "EndDate")
 	private LocalDate endDate;
-	
-	@Column(name = "AutoRenewal",length=1)
+
+	@Column(name = "AutoRenewal", length = 1)
 	private String autoRenewal;
-	
-	
-	
+
 }

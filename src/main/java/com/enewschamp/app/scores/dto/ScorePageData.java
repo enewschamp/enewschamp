@@ -9,11 +9,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class ScorePageData extends PageData implements Serializable{
+@EqualsAndHashCode(callSuper = false)
+public class ScorePageData extends PageData implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String yearMonth;
 	List<DailyScoreDTO> dailyScores;
 	List<MonthlyScoreGenreDTO> monthlyScoresByGenre;
-	
-	}
+
+}

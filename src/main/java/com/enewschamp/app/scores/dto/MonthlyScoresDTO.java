@@ -5,11 +5,11 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class MonthlyScoresDTO implements Serializable{
+public class MonthlyScoresDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Integer month;
-	private Long articlesPiblished;
+	private String month;
+	private Long articlesPublished;
 	private Long articlesRead;
 	private Long quizPublished;
 	private Long quizAttempted;

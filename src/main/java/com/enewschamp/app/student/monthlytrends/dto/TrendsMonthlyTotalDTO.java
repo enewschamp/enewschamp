@@ -6,31 +6,30 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class TrendsMonthlyTotalDTO extends BaseEntity{
+@EqualsAndHashCode(callSuper = false)
+public class TrendsMonthlyTotalDTO extends BaseEntity {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-
 	private Long trendsMonthlyTotalId;
-	
+
 	private Long studentId;
-	
+
 	private String editionId;
-	
+
 	private String yearMonth;
-	
-	
+
 	private String genreId;
-	
+
 	private Long articlesRead;
-	
-	
-	private Long quizQAttempted;
-	
-	private Long quizQCorrect;
-	
+
+	private Long quizAttempted;
+
+	private Long quizCorrect;
+
+	private int readingLevel;
+
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class ArticlePageData extends PageData {
 
 	/**
@@ -15,12 +15,10 @@ public class ArticlePageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	private long newsArticleId;
 	private String likeFlag;
-	private String opinion;
+	private String opinionText;
 	private String saveFlag;
-	private String genreId;
-private String headline;
-private String headlineKeyWord;
-private String publishMonth;
+	private String genre;
+	private String headline;
+	private String month;
 
-	
 }

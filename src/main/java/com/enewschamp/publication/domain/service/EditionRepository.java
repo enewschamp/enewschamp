@@ -10,8 +10,8 @@ import com.enewschamp.publication.domain.common.LOVProjection;
 import com.enewschamp.publication.domain.entity.Edition;
 
 @JaversSpringDataAuditable
-interface EditionRepository extends JpaRepository<Edition, String>{ 
-	 
-	@Query(value="select a.editionId as id, a.editionName as name from Edition a")
-    public List<LOVProjection> getEditionLOV();
-} 
+interface EditionRepository extends JpaRepository<Edition, String> {
+
+	@Query(value = "select a.editionId as id, a.editionName as name from Edition a")
+	public List<LOVProjection> getEditionLOV();
+}

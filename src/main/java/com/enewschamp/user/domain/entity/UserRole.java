@@ -12,11 +12,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name="UserRoles")
+@Table(name = "UserRoles")
 public class UserRole extends BaseEntity {
-	
+
 	private static final long serialVersionUID = 2383120567523981474L;
 
 	@EmbeddedId
@@ -25,6 +25,5 @@ public class UserRole extends BaseEntity {
 	@NotNull
 	@Column(name = "Contribution")
 	private int contribution = 0;
-
 
 }

@@ -2,14 +2,6 @@ package com.enewschamp.article.domain.common;
 
 public enum ArticleActionType {
 
-	SaveNewsArticleGroup, //First time creation
-	AssignAuthor,
-	SaveAsDraft,
-	SubmitForReview,
-	ReworkForAuthor,
-	ReworkForEditor,
-	ReadyToPublish,
-	Publish,
-	Close,
-	Reinstate;
+	SaveNewsArticleGroup, AssignAuthor, AssignEditor, SaveAsDraft, SubmitForReview, ReworkForAuthor, ReworkForEditor,
+	ReadyToPublish, Publish, Close, Reinstate;
 }

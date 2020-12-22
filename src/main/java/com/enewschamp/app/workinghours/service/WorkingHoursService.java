@@ -1,6 +1,5 @@
 package com.enewschamp.app.workinghours.service;
 
-
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -8,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.workinghours.entity.WorkingHours;
 import com.enewschamp.app.workinghours.repository.WorkingHourRepository;
 import com.enewschamp.problem.BusinessException;
@@ -18,14 +17,14 @@ public class WorkingHoursService {
 
 	@Autowired
 	WorkingHourRepository WorkingHoursRepository;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
-	
+
 	public WorkingHours create(WorkingHours WorkingHoursEntiry) {
 		return WorkingHoursRepository.save(WorkingHoursEntiry);
 	}
@@ -53,17 +52,16 @@ public class WorkingHoursService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.WORKING_HOUR_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.WORKING_HOUR_NOT_FOUND);
 		}
 	}
-	
-	public WorkingHours getWorkingHours(String editionId)
-	{
+
+	public WorkingHours getWorkingHours(String editionId) {
 		Optional<WorkingHours> existingEntity = WorkingHoursRepository.getWorkingHours(editionId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.WORKING_HOUR_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.WORKING_HOUR_NOT_FOUND);
 		}
 	}
 }

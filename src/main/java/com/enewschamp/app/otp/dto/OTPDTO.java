@@ -17,8 +17,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class OTPDTO extends BaseEntity{
+@EqualsAndHashCode(callSuper = false)
+public class OTPDTO extends BaseEntity {
 
 	/**
 	 * 
@@ -29,7 +29,5 @@ public class OTPDTO extends BaseEntity{
 	private String phoneNo;
 	private Long otp;
 	private LocalDateTime otpGenTime;
-	
-	
-	
+
 }

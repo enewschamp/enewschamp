@@ -6,6 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.enewschamp.subscription.domain.entity.StudentSchool;
 
 @JaversSpringDataAuditable
-public interface StudentSchoolRepository extends JpaRepository<StudentSchool, Long>{
-
+public interface StudentSchoolRepository extends JpaRepository<StudentSchool, Long> {
 }

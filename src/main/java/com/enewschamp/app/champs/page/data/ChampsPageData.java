@@ -2,23 +2,27 @@ package com.enewschamp.app.champs.page.data;
 
 import java.util.List;
 
+import com.enewschamp.app.common.CommonFilterData;
 import com.enewschamp.app.common.PageData;
+import com.enewschamp.app.common.PaginationData;
 import com.enewschamp.app.student.dto.ChampStudentDTO;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ChampsPageData extends PageData{
+public class ChampsPageData extends PageData {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String readingLevel;
-	private String monthYear;
+	@JsonInclude
+	private CommonFilterData filter;
+	@JsonInclude
 	private List<ChampStudentDTO> champs;
-	private int pageNo;
-	
+	@JsonInclude
+	private PaginationData pagination;
 }

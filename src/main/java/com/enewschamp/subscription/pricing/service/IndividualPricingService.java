@@ -3,6 +3,7 @@ package com.enewschamp.subscription.pricing.service;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.pricing.entity.IndividualPricing;
 import com.enewschamp.subscription.pricing.repository.IndividualPricingRepository;
@@ -20,14 +21,14 @@ public class IndividualPricingService {
 
 	@Autowired
 	IndividualPricingRepository individualPricingRepository;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
-	
+
 	public IndividualPricing create(IndividualPricing IndividualPricingEntity) {
 		return individualPricingRepository.save(IndividualPricingEntity);
 	}
@@ -55,21 +56,19 @@ public class IndividualPricingService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.SCHOOL_PRICING_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.SCHOOL_PRICING_NOT_FOUND);
 		}
 	}
-	
-	public IndividualPricing getPricingForIndividual(String editionId)
-	{
+
+	public IndividualPricing getPricingForIndividual(String editionId) {
 		Date sysdate = new Date();
 		LocalDate localSysDate = sysdate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		Optional<IndividualPricing> individualPrice = individualPricingRepository.getPricingForIndividual( editionId, localSysDate);
-		if(individualPrice.isPresent())
-		{
-			return individualPrice.get();
-		}
-		else {
-			throw new BusinessException(ErrorCodes.INDIVIDUAL_PRICING_NOT_FOUND);
+		List<IndividualPricing> individualPrice = individualPricingRepository.getPricingForIndividual(editionId,
+				localSysDate);
+		if (individualPrice != null && individualPrice.size() > 0) {
+			return individualPrice.get(0);
+		} else {
+			throw new BusinessException(ErrorCodeConstants.INDIVIDUAL_PRICING_NOT_FOUND);
 		}
 	}
 }

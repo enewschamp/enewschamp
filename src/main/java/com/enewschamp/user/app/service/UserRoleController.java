@@ -31,20 +31,22 @@ public class UserRoleController {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	private UserRoleService userRoleService;
 
-	@PostMapping(value = "/users/{userId}/roles")
-	public ResponseEntity<UserRoleDTO> create(@RequestBody @Valid UserRoleDTO userRoleDTO, @PathVariable String userId) {
+	@PostMapping(value = "/admin/users/{userId}/roles")
+	public ResponseEntity<UserRoleDTO> create(@RequestBody @Valid UserRoleDTO userRoleDTO,
+			@PathVariable String userId) {
 		UserRole userRole = modelMapper.map(userRoleDTO, UserRole.class);
 		userRole = userRoleService.create(userRole);
 		userRoleDTO = modelMapper.map(userRole, UserRoleDTO.class);
 		return new ResponseEntity<UserRoleDTO>(userRoleDTO, HttpStatus.CREATED);
 	}
 
-	@PutMapping(value = "/users/{userId}/roles/{roleId}")
-	public ResponseEntity<UserRoleDTO> update(@RequestBody @Valid UserRoleDTO userRoleDTO, @PathVariable String userId, @PathVariable String roleId) {
+	@PutMapping(value = "/admin/users/{userId}/roles/{roleId}")
+	public ResponseEntity<UserRoleDTO> update(@RequestBody @Valid UserRoleDTO userRoleDTO, @PathVariable String userId,
+			@PathVariable String roleId) {
 		UserRoleKeyDTO userRoleKeyDTO = new UserRoleKeyDTO();
 		userRoleKeyDTO.setUserId(userId);
 		userRoleKeyDTO.setRoleId(roleId);
@@ -54,10 +56,11 @@ public class UserRoleController {
 		userRoleDTO = modelMapper.map(userRole, UserRoleDTO.class);
 		return new ResponseEntity<UserRoleDTO>(userRoleDTO, HttpStatus.OK);
 	}
-	
-	@PatchMapping(value = "/users/{userId}/roles/{roleId}")
-	public ResponseEntity<UserRoleDTO> patch(@RequestBody @Valid UserRoleDTO userRoleDTO, @PathVariable String userId, @PathVariable String roleId) {
-		
+
+	@PatchMapping(value = "/admin/users/{userId}/roles/{roleId}")
+	public ResponseEntity<UserRoleDTO> patch(@RequestBody @Valid UserRoleDTO userRoleDTO, @PathVariable String userId,
+			@PathVariable String roleId) {
+
 		UserRoleKeyDTO userRoleKeyDTO = new UserRoleKeyDTO();
 		userRoleKeyDTO.setUserId(userId);
 		userRoleKeyDTO.setRoleId(roleId);
@@ -67,8 +70,8 @@ public class UserRoleController {
 		userRoleDTO = modelMapper.map(userRole, UserRoleDTO.class);
 		return new ResponseEntity<UserRoleDTO>(userRoleDTO, HttpStatus.OK);
 	}
-	
-	@DeleteMapping(value = "/users/{userId}/roles/{roleId}")
+
+	@DeleteMapping(value = "/admin/users/{userId}/roles/{roleId}")
 	public ResponseEntity<Void> delete(@PathVariable String userId, @PathVariable String roleId) {
 		UserRoleKeyDTO userRoleKeyDTO = new UserRoleKeyDTO();
 		userRoleKeyDTO.setUserId(userId);
@@ -77,8 +80,8 @@ public class UserRoleController {
 		userRoleService.delete(userRoleKey);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
-	@GetMapping(value = "/users/{userId}/roles/{roleId}")
+
+	@GetMapping(value = "/admin/users/{userId}/roles/{roleId}")
 	public ResponseEntity<UserRoleDTO> get(@PathVariable String userId, @PathVariable String roleId) {
 		UserRoleKeyDTO userRoleKeyDTO = new UserRoleKeyDTO();
 		userRoleKeyDTO.setUserId(userId);
@@ -88,8 +91,8 @@ public class UserRoleController {
 		UserRoleDTO userRoleDTO = modelMapper.map(userRole, UserRoleDTO.class);
 		return new ResponseEntity<UserRoleDTO>(userRoleDTO, HttpStatus.OK);
 	}
-	
-	@GetMapping(value = "/users/{userId}/roles/{roleId}/audit")
+
+	@GetMapping(value = "/admin/users/{userId}/roles/{roleId}/audit")
 	public ResponseEntity<String> getAudit(@PathVariable String userId, @PathVariable String roleId) {
 		UserRoleKeyDTO userRoleKeyDTO = new UserRoleKeyDTO();
 		userRoleKeyDTO.setUserId(userId);
@@ -98,7 +101,5 @@ public class UserRoleController {
 		String audit = userRoleService.getAudit(userRoleKey);
 		return new ResponseEntity<String>(audit, HttpStatus.OK);
 	}
-	
-	
 
 }

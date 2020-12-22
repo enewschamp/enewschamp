@@ -24,9 +24,10 @@ public class SubscriptionPageController {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	private StudentSubscriptionService studentSubscriptionService;
+
 	@PostMapping(value = "/studentsubscriptions/operation/GoPremiumSubs")
 	public ResponseEntity<StudentSubscriptionDTO> create(@RequestBody @Valid StudentSubscriptionDTO subscriptionDto) {
 		StudentSubscription subscription = modelMapper.map(subscriptionDto, StudentSubscription.class);

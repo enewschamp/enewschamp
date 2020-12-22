@@ -8,8 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.enewschamp.app.common.uicontrols.entity.UIControls;
 
 @JaversSpringDataAuditable
-public interface UIControlsRepository extends JpaRepository<UIControls, Long>{
+public interface UIControlsRepository extends JpaRepository<UIControls, Long> {
 
-	public List<UIControls> findByScreenName(String screenName);
+	public List<UIControls> findByPageNameAndOperation(String screenName, String operation);
+
 	public UIControls save(UIControls uicontrols);
 }

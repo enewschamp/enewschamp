@@ -23,15 +23,15 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.spring.web.advice.ProblemHandling;
 import org.zalando.problem.spring.web.advice.validation.Violation;
 
-import com.enewschamp.EnewschampApplicationErrorProperties;
+import com.enewschamp.common.domain.service.ErrorCodesService;
 
 @ControllerAdvice
 public class ExceptionHandling implements ProblemHandling, ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
-	
+
 	@Autowired
-	EnewschampApplicationErrorProperties errorMessagesConfig;
+	ErrorCodesService errorCodesService;
 
 	public Violation createViolation(final FieldError error) {
 		final String fieldName = formatFieldName(error.getField());
@@ -57,7 +57,6 @@ public class ExceptionHandling implements ProblemHandling, ApplicationContextAwa
 	public Optional<MediaType> negotiate(final NativeWebRequest request) {
 		// ProblemHandling only works with JSON, not with XML
 		Optional<MediaType> contentType = ProblemHandling.super.negotiate(request);
-
 		String[] headerValueArray = request.getHeaderValues(HttpHeaders.ACCEPT);
 
 		if (headerValueArray != null) {
@@ -70,45 +69,47 @@ public class ExceptionHandling implements ProblemHandling, ApplicationContextAwa
 					.findFirst().orElse(null) != null) {
 				// the client accepts application/xml or application/problem+xml
 				// returning an empty calls the fallback method
-				return Optional.of(MediaType.APPLICATION_PROBLEM_XML);
+				// return Optional.of(MediaType.APPLICATION_PROBLEM_XML);
+				return Optional.of(MediaType.APPLICATION_PROBLEM_JSON_UTF8);
 			}
 		}
 		return contentType;
 	}
-	
-	public ResponseEntity<Problem> process(
-            final ResponseEntity<Problem> entity,
-            @SuppressWarnings("UnusedParameters") final NativeWebRequest request) {
-        return process(entity);
-    }
-	
+
+	public ResponseEntity<Problem> process(final ResponseEntity<Problem> entity,
+			@SuppressWarnings("UnusedParameters") final NativeWebRequest request) {
+		return process(entity);
+	}
+
 	public ResponseEntity<Problem> process(final ResponseEntity<Problem> entity) {
-		
-		if( entity.getBody() != null && entity.getBody() instanceof Fault) {
+
+		if (entity.getBody() != null && entity.getBody() instanceof Fault) {
 			Fault fault = (Fault) entity.getBody();
 			setErrorMessages(fault);
 		}
-        return entity;
-    }
-	
+		return entity;
+	}
+
 	private void setErrorMessages(Fault fault) {
-		if(fault.getErrorCode() != null) {
-			//fault.setErrorMessage(errorMessagesConfig.getErrorMessagesConfig().get(fault.getTitle()));
-			
-			fault.setErrorMessage(buildErrorMessage(fault.getTitle(), fault.getErrorMessageParams()));
+		if (fault.getData().getErrorCode() != null) {
+			fault.getData().setErrorMessage(
+					buildErrorMessage(fault.getData().getErrorCode(), fault.getData().getErrorMessageParams()));
 		}
-		if(fault.getValidationErrors() != null) {
-			fault.getValidationErrors().forEach(validationError -> {
-				validationError.setErrorMessage(errorMessagesConfig.getErrorMessagesConfig().get(validationError.getErrorCode()));
+		fault.getData().setErrorMessageParams(null);
+		if (fault.getData().getValidationErrors() != null) {
+			fault.getData().getValidationErrors().forEach(validationError -> {
+				validationError.setErrorMessage(errorCodesService.getValue(validationError.getErrorCode()));
 			});
 		}
+		fault.getData().setValidationErrors(null);
+		fault.setStatus(null);
 	}
-	
+
 	private String buildErrorMessage(String errorCode, String[] errorMessageParams) {
 		String errorMessage = "";
 		if (errorCode != null) {
-			String msgString = errorMessagesConfig.getErrorMessagesConfig().get(errorCode);
-			if(msgString != null) {
+			String msgString = errorCodesService.getValue(errorCode);
+			if (msgString != null) {
 				try {
 					msgString = new String(msgString.getBytes("ISO-8859-1"), "UTF-8");
 				} catch (UnsupportedEncodingException e) {
@@ -122,5 +123,4 @@ public class ExceptionHandling implements ProblemHandling, ApplicationContextAwa
 		return errorMessage;
 	}
 
-	
 }

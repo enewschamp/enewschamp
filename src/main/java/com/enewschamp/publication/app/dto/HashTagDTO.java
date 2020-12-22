@@ -10,22 +10,20 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class HashTagDTO extends MaintenanceDTO {
-	
+
 	private static final long serialVersionUID = 2844284287599966841L;
 
 	@NotNull
-	@Size(min=2, max=25)
+	@Size(min = 2, max = 25)
 	private String hashTag;
-	
+
 	@NotNull
-	@Size(min=1, max = ForeignKeyColumnLength.GenreId)
+	@Size(min = 1, max = ForeignKeyColumnLength.GenreId)
 	private String genreId;
-	
+
 	@NotNull
-	@Size(min=3, max=3)
+	@Size(min = 3, max = 3)
 	private String languageId;
-	
-	
 }

@@ -26,16 +26,17 @@ public class PublicationSummaryRepositoryImpl extends RepositoryImpl implements 
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Override
 	public Page<PublicationDailySummaryDTO> fetchDailySummary(PublicationSummaryRequest summaryRequest,
 			Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<PublicationDailySummaryDTO> criteriaQuery = cb.createQuery(PublicationDailySummaryDTO.class);
 		Root<PublicationDailySummary> publicationDailySummaryRoot = criteriaQuery.from(PublicationDailySummary.class);
-		
-		criteriaQuery.select(cb.construct(PublicationDailySummaryDTO.class, publicationDailySummaryRoot.get("publicationDate"),
-				publicationDailySummaryRoot.get("newsArticleCount"), publicationDailySummaryRoot.get("quizCount")));
+
+		criteriaQuery.select(cb.construct(PublicationDailySummaryDTO.class,
+				publicationDailySummaryRoot.get("publicationDate"), publicationDailySummaryRoot.get("newsArticleCount"),
+				publicationDailySummaryRoot.get("quizCount")));
 
 		// Build filter conditions
 		List<Predicate> filterPredicates = new ArrayList<>();
@@ -47,10 +48,11 @@ public class PublicationSummaryRepositoryImpl extends RepositoryImpl implements 
 			filterPredicates.add(cb.equal(publicationDailySummaryRoot.get("year"), summaryRequest.getYear()));
 		}
 		if (summaryRequest.getDate() != null) {
-			filterPredicates.add(cb.equal(publicationDailySummaryRoot.get("publicationDate"), summaryRequest.getDate()));
+			filterPredicates
+					.add(cb.equal(publicationDailySummaryRoot.get("publicationDate"), summaryRequest.getDate()));
 		}
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
-		
+
 		// Build query
 		TypedQuery<PublicationDailySummaryDTO> q = entityManager.createQuery(criteriaQuery);
 
@@ -71,16 +73,14 @@ public class PublicationSummaryRepositoryImpl extends RepositoryImpl implements 
 			Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<PublicationMonthlySummaryDTO> criteriaQuery = cb.createQuery(PublicationMonthlySummaryDTO.class);
-		Root<PublicationMonthlySummary> publicationDailySummaryRoot = criteriaQuery.from(PublicationMonthlySummary.class);
-		
-		criteriaQuery.select(cb.construct(PublicationMonthlySummaryDTO.class, publicationDailySummaryRoot.get("recordId"),
-				publicationDailySummaryRoot.get("year"),
-				publicationDailySummaryRoot.get("month"),
-				publicationDailySummaryRoot.get("editionId"),
-				publicationDailySummaryRoot.get("genreId"),
-				publicationDailySummaryRoot.get("readingLevel"),
-				publicationDailySummaryRoot.get("newsArticleCount"),
-				publicationDailySummaryRoot.get("quizCount"),
+		Root<PublicationMonthlySummary> publicationDailySummaryRoot = criteriaQuery
+				.from(PublicationMonthlySummary.class);
+
+		criteriaQuery.select(cb.construct(PublicationMonthlySummaryDTO.class,
+				publicationDailySummaryRoot.get("recordId"), publicationDailySummaryRoot.get("year"),
+				publicationDailySummaryRoot.get("month"), publicationDailySummaryRoot.get("editionId"),
+				publicationDailySummaryRoot.get("genreId"), publicationDailySummaryRoot.get("readingLevel"),
+				publicationDailySummaryRoot.get("newsArticleCount"), publicationDailySummaryRoot.get("quizCount"),
 				publicationDailySummaryRoot.get("lastUpdatedDateTime")));
 
 		// Build filter conditions
@@ -99,7 +99,7 @@ public class PublicationSummaryRepositoryImpl extends RepositoryImpl implements 
 			filterPredicates.add(cb.equal(publicationDailySummaryRoot.get("genreId"), summaryRequest.getGenreId()));
 		}
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
-		
+
 		// Build query
 		TypedQuery<PublicationMonthlySummaryDTO> q = entityManager.createQuery(criteriaQuery);
 
@@ -114,6 +114,5 @@ public class PublicationSummaryRepositoryImpl extends RepositoryImpl implements 
 
 		return new PageImpl<>(list, pageable, count);
 	}
-
 
 }

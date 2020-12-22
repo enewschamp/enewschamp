@@ -28,13 +28,13 @@
 						"value": "application/json"
 					},
 					{
-						"key": "appName",
-						"value": "ENEWSCHAMPAPP",
+						"key": "publisherAppName",
+						"value": "{{publisherAppName}}",
 						"type": "text"
 					},
 					{
-						"key": "appKey",
-						"value": "ABNGYHUKLOIHGTY",
+						"key": "publisherAppKey",
+						"value": "{{publisherAppKey}}",
 						"type": "text"
 					}
 				],

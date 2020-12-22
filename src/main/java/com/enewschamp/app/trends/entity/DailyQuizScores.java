@@ -17,18 +17,16 @@ import lombok.Data;
 @Immutable
 public class DailyQuizScores {
 
-	
 	@Id
-	@Column(name = "publishDate", updatable = false, nullable = false)
-	private LocalDate publishDate;
-	
-	
-	@Column(name = "quizpublished")
-	private Long quizpublished;
+	@Column(name = "publicationDate", updatable = false, nullable = false)
+	private LocalDate publicationDate;
+
+	@Column(name = "quizPublished")
+	private Long quizPublished;
 
 	@Column(name = "quizAttempted")
 	private Long quizAttempted;
-	
-	@Column(name = "quizcorrect")
-	private Long quizcorrect;
+
+	@Column(name = "quizCorrect")
+	private Long quizCorrect;
 }
