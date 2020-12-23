@@ -2,8 +2,6 @@ package com.enewschamp.app.admin.handler;
 
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.NotNull;
-
 import com.enewschamp.app.common.PageData;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -12,28 +10,20 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class CountryPageData extends PageData {
+public class AppSecurityPageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	@JsonInclude
 	private Long id;
+	private Long appSecId;
 	@JsonInclude
-	private Long countryId;
+	private String appName;
 	@JsonInclude
-	private int isd;
+	private String appKey;
 	@JsonInclude
-	@NotNull(message = "Name must not be null")
-	private String name;
-	@JsonInclude
-	@NotNull(message = "Description must not be null")
-	private String description;
-	@JsonInclude
-	private String currencyId;
-	@JsonInclude
-	private String language;
+	private String module;
 	@JsonInclude
 	private String recordInUse;
 	@JsonInclude
 	private String operator;
 	@JsonInclude
-	protected LocalDateTime lastUpdate;
+	private LocalDateTime lastUpdate;
 }

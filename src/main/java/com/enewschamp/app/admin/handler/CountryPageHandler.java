@@ -100,6 +100,7 @@ public class CountryPageHandler implements IPageHandler {
 		country = countryService.create(country);
 		mapHeaderData(pageRequest, pageDto, pageData, country);
 		pageData.setRecordInUse(country.getRecordInUse().toString());
+		pageData.setCountryId(country.getCountryId());
 		pageDto.setData(pageData);
 		return pageDto;
 	}
@@ -126,7 +127,7 @@ public class CountryPageHandler implements IPageHandler {
 		CountryPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CountryPageData.class);
 		validate(pageData);
 		Country country = mapCountryData(pageRequest, pageData);
-		country.setCountryId(pageRequest.getData().get("id").asLong());
+		country.setCountryId(pageRequest.getData().get("countryId").asLong());
 		country = countryService.update(country);
 		mapHeaderData(pageRequest, pageDto, pageData, country);
 		pageDto.setData(pageData);
@@ -138,6 +139,7 @@ public class CountryPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		CountryPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CountryPageData.class);
 		Country country = modelMapper.map(pageData, Country.class);
+		country.setCountryId(pageData.getId());
 		country = countryService.read(country);
 		mapHeaderData(pageRequest, pageDto, pageData, country);
 		mapPageData(pageData, country);
@@ -152,6 +154,9 @@ public class CountryPageHandler implements IPageHandler {
 		pageData.setOperator(country.getOperatorId());
 		pageData.setRecordInUse(country.getRecordInUse().toString());
 		pageData.setLastUpdate(country.getOperationDateTime());
+		pageData.setIsd(country.getIsd());
+		pageData.setCurrencyId(country.getCurrencyId());
+		pageData.setLanguage(country.getLanguage());
 	}
 
 	@SneakyThrows
@@ -159,6 +164,7 @@ public class CountryPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		CountryPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CountryPageData.class);
 		Country country = modelMapper.map(pageData, Country.class);
+		country.setCountryId(pageData.getId());
 		country = countryService.close(country);
 		mapHeaderData(pageRequest, pageDto, pageData, country);
 		mapPageData(pageData, country);

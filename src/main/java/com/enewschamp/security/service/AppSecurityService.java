@@ -6,25 +6,33 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.security.entity.AppSecurity;
 import com.enewschamp.security.repository.AppSecurityRepository;
+import com.enewschamp.security.repository.AppSecurityRepositoryCustom;
 
 @Service
 public class AppSecurityService {
 
 	@Autowired
-	AppSecurityRepository appSecurityRepository;
+	private AppSecurityRepository appSecurityRepository;
+	
+	@Autowired
+	private AppSecurityRepositoryCustom appSecurityRepositoryCustom;
 
 	@Autowired
-	ModelMapper modelMapper;
+	private ModelMapper modelMapper;
 
 	@Autowired
 	@Qualifier("modelPatcher")
-	ModelMapper modelMapperForPatch;
+	private ModelMapper modelMapperForPatch;
 
 	public AppSecurity create(AppSecurity appSecurityEntity) {
 		return appSecurityRepository.save(appSecurityEntity);
@@ -65,6 +73,26 @@ public class AppSecurityService {
 		} else {
 			return false;
 		}
+	}
+	
+	public AppSecurity read(AppSecurity appSecurity) {
+		Long appSecId = appSecurity.getAppSecId();
+		AppSecurity existingAppSecurity = get(appSecId);
+		existingAppSecurity.setRecordInUse(RecordInUseType.Y);
+		return appSecurityRepository.save(existingAppSecurity);
+	}
+
+	public AppSecurity close(AppSecurity appSecurityEntity) {
+		Long appSecId = appSecurityEntity.getAppSecId();
+		AppSecurity existingAppSecurity = get(appSecId);
+		existingAppSecurity.setRecordInUse(RecordInUseType.N);
+		return appSecurityRepository.save(existingAppSecurity);
+	}
+
+	public Page<AppSecurity> list(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<AppSecurity> appSecList = appSecurityRepositoryCustom.findAppSecurities(pageable);
+		return appSecList;
 	}
 
 }

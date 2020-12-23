@@ -7,7 +7,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+
+import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,8 +18,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "AppSecurity")
-public class AppSecurity {
+@Table(name = "AppSecurity", uniqueConstraints={@UniqueConstraint(columnNames= {"module"})})
+public class AppSecurity extends BaseEntity {
 
 	private static final long serialVersionUID = -6268188630471167106L;
 
