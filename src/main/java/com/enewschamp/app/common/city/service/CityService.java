@@ -7,23 +7,31 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.city.repository.CityRepository;
-import com.enewschamp.app.common.country.entity.Country;
+import com.enewschamp.app.common.city.repository.CityRepositoryCustom;
+import com.enewschamp.app.common.state.entity.State;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.CityPageData;
-import com.enewschamp.subscription.app.dto.CountryPageData;
 
 @Service
 public class CityService extends AbstractDomainService {
 
 	@Autowired
 	CityRepository cityRepository;
+	
+	@Autowired
+	private CityRepositoryCustom customRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -94,6 +102,26 @@ public class CityService extends AbstractDomainService {
 			return cityentity.get();
 		} else
 			return null;
+	}
+	
+	public City read(City cityEntity) {
+		Long cityId = cityEntity.getCityId();
+		City existingCity = get(cityId);
+		existingCity.setRecordInUse(RecordInUseType.Y);
+		return cityRepository.save(existingCity);
+	}
+
+	public City close(City cityEntity) {
+		Long cityId = cityEntity.getCityId();
+		City existingCity = get(cityId);
+		existingCity.setRecordInUse(RecordInUseType.N);
+		return cityRepository.save(existingCity);
+	}
+
+	public Page<City> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<City> cityList = customRepository.findCities(searchRequest, pageable);
+		return cityList;
 	}
 
 }

@@ -10,4 +10,7 @@ import lombok.EqualsAndHashCode;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AdminSearchRequest {
 	private String countryId;
+	private String stateId;
+	private String name;
+	private String newsEventsApplicable;
 }

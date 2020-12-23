@@ -7,12 +7,10 @@ import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import com.enewschamp.app.admin.handler.StatePageData;
 import com.enewschamp.app.common.uicontrols.dto.UIControlsDTO;
 import com.enewschamp.common.app.dto.PropertiesDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,5 +34,6 @@ public class PageDTO implements Serializable {
 
 	private String errorMessage;
 	private JsonNode filter;
-	private List<StatePageData> records;
+	@JsonInclude
+	private List<PageData> records;
 }

@@ -7,12 +7,19 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.country.dto.CountryDTO;
 import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.app.common.country.repository.CountryRepository;
+import com.enewschamp.app.common.country.repository.CountryRepositoryCustom;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.CountryPageData;
@@ -22,14 +29,17 @@ import com.google.common.reflect.TypeToken;
 public class CountryService extends AbstractDomainService {
 
 	@Autowired
-	CountryRepository countryRepository;
+	private CountryRepository countryRepository;
+	
+	@Autowired
+	private CountryRepositoryCustom countryRepositoryCustom;
 
 	@Autowired
-	ModelMapper modelMapper;
+	private ModelMapper modelMapper;
 
 	@Autowired
 	@Qualifier("modelPatcher")
-	ModelMapper modelMapperForPatch;
+	private ModelMapper modelMapperForPatch;
 
 	public Country create(Country countryEntity) {
 		return countryRepository.save(countryEntity);
@@ -96,5 +106,25 @@ public class CountryService extends AbstractDomainService {
 		}
 
 		return countryData;
+	}
+	
+	public Country read(Country countryEntity) {
+		Long countryId = countryEntity.getCountryId();
+		Country existingCountry = get(countryId);
+		existingCountry.setRecordInUse(RecordInUseType.Y);
+		return countryRepository.save(existingCountry);
+	}
+
+	public Country close(Country countryEntity) {
+		Long countryId = countryEntity.getCountryId();
+		Country existingCountry = get(countryId);
+		existingCountry.setRecordInUse(RecordInUseType.N);
+		return countryRepository.save(existingCountry);
+	}
+
+	public Page<Country> list(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<Country> cityList = countryRepositoryCustom.findCountries(pageable);
+		return cityList;
 	}
 }

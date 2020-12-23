@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
+import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.common.state.entity.State;
@@ -168,6 +170,10 @@ public class StatePageHandler implements IPageHandler {
 				pageRequest.getData().get("pagination").get("pageSize").asInt());
 
 		List<StatePageData> list = mapStateData(stateList);
+		List<PageData> variable = list
+			    .stream()
+			    .map(e -> (PageData) e)
+			    .collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		dto.setHeader(pageRequest.getHeader());
@@ -175,7 +181,7 @@ public class StatePageHandler implements IPageHandler {
 			pageData.getPagination().setLastPage(true);
 		}
 		dto.setData(pageData);
-		dto.setRecords(list);
+		dto.setRecords(variable);
 		return dto;
 	}
 
