@@ -7,15 +7,20 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.entity.Avatar;
+import com.enewschamp.security.entity.AppSecurity;
 import com.enewschamp.subscription.app.dto.AvatarPageData;
 import com.enewschamp.subscription.app.dto.CountryPageData;
 
@@ -24,6 +29,9 @@ public class AvatarService extends AbstractDomainService {
 
 	@Autowired
 	AvatarRepository repository;
+
+	@Autowired
+	AvatarRepositoryCustom repositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -88,6 +96,26 @@ public class AvatarService extends AbstractDomainService {
 		Avatar avatar = new Avatar();
 		avatar.setAvatarId(avatarId);
 		return auditService.getEntityAudit(avatar);
+	}
+
+	public Avatar read(Avatar avatar) {
+		Long avatarId = avatar.getAvatarId();
+		Avatar existingAvatar = get(avatarId);
+		existingAvatar.setRecordInUse(RecordInUseType.Y);
+		return repository.save(existingAvatar);
+	}
+
+	public Avatar close(Avatar avatarEntity) {
+		Long avatarId = avatarEntity.getAvatarId();
+		Avatar existingAvatar = get(avatarId);
+		existingAvatar.setRecordInUse(RecordInUseType.N);
+		return repository.save(existingAvatar);
+	}
+
+	public Page<Avatar> list(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<Avatar> avatarList = repositoryCustom.findAvatars(pageable);
+		return avatarList;
 	}
 
 }
