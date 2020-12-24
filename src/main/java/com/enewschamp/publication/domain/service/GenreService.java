@@ -6,20 +6,29 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.publication.domain.entity.Edition;
 import com.enewschamp.publication.domain.entity.Genre;
+import com.enewschamp.publication.domain.repository.GenreRepositoryCustom;
 
 @Service
 public class GenreService extends AbstractDomainService {
 
 	@Autowired
 	GenreRepository repository;
+	
+	@Autowired
+	GenreRepositoryCustom repositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -70,6 +79,26 @@ public class GenreService extends AbstractDomainService {
 		Genre genre = new Genre();
 		genre.setGenreId(genreId);
 		return auditService.getEntityAudit(genre);
+	}
+	
+	public Genre read(Genre genreEntity) {
+		Long genreId = genreEntity.getGenreId();
+		Genre existingGenre = get(genreId);
+		existingGenre.setRecordInUse(RecordInUseType.Y);
+		return repository.save(existingGenre);
+	}
+
+	public Genre close(Genre genreEntity) {
+		Long genreId = genreEntity.getGenreId();
+		Genre existingEntity = get(genreId);
+		existingEntity.setRecordInUse(RecordInUseType.N);
+		return repository.save(existingEntity);
+	}
+
+	public Page<Genre> list(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<Genre> genreList = repositoryCustom.findGenres(pageable);
+		return genreList;
 	}
 
 }

@@ -88,6 +88,7 @@ public class EditionService extends AbstractDomainService {
 	public List<ListOfValuesItem> getLOV() {
 		return toListOfValuesItems(repository.getEditionLOV());
 	}
+	
 	public Edition read(Edition editionEntity) {
 		String editionId = editionEntity.getEditionId();
 		Edition existingEdition = get(editionId);

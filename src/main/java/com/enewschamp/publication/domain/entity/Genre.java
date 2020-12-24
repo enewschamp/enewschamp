@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -19,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "Genre")
+@Table(name = "Genre", uniqueConstraints={@UniqueConstraint(columnNames={"nameId", "imageName"})})
 public class Genre extends BaseEntity {
 
 	private static final long serialVersionUID = 4864561970205860047L;

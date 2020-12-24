@@ -195,6 +195,8 @@ public class EditionPageHandler implements IPageHandler {
 				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				EditionPageData editionPageData = modelMapper.map(edition, EditionPageData.class);
 				editionPageData.setId(edition.getEditionId());
+				editionPageData.setOperator(edition.getOperatorId());
+				editionPageData.setLastUpdate(edition.getOperationDateTime());
 				editionPageDataList.add(editionPageData);
 			}
 		}

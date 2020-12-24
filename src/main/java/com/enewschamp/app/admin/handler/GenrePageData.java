@@ -12,16 +12,14 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class EditionPageData extends PageData {
+public class GenrePageData extends PageData {
 	private static final long serialVersionUID = 1L;
+	@JsonInclude
+	private Long id;
 	@NotNull
+	private String name;
 	@JsonInclude
-	private String id;
-	@JsonInclude
-	private String editionName;
-    @NotNull
-    @JsonInclude
-	private Long languageId;
+	private String image;
     @JsonInclude
 	private String recordInUse;
     @JsonInclude
