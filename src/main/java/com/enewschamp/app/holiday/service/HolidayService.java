@@ -6,18 +6,27 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.holiday.entity.Holiday;
 import com.enewschamp.app.holiday.repository.HolidayRepository;
+import com.enewschamp.app.holiday.repository.HolidayRepositoryCustom;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.publication.domain.entity.Genre;
 
 @Service
 public class HolidayService {
 
 	@Autowired
 	HolidayRepository holidayRepository;
+	
+	@Autowired
+	HolidayRepositoryCustom holidayRepositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -67,6 +76,28 @@ public class HolidayService {
 			return true;
 		else
 			return false;
+	}
+	
+	
+
+	public Holiday read(Holiday holidayEntity) {
+		Long holidayId = holidayEntity.getHolidayId();
+		Holiday existingHoliday = get(holidayId);
+		existingHoliday.setRecordInUse(RecordInUseType.Y);
+		return holidayRepository.save(existingHoliday);
+	}
+
+	public Holiday close(Holiday holidayEntity) {
+		Long holidayId = holidayEntity.getHolidayId();
+		Holiday existingEntity = get(holidayId);
+		existingEntity.setRecordInUse(RecordInUseType.N);
+		return holidayRepository.save(existingEntity);
+	}
+
+	public Page<Holiday> list(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<Holiday> genreList = holidayRepositoryCustom.findHolidays(pageable);
+		return genreList;
 	}
 
 }

@@ -80,7 +80,7 @@ public class GenreService extends AbstractDomainService {
 		genre.setGenreId(genreId);
 		return auditService.getEntityAudit(genre);
 	}
-	
+
 	public Genre read(Genre genreEntity) {
 		Long genreId = genreEntity.getGenreId();
 		Genre existingGenre = get(genreId);
