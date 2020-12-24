@@ -6,20 +6,28 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.entity.Edition;
+import com.enewschamp.publication.domain.repository.EditionRepositoryCustom;
 
 @Service
 public class EditionService extends AbstractDomainService {
 
 	@Autowired
 	EditionRepository repository;
+	
+	@Autowired
+	EditionRepositoryCustom repositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -79,5 +87,24 @@ public class EditionService extends AbstractDomainService {
 
 	public List<ListOfValuesItem> getLOV() {
 		return toListOfValuesItems(repository.getEditionLOV());
+	}
+	public Edition read(Edition editionEntity) {
+		String editionId = editionEntity.getEditionId();
+		Edition existingEdition = get(editionId);
+		existingEdition.setRecordInUse(RecordInUseType.Y);
+		return repository.save(existingEdition);
+	}
+
+	public Edition close(Edition editionEntity) {
+		String editionId = editionEntity.getEditionId();
+		Edition existingEntity = get(editionId);
+		existingEntity.setRecordInUse(RecordInUseType.N);
+		return repository.save(existingEntity);
+	}
+
+	public Page<Edition> list(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<Edition> editionList = repositoryCustom.findEditions(pageable);
+		return editionList;
 	}
 }

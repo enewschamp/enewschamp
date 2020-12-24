@@ -6,11 +6,18 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.master.badge.repository.BadgeRepository;
+import com.enewschamp.master.badge.repository.BadgeRepositoryCustom;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.entity.Badge;
 
@@ -19,6 +26,9 @@ public class BadgeService {
 
 	@Autowired
 	BadgeRepository badgeRepository;
+	
+	@Autowired
+	BadgeRepositoryCustom badgeRepositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -119,5 +129,25 @@ public class BadgeService {
 		Badge badge = new Badge();
 		badge.setBadgeId(badgeId);
 		return auditService.getEntityAudit(badge);
+	}
+	
+	public Badge read(Badge badgeEntity) {
+		Long badgeId = badgeEntity.getBadgeId();
+		Badge existingBadge = get(badgeId);
+		existingBadge.setRecordInUse(RecordInUseType.Y);
+		return badgeRepository.save(existingBadge);
+	}
+
+	public Badge close(Badge badgeEntity) {
+		Long badgeId = badgeEntity.getBadgeId();
+		Badge existingBadge = get(badgeId);
+		existingBadge.setRecordInUse(RecordInUseType.N);
+		return badgeRepository.save(existingBadge);
+	}
+
+	public Page<Badge> list(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<Badge> badgeList = badgeRepositoryCustom.findBadges(pageable);
+		return badgeList;
 	}
 }
