@@ -14,3 +14,13 @@ CREATE TABLE `promotions` (
   `record_in_use` varchar(1) NOT NULL,
   PRIMARY KEY (`promotion_id`)
 );
+
+CREATE TABLE `entitlements` (
+   `entitlement_id` bigint(20) NOT NULL,
+   `operation_date_time` datetime NOT NULL,
+   `operator_id` varchar(10) NOT NULL,
+   `record_in_use` varchar(1) NOT NULL,
+   `role` varchar(20) NOT NULL,
+   `page_name` varchar(50) NOT NULL,
+   PRIMARY KEY (`entitlement_id`) 
+);
