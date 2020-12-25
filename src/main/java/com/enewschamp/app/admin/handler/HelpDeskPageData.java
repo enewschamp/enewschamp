@@ -31,7 +31,6 @@ public class HelpDeskPageData extends PageData {
 	private String closeFlag;
 	@NotNull
 	private LocalDateTime callBackTime;
-	@NotNull
 	private LocalDateTime createDateTime;
 	@JsonInclude
 	private String recordInUse;

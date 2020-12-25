@@ -95,13 +95,14 @@ public class HelpDeskPageHandler implements IPageHandler {
 		validate(pageData);
 		HelpDesk helpDesk = mapHelpDeskData(pageRequest, pageData);
 		helpDesk = helpDeskService.create(helpDesk);
-		mapHeaderData(pageRequest, pageDto, pageData, helpDesk);
+		mapHeaderData(pageRequest, pageDto);
+		pageData.setId(helpDesk.getRequestId());
 		pageData.setLastUpdate(helpDesk.getOperationDateTime());
 		pageDto.setData(pageData);
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto, HelpDeskPageData pageData, HelpDesk helpDesk) {
+	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
 		pageDto.setHeader(pageRequest.getHeader());
 		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
 		pageDto.getHeader().setTodaysDate(LocalDate.now());
@@ -119,10 +120,11 @@ public class HelpDeskPageHandler implements IPageHandler {
 	private PageDTO updateHelpDesk(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		HelpDeskPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HelpDeskPageData.class);
+		pageData.setRequestId(pageRequest.getData().get("id").asLong());
 		validate(pageData);
 		HelpDesk helpDesk = mapHelpDeskData(pageRequest, pageData);
 		helpDesk = helpDeskService.update(helpDesk);
-		mapHeaderData(pageRequest, pageDto, pageData, helpDesk);
+		mapHeaderData(pageRequest, pageDto);
 		pageData.setLastUpdate(helpDesk.getOperationDateTime());
 		pageDto.setData(pageData);
 		return pageDto;
@@ -132,9 +134,10 @@ public class HelpDeskPageHandler implements IPageHandler {
 	private PageDTO readHelpDesk(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		HelpDeskPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HelpDeskPageData.class);
+		pageData.setRequestId(pageRequest.getData().get("id").asLong());
 		HelpDesk helpDesk = modelMapper.map(pageData, HelpDesk.class);
 		helpDesk = helpDeskService.read(helpDesk);
-		mapHeaderData(pageRequest, pageDto, pageData, helpDesk);
+		mapHeaderData(pageRequest, pageDto);
 		mapPageData(pageData, helpDesk);
 		pageDto.setData(pageData);
 		return pageDto;
@@ -155,7 +158,7 @@ public class HelpDeskPageHandler implements IPageHandler {
 		HelpDesk helpDesk = modelMapper.map(pageData, HelpDesk.class);
 		helpDesk.setRequestId(pageData.getId());
 		helpDesk = helpDeskService.close(helpDesk);
-		mapHeaderData(pageRequest, pageDto, pageData, helpDesk);
+		mapHeaderData(pageRequest, pageDto);
 		mapPageData(pageData, helpDesk);
 		pageDto.setData(pageData);
 		return pageDto;
