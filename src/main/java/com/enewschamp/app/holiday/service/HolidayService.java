@@ -17,7 +17,6 @@ import com.enewschamp.app.holiday.repository.HolidayRepository;
 import com.enewschamp.app.holiday.repository.HolidayRepositoryCustom;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.publication.domain.entity.Genre;
 
 @Service
 public class HolidayService {

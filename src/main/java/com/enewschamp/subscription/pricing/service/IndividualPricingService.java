@@ -9,9 +9,14 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.pricing.repository.IndividualPricingRepositoryCustom;
 import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.pricing.entity.IndividualPricing;
 import com.enewschamp.subscription.pricing.repository.IndividualPricingRepository;
@@ -20,14 +25,17 @@ import com.enewschamp.subscription.pricing.repository.IndividualPricingRepositor
 public class IndividualPricingService {
 
 	@Autowired
-	IndividualPricingRepository individualPricingRepository;
+	private IndividualPricingRepository individualPricingRepository;
+	
+	@Autowired
+	private IndividualPricingRepositoryCustom individualPricingRepositoryCustom;
 
 	@Autowired
-	ModelMapper modelMapper;
+	private ModelMapper modelMapper;
 
 	@Autowired
 	@Qualifier("modelPatcher")
-	ModelMapper modelMapperForPatch;
+	private ModelMapper modelMapperForPatch;
 
 	public IndividualPricing create(IndividualPricing IndividualPricingEntity) {
 		return individualPricingRepository.save(IndividualPricingEntity);
@@ -70,5 +78,26 @@ public class IndividualPricingService {
 		} else {
 			throw new BusinessException(ErrorCodeConstants.INDIVIDUAL_PRICING_NOT_FOUND);
 		}
+	}
+	
+
+	public IndividualPricing read(IndividualPricing individualPricingEntity) {
+		Long inPricingId = individualPricingEntity.getIndividualPricingId();
+		IndividualPricing existingndividualPricing = get(inPricingId);
+		existingndividualPricing.setRecordInUse(RecordInUseType.Y);
+		return individualPricingRepository.save(existingndividualPricing);
+	}
+
+	public IndividualPricing close(IndividualPricing individualPricingEntity) {
+		Long inPricingId = individualPricingEntity.getIndividualPricingId();
+		IndividualPricing existingEntity = get(inPricingId);
+		existingEntity.setRecordInUse(RecordInUseType.N);
+		return individualPricingRepository.save(existingEntity);
+	}
+
+	public Page<IndividualPricing> list(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<IndividualPricing> genreList = individualPricingRepositoryCustom.findIndividualPricings(pageable);
+		return genreList;
 	}
 }
