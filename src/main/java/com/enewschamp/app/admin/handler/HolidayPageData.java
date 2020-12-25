@@ -1,5 +1,6 @@
 package com.enewschamp.app.admin.handler;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
@@ -16,23 +17,12 @@ public class HolidayPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	@JsonInclude
 	private Long id;
-	private Long requestId;
-	@NotNull
-	private Long studentId;
 	@NotNull
 	private String editionId;
 	@NotNull
-	private String categoryId;
+	private LocalDate date;
 	@NotNull
-	private String details;
-	@NotNull
-	private String callBackPhoneNumber;
-	private String supportingComments;
-	private String closeFlag;
-	@NotNull
-	private LocalDateTime callBackTime;
-	@NotNull
-	private LocalDateTime createDateTime;
+	private String holiday;
 	@JsonInclude
 	private String recordInUse;
 	@JsonInclude

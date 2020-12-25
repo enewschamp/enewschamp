@@ -36,7 +36,7 @@ import com.enewschamp.subscription.domain.business.StudentDetailsBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component(value = "HelpDeskPageHandler")
+@Component(value = "HelpDeskPageHandler1")
 public class HelpDeskPageHandler implements IPageHandler {
 
 	@Autowired

@@ -92,11 +92,13 @@ public class HolidayPageHandler implements IPageHandler {
 	private PageDTO createHoliday(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		HolidayPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HolidayPageData.class);
+		pageData.setDate(LocalDate.parse(pageRequest.getData().get("date").asText()));
 		validate(pageData);
 		Holiday holiday = mapHolidayData(pageRequest, pageData);
 		holiday = holidayService.create(holiday);
 		mapHeaderData(pageRequest, pageDto, pageData, holiday);
 		pageData.setLastUpdate(holiday.getOperationDateTime());
+		pageData.setId(holiday.getHolidayId());
 		pageDto.setData(pageData);
 		return pageDto;
 	}
@@ -142,6 +144,9 @@ public class HolidayPageHandler implements IPageHandler {
 
 	private void mapPageData(HolidayPageData pageData, Holiday holiday) {
 		pageData.setId(holiday.getHolidayId());
+		pageData.setEditionId(holiday.getEditionId());
+		pageData.setHoliday(holiday.getHoliday());
+		pageData.setDate(holiday.getHolidayDate());
 		pageData.setRecordInUse(holiday.getRecordInUse().toString());
 		pageData.setOperator(holiday.getOperatorId());
 		pageData.setLastUpdate(holiday.getOperationDateTime());
