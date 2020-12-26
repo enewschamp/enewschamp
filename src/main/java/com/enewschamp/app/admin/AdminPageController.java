@@ -8,11 +8,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enewschamp.EnewschampApplicationProperties;
+import com.enewschamp.app.common.CommonModuleService;
+import com.enewschamp.app.common.CommonService;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.common.RequestStatusType;
+import com.enewschamp.app.user.login.entity.UserActivityTracker;
+import com.enewschamp.app.user.login.entity.UserType;
+import com.enewschamp.common.domain.service.PropertiesService;
 import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.Fault;
@@ -20,23 +26,49 @@ import com.enewschamp.problem.Fault;
 @RestController
 @RequestMapping("/enewschamp-api/v1")
 public class AdminPageController {
-	
+
 	@Autowired
 	private PageHandlerFactory pageHandlerFactory;
 
 	@Autowired
-	private EnewschampApplicationProperties appConfig;
+	private CommonModuleService commonModuleService;
 	
-	@PostMapping(value="/admin")
-	public ResponseEntity<PageDTO> processAdminRequest(@RequestBody PageRequestDTO pageRequest){
+	@Autowired
+	private PropertiesService propertiesService;
+
+	@PostMapping(value = "/admin")
+	public ResponseEntity<PageDTO> processAdminRequest(@RequestBody PageRequestDTO pageRequest) {
 		ResponseEntity<PageDTO> response = null;
 		try {
+			String module = pageRequest.getHeader().getModule();
 			String pageName = pageRequest.getHeader().getPageName();
 			String actionName = pageRequest.getHeader().getAction();
+			String loginCredentials = pageRequest.getHeader().getLoginCredentials();
+			String userId = pageRequest.getHeader().getUserId();
+			String deviceId = pageRequest.getHeader().getDeviceId();
+			String operation = pageRequest.getHeader().getOperation();
+			String editionId = pageRequest.getHeader().getEditionId();
+			if (module == null || pageName == null || operation == null || actionName == null || userId == null
+					|| deviceId == null || loginCredentials == null
+					|| (!propertiesService.getProperty(PropertyConstants.ADMIN_MODULE_NAME).equals(module))
+					|| pageName.trim().isEmpty() || actionName.trim().isEmpty() || deviceId.trim().isEmpty()) {
+				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
+			}
+			UserActivityTracker userActivityTracker = commonModuleService.validateUser(pageRequest, module, pageName,
+					actionName, loginCredentials, userId, deviceId, operation, editionId, UserType.A,
+					PropertyConstants.ADMIN_MODULE_NAME);
 			pageRequest.getHeader().setPageName(pageName);
 			pageRequest.getHeader().setAction(actionName);
-
-			PageDTO pageResponse = processRequest(pageName, actionName, pageRequest, "app");
+			PageDTO pageResponse = null;
+			if (actionName.equalsIgnoreCase("RefreshToken")) {
+				pageResponse = commonModuleService.performRefreshToken(pageRequest, loginCredentials, userId, deviceId,
+						userActivityTracker, UserType.A);
+			} else {
+				pageResponse = processRequest(pageName, actionName, pageRequest, "admin");
+				pageResponse.getHeader().setLoginCredentials(null);
+			}
+			if(pageName.equals("Login"))
+			pageResponse.setData(commonModuleService.getLoginPageData(userId, UserType.A));
 			response = new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
 		} catch (BusinessException e) {
 			HeaderDTO header = pageRequest.getHeader();

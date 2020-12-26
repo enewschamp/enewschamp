@@ -28,12 +28,12 @@ public interface UserLoginRepository extends JpaRepository<UserLogin, Long> {
 	public LocalDateTime getLastLoginDate(@Param("userId") String emailId, @Param("deviceId") String deviceId,
 			@Param("userType") UserType userType);
 
-	@Query("Select s from UserLogin s where s.userId= :userId and s.deviceId= :deviceId and s.tokenId= :tokenId and s.userType= 'P'")
+	@Query("Select s from UserLogin s where s.userId= :userId and s.deviceId= :deviceId and s.tokenId= :tokenId and s.userType= :userType")
 	public Optional<UserLogin> getOperatorLogin(@Param("userId") String userId, @Param("deviceId") String deviceId,
-			@Param("tokenId") String tokenId);
+			@Param("tokenId") String tokenId, @Param("userType") UserType userType);
 
-	@Query("Select s from UserLogin s where s.userId= :userId and s.userType= 'P'")
-	public Optional<UserLogin> getOperatorLogin(@Param("userId") String userId);
+	@Query("Select s from UserLogin s where s.userId= :userId and s.userType= :userType")
+	public Optional<UserLogin> getOperatorLogin(@Param("userId") String userId, @Param("userType") UserType userType);
 
 	@Query("Select s from UserLogin s where s.deviceId= :deviceId and s.userType= 'S'")
 	public Optional<UserLogin> getStudentLoginByDeviceId(@Param("deviceId") String deviceId);

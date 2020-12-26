@@ -56,85 +56,85 @@ public class AppSecFilter extends GenericFilterBean {
 		String module = requestWrapper.getHeader("module");
 		String payLoad = this.getRequestBody(requestWrapper);
 		PageRequestDTO requestPage = null;
-//		if (payLoad != null && !payLoad.isEmpty()) {
-//			try {
-//				requestPage = objectMapper.readValue(payLoad, PageRequestDTO.class);
-//			} catch (Exception e) {
-//				response.setContentType("application/json");
-//				PrintWriter writer = response.getWriter();
-//				HeaderDTO header = new HeaderDTO();
-//				header.setRequestStatus(RequestStatusType.F);
-//				BusinessException be = new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
-//				Fault f = new Fault(be, header);
-//				f.getData().setErrorMessageParams(null);
-//				writer.write(objectMapper.writeValueAsString(f));
-//				writer.flush();
-//				return;
-//			}
-//		}
-//		HeaderDTO header = new HeaderDTO();
-//		if (requestPage != null) {
-//			header = requestPage.getHeader();
-//		}
-//		if ("".equals(appName) || null == appName) {
-//			appName = servletRequest.getParameter("appName");
-//		}
-//		if ("".equals(appKey) || null == appKey) {
-//			appKey = servletRequest.getParameter("appKey");
-//		}
-//		if ("".equals(module) || null == module) {
-//			module = servletRequest.getParameter("module");
-//		}
-//		// validate the appkey and appname
-//		if ("".equals(appName) || null == appName) {
-//			response.setContentType("application/json");
-//			PrintWriter writer = response.getWriter();
-//			header.setRequestStatus(RequestStatusType.F);
-//			BusinessException be = new BusinessException(ErrorCodeConstants.UNAUTH_ACCESS);
-//			Fault f = new Fault(be, header);
-//			f.getData().setErrorMessageParams(null);
-//			requestPage = modelMapper.map(f, PageRequestDTO.class);
-//			String json = objectMapper.writeValueAsString(f.getData());
-//			JsonNode jsonNode = objectMapper.readTree(json);
-//			requestPage.setData(jsonNode);
-//			writer.write(objectMapper.writeValueAsString(requestPage));
-//			writer.flush();
-//			return;
-//		}
-//		if ("".equals(appKey) || null == appKey) {
-//			response.setContentType("application/json");
-//			PrintWriter writer = response.getWriter();
-//			header.setRequestStatus(RequestStatusType.F);
-//			BusinessException be = new BusinessException(ErrorCodeConstants.UNAUTH_ACCESS);
-//			Fault f = new Fault(be, header);
-//			f.getData().setErrorMessageParams(null);
-//			requestPage = modelMapper.map(f, PageRequestDTO.class);
-//			String json = objectMapper.writeValueAsString(f.getData());
-//			JsonNode jsonNode = objectMapper.readTree(json);
-//			requestPage.setData(jsonNode);
-//			writer.write(objectMapper.writeValueAsString(requestPage));
-//			writer.flush();
-//			return;
-//		}
-//		if (header != null && header.getModule() != null) {
-//			module = header.getModule();
-//		}
-//		boolean isValid = appSecService.isValidKey(appName, appKey, module);
-//		if (!isValid) {
-//			response.setContentType("application/json");
-//			PrintWriter writer = response.getWriter();
-//			header.setRequestStatus(RequestStatusType.F);
-//			BusinessException be = new BusinessException(ErrorCodeConstants.UNAUTH_ACCESS);
-//			Fault f = new Fault(be, header);
-//			f.getData().setErrorMessageParams(null);
-//			requestPage = modelMapper.map(f, PageRequestDTO.class);
-//			String json = objectMapper.writeValueAsString(f.getData());
-//			JsonNode jsonNode = objectMapper.readTree(json);
-//			requestPage.setData(jsonNode);
-//			writer.write(objectMapper.writeValueAsString(requestPage));
-//			writer.flush();
-//			return;
-//		}
+		if (payLoad != null && !payLoad.isEmpty()) {
+			try {
+				requestPage = objectMapper.readValue(payLoad, PageRequestDTO.class);
+			} catch (Exception e) {
+				response.setContentType("application/json");
+				PrintWriter writer = response.getWriter();
+				HeaderDTO header = new HeaderDTO();
+				header.setRequestStatus(RequestStatusType.F);
+				BusinessException be = new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
+				Fault f = new Fault(be, header);
+				f.getData().setErrorMessageParams(null);
+				writer.write(objectMapper.writeValueAsString(f));
+				writer.flush();
+				return;
+			}
+		}
+		HeaderDTO header = new HeaderDTO();
+		if (requestPage != null) {
+			header = requestPage.getHeader();
+		}
+		if ("".equals(appName) || null == appName) {
+			appName = servletRequest.getParameter("appName");
+		}
+		if ("".equals(appKey) || null == appKey) {
+			appKey = servletRequest.getParameter("appKey");
+		}
+		if ("".equals(module) || null == module) {
+			module = servletRequest.getParameter("module");
+		}
+		// validate the appkey and appname
+		if ("".equals(appName) || null == appName) {
+			response.setContentType("application/json");
+			PrintWriter writer = response.getWriter();
+			header.setRequestStatus(RequestStatusType.F);
+			BusinessException be = new BusinessException(ErrorCodeConstants.UNAUTH_ACCESS);
+			Fault f = new Fault(be, header);
+			f.getData().setErrorMessageParams(null);
+			requestPage = modelMapper.map(f, PageRequestDTO.class);
+			String json = objectMapper.writeValueAsString(f.getData());
+			JsonNode jsonNode = objectMapper.readTree(json);
+			requestPage.setData(jsonNode);
+			writer.write(objectMapper.writeValueAsString(requestPage));
+			writer.flush();
+			return;
+		}
+		if ("".equals(appKey) || null == appKey) {
+			response.setContentType("application/json");
+			PrintWriter writer = response.getWriter();
+			header.setRequestStatus(RequestStatusType.F);
+			BusinessException be = new BusinessException(ErrorCodeConstants.UNAUTH_ACCESS);
+			Fault f = new Fault(be, header);
+			f.getData().setErrorMessageParams(null);
+			requestPage = modelMapper.map(f, PageRequestDTO.class);
+			String json = objectMapper.writeValueAsString(f.getData());
+			JsonNode jsonNode = objectMapper.readTree(json);
+			requestPage.setData(jsonNode);
+			writer.write(objectMapper.writeValueAsString(requestPage));
+			writer.flush();
+			return;
+		}
+		if (header != null && header.getModule() != null) {
+			module = header.getModule();
+		}
+		boolean isValid = appSecService.isValidKey(appName, appKey, module);
+		if (!isValid) {
+			response.setContentType("application/json");
+			PrintWriter writer = response.getWriter();
+			header.setRequestStatus(RequestStatusType.F);
+			BusinessException be = new BusinessException(ErrorCodeConstants.UNAUTH_ACCESS);
+			Fault f = new Fault(be, header);
+			f.getData().setErrorMessageParams(null);
+			requestPage = modelMapper.map(f, PageRequestDTO.class);
+			String json = objectMapper.writeValueAsString(f.getData());
+			JsonNode jsonNode = objectMapper.readTree(json);
+			requestPage.setData(jsonNode);
+			writer.write(objectMapper.writeValueAsString(requestPage));
+			writer.flush();
+			return;
+		}
 		filterChain.doFilter(requestWrapper, servletResponse);
 	}
 

@@ -93,8 +93,8 @@ public class UserLoginService {
 		return repository.getLastLoginDate(userId, deviceId, userType);
 	}
 
-	public UserLogin getOperatorLogin(final String userId, final String deviceId, final String tokenId) {
-		Optional<UserLogin> existingEntity = repository.getOperatorLogin(userId, deviceId, tokenId);
+	public UserLogin getOperatorLogin(final String userId, final String deviceId, final String tokenId, UserType userType) {
+		Optional<UserLogin> existingEntity = repository.getOperatorLogin(userId, deviceId, tokenId, userType);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
@@ -102,8 +102,8 @@ public class UserLoginService {
 		}
 	}
 
-	public UserLogin getOperatorLogin(final String userId) {
-		Optional<UserLogin> existingEntity = repository.getOperatorLogin(userId);
+	public UserLogin getOperatorLogin(final String userId, UserType userType) {
+		Optional<UserLogin> existingEntity = repository.getOperatorLogin(userId, userType);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {

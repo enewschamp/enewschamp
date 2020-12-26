@@ -10,6 +10,7 @@ import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.signin.page.handler.LoginPageData;
+import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.app.user.login.service.UserLoginService;
 import com.enewschamp.common.domain.service.PropertiesService;
@@ -45,6 +46,12 @@ public class PublisherMenuPageHandler extends AbstractPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String userId = pageNavigationContext.getPageRequest().getHeader().getUserId();
+		LoginPageData loginPageData = getLoginPageData(userId);
+		pageDto.setData(loginPageData);
+		return pageDto;
+	}
+
+	private LoginPageData getLoginPageData(String userId) {
 		User user = userService.get(userId);
 		LoginPageData loginPageData = new LoginPageData();
 		if (user != null) {
@@ -52,12 +59,11 @@ public class PublisherMenuPageHandler extends AbstractPageHandler {
 			loginPageData.setTodaysDate(LocalDate.now());
 			loginPageData.setTheme(user.getTheme());
 			loginPageData.setUserRole(userLoginBusiness.getUserRole(userId));
-			loginPageData.setLoginCredentials(userLoginService.getOperatorLogin(userId).getTokenId());
+			loginPageData.setLoginCredentials(userLoginService.getOperatorLogin(userId, UserType.P).getTokenId());
 			loginPageData
 					.setTokenValidity(propertiesService.getProperty(PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));
 		}
-		pageDto.setData(loginPageData);
-		return pageDto;
+		return loginPageData;
 	}
 
 	@Override

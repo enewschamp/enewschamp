@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.helpdesk.entity.HelpDesk;
 import com.enewschamp.app.helpdesk.repository.HelpDeskRepository;
@@ -78,9 +79,9 @@ public class HelpDeskService {
 		return helpDeskRespository.save(existingEntity);
 	}
 
-	public Page<HelpDesk> list(int pageNo, int pageSize) {
+	public Page<HelpDesk> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<HelpDesk> genreList = helpDeskRespositoryCustom.findHelpDesks(pageable);
+		Page<HelpDesk> genreList = helpDeskRespositoryCustom.findHelpDesks(pageable, searchRequest);
 		return genreList;
 	}
 

@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import com.enewschamp.app.common.state.repository.StateRepositoryCustom;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.problem.Fault;
 import com.enewschamp.subscription.app.dto.StatePageData;
 
 @Service
@@ -39,9 +41,15 @@ public class StateService extends AbstractDomainService {
 	ModelMapper modelMapperForPatch;
 
 	public State create(State stateEntity) {
-		State state = stateRepository.findByNameIdAndCountryId(stateEntity.getNameId(), stateEntity.getCountryId());
-		if (state != null)
-			return state;
+//		State state = stateRepository.findByNameIdAndCountryId(stateEntity.getNameId(), stateEntity.getCountryId());
+//		if (state != null)
+//			return state;
+		try {
+			stateRepository.save(stateEntity);
+		}
+		catch(DataIntegrityViolationException e) {
+			throw new BusinessException("REC_EXIST_01", "Duplicate record found");
+		}
 		return stateRepository.save(stateEntity);
 	}
 

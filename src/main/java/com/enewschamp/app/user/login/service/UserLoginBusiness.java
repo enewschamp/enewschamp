@@ -58,7 +58,7 @@ public class UserLoginBusiness {
 	public UserLogin login(final String userId, final String deviceId, final String tokenId, UserType userType) {
 		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, tokenId, userType);
 		if (loggedIn == null) {
-			loggedIn = loginService.getOperatorLogin(userId);
+			loggedIn = loginService.getOperatorLogin(userId, userType);
 		}
 		if (UserType.S.equals(userType) && loggedIn == null) {
 			loggedIn = getStudentLoginByDeviceId(deviceId);
@@ -188,7 +188,7 @@ public class UserLoginBusiness {
 		if (UserType.S.toString().equals(userType.toString())) {
 			loggedIn = loginService.getUserLogin(userId, deviceId, tokenId, userType);
 		} else {
-			loggedIn = loginService.getOperatorLogin(userId, deviceId, tokenId);
+			loggedIn = loginService.getOperatorLogin(userId, deviceId, tokenId, userType);
 		}
 		return loggedIn;
 	}

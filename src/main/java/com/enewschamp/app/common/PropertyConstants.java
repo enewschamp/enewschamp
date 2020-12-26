@@ -5,6 +5,7 @@ public interface PropertyConstants {
 	public static String PAGE_SIZE = "pageSize";
 	public static String STUDENT_APP_MODULE_NAME = "studentAppModuleName";
 	public static String PUBLISHER_MODULE_NAME = "publisherModuleName";
+	public static String ADMIN_MODULE_NAME = "adminModuleName";
 	public static String LAST_PROP_CHANGE_TIME = "lastPropChangeTime";
 	public static String REGISTRATION_COMPLETION_GRACE_DAYS = "registrationCompletionGraceDays";
 	public static String EVAL_DAYS = "evalDays";

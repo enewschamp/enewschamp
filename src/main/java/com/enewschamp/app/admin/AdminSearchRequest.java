@@ -13,4 +13,10 @@ public class AdminSearchRequest {
 	private String stateId;
 	private String name;
 	private String newsEventsApplicable;
+	private String studentId;
+	private String createDateFrom;
+	private String createDateTo;
+	private String categoryId;
+	private String closeFlag;
+	private String supportUserId;
 }

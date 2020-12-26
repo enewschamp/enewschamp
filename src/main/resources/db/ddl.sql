@@ -24,3 +24,8 @@ CREATE TABLE `entitlements` (
    `page_name` varchar(50) NOT NULL,
    PRIMARY KEY (`entitlement_id`) 
 );
+
+CREATE TABLE `test_table`(
+`operation_date_time` datetime NOT NULL,
+`operation_date date` NOT NULL
+);

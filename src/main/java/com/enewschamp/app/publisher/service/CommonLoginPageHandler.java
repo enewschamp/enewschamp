@@ -33,8 +33,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component(value = "PublisherLoginPageHandler")
-public class PublisherLoginPageHandler implements IPageHandler {
+@Component(value = "CommonLoginPageHandler")
+public class CommonLoginPageHandler implements IPageHandler {
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -56,7 +56,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 
 	@Autowired
 	PropertiesService propertiesService;
-	
+
 	@Autowired
 	UserLoginService loginService;
 
@@ -93,6 +93,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 		String deviceId = pageRequest.getHeader().getDeviceId();
 		String tokenId = pageRequest.getHeader().getLoginCredentials();
 		String password = "";
+		UserType userType = pageRequest.getHeader().getModule().equals("Admin") ? UserType.A : UserType.P;
 		boolean loginSuccess = false;
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
 		userActivityTracker.setOperatorId("SYSTEM");
@@ -100,7 +101,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 		userActivityTracker.setActionPerformed(action);
 		userActivityTracker.setDeviceId(deviceId);
 		userActivityTracker.setUserId(userId);
-		userActivityTracker.setUserType(UserType.P);
+		userActivityTracker.setUserType(userType);
 		userActivityTracker.setActionTime(LocalDateTime.now());
 		if (null == userId || "".equals(userId) || !userService.validateUser(userId)) {
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
@@ -121,7 +122,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			}
 			loginSuccess = userService.validatePassword(userId, password, userActivityTracker);
 			if (loginSuccess) {
-				UserLogin userLogin = userLoginBusiness.login(userId, deviceId, tokenId, UserType.P);
+				UserLogin userLogin = userLoginBusiness.login(userId, deviceId, tokenId, userType);
 				userLogin.setLoginFlag(AppConstants.YES);
 				loginService.update(userLogin);
 				userActivityTracker.setActionStatus(UserAction.SUCCESS);
@@ -142,8 +143,8 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			userLoginBusiness.isUserLoggedIn(deviceId, tokenId, userId, UserType.P, userActivityTracker);
-			userLoginBusiness.logout(userId, deviceId, tokenId, UserType.P);
+			userLoginBusiness.isUserLoggedIn(deviceId, tokenId, userId, userType, userActivityTracker);
+			userLoginBusiness.logout(userId, deviceId, tokenId, userType);
 			userActivityTracker.setActionStatus(UserAction.SUCCESS);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			loginPageData = new PublisherLoginPageData();
@@ -229,7 +230,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 				throw new BusinessException(ErrorCodeConstants.INVALID_SECURITY_CODE);
 			}
 			userService.resetPassword(userId, passwordNew, userActivityTracker);
-			userLoginBusiness.logout(userId, deviceId, tokenId, UserType.P);
+			userLoginBusiness.logout(userId, deviceId, tokenId, userType);
 			userActivityTracker.setActionStatus(UserAction.SUCCESS);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			loginPageData = new PublisherLoginPageData();
@@ -249,7 +250,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			userLoginBusiness.isUserLoggedIn(deviceId, tokenId, userId, UserType.P, userActivityTracker);
+			userLoginBusiness.isUserLoggedIn(deviceId, tokenId, userId, userType, userActivityTracker);
 			if (password == null && "".equals(password)) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
@@ -295,7 +296,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			userLoginBusiness.isUserLoggedIn(deviceId, tokenId, userId, UserType.P, userActivityTracker);
+			userLoginBusiness.isUserLoggedIn(deviceId, tokenId, userId, userType, userActivityTracker);
 			if (theme == null && "".equals(theme)) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);

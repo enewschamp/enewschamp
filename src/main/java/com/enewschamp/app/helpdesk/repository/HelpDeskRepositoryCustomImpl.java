@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.helpdesk.entity.HelpDesk;
 import com.enewschamp.domain.repository.RepositoryImpl;
 @Repository
@@ -25,11 +26,17 @@ public class HelpDeskRepositoryCustomImpl extends RepositoryImpl implements Help
 	private EntityManager entityManager;
 
 	@Override
-	public Page<HelpDesk> findHelpDesks(Pageable pageable) {
+	public Page<HelpDesk> findHelpDesks(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<HelpDesk> criteriaQuery = cb.createQuery(HelpDesk.class);
 		Root<HelpDesk> stateRoot = criteriaQuery.from(HelpDesk.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
+		filterPredicates.add(cb.like(stateRoot.get("studentId"), "%" + searchRequest.getStudentId() + "%"));
+		filterPredicates.add(cb.like(stateRoot.get("createDateFrom"), "%" + searchRequest.getCreateDateFrom() + "%"));
+		filterPredicates.add(cb.like(stateRoot.get("createDateTo"), "%" + searchRequest.getCreateDateTo() + "%"));
+		filterPredicates.add(cb.like(stateRoot.get("categoryId"), "%" + searchRequest.getCategoryId() + "%"));
+		filterPredicates.add(cb.like(stateRoot.get("closeFlag"), "%" + searchRequest.getCloseFlag() + "%"));
+		filterPredicates.add(cb.like(stateRoot.get("supportUserId"), "%" + searchRequest.getSupportUserId() + "%"));
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		// Build query
 		TypedQuery<HelpDesk> q = entityManager.createQuery(criteriaQuery);

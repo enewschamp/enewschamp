@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
@@ -166,7 +167,14 @@ public class HelpDeskPageHandler implements IPageHandler {
 
 	@SneakyThrows
 	private PageDTO listHelpDesk(PageRequestDTO pageRequest) {
-		Page<HelpDesk> editionList = helpDeskService.list(
+		AdminSearchRequest searchRequest = new AdminSearchRequest();
+		searchRequest.setStudentId(pageRequest.getData().get("filter").get("studentId").asText());
+		searchRequest.setSupportUserId(pageRequest.getData().get("filter").get("supportUserId").asText());
+		searchRequest.setCloseFlag(pageRequest.getData().get("filter").get("closeFlag").asText());
+		searchRequest.setCategoryId(pageRequest.getData().get("filter").get("categoryId").asText());
+		searchRequest.setCreateDateTo(pageRequest.getData().get("filter").get("createDateTo").asText());
+		searchRequest.setCreateDateFrom(pageRequest.getData().get("filter").get("createDateFrom").asText());
+		Page<HelpDesk> editionList = helpDeskService.list(searchRequest,
 				pageRequest.getData().get("pagination").get("pageNumber").asInt(),
 				pageRequest.getData().get("pagination").get("pageSize").asInt());
 

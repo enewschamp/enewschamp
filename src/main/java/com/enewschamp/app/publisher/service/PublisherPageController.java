@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,30 +25,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.EnewschampApplicationProperties;
+import com.enewschamp.app.common.CommonModuleService;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.common.RequestStatusType;
-import com.enewschamp.app.signin.page.handler.LoginPageData;
-import com.enewschamp.app.user.login.entity.UserAction;
 import com.enewschamp.app.user.login.entity.UserActivityTracker;
-import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.common.domain.service.PropertiesService;
 import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.domain.common.PageNavigationContext;
-import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.publication.domain.service.EditionService;
 import com.enewschamp.publication.domain.service.HashTagService;
-import com.enewschamp.user.domain.entity.User;
 import com.enewschamp.user.domain.service.UserService;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lombok.extern.java.Log;
 
@@ -84,6 +75,9 @@ public class PublisherPageController {
 
 	@Autowired
 	HashTagService hashTagService;
+	
+	@Autowired
+	private CommonModuleService commonModuleService;
 
 	@PostMapping(value = "/publisher")
 	@Transactional
@@ -98,7 +92,6 @@ public class PublisherPageController {
 			String deviceId = pageRequest.getHeader().getDeviceId();
 			String operation = pageRequest.getHeader().getOperation();
 			String editionId = pageRequest.getHeader().getEditionId();
-			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userId, null));
 			if (module == null || pageName == null || operation == null || actionName == null || userId == null
 					|| deviceId == null || loginCredentials == null || editionId == null
 					|| (!propertiesService.getProperty(PropertyConstants.PUBLISHER_MODULE_NAME).equals(module))
@@ -106,54 +99,15 @@ public class PublisherPageController {
 					|| editionId.trim().isEmpty()) {
 				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
 			}
-			User user = userService.get(userId);
-			UserActivityTracker userActivityTracker = new UserActivityTracker();
-			userActivityTracker.setOperatorId("SYSTEM");
-			userActivityTracker.setRecordInUse(RecordInUseType.Y);
-			userActivityTracker.setActionPerformed(actionName);
-			userActivityTracker.setDeviceId(deviceId);
-			userActivityTracker.setUserId(userId);
-			userActivityTracker.setUserType(UserType.P);
-			userActivityTracker.setActionTime(LocalDateTime.now());
-			if (user == null) {
-				userActivityTracker.setActionStatus(UserAction.FAILURE);
-				userLoginBusiness.auditUserActivity(userActivityTracker);
-				throw new BusinessException(ErrorCodeConstants.INVALID_USER_ID, userId);
-			}
-			if (!user.getIsActive().equalsIgnoreCase(RecordInUseType.Y.toString())) {
-				userActivityTracker.setActionStatus(UserAction.FAILURE);
-				userLoginBusiness.auditUserActivity(userActivityTracker);
-				throw new BusinessException(ErrorCodeConstants.USER_IS_INACTIVE, userId);
-			}
-			// Check if user has been logged in
-			if (!(pageName.equalsIgnoreCase("Login"))) {
-				userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.P);
-				JsonNode dataNode = pageRequest.getData();
-				if (dataNode != null && dataNode instanceof ObjectNode) {
-					((ObjectNode) dataNode).put("operatorId", userId);
-				}
-			}
+			UserActivityTracker userActivityTracker = commonModuleService.validateUser(pageRequest, module, pageName, actionName,
+					loginCredentials, userId, deviceId, operation, editionId, UserType.P, PropertyConstants.PUBLISHER_MODULE_NAME);
 			pageRequest.getHeader().setPageName(pageName);
 			pageRequest.getHeader().setAction(actionName);
 
 			PageDTO pageResponse = null;
 			if (actionName.equalsIgnoreCase("RefreshToken")) {
-				String edition = pageRequest.getHeader().getEditionId();
-				editionService.getEdition(edition);
-				userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.P, userActivityTracker);
-				UserLogin userLogin = userLoginBusiness.login(userId, deviceId, loginCredentials, UserType.P);
-				userActivityTracker.setActionStatus(UserAction.SUCCESS);
-				userLoginBusiness.auditUserActivity(userActivityTracker);
-				pageResponse = new PageDTO();
-				pageRequest.getHeader().setRequestStatus(RequestStatusType.S);
-				pageResponse.setHeader(pageRequest.getHeader());
-				LoginPageData loginPageData = new LoginPageData();
-				loginPageData.setMessage("Token Refreshed Successfully");
-				loginPageData.setLoginCredentials(userLogin.getTokenId());
-				loginPageData.setTokenValidity(
-						propertiesService.getProperty(PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));
-				pageResponse.setData(loginPageData);
-				pageResponse.getHeader().setLoginCredentials(null);
+				pageResponse = commonModuleService.performRefreshToken(pageRequest, loginCredentials, userId, deviceId,
+						userActivityTracker, UserType.P);
 			} else {
 				pageResponse = processRequest(pageName, actionName, pageRequest, "publisher");
 				pageResponse.getHeader().setLoginCredentials(null);
@@ -193,6 +147,8 @@ public class PublisherPageController {
 		}
 		return response;
 	}
+
+
 
 	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest, String context) {
 		// Process current page
