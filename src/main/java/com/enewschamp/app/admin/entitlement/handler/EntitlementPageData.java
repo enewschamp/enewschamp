@@ -25,11 +25,11 @@ public class EntitlementPageData extends PageData {
 	@JsonInclude
 	@NotNull
 	private String pageName;
-	@JsonInclude
-	private String recordInUse;
-	@JsonInclude
-	private String operator;
-	@JsonInclude
-	protected LocalDateTime lastUpdate;
+//	@JsonInclude
+//	private String recordInUse;
+//	@JsonInclude
+//	private String operator;
+//	@JsonInclude
+//	protected LocalDateTime lastUpdate;
 	
 }

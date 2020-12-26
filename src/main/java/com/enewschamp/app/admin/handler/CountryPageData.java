@@ -30,10 +30,10 @@ public class CountryPageData extends PageData {
 	private String currencyId;
 	@JsonInclude
 	private String language;
-	@JsonInclude
-	private String recordInUse;
-	@JsonInclude
-	private String operator;
-	@JsonInclude
-	protected LocalDateTime lastUpdate;
+//	@JsonInclude
+//	private String recordInUse;
+//	@JsonInclude
+//	private String operator;
+//	@JsonInclude
+//	protected LocalDateTime lastUpdate;
 }

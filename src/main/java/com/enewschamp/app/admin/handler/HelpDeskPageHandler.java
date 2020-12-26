@@ -147,8 +147,8 @@ public class HelpDeskPageHandler implements IPageHandler {
 	private void mapPageData(HelpDeskPageData pageData, HelpDesk helpDesk) {
 		pageData.setId(helpDesk.getRequestId());
 		pageData.setEditionId(helpDesk.getEditionId());
-		pageData.setRecordInUse(helpDesk.getRecordInUse().toString());
-		pageData.setOperator(helpDesk.getOperatorId());
+		//pageData.setRecordInUse(helpDesk.getRecordInUse().toString());
+		//pageData.setOperator(helpDesk.getOperatorId());
 		pageData.setLastUpdate(helpDesk.getOperationDateTime());
 	}
 
@@ -199,7 +199,7 @@ public class HelpDeskPageHandler implements IPageHandler {
 				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				HelpDeskPageData genrePageData = modelMapper.map(helpDesk, HelpDeskPageData.class);
 				genrePageData.setId(helpDesk.getRequestId());
-				genrePageData.setOperator(helpDesk.getOperatorId());
+			//	genrePageData.setOperator(helpDesk.getOperatorId());
 				genrePageData.setLastUpdate(helpDesk.getOperationDateTime());
 				genrePageDataList.add(genrePageData);
 			}

@@ -153,8 +153,8 @@ public class PromotionPageHandler implements IPageHandler {
 		pageData.setDateTo(promotion.getDateTo());
 		pageData.setPromotionDetails(promotion.getPromotionDetails());
 		pageData.setDescription(promotion.getDescription());
-		pageData.setRecordInUse(promotion.getRecordInUse().toString());
-		pageData.setOperator(promotion.getOperatorId());
+	//	pageData.setRecordInUse(promotion.getRecordInUse().toString());
+	//	pageData.setOperator(promotion.getOperatorId());
 		pageData.setLastUpdate(promotion.getOperationDateTime());
 	}
 
@@ -198,7 +198,7 @@ public class PromotionPageHandler implements IPageHandler {
 				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				PromotionPageData holidayPageData = modelMapper.map(promotion, PromotionPageData.class);
 				holidayPageData.setId(promotion.getPromotionId());
-				holidayPageData.setOperator(promotion.getOperatorId());
+			//	holidayPageData.setOperator(promotion.getOperatorId());
 				holidayPageData.setLastUpdate(promotion.getOperationDateTime());
 				promotionPageDataList.add(holidayPageData);
 			}

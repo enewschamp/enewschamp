@@ -19,7 +19,7 @@ public class AvatarPageData extends PageData {
 	private int readingLevel;
 	private String imageName;
 	private String base64Image;
-	private String recordInUse;
-	private String operator;
-	private LocalDateTime lastUpdate;
+//	private String recordInUse;
+//	private String operator;
+//	private LocalDateTime lastUpdate;
 }

@@ -1,7 +1,5 @@
 package com.enewschamp.app.admin.handler;
 
-import java.time.LocalDateTime;
-
 import com.enewschamp.app.common.PageData;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -20,10 +18,10 @@ public class AppSecurityPageData extends PageData {
 	private String appKey;
 	@JsonInclude
 	private String module;
-	@JsonInclude
-	private String recordInUse;
-	@JsonInclude
-	private String operator;
-	@JsonInclude
-	private LocalDateTime lastUpdate;
+//	@JsonInclude
+//	private String recordInUse;
+//	@JsonInclude
+//	private String operator;
+//	@JsonInclude
+//	private LocalDateTime lastUpdate;
 }

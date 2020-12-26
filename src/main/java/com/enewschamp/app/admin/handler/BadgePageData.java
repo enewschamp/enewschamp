@@ -29,10 +29,10 @@ public class BadgePageData extends PageData {
 	private String imageName;
 	@Transient
 	private String base64Image;
-	@JsonInclude
-	private String recordInUse;
-	@JsonInclude
-	private String operator;
-	@JsonInclude
-	private LocalDateTime lastUpdate;
+//	@JsonInclude
+//	private String recordInUse;
+//	@JsonInclude
+//	private String operator;
+//	@JsonInclude
+//	private LocalDateTime lastUpdate;
 }

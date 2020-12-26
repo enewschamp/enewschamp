@@ -150,8 +150,8 @@ public class EditionPageHandler implements IPageHandler {
 		pageData.setId(edition.getEditionId());
 		pageData.setEditionName(edition.getEditionName());
 		pageData.setLanguageId(edition.getLanguageId());
-		pageData.setRecordInUse(edition.getRecordInUse().toString());
-		pageData.setOperator(edition.getOperatorId());
+		//pageData.setRecordInUse(edition.getRecordInUse().toString());
+		//pageData.setOperator(edition.getOperatorId());
 		pageData.setLastUpdate(edition.getOperationDateTime());
 	}
 
@@ -195,7 +195,7 @@ public class EditionPageHandler implements IPageHandler {
 				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				EditionPageData editionPageData = modelMapper.map(edition, EditionPageData.class);
 				editionPageData.setId(edition.getEditionId());
-				editionPageData.setOperator(edition.getOperatorId());
+			//	editionPageData.setOperator(edition.getOperatorId());
 				editionPageData.setLastUpdate(edition.getOperationDateTime());
 				editionPageDataList.add(editionPageData);
 			}

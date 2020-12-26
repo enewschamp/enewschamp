@@ -150,8 +150,8 @@ public class GenrePageHandler implements IPageHandler {
 		pageData.setId(genre.getGenreId());
 		pageData.setName(genre.getNameId());
 		pageData.setImage(genre.getImageName());
-		pageData.setRecordInUse(genre.getRecordInUse().toString());
-		pageData.setOperator(genre.getOperatorId());
+		//pageData.setRecordInUse(genre.getRecordInUse().toString());
+	//	pageData.setOperator(genre.getOperatorId());
 		pageData.setLastUpdate(genre.getOperationDateTime());
 	}
 
@@ -197,7 +197,7 @@ public class GenrePageHandler implements IPageHandler {
 				genrePageData.setImage(genre.getImageName());
 				genrePageData.setName(genre.getNameId());
 				genrePageData.setId(genre.getGenreId());
-				genrePageData.setOperator(genre.getOperatorId());
+				//genrePageData.setOperator(genre.getOperatorId());
 				genrePageData.setLastUpdate(genre.getOperationDateTime());
 				genrePageDataList.add(genrePageData);
 			}

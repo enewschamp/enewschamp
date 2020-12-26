@@ -23,10 +23,10 @@ public class HolidayPageData extends PageData {
 	private LocalDate date;
 	@NotNull
 	private String holiday;
-	@JsonInclude
-	private String recordInUse;
-	@JsonInclude
-	private String operator;
-	@JsonInclude
-	private LocalDateTime lastUpdate;
+//	@JsonInclude
+//	private String recordInUse;
+//	@JsonInclude
+//	private String operator;
+//	@JsonInclude
+//	private LocalDateTime lastUpdate;
 }

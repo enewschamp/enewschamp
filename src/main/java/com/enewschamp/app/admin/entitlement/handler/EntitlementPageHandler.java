@@ -148,8 +148,8 @@ public class EntitlementPageHandler implements IPageHandler {
 		pageData.setId(entitlement.getEntitlementId());
 		pageData.setUserId(entitlement.getUserId());
 		pageData.setPageName(entitlement.getPageName());
-		pageData.setRecordInUse(entitlement.getRecordInUse().toString());
-		pageData.setOperator(entitlement.getOperatorId());
+	//	pageData.setRecordInUse(entitlement.getRecordInUse().toString());
+	//	pageData.setOperator(entitlement.getOperatorId());
 		pageData.setLastUpdate(entitlement.getOperationDateTime());
 	}
 
@@ -193,7 +193,7 @@ public class EntitlementPageHandler implements IPageHandler {
 				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				EntitlementPageData entitlementPageData = modelMapper.map(entitlement, EntitlementPageData.class);
 				entitlementPageData.setId(entitlement.getEntitlementId());
-				entitlementPageData.setOperator(entitlement.getOperatorId());
+			//	entitlementPageData.setOperator(entitlement.getOperatorId());
 				entitlementPageData.setLastUpdate(entitlement.getOperationDateTime());
 				entitlementPageDataList.add(entitlementPageData);
 			}

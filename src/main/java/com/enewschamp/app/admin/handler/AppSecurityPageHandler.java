@@ -151,8 +151,8 @@ public class AppSecurityPageHandler implements IPageHandler {
 		pageData.setAppKey(appSecurity.getAppKey());
 		pageData.setAppName(appSecurity.getAppName());
 		pageData.setModule(appSecurity.getModule());
-		pageData.setRecordInUse(appSecurity.getRecordInUse().toString());
-		pageData.setOperator(appSecurity.getOperatorId());
+		//pageData.setRecordInUse(appSecurity.getRecordInUse().toString());
+		//pageData.setOperator(appSecurity.getOperatorId());
 		pageData.setLastUpdate(appSecurity.getOperationDateTime());
 	}
 

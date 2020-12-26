@@ -23,10 +23,10 @@ public class IndividualPricingPageData extends PageData {
 	private LocalDate effectiveDate;
 	@NotNull
 	private String pricingDetails;
-	@JsonInclude
-	private String recordInUse;
-	@JsonInclude
-	private String operator;
-	@JsonInclude
-	private LocalDateTime lastUpdate;
+//	@JsonInclude
+//	private String recordInUse;
+//	@JsonInclude
+//	private String operator;
+//	@JsonInclude
+//	private LocalDateTime lastUpdate;
 }

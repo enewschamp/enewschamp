@@ -22,10 +22,10 @@ public class EditionPageData extends PageData {
     @NotNull
     @JsonInclude
 	private Long languageId;
-    @JsonInclude
-	private String recordInUse;
-    @JsonInclude
-	private String operator;
-    @JsonInclude
-	private LocalDateTime lastUpdate;
+//    @JsonInclude
+//	private String recordInUse;
+//    @JsonInclude
+//	private String operator;
+//    @JsonInclude
+//	private LocalDateTime lastUpdate;
 }

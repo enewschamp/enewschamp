@@ -29,12 +29,12 @@ public class CityPageData extends PageData {
 	@JsonInclude
 	@NotNull(message = "Description must not be null")
 	private String description;
-	@JsonInclude
-	private String recordInUse;
-	@JsonInclude
-	private String operator;
-	@JsonInclude
-	protected LocalDateTime lastUpdate;
+//	@JsonInclude
+//	private String recordInUse;
+//	@JsonInclude
+//	private String operator;
+//	@JsonInclude
+//	protected LocalDateTime lastUpdate;
 	@JsonInclude
 	private String isApplicableForNewsEvents;
 }

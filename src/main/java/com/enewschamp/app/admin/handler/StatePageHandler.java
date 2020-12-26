@@ -28,6 +28,7 @@ import com.enewschamp.app.common.state.service.StateService;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -60,6 +61,9 @@ public class StatePageHandler implements IPageHandler {
 			break;
 		case "Close":
 			pageDto = closeState(pageRequest);
+			break;
+		case "Reinstate":
+			pageDto = readState(pageRequest);
 			break;
 		case "List":
 			pageDto = listState(pageRequest);
@@ -95,24 +99,23 @@ public class StatePageHandler implements IPageHandler {
 		validate(pageData);
 		State state = mapStateData(pageRequest, pageData);
 		state = stateService.create(state);
-		mapHeaderData(pageRequest, pageDto, pageData, state);
-		pageDto.setData(pageData);
+		mapState(pageRequest, pageDto, state);
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto, StatePageData pageData, State state) {
+	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
 		pageDto.setHeader(pageRequest.getHeader());
 		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
 		pageDto.getHeader().setTodaysDate(LocalDate.now());
 		pageDto.getHeader().setLoginCredentials(null);
-		pageData.setId(state.getStateId());
-		pageData.setLastUpdate(state.getOperationDateTime());
+		pageDto.getHeader().setUserId(null);
+		pageDto.getHeader().setDeviceId(null);
+
 	}
 
 	private State mapStateData(PageRequestDTO pageRequest, StatePageData pageData) {
 		State state = modelMapper.map(pageData, State.class);
-		state.setNameId(pageRequest.getData().get("name").asText());
-		state.setOperatorId(pageRequest.getData().get("operator").asText());
+		state.setRecordInUse(RecordInUseType.Y);
 		return state;
 	}
 
@@ -123,9 +126,15 @@ public class StatePageHandler implements IPageHandler {
 		validate(pageData);
 		State state = mapStateData(pageRequest, pageData);
 		state = stateService.update(state);
-		mapHeaderData(pageRequest, pageDto, pageData, state);
-		pageDto.setData(pageData);
+		mapState(pageRequest, pageDto, state);
 		return pageDto;
+	}
+
+	private void mapState(PageRequestDTO pageRequest, PageDTO pageDto, State state) {
+		StatePageData pageData;
+		mapHeaderData(pageRequest, pageDto);
+		pageData = mapPageData(state);
+		pageDto.setData(pageData);
 	}
 
 	@SneakyThrows
@@ -134,19 +143,14 @@ public class StatePageHandler implements IPageHandler {
 		StatePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StatePageData.class);
 		State state = modelMapper.map(pageData, State.class);
 		state = stateService.read(state);
-		mapHeaderData(pageRequest, pageDto, pageData, state);
-		mapPageData(pageData, state);
-		pageDto.setData(pageData);
+		mapState(pageRequest, pageDto, state);
 		return pageDto;
 	}
 
-	private void mapPageData(StatePageData pageData, State state) {
-		pageData.setCountryId(state.getCountryId());
-		pageData.setName(state.getNameId());
-		pageData.setDescription(state.getDescription());
-		pageData.setOperator(state.getOperatorId());
-		pageData.setRecordInUse(state.getRecordInUse().toString());
+	private StatePageData mapPageData(State state) {
+		StatePageData pageData = modelMapper.map(state, StatePageData.class);
 		pageData.setLastUpdate(state.getOperationDateTime());
+		return pageData;
 	}
 
 	@SneakyThrows
@@ -155,9 +159,7 @@ public class StatePageHandler implements IPageHandler {
 		StatePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StatePageData.class);
 		State state = modelMapper.map(pageData, State.class);
 		state = stateService.close(state);
-		mapHeaderData(pageRequest, pageDto, pageData, state);
-		mapPageData(pageData, state);
-		pageDto.setData(pageData);
+		mapState(pageRequest, pageDto, state);
 		return pageDto;
 	}
 
@@ -176,9 +178,10 @@ public class StatePageHandler implements IPageHandler {
 			    .collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
+		pageData.getPagination().setIsLastPage("N");
 		dto.setHeader(pageRequest.getHeader());
 		if ((stateList.getNumber() + 1) == stateList.getTotalPages()) {
-			pageData.getPagination().setLastPage(true);
+			pageData.getPagination().setIsLastPage("Y");
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);
@@ -192,11 +195,8 @@ public class StatePageHandler implements IPageHandler {
 			for (State state : pageDataList) {
 				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				StatePageData statePageData = modelMapper.map(state, StatePageData.class);
-				statePageData.setName(state.getNameId());
-				statePageData.setDescription(state.getDescription());
-				statePageData.setId(state.getStateId());
-				statePageData.setOperator(state.getOperatorId());
 				statePageData.setLastUpdate(state.getOperationDateTime());
+				//statePageData.setOperatorId(null);
 				statePageDataList.add(statePageData);
 			}
 		}

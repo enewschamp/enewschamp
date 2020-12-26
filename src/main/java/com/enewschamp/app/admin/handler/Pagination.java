@@ -8,5 +8,5 @@ import lombok.EqualsAndHashCode;
 public class Pagination {
 	private int pageNumber;
 	private int pageSize;
-	private boolean isLastPage;
+	private String isLastPage;
 }

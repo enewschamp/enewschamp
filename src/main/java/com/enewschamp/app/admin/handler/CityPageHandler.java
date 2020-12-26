@@ -97,7 +97,7 @@ public class CityPageHandler implements IPageHandler {
 		City city = mapCityData(pageRequest, pageData);
 		city = cityService.create(city);
 		mapHeaderData(pageRequest, pageDto, pageData, city);
-		pageData.setRecordInUse(city.getRecordInUse().toString());
+		//pageData.setRecordInUse(city.getRecordInUse().toString());
 		pageData.setIsApplicableForNewsEvents(city.getIsApplicableForNewsEvents());
 		pageDto.setData(pageData);
 		return pageDto;
@@ -150,8 +150,8 @@ public class CityPageHandler implements IPageHandler {
 		pageData.setCountryId(city.getCountryId());
 		pageData.setName(city.getNameId());
 		pageData.setDescription(city.getDescription());
-		pageData.setOperator(city.getOperatorId());
-		pageData.setRecordInUse(city.getRecordInUse().toString());
+		//pageData.setOperator(city.getOperatorId());
+		//pageData.setRecordInUse(city.getRecordInUse().toString());
 		pageData.setLastUpdate(city.getOperationDateTime());
 		pageData.setStateId(city.getStateId());
 		pageData.setIsApplicableForNewsEvents(city.getIsApplicableForNewsEvents());
@@ -206,7 +206,7 @@ public class CityPageHandler implements IPageHandler {
 				statePageData.setName(city.getNameId());
 				statePageData.setDescription(city.getDescription());
 				statePageData.setId(city.getCityId());
-				statePageData.setOperator(city.getOperatorId());
+				//statePageData.setOperator(city.getOperatorId());
 				statePageData.setLastUpdate(city.getOperationDateTime());
 				cityPageDataList.add(statePageData);
 			}

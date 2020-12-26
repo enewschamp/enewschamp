@@ -20,10 +20,10 @@ public class GenrePageData extends PageData {
 	private String name;
 	@JsonInclude
 	private String image;
-    @JsonInclude
-	private String recordInUse;
-    @JsonInclude
-	private String operator;
-    @JsonInclude
-	private LocalDateTime lastUpdate;
+//    @JsonInclude
+//	private String recordInUse;
+//    @JsonInclude
+//	private String operator;
+//    @JsonInclude
+//	private LocalDateTime lastUpdate;
 }

@@ -149,8 +149,8 @@ public class AvatarPageHandler implements IPageHandler {
 		pageData.setReadingLevel(avatar.getReadingLevel());
 		pageData.setImageName(avatar.getImageName());
 		pageData.setGender(avatar.getGender());
-		pageData.setRecordInUse(avatar.getRecordInUse().toString());
-		pageData.setOperator(avatar.getOperatorId());
+		//pageData.setRecordInUse(avatar.getRecordInUse().toString());
+		//pageData.setOperator(avatar.getOperatorId());
 		pageData.setLastUpdate(avatar.getOperationDateTime());
 	}
 

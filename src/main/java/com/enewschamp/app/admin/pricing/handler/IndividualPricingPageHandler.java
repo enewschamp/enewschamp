@@ -147,8 +147,8 @@ public class IndividualPricingPageHandler implements IPageHandler {
 		pageData.setEditionId(individualPricing.getEditionId());
 		pageData.setEffectiveDate(individualPricing.getEffectiveDate());
 		pageData.setPricingDetails(individualPricing.getPricingDetails());
-		pageData.setRecordInUse(individualPricing.getRecordInUse().toString());
-		pageData.setOperator(individualPricing.getOperatorId());
+	//	pageData.setRecordInUse(individualPricing.getRecordInUse().toString());
+	//	pageData.setOperator(individualPricing.getOperatorId());
 		pageData.setLastUpdate(individualPricing.getOperationDateTime());
 	}
 
@@ -192,7 +192,7 @@ public class IndividualPricingPageHandler implements IPageHandler {
 				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				IndividualPricingPageData holidayPageData = modelMapper.map(individualPricing, IndividualPricingPageData.class);
 				holidayPageData.setId(individualPricing.getIndividualPricingId());
-				holidayPageData.setOperator(individualPricing.getOperatorId());
+				//holidayPageData.setOperator(individualPricing.getOperatorId());
 				holidayPageData.setLastUpdate(individualPricing.getOperationDateTime());
 				holidayPageDataList.add(holidayPageData);
 			}

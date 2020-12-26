@@ -32,10 +32,10 @@ public class HelpDeskPageData extends PageData {
 	@NotNull
 	private LocalDateTime callBackTime;
 	private LocalDateTime createDateTime;
-	@JsonInclude
-	private String recordInUse;
-	@JsonInclude
-	private String operator;
-	@JsonInclude
-	private LocalDateTime lastUpdate;
+//	@JsonInclude
+//	private String recordInUse;
+//	@JsonInclude
+//	private String operator;
+//	@JsonInclude
+//	private LocalDateTime lastUpdate;
 }

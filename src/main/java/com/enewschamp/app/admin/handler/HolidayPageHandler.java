@@ -147,8 +147,8 @@ public class HolidayPageHandler implements IPageHandler {
 		pageData.setEditionId(holiday.getEditionId());
 		pageData.setHoliday(holiday.getHoliday());
 		pageData.setDate(holiday.getHolidayDate());
-		pageData.setRecordInUse(holiday.getRecordInUse().toString());
-		pageData.setOperator(holiday.getOperatorId());
+		//pageData.setRecordInUse(holiday.getRecordInUse().toString());
+		//pageData.setOperator(holiday.getOperatorId());
 		pageData.setLastUpdate(holiday.getOperationDateTime());
 	}
 
@@ -192,7 +192,7 @@ public class HolidayPageHandler implements IPageHandler {
 				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				HolidayPageData holidayPageData = modelMapper.map(holiday, HolidayPageData.class);
 				holidayPageData.setId(holiday.getHolidayId());
-				holidayPageData.setOperator(holiday.getOperatorId());
+			//	holidayPageData.setOperator(holiday.getOperatorId());
 				holidayPageData.setLastUpdate(holiday.getOperationDateTime());
 				holidayPageDataList.add(holidayPageData);
 			}

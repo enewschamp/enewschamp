@@ -67,13 +67,6 @@ public class CommonModuleService {
 			String actionName, String loginCredentials, String userId, String deviceId, String operation,
 			String editionId, UserType userType, String moduleName) {
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userId, null));
-//		if (module == null || pageName == null || operation == null || actionName == null || userId == null
-//				|| deviceId == null || loginCredentials == null || editionId == null
-//				|| (!propertiesService.getProperty(moduleName).equals(module))
-//				|| pageName.trim().isEmpty() || actionName.trim().isEmpty() || deviceId.trim().isEmpty()
-//				|| editionId.trim().isEmpty()) {
-//			throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
-//		}
 		User user = userService.get(userId);
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
 		userActivityTracker.setOperatorId("SYSTEM");

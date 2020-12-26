@@ -148,8 +148,8 @@ public class BadgePageHandler implements IPageHandler {
 	private void mapPageData(BadgePageData pageData, Badge  badge) {
 		pageData.setReadingLevel(badge.getReadingLevel());
 		pageData.setImageName(badge.getImageName());
-		pageData.setRecordInUse(badge.getRecordInUse().toString());
-		pageData.setOperator(badge.getOperatorId());
+	//	pageData.setRecordInUse(badge.getRecordInUse().toString());
+	//	pageData.setOperator(badge.getOperatorId());
 		pageData.setLastUpdate(badge.getOperationDateTime());
 	}
 

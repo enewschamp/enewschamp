@@ -99,7 +99,7 @@ public class CountryPageHandler implements IPageHandler {
 		Country country = mapCountryData(pageRequest, pageData);
 		country = countryService.create(country);
 		mapHeaderData(pageRequest, pageDto, pageData, country);
-		pageData.setRecordInUse(country.getRecordInUse().toString());
+	//	pageData.setRecordInUse(country.getRecordInUse().toString());
 		pageData.setCountryId(country.getCountryId());
 		pageDto.setData(pageData);
 		return pageDto;
@@ -151,8 +151,8 @@ public class CountryPageHandler implements IPageHandler {
 		pageData.setCountryId(country.getCountryId());
 		pageData.setName(country.getNameId());
 		pageData.setDescription(country.getDescription());
-		pageData.setOperator(country.getOperatorId());
-		pageData.setRecordInUse(country.getRecordInUse().toString());
+		//pageData.setOperator(country.getOperatorId());
+		//pageData.setRecordInUse(country.getRecordInUse().toString());
 		pageData.setLastUpdate(country.getOperationDateTime());
 		pageData.setIsd(country.getIsd());
 		pageData.setCurrencyId(country.getCurrencyId());
@@ -203,7 +203,7 @@ public class CountryPageHandler implements IPageHandler {
 				CountryPageData statePageData = modelMapper.map(country, CountryPageData.class);
 				statePageData.setName(country.getNameId());
 				statePageData.setDescription(country.getDescription());
-				statePageData.setOperator(country.getOperatorId());
+				//statePageData.setOperator(country.getOperatorId());
 				statePageData.setLastUpdate(country.getOperationDateTime());
 				countryPageDataList.add(statePageData);
 			}

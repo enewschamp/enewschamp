@@ -41,14 +41,11 @@ public class StateService extends AbstractDomainService {
 	ModelMapper modelMapperForPatch;
 
 	public State create(State stateEntity) {
-//		State state = stateRepository.findByNameIdAndCountryId(stateEntity.getNameId(), stateEntity.getCountryId());
-//		if (state != null)
-//			return state;
 		try {
 			stateRepository.save(stateEntity);
 		}
 		catch(DataIntegrityViolationException e) {
-			throw new BusinessException("REC_EXIST_01", "Duplicate record found");
+			throw new BusinessException("REC_EXIST_01");
 		}
 		return stateRepository.save(stateEntity);
 	}
