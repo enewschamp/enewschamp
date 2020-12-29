@@ -177,7 +177,7 @@ public class BadgePageHandler implements IPageHandler {
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		dto.setHeader(pageRequest.getHeader());
 		if ((badgeList.getNumber() + 1) == badgeList.getTotalPages()) {
-			pageData.getPagination().setLastPage(true);
+			//pageData.getPagination().setLastPage(true);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);

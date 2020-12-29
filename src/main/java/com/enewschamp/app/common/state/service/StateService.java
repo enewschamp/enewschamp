@@ -21,7 +21,6 @@ import com.enewschamp.app.common.state.repository.StateRepositoryCustom;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.problem.Fault;
 import com.enewschamp.subscription.app.dto.StatePageData;
 
 @Service
@@ -45,7 +44,7 @@ public class StateService extends AbstractDomainService {
 			stateRepository.save(stateEntity);
 		}
 		catch(DataIntegrityViolationException e) {
-			throw new BusinessException("REC_EXIST_01");
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		return stateRepository.save(stateEntity);
 	}
@@ -107,14 +106,33 @@ public class StateService extends AbstractDomainService {
 	public State read(State stateEntity) {
 		Long StateId = stateEntity.getStateId();
 		State existingState = get(StateId);
+		if(existingState.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingState;
+		}
 		existingState.setRecordInUse(RecordInUseType.Y);
+		existingState.setOperationDateTime(null);
 		return stateRepository.save(existingState);
 	}
 
 	public State close(State stateEntity) {
 		Long StateId = stateEntity.getStateId();
 		State existingState = get(StateId);
+		if(existingState.getRecordInUse().equals(RecordInUseType.N)) {
+			return existingState;
+		}
 		existingState.setRecordInUse(RecordInUseType.N);
+		existingState.setOperationDateTime(null);
+		return stateRepository.save(existingState);
+	}
+	
+	public State reInstate(State stateEntity) {
+		Long StateId = stateEntity.getStateId();
+		State existingState = get(StateId);
+		if(existingState.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingState;
+		}
+		existingState.setRecordInUse(RecordInUseType.Y);
+		existingState.setOperationDateTime(null);
 		return stateRepository.save(existingState);
 	}
 

@@ -184,7 +184,7 @@ public class HelpDeskPageHandler implements IPageHandler {
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		dto.setHeader(pageRequest.getHeader());
 		if ((editionList.getNumber() + 1) == editionList.getTotalPages()) {
-			pageData.getPagination().setLastPage(true);
+			//pageData.getPagination().setLastPage(true);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);

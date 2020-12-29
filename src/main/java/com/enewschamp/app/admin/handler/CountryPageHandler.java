@@ -187,7 +187,7 @@ public class CountryPageHandler implements IPageHandler {
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		dto.setHeader(pageRequest.getHeader());
 		if ((cityList.getNumber() + 1) == cityList.getTotalPages()) {
-			pageData.getPagination().setLastPage(true);
+			//pageData.getPagination().setLastPage(true);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);

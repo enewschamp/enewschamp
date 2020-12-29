@@ -178,7 +178,7 @@ public class EntitlementPageHandler implements IPageHandler {
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		dto.setHeader(pageRequest.getHeader());
 		if ((pricingList.getNumber() + 1) == pricingList.getTotalPages()) {
-			pageData.getPagination().setLastPage(true);
+			//pageData.getPagination().setLastPage(true);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);

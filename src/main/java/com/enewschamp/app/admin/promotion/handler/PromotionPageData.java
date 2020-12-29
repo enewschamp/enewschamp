@@ -1,10 +1,11 @@
 package com.enewschamp.app.admin.promotion.handler;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -18,43 +19,48 @@ public class PromotionPageData extends PageData {
 	@JsonInclude
 	private Long id;
 
-	@NotNull
+	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
 	@JsonInclude
 	private String editionId;
 
-	@NotNull
+	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
 	@JsonInclude
 	private String couponCode;
 
-	@NotNull
+	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
 	@JsonInclude
 	private LocalDate dateFrom;
 
-	@NotNull
+	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
 	@JsonInclude
 	private LocalDate dateTo;
 
-	@NotNull
+	@NotNull(message = MessageConstants.COUNTRY_NOT_NULL)
+	@NotEmpty(message = MessageConstants.COUNTRY_NOT_EMPTY)
 	@JsonInclude
 	private String countryId;
 
-	@NotNull
+	@NotNull(message = MessageConstants.STATE_NOT_NULL)
+	@NotEmpty(message = MessageConstants.STATE_NOT_EMPTY)
 	@JsonInclude
 	private String stateId;
 
-	@NotNull
+	@NotNull(message = MessageConstants.CITY_NOT_NULL)
+	@NotEmpty(message = MessageConstants.CITY_NOT_EMPTY)
 	@JsonInclude
 	private String cityId;
 
-	@NotNull
+	@NotNull(message = MessageConstants.PROMOTION_DETAIL_NOT_NULL)
+	@NotEmpty(message = MessageConstants.PROMOTION_DETAIL_NOT_EMPTY)
 	@JsonInclude
 	private String promotionDetails;
+	
 	@JsonInclude
+	@NotNull(message = MessageConstants.DESCRIPTION_NOT_NULL)
+	@NotEmpty(message = MessageConstants.DESCRIPTION_NOT_EMPTY)
 	private String description;
-//	@JsonInclude
-//	private String recordInUse;
-//	@JsonInclude
-//	private String operator;
-//	@JsonInclude
-//	private LocalDateTime lastUpdate;
 }

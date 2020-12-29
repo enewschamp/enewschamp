@@ -2,8 +2,10 @@ package com.enewschamp.app.admin.handler;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -17,25 +19,25 @@ public class HelpDeskPageData extends PageData {
 	@JsonInclude
 	private Long id;
 	private Long requestId;
-	@NotNull
+	@NotNull(message = MessageConstants.STUDENT_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.STUDENT_ID_NOT_EMPTY)
 	private Long studentId;
-	@NotNull
+	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
 	private String editionId;
-	@NotNull
+	@NotNull(message = MessageConstants.CATEGORY_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.CATEGORY_ID_NOT_EMPTY)
 	private String categoryId;
-	@NotNull
+	@NotNull(message = MessageConstants.DETAILS_NOT_NULL)
+	@NotEmpty(message = MessageConstants.DETAILS_NOT_EMPTY)
 	private String details;
-	@NotNull
+	@NotNull(message = MessageConstants.CALLBACK_PHONE_NO_NOT_NULL)
+	@NotEmpty(message = MessageConstants.CALLBACK_PHONE_NO_NOT_EMPTY)
 	private String callBackPhoneNumber;
 	private String supportingComments;
 	private String closeFlag;
-	@NotNull
+	@NotNull(message = MessageConstants.CALLBACK_TIME_NOT_NULL)
+	@NotEmpty(message = MessageConstants.CALLBACK_TIME_NOT_EMPTY)
 	private LocalDateTime callBackTime;
 	private LocalDateTime createDateTime;
-//	@JsonInclude
-//	private String recordInUse;
-//	@JsonInclude
-//	private String operator;
-//	@JsonInclude
-//	private LocalDateTime lastUpdate;
 }

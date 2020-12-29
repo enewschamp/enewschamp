@@ -1,5 +1,7 @@
 package com.enewschamp.app.admin.handler;
 
+import com.enewschamp.app.common.PageStatus;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -8,5 +10,5 @@ import lombok.EqualsAndHashCode;
 public class Pagination {
 	private int pageNumber;
 	private int pageSize;
-	private String isLastPage;
+	private PageStatus isLastPage;
 }

@@ -1,10 +1,11 @@
 package com.enewschamp.app.admin.handler;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -17,16 +18,13 @@ public class HolidayPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	@JsonInclude
 	private Long id;
-	@NotNull
+	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
 	private String editionId;
-	@NotNull
+	@NotNull(message = MessageConstants.DATE_NOT_NULL)
+	@NotEmpty(message = MessageConstants.DATE_NOT_EMPTY)
 	private LocalDate date;
-	@NotNull
+	@NotNull(message = MessageConstants.HOLIDAY_NOT_NULL)
+	@NotEmpty(message = MessageConstants.HOLIDAY_NOT_EMPTY)
 	private String holiday;
-//	@JsonInclude
-//	private String recordInUse;
-//	@JsonInclude
-//	private String operator;
-//	@JsonInclude
-//	private LocalDateTime lastUpdate;
 }

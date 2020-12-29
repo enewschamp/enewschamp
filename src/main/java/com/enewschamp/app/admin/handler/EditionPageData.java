@@ -1,9 +1,9 @@
 package com.enewschamp.app.admin.handler;
 
-import java.time.LocalDateTime;
-
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -14,18 +14,16 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class EditionPageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	@NotNull
+	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
 	@JsonInclude
 	private String id;
 	@JsonInclude
+	@NotNull(message = MessageConstants.EDITION_NAME_NOT_NULL)
+	@NotEmpty(message = MessageConstants.EDITION_NAME_NOT_EMPTY)
 	private String editionName;
-    @NotNull
-    @JsonInclude
+	@NotNull(message = MessageConstants.LANGUAGE_NOT_NULL)
+	@NotEmpty(message = MessageConstants.LANGUAGE_NOT_EMPTY)
+	@JsonInclude
 	private Long languageId;
-//    @JsonInclude
-//	private String recordInUse;
-//    @JsonInclude
-//	private String operator;
-//    @JsonInclude
-//	private LocalDateTime lastUpdate;
 }

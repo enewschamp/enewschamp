@@ -1,12 +1,11 @@
 package com.enewschamp.app.admin.handler;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Transient;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,21 +17,20 @@ public class BadgePageData extends PageData {
 	private Long id;
 	private Long badgeId = 0L;
 
-	@NotNull
+	@NotNull(message = MessageConstants.BADGE_NAME_NOT_NULL)
+	@NotEmpty(message = MessageConstants.BADGE_NAME_NOT_EMPTY)
 	private String nameId;
-    @NotNull
+	@NotNull(message = MessageConstants.GENRE_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.GENRE_ID_NOT_EMPTY)
 	private String genreId;
 	private Long monthlyPointsToScore;
+	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
 	private String editionId;
-	@NotNull
+	@NotNull(message = MessageConstants.READING_LEVEL_NOT_NULL)
+	@NotEmpty(message = MessageConstants.READING_LEVEL_NOT_EMPTY)
 	private int readingLevel;
 	private String imageName;
 	@Transient
 	private String base64Image;
-//	@JsonInclude
-//	private String recordInUse;
-//	@JsonInclude
-//	private String operator;
-//	@JsonInclude
-//	private LocalDateTime lastUpdate;
 }

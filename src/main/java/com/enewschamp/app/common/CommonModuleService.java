@@ -2,6 +2,12 @@ package com.enewschamp.app.common;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,7 +30,10 @@ import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class CommonModuleService {
 	@Autowired
 	UserLoginBusiness userLoginBusiness;
@@ -40,6 +49,7 @@ public class CommonModuleService {
 	
 	@Autowired
 	private UserLoginService userLoginService;
+	private Validator validator;
 	
 	public PageDTO performRefreshToken(PageRequestDTO pageRequest, String loginCredentials, String userId,
 			String deviceId, UserActivityTracker userActivityTracker, UserType userType) {
@@ -110,6 +120,23 @@ public class CommonModuleService {
 					.setTokenValidity(propertiesService.getProperty(PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));
 		}
 		return loginPageData;
+	}
+	
+	public void validateHeaders(HeaderDTO pageData, String module) {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		validator = factory.getValidator();
+		Set<ConstraintViolation<HeaderDTO>> violations = validator.validate(pageData);
+		if (!violations.isEmpty()) {
+			violations.forEach(e -> {
+				log.error(e.getMessage());
+			});
+			throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
+		}
+		
+		if ((!propertiesService.getProperty(PropertyConstants.ADMIN_MODULE_NAME).equals(module))) {
+			log.error("Module name doesn't match");
+			throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
+		}
 	}
 
 }

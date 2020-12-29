@@ -182,7 +182,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		dto.setHeader(pageRequest.getHeader());
 		if ((appSecList.getNumber() + 1) == appSecList.getTotalPages()) {
-			pageData.getPagination().setLastPage(true);
+			//pageData.getPagination().setLastPage(true);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);

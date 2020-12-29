@@ -1,9 +1,9 @@
 package com.enewschamp.app.admin.handler;
 
-import java.time.LocalDateTime;
-
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -16,14 +16,9 @@ public class GenrePageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	@JsonInclude
 	private Long id;
-	@NotNull
+	@NotNull(message = MessageConstants.GENRE_NAME_NOT_NULL)
+	@NotEmpty(message = MessageConstants.GENRE_NAME_NOT_EMPTY)
 	private String name;
 	@JsonInclude
 	private String image;
-//    @JsonInclude
-//	private String recordInUse;
-//    @JsonInclude
-//	private String operator;
-//    @JsonInclude
-//	private LocalDateTime lastUpdate;
 }

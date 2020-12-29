@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.zalando.problem.ProblemModule;
@@ -34,6 +35,7 @@ public class EnewschampApplicationConfig {
 		ModelMapper modelMapper = new ModelMapper();
 		// Null attributes are ignored from the source object
 		modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		return modelMapper;
 	}
 

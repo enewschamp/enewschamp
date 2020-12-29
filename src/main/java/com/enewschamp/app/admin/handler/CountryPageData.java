@@ -1,9 +1,9 @@
 package com.enewschamp.app.admin.handler;
 
-import java.time.LocalDateTime;
-
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -21,19 +21,15 @@ public class CountryPageData extends PageData {
 	@JsonInclude
 	private int isd;
 	@JsonInclude
-	@NotNull(message = "Name must not be null")
+	@NotNull(message = MessageConstants.COUNTRY_NOT_NULL)
+	@NotEmpty(message = MessageConstants.COUNTRY_NOT_EMPTY)
 	private String name;
 	@JsonInclude
-	@NotNull(message = "Description must not be null")
+	@NotNull(message = MessageConstants.DESCRIPTION_NOT_NULL)
+	@NotEmpty(message = MessageConstants.DESCRIPTION_NOT_EMPTY)
 	private String description;
 	@JsonInclude
 	private String currencyId;
 	@JsonInclude
 	private String language;
-//	@JsonInclude
-//	private String recordInUse;
-//	@JsonInclude
-//	private String operator;
-//	@JsonInclude
-//	protected LocalDateTime lastUpdate;
 }

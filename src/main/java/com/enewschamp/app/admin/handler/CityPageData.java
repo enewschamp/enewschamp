@@ -1,9 +1,9 @@
 package com.enewschamp.app.admin.handler;
 
-import java.time.LocalDateTime;
-
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -17,24 +17,22 @@ public class CityPageData extends PageData {
 	@JsonInclude
 	private Long id;
 	@JsonInclude
-	@NotNull(message = "Country id must not be null")
+	@NotNull(message = MessageConstants.COUNTRY_NOT_NULL)
+	@NotEmpty(message = MessageConstants.COUNTRY_NOT_EMPTY)
 	private String countryId;
 	@JsonInclude
-	@NotNull(message = "State id must not be null")
+	@NotNull(message = MessageConstants.STATE_NOT_NULL)
+	@NotEmpty(message = MessageConstants.STATE_NOT_EMPTY)
 	private String stateId;
 	@NotNull
 	@JsonInclude
-	@NotNull(message = "Name must not be null")
+	@NotNull(message = MessageConstants.CITY_NOT_NULL)
+	@NotEmpty(message = MessageConstants.CITY_NOT_EMPTY)
 	private String name;
 	@JsonInclude
-	@NotNull(message = "Description must not be null")
+	@NotNull(message = MessageConstants.DESCRIPTION_NOT_NULL)
+	@NotEmpty(message = MessageConstants.DESCRIPTION_NOT_EMPTY)
 	private String description;
-//	@JsonInclude
-//	private String recordInUse;
-//	@JsonInclude
-//	private String operator;
-//	@JsonInclude
-//	protected LocalDateTime lastUpdate;
 	@JsonInclude
 	private String isApplicableForNewsEvents;
 }

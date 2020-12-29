@@ -3,6 +3,9 @@ package com.enewschamp.app.common;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,16 +16,29 @@ public class HeaderDTO implements Serializable {
 	private static final long serialVersionUID = -2727382165795060076L;
 
 	private RequestStatusType requestStatus;
+	@NotNull(message = "Module must not be null")
+	@NotEmpty(message = "Module must not be empty")
 	private String module;
+	@NotNull(message = "LoginCredential must not be null")
+	@NotEmpty(message = "LoginCredential must not be empty")
 	private String loginCredentials;
+	@NotNull(message = "PageName must not be null")
+	@NotEmpty(message = "PageName must not be empty")
 	private String pageName;
+	@NotNull(message = "Action must not be null")
+	@NotEmpty(message = "Action must not be empty")
 	private String action;
+	@NotNull(message = "Action must not be null")
 	private String operation;
 	private String editionId;
 	private LocalDate publicationDate;
 	private String emailId;
 	private String appVersion;
+	@NotNull(message = "DeviceId must not be null")
+	@NotEmpty(message = "DeviceId must not be empty")
 	private String deviceId;
+	@NotNull(message = "UserId must not be null")
+	@NotEmpty(message = "UserId must not be empty")
 	private String userId;
 	private String helpText;
 	private LocalDate todaysDate;

@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.app.common.CommonModuleService;
-import com.enewschamp.app.common.CommonService;
-import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -18,7 +16,6 @@ import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.user.login.entity.UserActivityTracker;
 import com.enewschamp.app.user.login.entity.UserType;
-import com.enewschamp.common.domain.service.PropertiesService;
 import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.Fault;
@@ -33,8 +30,7 @@ public class AdminPageController {
 	@Autowired
 	private CommonModuleService commonModuleService;
 	
-	@Autowired
-	private PropertiesService propertiesService;
+
 
 	@PostMapping(value = "/admin")
 	public ResponseEntity<PageDTO> processAdminRequest(@RequestBody PageRequestDTO pageRequest) {
@@ -48,12 +44,7 @@ public class AdminPageController {
 			String deviceId = pageRequest.getHeader().getDeviceId();
 			String operation = pageRequest.getHeader().getOperation();
 			String editionId = pageRequest.getHeader().getEditionId();
-			if (module == null || pageName == null || operation == null || actionName == null || userId == null
-					|| deviceId == null || loginCredentials == null
-					|| (!propertiesService.getProperty(PropertyConstants.ADMIN_MODULE_NAME).equals(module))
-					|| pageName.trim().isEmpty() || actionName.trim().isEmpty() || deviceId.trim().isEmpty()) {
-				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
-			}
+			commonModuleService.validateHeaders(pageRequest.getHeader(), module);
 			UserActivityTracker userActivityTracker = commonModuleService.validateUser(pageRequest, module, pageName,
 					actionName, loginCredentials, userId, deviceId, operation, editionId, UserType.A,
 					PropertyConstants.ADMIN_MODULE_NAME);
@@ -86,5 +77,7 @@ public class AdminPageController {
 		PageDTO pageResponse = pageHandlerFactory.getPageHandler(pageName, context).handleAction(pageRequest);
 		return pageResponse;
 	}
+	
+
 
 }

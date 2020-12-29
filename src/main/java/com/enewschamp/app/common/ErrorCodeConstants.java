@@ -101,6 +101,7 @@ public interface ErrorCodeConstants {
 	public static String STUDENT_NOTIFICATION_NOT_FOUND = "STUD_NOTIF_001";
 	public static String EMAIL_NOT_SENT = "EM_NOT_01";
 	public static String NO_RECORD_FOUND = "NO_REC_01";
+	public static String RECORD_ALREADY_EXIST = "REC_EXIST";
 	public static String OTP_EXPIRED = "OTP_001";
 	public static String OTP_GEN_MAX_ATTEMPTS_EXHAUSTED = "OTP_002";
 	public static String OTP_VERIFY_MAX_ATTEMPTS_EXHAUSTED = "OTP_003";
