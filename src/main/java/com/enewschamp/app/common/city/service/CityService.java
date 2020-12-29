@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +18,7 @@ import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.city.repository.CityRepository;
 import com.enewschamp.app.common.city.repository.CityRepositoryCustom;
-import com.enewschamp.app.common.state.entity.State;
+import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
@@ -29,7 +30,7 @@ public class CityService extends AbstractDomainService {
 
 	@Autowired
 	CityRepository cityRepository;
-	
+
 	@Autowired
 	private CityRepositoryCustom customRepository;
 
@@ -40,8 +41,14 @@ public class CityService extends AbstractDomainService {
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
 
-	public City create(City CityEntity) {
-		return cityRepository.save(CityEntity);
+	public City create(City cityEntity) {
+		City city = null;
+		try {
+			city = cityRepository.save(cityEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return city;
 	}
 
 	public City update(City CityEntity) {
@@ -103,18 +110,37 @@ public class CityService extends AbstractDomainService {
 		} else
 			return null;
 	}
-	
+
 	public City read(City cityEntity) {
 		Long cityId = cityEntity.getCityId();
 		City existingCity = get(cityId);
+		if (existingCity.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingCity;
+		}
 		existingCity.setRecordInUse(RecordInUseType.Y);
+		existingCity.setOperationDateTime(null);
 		return cityRepository.save(existingCity);
 	}
 
 	public City close(City cityEntity) {
 		Long cityId = cityEntity.getCityId();
 		City existingCity = get(cityId);
+		if (existingCity.getRecordInUse().equals(RecordInUseType.N)) {
+			return existingCity;
+		}
 		existingCity.setRecordInUse(RecordInUseType.N);
+		existingCity.setOperationDateTime(null);
+		return cityRepository.save(existingCity);
+	}
+
+	public City reInstateCity(City cityEntity) {
+		Long cityId = cityEntity.getCityId();
+		City existingCity = get(cityId);
+		if (existingCity.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingCity;
+		}
+		existingCity.setRecordInUse(RecordInUseType.Y);
+		existingCity.setOperationDateTime(null);
 		return cityRepository.save(existingCity);
 	}
 

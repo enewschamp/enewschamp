@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 public class CityPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	@JsonInclude
-	private Long id;
+	private Long cityId;
 	@JsonInclude
 	@NotNull(message = MessageConstants.COUNTRY_NOT_NULL)
 	@NotEmpty(message = MessageConstants.COUNTRY_NOT_EMPTY)
@@ -24,11 +24,10 @@ public class CityPageData extends PageData {
 	@NotNull(message = MessageConstants.STATE_NOT_NULL)
 	@NotEmpty(message = MessageConstants.STATE_NOT_EMPTY)
 	private String stateId;
-	@NotNull
 	@JsonInclude
 	@NotNull(message = MessageConstants.CITY_NOT_NULL)
 	@NotEmpty(message = MessageConstants.CITY_NOT_EMPTY)
-	private String name;
+	private String nameId;
 	@JsonInclude
 	@NotNull(message = MessageConstants.DESCRIPTION_NOT_NULL)
 	@NotEmpty(message = MessageConstants.DESCRIPTION_NOT_EMPTY)

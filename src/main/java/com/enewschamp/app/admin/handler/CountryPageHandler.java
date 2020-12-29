@@ -147,17 +147,17 @@ public class CountryPageHandler implements IPageHandler {
 
 	@SneakyThrows
 	private PageDTO listCountry(PageRequestDTO pageRequest) {
-		Page<Country> cityList = countryService.list(
+		Page<Country> countryList = countryService.list(
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
-		List<CountryPageData> list = mapCountryData(cityList);
+		List<CountryPageData> list = mapCountryData(countryList);
 		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		pageData.getPagination().setIsLastPage(PageStatus.N);
 		dto.setHeader(pageRequest.getHeader());
-		if ((cityList.getNumber() + 1) == cityList.getTotalPages()) {
+		if ((countryList.getNumber() + 1) == countryList.getTotalPages()) {
 			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}
 		dto.setData(pageData);

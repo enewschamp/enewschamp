@@ -18,10 +18,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.city.service.CityService;
@@ -62,6 +64,9 @@ public class CityPageHandler implements IPageHandler {
 		case "Close":
 			pageDto = closeCity(pageRequest);
 			break;
+		case "Reinstate":
+			pageDto = reinstateCity(pageRequest);
+			break;
 		case "List":
 			pageDto = listCity(pageRequest);
 			break;
@@ -96,28 +101,22 @@ public class CityPageHandler implements IPageHandler {
 		validate(pageData);
 		City city = mapCityData(pageRequest, pageData);
 		city = cityService.create(city);
-		mapHeaderData(pageRequest, pageDto, pageData, city);
-		//pageData.setRecordInUse(city.getRecordInUse().toString());
-		pageData.setIsApplicableForNewsEvents(city.getIsApplicableForNewsEvents());
-		pageDto.setData(pageData);
+		mapCity(pageRequest, pageDto, city);
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto, CityPageData pageData, City city) {
+	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
 		pageDto.setHeader(pageRequest.getHeader());
 		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
 		pageDto.getHeader().setTodaysDate(LocalDate.now());
 		pageDto.getHeader().setLoginCredentials(null);
-		pageData.setId(city.getCityId());
-		pageData.setLastUpdate(city.getOperationDateTime());
+		pageDto.getHeader().setUserId(null);
+		pageDto.getHeader().setDeviceId(null);
 	}
 
 	private City mapCityData(PageRequestDTO pageRequest, CityPageData pageData) {
 		City city = modelMapper.map(pageData, City.class);
-	    city.setNameId(pageRequest.getData().get("name").asText());
-		city.setOperatorId(pageRequest.getData().get("operator").asText());
 		city.setRecordInUse(RecordInUseType.Y);
-		city.setIsApplicableForNewsEvents(pageRequest.getData().get("isApplicableForNewsEvents").asText());
 		return city;
 	}
 
@@ -127,10 +126,8 @@ public class CityPageHandler implements IPageHandler {
 		CityPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CityPageData.class);
 		validate(pageData);
 		City city = mapCityData(pageRequest, pageData);
-		city.setCityId(pageRequest.getData().get("id").asLong());
 		city = cityService.update(city);
-		mapHeaderData(pageRequest, pageDto, pageData, city);
-		pageDto.setData(pageData);
+		mapCity(pageRequest, pageDto, city);
 		return pageDto;
 	}
 
@@ -140,21 +137,8 @@ public class CityPageHandler implements IPageHandler {
 		CityPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CityPageData.class);
 		City city = modelMapper.map(pageData, City.class);
 		city = cityService.read(city);
-		mapHeaderData(pageRequest, pageDto, pageData, city);
-		mapPageData(pageData, city);
-		pageDto.setData(pageData);
+		mapCity(pageRequest, pageDto, city);
 		return pageDto;
-	}
-
-	private void mapPageData(CityPageData pageData, City city) {
-		pageData.setCountryId(city.getCountryId());
-		pageData.setName(city.getNameId());
-		pageData.setDescription(city.getDescription());
-		//pageData.setOperator(city.getOperatorId());
-		//pageData.setRecordInUse(city.getRecordInUse().toString());
-		pageData.setLastUpdate(city.getOperationDateTime());
-		pageData.setStateId(city.getStateId());
-		pageData.setIsApplicableForNewsEvents(city.getIsApplicableForNewsEvents());
 	}
 
 	@SneakyThrows
@@ -163,37 +147,53 @@ public class CityPageHandler implements IPageHandler {
 		CityPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CityPageData.class);
 		City city = modelMapper.map(pageData, City.class);
 		city = cityService.close(city);
-		mapHeaderData(pageRequest, pageDto, pageData, city);
-		mapPageData(pageData, city);
-		pageDto.setData(pageData);
+		mapCity(pageRequest, pageDto, city);
+		return pageDto;
+	}
+
+	@SneakyThrows
+	private PageDTO reinstateCity(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		CityPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CityPageData.class);
+		City city = modelMapper.map(pageData, City.class);
+		city = cityService.reInstateCity(city);
+		mapCity(pageRequest, pageDto, city);
 		return pageDto;
 	}
 
 	@SneakyThrows
 	private PageDTO listCity(PageRequestDTO pageRequest) {
-		AdminSearchRequest searchRequest = new AdminSearchRequest();
-		searchRequest.setCountryId(pageRequest.getData().get("filter").get("countryId").asText());
-		searchRequest.setStateId(pageRequest.getData().get("filter").get("stateId").asText());
-		searchRequest.setName(pageRequest.getData().get("filter").get("name").asText());
-		searchRequest.setNewsEventsApplicable(pageRequest.getData().get("filter").get("newsEventsApplicable").asText());
+		AdminSearchRequest searchRequest = objectMapper
+				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
 		Page<City> cityList = cityService.list(searchRequest,
-				pageRequest.getData().get("pagination").get("pageNumber").asInt(),
-				pageRequest.getData().get("pagination").get("pageSize").asInt());
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
 		List<CityPageData> list = mapCityData(cityList);
-		List<PageData> variable = list
-			    .stream()
-			    .map(e -> (PageData) e)
-			    .collect(Collectors.toList());
+		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
+		pageData.getPagination().setIsLastPage(PageStatus.N);
 		dto.setHeader(pageRequest.getHeader());
 		if ((cityList.getNumber() + 1) == cityList.getTotalPages()) {
-			//pageData.getPagination().setLastPage(true);
+			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);
 		return dto;
+	}
+
+	private CityPageData mapPageData(City city) {
+		CityPageData pageData = modelMapper.map(city, CityPageData.class);
+		pageData.setLastUpdate(city.getOperationDateTime());
+		return pageData;
+	}
+
+	private void mapCity(PageRequestDTO pageRequest, PageDTO pageDto, City city) {
+		CityPageData pageData;
+		mapHeaderData(pageRequest, pageDto);
+		pageData = mapPageData(city);
+		pageDto.setData(pageData);
 	}
 
 	public List<CityPageData> mapCityData(Page<City> page) {
@@ -202,13 +202,9 @@ public class CityPageHandler implements IPageHandler {
 			List<City> pageDataList = page.getContent();
 			for (City city : pageDataList) {
 				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-				CityPageData statePageData = modelMapper.map(city, CityPageData.class);
-				statePageData.setName(city.getNameId());
-				statePageData.setDescription(city.getDescription());
-				statePageData.setId(city.getCityId());
-				//statePageData.setOperator(city.getOperatorId());
-				statePageData.setLastUpdate(city.getOperationDateTime());
-				cityPageDataList.add(statePageData);
+				CityPageData cityPageData = modelMapper.map(city, CityPageData.class);
+				cityPageData.setLastUpdate(city.getOperationDateTime());
+				cityPageDataList.add(cityPageData);
 			}
 		}
 		return cityPageDataList;
