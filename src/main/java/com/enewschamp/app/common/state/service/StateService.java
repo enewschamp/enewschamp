@@ -40,13 +40,14 @@ public class StateService extends AbstractDomainService {
 	ModelMapper modelMapperForPatch;
 
 	public State create(State stateEntity) {
+		State state = null;
 		try {
-			stateRepository.save(stateEntity);
+			state = stateRepository.save(stateEntity);
 		}
 		catch(DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
-		return stateRepository.save(stateEntity);
+		return state;
 	}
 
 	public State update(State stateEntity) {

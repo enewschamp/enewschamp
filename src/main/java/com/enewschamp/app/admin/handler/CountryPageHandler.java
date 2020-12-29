@@ -17,14 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.common.RequestStatusType;
-import com.enewschamp.app.common.city.entity.City;
-import com.enewschamp.app.common.city.service.CityService;
 import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.app.common.country.service.CountryService;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
@@ -64,6 +63,9 @@ public class CountryPageHandler implements IPageHandler {
 		case "Close":
 			pageDto = closeCountry(pageRequest);
 			break;
+		case "Reinstate":
+			pageDto = reInstateCountry(pageRequest);
+			break;
 		case "List":
 			pageDto = listCountry(pageRequest);
 			break;
@@ -95,42 +97,21 @@ public class CountryPageHandler implements IPageHandler {
 	private PageDTO createCountry(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		CountryPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CountryPageData.class);
-		validate(pageData);
+		validateData(pageData);
 		Country country = mapCountryData(pageRequest, pageData);
 		country = countryService.create(country);
-		mapHeaderData(pageRequest, pageDto, pageData, country);
-	//	pageData.setRecordInUse(country.getRecordInUse().toString());
-		pageData.setCountryId(country.getCountryId());
-		pageDto.setData(pageData);
+		mapCountry(pageRequest, pageDto, country);
 		return pageDto;
-	}
-
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto, CountryPageData pageData, Country country) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageData.setLastUpdate(country.getOperationDateTime());
-	}
-
-	private Country mapCountryData(PageRequestDTO pageRequest, CountryPageData pageData) {
-		Country country = modelMapper.map(pageData, Country.class);
-	    country.setNameId(pageRequest.getData().get("name").asText());
-		country.setOperatorId(pageRequest.getData().get("operator").asText());
-		country.setRecordInUse(RecordInUseType.Y);
-		return country;
 	}
 
 	@SneakyThrows
 	private PageDTO updateCountry(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		CountryPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CountryPageData.class);
-		validate(pageData);
+		validateData(pageData);
 		Country country = mapCountryData(pageRequest, pageData);
-		country.setCountryId(pageRequest.getData().get("countryId").asLong());
 		country = countryService.update(country);
-		mapHeaderData(pageRequest, pageDto, pageData, country);
-		pageDto.setData(pageData);
+		mapCountry(pageRequest, pageDto, country);
 		return pageDto;
 	}
 
@@ -139,60 +120,79 @@ public class CountryPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		CountryPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CountryPageData.class);
 		Country country = modelMapper.map(pageData, Country.class);
-		country.setCountryId(pageData.getId());
 		country = countryService.read(country);
-		mapHeaderData(pageRequest, pageDto, pageData, country);
-		mapPageData(pageData, country);
-		pageDto.setData(pageData);
+		mapCountry(pageRequest, pageDto, country);
 		return pageDto;
 	}
-
-	private void mapPageData(CountryPageData pageData, Country country) {
-		pageData.setCountryId(country.getCountryId());
-		pageData.setName(country.getNameId());
-		pageData.setDescription(country.getDescription());
-		//pageData.setOperator(country.getOperatorId());
-		//pageData.setRecordInUse(country.getRecordInUse().toString());
-		pageData.setLastUpdate(country.getOperationDateTime());
-		pageData.setIsd(country.getIsd());
-		pageData.setCurrencyId(country.getCurrencyId());
-		pageData.setLanguage(country.getLanguage());
-	}
-
+	
 	@SneakyThrows
 	private PageDTO closeCountry(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		CountryPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CountryPageData.class);
 		Country country = modelMapper.map(pageData, Country.class);
-		country.setCountryId(pageData.getId());
 		country = countryService.close(country);
-		mapHeaderData(pageRequest, pageDto, pageData, country);
-		mapPageData(pageData, country);
-		pageDto.setData(pageData);
+		mapCountry(pageRequest, pageDto, country);
+		return pageDto;
+	}
+
+	@SneakyThrows
+	private PageDTO reInstateCountry(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		CountryPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CountryPageData.class);
+		Country country = modelMapper.map(pageData, Country.class);
+		country = countryService.reInstate(country);
+		mapCountry(pageRequest, pageDto, country);
 		return pageDto;
 	}
 
 	@SneakyThrows
 	private PageDTO listCountry(PageRequestDTO pageRequest) {
 		Page<Country> cityList = countryService.list(
-				pageRequest.getData().get("pagination").get("pageNumber").asInt(),
-				pageRequest.getData().get("pagination").get("pageSize").asInt());
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
 		List<CountryPageData> list = mapCountryData(cityList);
-		List<PageData> variable = list
-			    .stream()
-			    .map(e -> (PageData) e)
-			    .collect(Collectors.toList());
+		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
+		pageData.getPagination().setIsLastPage(PageStatus.N);
 		dto.setHeader(pageRequest.getHeader());
 		if ((cityList.getNumber() + 1) == cityList.getTotalPages()) {
-			//pageData.getPagination().setLastPage(true);
+			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);
 		return dto;
 	}
+
+	private void mapCountry(PageRequestDTO pageRequest, PageDTO pageDto, Country country) {
+		CountryPageData pageData;
+		mapHeaderData(pageRequest, pageDto);
+		pageData = mapPageData(country);
+		pageDto.setData(pageData);
+	}
+
+	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
+		pageDto.setHeader(pageRequest.getHeader());
+		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
+		pageDto.getHeader().setTodaysDate(LocalDate.now());
+		pageDto.getHeader().setLoginCredentials(null);
+		pageDto.getHeader().setUserId(null);
+		pageDto.getHeader().setDeviceId(null);
+	}
+
+	private Country mapCountryData(PageRequestDTO pageRequest, CountryPageData pageData) {
+		Country country = modelMapper.map(pageData, Country.class);
+		country.setRecordInUse(RecordInUseType.Y);
+		return country;
+	}
+
+	private CountryPageData mapPageData(Country country) {
+		CountryPageData pageData = modelMapper.map(country, CountryPageData.class);
+		pageData.setLastUpdate(country.getOperationDateTime());
+		return pageData;
+	}
+
 
 	public List<CountryPageData> mapCountryData(Page<Country> page) {
 		List<CountryPageData> countryPageDataList = new ArrayList<CountryPageData>();
@@ -201,9 +201,6 @@ public class CountryPageHandler implements IPageHandler {
 			for (Country country : pageDataList) {
 				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				CountryPageData statePageData = modelMapper.map(country, CountryPageData.class);
-				statePageData.setName(country.getNameId());
-				statePageData.setDescription(country.getDescription());
-				//statePageData.setOperator(country.getOperatorId());
 				statePageData.setLastUpdate(country.getOperationDateTime());
 				countryPageDataList.add(statePageData);
 			}
@@ -211,15 +208,15 @@ public class CountryPageHandler implements IPageHandler {
 		return countryPageDataList;
 	}
 
-	private void validate(CountryPageData pageData) {
+	private void validateData(CountryPageData pageData) {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
 		Set<ConstraintViolation<CountryPageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
+			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
 		}
 	}
 }

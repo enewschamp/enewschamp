@@ -177,16 +177,14 @@ public class StatePageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO listState(PageRequestDTO pageRequest) {
 		AdminSearchRequest searchRequest = new AdminSearchRequest();
-		searchRequest.setCountryId(pageRequest.getData().get(CommonConstants.FILTER).get(CommonConstants.COUNTRY_ID).asText());
+		searchRequest.setCountryId(
+				pageRequest.getData().get(CommonConstants.FILTER).get(CommonConstants.COUNTRY_ID).asText());
 		Page<State> stateList = stateService.list(searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
 		List<StatePageData> list = mapStateData(stateList);
-		List<PageData> variable = list
-			    .stream()
-			    .map(e -> (PageData) e)
-			    .collect(Collectors.toList());
+		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		pageData.getPagination().setIsLastPage(PageStatus.N);
@@ -218,7 +216,7 @@ public class StatePageHandler implements IPageHandler {
 		Set<ConstraintViolation<StatePageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
 		}

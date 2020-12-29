@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import com.enewschamp.app.common.country.dto.CountryDTO;
 import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.app.common.country.repository.CountryRepository;
 import com.enewschamp.app.common.country.repository.CountryRepositoryCustom;
+import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
@@ -42,7 +44,14 @@ public class CountryService extends AbstractDomainService {
 	private ModelMapper modelMapperForPatch;
 
 	public Country create(Country countryEntity) {
-		return countryRepository.save(countryEntity);
+		Country country = null;
+		try {
+			country = countryRepository.save(countryEntity);
+		}
+		catch(DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return country;
 	}
 
 	public Country update(Country countryEntity) {
@@ -111,14 +120,33 @@ public class CountryService extends AbstractDomainService {
 	public Country read(Country countryEntity) {
 		Long countryId = countryEntity.getCountryId();
 		Country existingCountry = get(countryId);
+		if(existingCountry.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingCountry;
+		}
 		existingCountry.setRecordInUse(RecordInUseType.Y);
+		existingCountry.setOperationDateTime(null);
 		return countryRepository.save(existingCountry);
 	}
 
 	public Country close(Country countryEntity) {
 		Long countryId = countryEntity.getCountryId();
 		Country existingCountry = get(countryId);
+		if(existingCountry.getRecordInUse().equals(RecordInUseType.N)) {
+			return existingCountry;
+		}
 		existingCountry.setRecordInUse(RecordInUseType.N);
+		existingCountry.setOperationDateTime(null);
+		return countryRepository.save(existingCountry);
+	}
+	
+	public Country reInstate(Country countryEntity) {
+		Long countryId = countryEntity.getCountryId();
+		Country existingCountry = get(countryId);
+		if(existingCountry.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingCountry;
+		}
+		existingCountry.setRecordInUse(RecordInUseType.Y);
+		existingCountry.setOperationDateTime(null);
 		return countryRepository.save(existingCountry);
 	}
 
