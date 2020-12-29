@@ -12,15 +12,16 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
@@ -61,6 +62,9 @@ public class AppSecurityPageHandler implements IPageHandler {
 		case "Close":
 			pageDto = closeAppSecurity(pageRequest);
 			break;
+		case "Reinstate":
+			pageDto = reinstateAppSecurity(pageRequest);
+			break;
 		case "List":
 			pageDto = listAppSecurity(pageRequest);
 			break;
@@ -96,28 +100,31 @@ public class AppSecurityPageHandler implements IPageHandler {
 		validate(pageData);
 		AppSecurity appSecurity = mapAppSecurityData(pageRequest, pageData);
 		appSecurity = appSecurityService.create(appSecurity);
-		mapHeaderData(pageRequest, pageDto, pageData, appSecurity);
-		pageData.setAppSecId(appSecurity.getAppSecId());
-		pageData.setLastUpdate(appSecurity.getOperationDateTime());
-		pageDto.setData(pageData);
+		mapAppSecurity(pageRequest, pageDto, appSecurity);
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto, AppSecurityPageData pageData,
-			AppSecurity appSecurity) {
+	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
 		pageDto.setHeader(pageRequest.getHeader());
 		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
 		pageDto.getHeader().setTodaysDate(LocalDate.now());
 		pageDto.getHeader().setLoginCredentials(null);
+		pageDto.getHeader().setUserId(null);
+		pageDto.getHeader().setDeviceId(null);
 	}
 
 	private AppSecurity mapAppSecurityData(PageRequestDTO pageRequest, AppSecurityPageData pageData) {
 		AppSecurity appSecurity = modelMapper.map(pageData, AppSecurity.class);
-		appSecurity.setOperatorId(pageRequest.getData().get("operator").asText());
 		appSecurity.setRecordInUse(RecordInUseType.Y);
 		return appSecurity;
 	}
 
+	private void mapAppSecurity(PageRequestDTO pageRequest, PageDTO pageDto, AppSecurity appSecurity) {
+		AppSecurityPageData pageData;
+		mapHeaderData(pageRequest, pageDto);
+		pageData = mapPageData(appSecurity);
+		pageDto.setData(pageData);
+	}
 	@SneakyThrows
 	private PageDTO updateAppSecurity(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
@@ -126,10 +133,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 		validate(pageData);
 		AppSecurity appSecurity = mapAppSecurityData(pageRequest, pageData);
 		appSecurity = appSecurityService.update(appSecurity);
-		mapHeaderData(pageRequest, pageDto, pageData, appSecurity);
-		pageData.setAppSecId(appSecurity.getAppSecId());
-		pageData.setLastUpdate(appSecurity.getOperationDateTime());
-		pageDto.setData(pageData);
+		mapAppSecurity(pageRequest, pageDto, appSecurity);
 		return pageDto;
 	}
 
@@ -139,21 +143,16 @@ public class AppSecurityPageHandler implements IPageHandler {
 		AppSecurityPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				AppSecurityPageData.class);
 		AppSecurity appSecurity = modelMapper.map(pageData, AppSecurity.class);
-		appSecurity.setAppSecId(pageRequest.getData().get("id").asLong());
 		appSecurity = appSecurityService.read(appSecurity);
-		mapHeaderData(pageRequest, pageDto, pageData, appSecurity);
-		mapPageData(pageData, appSecurity);
-		pageDto.setData(pageData);
+		mapAppSecurity(pageRequest, pageDto, appSecurity);
 		return pageDto;
 	}
 
-	private void mapPageData(AppSecurityPageData pageData, AppSecurity appSecurity) {
-		pageData.setAppKey(appSecurity.getAppKey());
-		pageData.setAppName(appSecurity.getAppName());
-		pageData.setModule(appSecurity.getModule());
-		//pageData.setRecordInUse(appSecurity.getRecordInUse().toString());
-		//pageData.setOperator(appSecurity.getOperatorId());
+	
+	private AppSecurityPageData mapPageData(AppSecurity appSecurity) {
+		AppSecurityPageData pageData = modelMapper.map(appSecurity, AppSecurityPageData.class);
 		pageData.setLastUpdate(appSecurity.getOperationDateTime());
+		return pageData;
 	}
 
 	@SneakyThrows
@@ -162,27 +161,35 @@ public class AppSecurityPageHandler implements IPageHandler {
 		AppSecurityPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				AppSecurityPageData.class);
 		AppSecurity appSecurity = modelMapper.map(pageData, AppSecurity.class);
-		appSecurity.setAppSecId(pageData.getId());
 		appSecurity = appSecurityService.close(appSecurity);
-		mapHeaderData(pageRequest, pageDto, pageData, appSecurity);
-		mapPageData(pageData, appSecurity);
-		pageDto.setData(pageData);
+		mapAppSecurity(pageRequest, pageDto, appSecurity);
 		return pageDto;
 	}
 
 	@SneakyThrows
+	private PageDTO reinstateAppSecurity(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		AppSecurityPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				AppSecurityPageData.class);
+		AppSecurity appSecurity = modelMapper.map(pageData, AppSecurity.class);
+		appSecurity = appSecurityService.reInstateCity(appSecurity);
+		mapAppSecurity(pageRequest, pageDto, appSecurity);
+		return pageDto;
+	}
+	@SneakyThrows
 	private PageDTO listAppSecurity(PageRequestDTO pageRequest) {
 		Page<AppSecurity> appSecList = appSecurityService.list(
-				pageRequest.getData().get("pagination").get("pageNumber").asInt(),
-				pageRequest.getData().get("pagination").get("pageSize").asInt());
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
 		List<AppSecurityPageData> list = mapAppSecurityData(appSecList);
 		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
+		pageData.getPagination().setIsLastPage(PageStatus.N);
 		dto.setHeader(pageRequest.getHeader());
 		if ((appSecList.getNumber() + 1) == appSecList.getTotalPages()) {
-			//pageData.getPagination().setLastPage(true);
+			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);
@@ -194,8 +201,8 @@ public class AppSecurityPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<AppSecurity> pageDataList = page.getContent();
 			for (AppSecurity appSecurity : pageDataList) {
-				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				AppSecurityPageData appSecPageData = modelMapper.map(appSecurity, AppSecurityPageData.class);
+				appSecPageData.setLastUpdate(appSecurity.getOperationDateTime());
 				countryPageDataList.add(appSecPageData);
 			}
 		}
@@ -208,7 +215,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 		Set<ConstraintViolation<AppSecurityPageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}

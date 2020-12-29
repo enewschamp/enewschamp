@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,13 @@ public class AppSecurityService {
 	private ModelMapper modelMapperForPatch;
 
 	public AppSecurity create(AppSecurity appSecurityEntity) {
-		return appSecurityRepository.save(appSecurityEntity);
+		AppSecurity appSecurity = null;
+		try {
+			appSecurity = appSecurityRepository.save(appSecurityEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return appSecurity;
 	}
 
 	public AppSecurity update(AppSecurity appSecurityEntity) {
@@ -78,15 +85,34 @@ public class AppSecurityService {
 	public AppSecurity read(AppSecurity appSecurity) {
 		Long appSecId = appSecurity.getAppSecId();
 		AppSecurity existingAppSecurity = get(appSecId);
+		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingAppSecurity;
+		}
 		existingAppSecurity.setRecordInUse(RecordInUseType.Y);
+		existingAppSecurity.setOperationDateTime(null);
 		return appSecurityRepository.save(existingAppSecurity);
 	}
 
 	public AppSecurity close(AppSecurity appSecurityEntity) {
 		Long appSecId = appSecurityEntity.getAppSecId();
 		AppSecurity existingAppSecurity = get(appSecId);
+		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.N)) {
+			return existingAppSecurity;
+		}
 		existingAppSecurity.setRecordInUse(RecordInUseType.N);
+		existingAppSecurity.setOperationDateTime(null);
 		return appSecurityRepository.save(existingAppSecurity);
+	}
+	
+	public AppSecurity reInstateCity(AppSecurity appSecurityEntity) {
+		Long appSecId = appSecurityEntity.getAppSecId();
+		AppSecurity existingAppSec = get(appSecId);
+		if (existingAppSec.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingAppSec;
+		}
+		existingAppSec.setRecordInUse(RecordInUseType.Y);
+		existingAppSec.setOperationDateTime(null);
+		return appSecurityRepository.save(existingAppSec);
 	}
 
 	public Page<AppSecurity> list(int pageNo, int pageSize) {

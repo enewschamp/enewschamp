@@ -12,7 +12,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -199,7 +198,6 @@ public class CountryPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<Country> pageDataList = page.getContent();
 			for (Country country : pageDataList) {
-				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				CountryPageData statePageData = modelMapper.map(country, CountryPageData.class);
 				statePageData.setLastUpdate(country.getOperationDateTime());
 				countryPageDataList.add(statePageData);
