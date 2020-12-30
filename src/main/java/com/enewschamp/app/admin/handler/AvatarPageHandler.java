@@ -12,15 +12,16 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
@@ -61,6 +62,9 @@ public class AvatarPageHandler implements IPageHandler {
 		case "Close":
 			pageDto = closeAvatar(pageRequest);
 			break;
+		case "Reinstate":
+			pageDto = reinstateAvatar(pageRequest);
+			break;
 		case "List":
 			pageDto = listAvatar(pageRequest);
 			break;
@@ -92,31 +96,13 @@ public class AvatarPageHandler implements IPageHandler {
 	private PageDTO createAvatar(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		AvatarPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), AvatarPageData.class);
-		pageData.setNameId(pageRequest.getData().get("name").asText());
 		validate(pageData);
 		Avatar avatar = mapAvatarData(pageRequest, pageData);
-		//avatar.setNameId(pageData.getNameId());
 		avatar = avatarService.create(avatar);
-		mapHeaderData(pageRequest, pageDto, pageData, avatar);
-		pageData.setAvatarId(avatar.getAvatarId());
-		pageData.setLastUpdate(avatar.getOperationDateTime());
-		pageDto.setData(pageData);
+        mapAvatar(pageRequest, pageDto, avatar);
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto, AvatarPageData pageData, Avatar avatar) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-	}
-
-	private Avatar mapAvatarData(PageRequestDTO pageRequest, AvatarPageData pageData) {
-		Avatar avatar = modelMapper.map(pageData, Avatar.class);
-		avatar.setOperatorId(pageRequest.getData().get("operator").asText());
-		avatar.setRecordInUse(RecordInUseType.Y);
-		return avatar;
-	}
 
 	@SneakyThrows
 	private PageDTO updateAvatar(PageRequestDTO pageRequest) {
@@ -125,10 +111,7 @@ public class AvatarPageHandler implements IPageHandler {
 		validate(pageData);
 		Avatar avatar = mapAvatarData(pageRequest, pageData);
 		avatar = avatarService.update(avatar);
-		mapHeaderData(pageRequest, pageDto, pageData, avatar);
-		pageData.setAvatarId(avatar.getAvatarId());
-		pageData.setLastUpdate(avatar.getOperationDateTime());
-		pageDto.setData(pageData);
+		mapAvatar(pageRequest, pageDto, avatar);
 		return pageDto;
 	}
 
@@ -137,21 +120,15 @@ public class AvatarPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		AvatarPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), AvatarPageData.class);
 		Avatar avatar = modelMapper.map(pageData, Avatar.class);
-		avatar.setAvatarId(pageRequest.getData().get("id").asLong());
 		avatar = avatarService.read(avatar);
-		mapHeaderData(pageRequest, pageDto, pageData, avatar);
-		mapPageData(pageData, avatar);
-		pageDto.setData(pageData);
+		mapAvatar(pageRequest, pageDto, avatar);
 		return pageDto;
 	}
 
-	private void mapPageData(AvatarPageData pageData, Avatar avatar) {
-		pageData.setReadingLevel(avatar.getReadingLevel());
-		pageData.setImageName(avatar.getImageName());
-		pageData.setGender(avatar.getGender());
-		//pageData.setRecordInUse(avatar.getRecordInUse().toString());
-		//pageData.setOperator(avatar.getOperatorId());
+	private AvatarPageData mapPageData(Avatar avatar) {
+		AvatarPageData pageData = modelMapper.map(avatar, AvatarPageData.class);
 		pageData.setLastUpdate(avatar.getOperationDateTime());
+		return pageData;
 	}
 
 	@SneakyThrows
@@ -159,26 +136,35 @@ public class AvatarPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		AvatarPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), AvatarPageData.class);
 		Avatar avatar = modelMapper.map(pageData, Avatar.class);
-		avatar.setAvatarId(pageData.getId());
 		avatar = avatarService.close(avatar);
-		mapHeaderData(pageRequest, pageDto, pageData, avatar);
-		mapPageData(pageData, avatar);
-		pageDto.setData(pageData);
+		mapAvatar(pageRequest, pageDto, avatar);
+		return pageDto;
+	}
+
+	@SneakyThrows
+	private PageDTO reinstateAvatar(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		AvatarPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), AvatarPageData.class);
+		Avatar avatar = modelMapper.map(pageData, Avatar.class);
+		avatar = avatarService.reinstate(avatar);
+		mapAvatar(pageRequest, pageDto, avatar);
 		return pageDto;
 	}
 
 	@SneakyThrows
 	private PageDTO listAvatar(PageRequestDTO pageRequest) {
-		Page<Avatar> avatarList = avatarService.list(pageRequest.getData().get("pagination").get("pageNumber").asInt(),
-				pageRequest.getData().get("pagination").get("pageSize").asInt());
+		Page<Avatar> avatarList = avatarService.list(
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
 		List<AvatarPageData> list = mapAvatarData(avatarList);
 		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
+		pageData.getPagination().setIsLastPage(PageStatus.N);
 		dto.setHeader(pageRequest.getHeader());
 		if ((avatarList.getNumber() + 1) == avatarList.getTotalPages()) {
-			//pageData.getPagination().setLastPage(true);
+			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);
@@ -190,13 +176,36 @@ public class AvatarPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<Avatar> pageDataList = page.getContent();
 			for (Avatar avatar : pageDataList) {
-				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				AvatarPageData avatarPageData = modelMapper.map(avatar, AvatarPageData.class);
+				avatarPageData.setLastUpdate(avatar.getOperationDateTime());
 				avatarPageDataList.add(avatarPageData);
 			}
 		}
 		return avatarPageDataList;
 	}
+	
+	private void mapAvatar(PageRequestDTO pageRequest, PageDTO pageDto, Avatar avatar) {
+		AvatarPageData pageData;
+		mapHeaderData(pageRequest, pageDto);
+		pageData = mapPageData(avatar);
+		pageDto.setData(pageData);
+	}
+
+	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
+		pageDto.setHeader(pageRequest.getHeader());
+		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
+		pageDto.getHeader().setTodaysDate(LocalDate.now());
+		pageDto.getHeader().setLoginCredentials(null);
+		pageDto.getHeader().setUserId(null);
+		pageDto.getHeader().setDeviceId(null);
+	}
+
+	private Avatar mapAvatarData(PageRequestDTO pageRequest, AvatarPageData pageData) {
+		Avatar avatar = modelMapper.map(pageData, Avatar.class);
+		avatar.setRecordInUse(RecordInUseType.Y);
+		return avatar;
+	}
+
 
 	private void validate(AvatarPageData pageData) {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -204,7 +213,7 @@ public class AvatarPageHandler implements IPageHandler {
 		Set<ConstraintViolation<AvatarPageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}

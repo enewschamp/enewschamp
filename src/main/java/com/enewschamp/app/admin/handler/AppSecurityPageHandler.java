@@ -172,7 +172,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 		AppSecurityPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				AppSecurityPageData.class);
 		AppSecurity appSecurity = modelMapper.map(pageData, AppSecurity.class);
-		appSecurity = appSecurityService.reInstateCity(appSecurity);
+		appSecurity = appSecurityService.reinstate(appSecurity);
 		mapAppSecurity(pageRequest, pageDto, appSecurity);
 		return pageDto;
 	}

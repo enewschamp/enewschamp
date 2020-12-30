@@ -104,7 +104,7 @@ public class AppSecurityService {
 		return appSecurityRepository.save(existingAppSecurity);
 	}
 	
-	public AppSecurity reInstateCity(AppSecurity appSecurityEntity) {
+	public AppSecurity reinstate(AppSecurity appSecurityEntity) {
 		Long appSecId = appSecurityEntity.getAppSecId();
 		AppSecurity existingAppSec = get(appSecId);
 		if (existingAppSec.getRecordInUse().equals(RecordInUseType.Y)) {
