@@ -12,15 +12,16 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
@@ -61,6 +62,9 @@ public class GenrePageHandler implements IPageHandler {
 		case "Close":
 			pageDto = closeGenre(pageRequest);
 			break;
+		case "Reinstate":
+			pageDto = reinstateGenre(pageRequest);
+			break;
 		case "List":
 			pageDto = listGenre(pageRequest);
 			break;
@@ -92,32 +96,11 @@ public class GenrePageHandler implements IPageHandler {
 	private PageDTO createEdition(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		GenrePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), GenrePageData.class);
-		pageData.setName(pageRequest.getData().get("name").asText());
-		pageData.setImage(pageRequest.getData().get("image").asText());
 		validate(pageData);
 		Genre genre = mapGenreData(pageRequest, pageData);
 		genre = genreService.create(genre);
-		mapHeaderData(pageRequest, pageDto, pageData, genre);
-		pageData.setId(genre.getGenreId());
-		pageData.setLastUpdate(genre.getOperationDateTime());
-		pageDto.setData(pageData);
+		mapGenre(pageRequest, pageDto, genre);
 		return pageDto;
-	}
-
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto, GenrePageData pageData, Genre edition) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-	}
-
-	private Genre mapGenreData(PageRequestDTO pageRequest, GenrePageData pageData) {
-		Genre genre = modelMapper.map(pageData, Genre.class);
-		genre.setNameId(pageData.getName());
-		genre.setImageName(pageData.getImage());
-		genre.setOperatorId(pageRequest.getData().get("operator").asText());
-		genre.setRecordInUse(RecordInUseType.Y);
-		return genre;
 	}
 
 	@SneakyThrows
@@ -127,9 +110,7 @@ public class GenrePageHandler implements IPageHandler {
 		validate(pageData);
 		Genre genre = mapGenreData(pageRequest, pageData);
 		genre = genreService.update(genre);
-		mapHeaderData(pageRequest, pageDto, pageData, genre);
-		pageData.setLastUpdate(genre.getOperationDateTime());
-		pageDto.setData(pageData);
+		mapGenre(pageRequest, pageDto, genre);
 		return pageDto;
 	}
 
@@ -138,21 +119,9 @@ public class GenrePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		GenrePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), GenrePageData.class);
 		Genre genre = modelMapper.map(pageData, Genre.class);
-		genre.setGenreId(pageRequest.getData().get("id").asLong());
 		genre = genreService.read(genre);
-		mapHeaderData(pageRequest, pageDto, pageData, genre);
-		mapPageData(pageData, genre);
-		pageDto.setData(pageData);
+		mapGenre(pageRequest, pageDto, genre);
 		return pageDto;
-	}
-
-	private void mapPageData(GenrePageData pageData, Genre genre) {
-		pageData.setId(genre.getGenreId());
-		pageData.setName(genre.getNameId());
-		pageData.setImage(genre.getImageName());
-		//pageData.setRecordInUse(genre.getRecordInUse().toString());
-	//	pageData.setOperator(genre.getOperatorId());
-		pageData.setLastUpdate(genre.getOperationDateTime());
 	}
 
 	@SneakyThrows
@@ -160,27 +129,35 @@ public class GenrePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		GenrePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), GenrePageData.class);
 		Genre genre = modelMapper.map(pageData, Genre.class);
-		genre.setGenreId(pageData.getId());
 		genre = genreService.close(genre);
-		mapHeaderData(pageRequest, pageDto, pageData, genre);
-		mapPageData(pageData, genre);
-		pageDto.setData(pageData);
+		mapGenre(pageRequest, pageDto, genre);
+		return pageDto;
+	}
+
+	@SneakyThrows
+	private PageDTO reinstateGenre(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		GenrePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), GenrePageData.class);
+		Genre genre = modelMapper.map(pageData, Genre.class);
+		genre = genreService.reinstate(genre);
+		mapGenre(pageRequest, pageDto, genre);
 		return pageDto;
 	}
 
 	@SneakyThrows
 	private PageDTO listGenre(PageRequestDTO pageRequest) {
 		Page<Genre> editionList = genreService.list(
-				pageRequest.getData().get("pagination").get("pageNumber").asInt(),
-				pageRequest.getData().get("pagination").get("pageSize").asInt());
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
 		List<GenrePageData> list = mapGenreData(editionList);
 		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
+		pageData.getPagination().setIsLastPage(PageStatus.N);
 		dto.setHeader(pageRequest.getHeader());
 		if ((editionList.getNumber() + 1) == editionList.getTotalPages()) {
-			//pageData.getPagination().setLastPage(true);
+			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);
@@ -192,17 +169,40 @@ public class GenrePageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<Genre> pageDataList = page.getContent();
 			for (Genre genre : pageDataList) {
-				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				GenrePageData genrePageData = modelMapper.map(genre, GenrePageData.class);
-				genrePageData.setImage(genre.getImageName());
-				genrePageData.setName(genre.getNameId());
-				genrePageData.setId(genre.getGenreId());
-				//genrePageData.setOperator(genre.getOperatorId());
 				genrePageData.setLastUpdate(genre.getOperationDateTime());
 				genrePageDataList.add(genrePageData);
 			}
 		}
 		return genrePageDataList;
+	}
+
+	private void mapGenre(PageRequestDTO pageRequest, PageDTO pageDto, Genre genre) {
+		GenrePageData pageData;
+		mapHeaderData(pageRequest, pageDto);
+		pageData = mapPageData(genre);
+		pageDto.setData(pageData);
+	}
+
+	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
+		pageDto.setHeader(pageRequest.getHeader());
+		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
+		pageDto.getHeader().setTodaysDate(LocalDate.now());
+		pageDto.getHeader().setLoginCredentials(null);
+		pageDto.getHeader().setUserId(null);
+		pageDto.getHeader().setDeviceId(null);
+	}
+
+	private Genre mapGenreData(PageRequestDTO pageRequest, GenrePageData pageData) {
+		Genre genre = modelMapper.map(pageData, Genre.class);
+		genre.setRecordInUse(RecordInUseType.Y);
+		return genre;
+	}
+
+	private GenrePageData mapPageData(Genre genre) {
+		GenrePageData pageData = modelMapper.map(genre, GenrePageData.class);
+		pageData.setLastUpdate(genre.getOperationDateTime());
+		return pageData;
 	}
 
 	private void validate(GenrePageData pageData) {
@@ -211,7 +211,7 @@ public class GenrePageHandler implements IPageHandler {
 		Set<ConstraintViolation<GenrePageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}

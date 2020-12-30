@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +18,6 @@ import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.publication.domain.entity.Edition;
 import com.enewschamp.publication.domain.entity.Genre;
 import com.enewschamp.publication.domain.repository.GenreRepositoryCustom;
 
@@ -26,7 +26,7 @@ public class GenreService extends AbstractDomainService {
 
 	@Autowired
 	GenreRepository repository;
-	
+
 	@Autowired
 	GenreRepositoryCustom repositoryCustom;
 
@@ -40,8 +40,14 @@ public class GenreService extends AbstractDomainService {
 	@Autowired
 	AuditService auditService;
 
-	public Genre create(Genre genre) {
-		return repository.save(genre);
+	public Genre create(Genre genreEntity) {
+		Genre genre = null;
+		try {
+			genre = repository.save(genreEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return genre;
 	}
 
 	public Genre update(Genre genre) {
@@ -84,15 +90,34 @@ public class GenreService extends AbstractDomainService {
 	public Genre read(Genre genreEntity) {
 		Long genreId = genreEntity.getGenreId();
 		Genre existingGenre = get(genreId);
+		if (existingGenre.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingGenre;
+		}
 		existingGenre.setRecordInUse(RecordInUseType.Y);
+		existingGenre.setOperationDateTime(null);
 		return repository.save(existingGenre);
 	}
 
 	public Genre close(Genre genreEntity) {
 		Long genreId = genreEntity.getGenreId();
 		Genre existingEntity = get(genreId);
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+			return existingEntity;
+		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
+		existingEntity.setOperationDateTime(null);
 		return repository.save(existingEntity);
+	}
+
+	public Genre reinstate(Genre genreEntity) {
+		Long genreId = genreEntity.getGenreId();
+		Genre existingGenre = get(genreId);
+		if (existingGenre.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingGenre;
+		}
+		existingGenre.setRecordInUse(RecordInUseType.Y);
+		existingGenre.setOperationDateTime(null);
+		return repository.save(existingGenre);
 	}
 
 	public Page<Genre> list(int pageNo, int pageSize) {

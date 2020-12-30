@@ -16,14 +16,12 @@ public class EditionPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
 	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
-	@JsonInclude
-	private String id;
+	private String editionId; 
 	@JsonInclude
 	@NotNull(message = MessageConstants.EDITION_NAME_NOT_NULL)
 	@NotEmpty(message = MessageConstants.EDITION_NAME_NOT_EMPTY)
 	private String editionName;
 	@NotNull(message = MessageConstants.LANGUAGE_NOT_NULL)
-	@NotEmpty(message = MessageConstants.LANGUAGE_NOT_EMPTY)
 	@JsonInclude
 	private Long languageId;
 }

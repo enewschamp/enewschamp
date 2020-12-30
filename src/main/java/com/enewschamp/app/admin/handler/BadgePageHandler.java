@@ -12,7 +12,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -170,7 +169,6 @@ public class BadgePageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<Badge> pageDataList = page.getContent();
 			for (Badge badge : pageDataList) {
-				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				BadgePageData badgePageData = modelMapper.map(badge, BadgePageData.class);
 				badgePageData.setLastUpdate(badge.getOperationDateTime());
 				badgePageDataList.add(badgePageData);

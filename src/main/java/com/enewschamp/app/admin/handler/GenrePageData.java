@@ -15,10 +15,10 @@ import lombok.EqualsAndHashCode;
 public class GenrePageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	@JsonInclude
-	private Long id;
+	private Long genreId;
 	@NotNull(message = MessageConstants.GENRE_NAME_NOT_NULL)
 	@NotEmpty(message = MessageConstants.GENRE_NAME_NOT_EMPTY)
-	private String name;
+	private String nameId;
 	@JsonInclude
-	private String image;
+	private String imageName;
 }
