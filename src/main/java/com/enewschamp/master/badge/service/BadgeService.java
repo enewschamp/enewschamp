@@ -6,14 +6,13 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.master.badge.repository.BadgeRepository;
@@ -41,7 +40,14 @@ public class BadgeService {
 	AuditService auditService;
 
 	public Badge create(Badge badgeEntity) {
-		return badgeRepository.save(badgeEntity);
+		Badge badge = null;
+		try {
+			badge = badgeRepository.save(badgeEntity);
+		}
+		catch(DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return badge;
 	}
 
 	public Badge update(Badge badgeEntity) {
@@ -134,15 +140,34 @@ public class BadgeService {
 	public Badge read(Badge badgeEntity) {
 		Long badgeId = badgeEntity.getBadgeId();
 		Badge existingBadge = get(badgeId);
+		if(existingBadge.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingBadge;
+		}
 		existingBadge.setRecordInUse(RecordInUseType.Y);
+		existingBadge.setOperationDateTime(null);
 		return badgeRepository.save(existingBadge);
 	}
 
 	public Badge close(Badge badgeEntity) {
 		Long badgeId = badgeEntity.getBadgeId();
 		Badge existingBadge = get(badgeId);
+		if(existingBadge.getRecordInUse().equals(RecordInUseType.N)) {
+			return existingBadge;
+		}
 		existingBadge.setRecordInUse(RecordInUseType.N);
+		existingBadge.setOperationDateTime(null);
 		return badgeRepository.save(existingBadge);
+	}
+	
+	public Badge reInstate(Badge badgeEntity) {
+		Long badgeId = badgeEntity.getBadgeId();
+		Badge existingCountry = get(badgeId);
+		if(existingCountry.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingCountry;
+		}
+		existingCountry.setRecordInUse(RecordInUseType.Y);
+		existingCountry.setOperationDateTime(null);
+		return badgeRepository.save(existingCountry);
 	}
 
 	public Page<Badge> list(int pageNo, int pageSize) {

@@ -29,6 +29,7 @@ public class MessageConstants {
 	public static final String GENRE_ID_NOT_NULL ="Genre id must not be null";
 	public static final String EDITION_ID_NOT_EMPTY ="Edition id must not be empty";
 	public static final String EDITION_ID_NOT_NULL ="Edition id must not be null";
+	public static final String MONTHLY_POINT_NOT_NULL ="Monthly point id must not be null";
 	public static final String EDITION_NAME_NOT_EMPTY ="Edition name must not be empty";
 	public static final String EDITION_NAME_NOT_NULL ="Edition name must not be null";
 	public static final String LANGUAGE_NOT_EMPTY ="Language must not be empty";

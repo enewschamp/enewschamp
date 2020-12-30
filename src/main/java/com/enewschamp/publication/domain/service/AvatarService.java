@@ -7,12 +7,14 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
@@ -40,8 +42,14 @@ public class AvatarService extends AbstractDomainService {
 	@Autowired
 	AuditService auditService;
 
-	public Avatar create(Avatar avatar) {
-		return repository.save(avatar);
+	public Avatar create(Avatar avatarEntity) {
+		Avatar avatar = null;
+		try {
+			avatar = repository.save(avatarEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return avatar;
 	}
 
 	public Avatar update(Avatar avatar) {
@@ -116,7 +124,7 @@ public class AvatarService extends AbstractDomainService {
 		existingAvatar.setOperationDateTime(null);
 		return repository.save(existingAvatar);
 	}
-	
+
 	public Avatar reinstate(Avatar appSecurityEntity) {
 		Long avatarId = appSecurityEntity.getAvatarId();
 		Avatar existingAvatar = get(avatarId);
