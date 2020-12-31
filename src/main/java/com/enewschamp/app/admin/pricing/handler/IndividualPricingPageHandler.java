@@ -12,16 +12,17 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.handler.ListPageData;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
@@ -62,6 +63,9 @@ public class IndividualPricingPageHandler implements IPageHandler {
 		case "Close":
 			pageDto = closeIndividualPricing(pageRequest);
 			break;
+		case "Reinstate":
+			pageDto = reinstateIndividualPricing(pageRequest);
+			break;
 		case "List":
 			pageDto = listIndividualPricing(pageRequest);
 			break;
@@ -92,92 +96,74 @@ public class IndividualPricingPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createIndividualPricing(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		IndividualPricingPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), IndividualPricingPageData.class);
+		IndividualPricingPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				IndividualPricingPageData.class);
 		validate(pageData);
 		IndividualPricing individualPricing = mapPricingData(pageRequest, pageData);
 		individualPricing = individualPricingService.create(individualPricing);
-		mapHeaderData(pageRequest, pageDto, pageData, individualPricing);
-		pageData.setLastUpdate(individualPricing.getOperationDateTime());
-		pageData.setId(individualPricing.getIndividualPricingId());
-		pageDto.setData(pageData);
+		mapPricing(pageRequest, pageDto, individualPricing);
 		return pageDto;
-	}
-
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto, IndividualPricingPageData pageData, IndividualPricing individualPricing) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-	}
-
-	private IndividualPricing mapPricingData(PageRequestDTO pageRequest, IndividualPricingPageData pageData) {
-		IndividualPricing individualPricing = modelMapper.map(pageData, IndividualPricing.class);
-		individualPricing.setOperatorId(pageRequest.getData().get("operator").asText());
-		individualPricing.setRecordInUse(RecordInUseType.Y);
-		return individualPricing;
 	}
 
 	@SneakyThrows
 	private PageDTO updateIndividualPricing(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		IndividualPricingPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), IndividualPricingPageData.class);
+		IndividualPricingPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				IndividualPricingPageData.class);
 		validate(pageData);
 		IndividualPricing individualPricing = mapPricingData(pageRequest, pageData);
 		individualPricing = individualPricingService.update(individualPricing);
-		mapHeaderData(pageRequest, pageDto, pageData, individualPricing);
-		pageData.setLastUpdate(individualPricing.getOperationDateTime());
-		pageDto.setData(pageData);
+		mapPricing(pageRequest, pageDto, individualPricing);
 		return pageDto;
 	}
 
 	@SneakyThrows
 	private PageDTO readIndividualPricing(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		IndividualPricingPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), IndividualPricingPageData.class);
+		IndividualPricingPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				IndividualPricingPageData.class);
 		IndividualPricing individualPricing = modelMapper.map(pageData, IndividualPricing.class);
 		individualPricing = individualPricingService.read(individualPricing);
-		mapHeaderData(pageRequest, pageDto, pageData, individualPricing);
-		mapPageData(pageData, individualPricing);
-		pageDto.setData(pageData);
+		mapPricing(pageRequest, pageDto, individualPricing);
 		return pageDto;
-	}
-
-	private void mapPageData(IndividualPricingPageData pageData, IndividualPricing individualPricing) {
-		pageData.setId(individualPricing.getIndividualPricingId());
-		pageData.setEditionId(individualPricing.getEditionId());
-		pageData.setEffectiveDate(individualPricing.getEffectiveDate());
-		pageData.setPricingDetails(individualPricing.getPricingDetails());
-	//	pageData.setRecordInUse(individualPricing.getRecordInUse().toString());
-	//	pageData.setOperator(individualPricing.getOperatorId());
-		pageData.setLastUpdate(individualPricing.getOperationDateTime());
 	}
 
 	@SneakyThrows
 	private PageDTO closeIndividualPricing(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		IndividualPricingPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), IndividualPricingPageData.class);
+		IndividualPricingPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				IndividualPricingPageData.class);
 		IndividualPricing individualPricing = modelMapper.map(pageData, IndividualPricing.class);
-		individualPricing.setIndividualPricingId(pageData.getId());
 		individualPricing = individualPricingService.close(individualPricing);
-		mapHeaderData(pageRequest, pageDto, pageData, individualPricing);
-		mapPageData(pageData, individualPricing);
-		pageDto.setData(pageData);
+		mapPricing(pageRequest, pageDto, individualPricing);
+		return pageDto;
+	}
+
+	@SneakyThrows
+	private PageDTO reinstateIndividualPricing(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		IndividualPricingPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				IndividualPricingPageData.class);
+		IndividualPricing individualPricing = modelMapper.map(pageData, IndividualPricing.class);
+		individualPricing = individualPricingService.reinstate(individualPricing);
+		mapPricing(pageRequest, pageDto, individualPricing);
 		return pageDto;
 	}
 
 	@SneakyThrows
 	private PageDTO listIndividualPricing(PageRequestDTO pageRequest) {
 		Page<IndividualPricing> pricingList = individualPricingService.list(
-				pageRequest.getData().get("pagination").get("pageNumber").asInt(),
-				pageRequest.getData().get("pagination").get("pageSize").asInt());
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
 		List<IndividualPricingPageData> list = mapPricingData(pricingList);
 		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
+		pageData.getPagination().setIsLastPage(PageStatus.N);
 		dto.setHeader(pageRequest.getHeader());
 		if ((pricingList.getNumber() + 1) == pricingList.getTotalPages()) {
-			//pageData.getPagination().setLastPage(true);
+			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);
@@ -189,15 +175,41 @@ public class IndividualPricingPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<IndividualPricing> pageDataList = page.getContent();
 			for (IndividualPricing individualPricing : pageDataList) {
-				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-				IndividualPricingPageData holidayPageData = modelMapper.map(individualPricing, IndividualPricingPageData.class);
-				holidayPageData.setId(individualPricing.getIndividualPricingId());
-				//holidayPageData.setOperator(individualPricing.getOperatorId());
+				IndividualPricingPageData holidayPageData = modelMapper.map(individualPricing,
+						IndividualPricingPageData.class);
 				holidayPageData.setLastUpdate(individualPricing.getOperationDateTime());
 				holidayPageDataList.add(holidayPageData);
 			}
 		}
 		return holidayPageDataList;
+	}
+
+	private void mapPricing(PageRequestDTO pageRequest, PageDTO pageDto, IndividualPricing pricing) {
+		IndividualPricingPageData pageData;
+		mapHeaderData(pageRequest, pageDto);
+		pageData = mapPageData(pricing);
+		pageDto.setData(pageData);
+	}
+
+	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
+		pageDto.setHeader(pageRequest.getHeader());
+		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
+		pageDto.getHeader().setTodaysDate(LocalDate.now());
+		pageDto.getHeader().setLoginCredentials(null);
+		pageDto.getHeader().setUserId(null);
+		pageDto.getHeader().setDeviceId(null);
+	}
+
+	private IndividualPricing mapPricingData(PageRequestDTO pageRequest, IndividualPricingPageData pageData) {
+		IndividualPricing pricing = modelMapper.map(pageData, IndividualPricing.class);
+		pricing.setRecordInUse(RecordInUseType.Y);
+		return pricing;
+	}
+
+	private IndividualPricingPageData mapPageData(IndividualPricing pricing) {
+		IndividualPricingPageData pageData = modelMapper.map(pricing, IndividualPricingPageData.class);
+		pageData.setLastUpdate(pricing.getOperationDateTime());
+		return pageData;
 	}
 
 	private void validate(IndividualPricingPageData pageData) {
@@ -206,7 +218,7 @@ public class IndividualPricingPageHandler implements IPageHandler {
 		Set<ConstraintViolation<IndividualPricingPageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}

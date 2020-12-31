@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,7 @@ public class IndividualPricingService {
 
 	@Autowired
 	private IndividualPricingRepository individualPricingRepository;
-	
+
 	@Autowired
 	private IndividualPricingRepositoryCustom individualPricingRepositoryCustom;
 
@@ -37,8 +38,14 @@ public class IndividualPricingService {
 	@Qualifier("modelPatcher")
 	private ModelMapper modelMapperForPatch;
 
-	public IndividualPricing create(IndividualPricing IndividualPricingEntity) {
-		return individualPricingRepository.save(IndividualPricingEntity);
+	public IndividualPricing create(IndividualPricing individualPricingEntity) {
+		IndividualPricing pricing = null;
+		try {
+			pricing = individualPricingRepository.save(individualPricingEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return pricing;
 	}
 
 	public IndividualPricing update(IndividualPricing IndividualPricingEntity) {
@@ -79,20 +86,38 @@ public class IndividualPricingService {
 			throw new BusinessException(ErrorCodeConstants.INDIVIDUAL_PRICING_NOT_FOUND);
 		}
 	}
-	
 
 	public IndividualPricing read(IndividualPricing individualPricingEntity) {
 		Long inPricingId = individualPricingEntity.getIndividualPricingId();
 		IndividualPricing existingndividualPricing = get(inPricingId);
+		if (existingndividualPricing.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingndividualPricing;
+		}
 		existingndividualPricing.setRecordInUse(RecordInUseType.Y);
+		existingndividualPricing.setOperationDateTime(null);
 		return individualPricingRepository.save(existingndividualPricing);
 	}
 
 	public IndividualPricing close(IndividualPricing individualPricingEntity) {
 		Long inPricingId = individualPricingEntity.getIndividualPricingId();
 		IndividualPricing existingEntity = get(inPricingId);
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+			return existingEntity;
+		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
+		existingEntity.setOperationDateTime(null);
 		return individualPricingRepository.save(existingEntity);
+	}
+
+	public IndividualPricing reinstate(IndividualPricing individualPricing) {
+		Long pricingId = individualPricing.getIndividualPricingId();
+		IndividualPricing existingPricing = get(pricingId);
+		if (existingPricing.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingPricing;
+		}
+		existingPricing.setRecordInUse(RecordInUseType.Y);
+		existingPricing.setOperationDateTime(null);
+		return individualPricingRepository.save(existingPricing);
 	}
 
 	public Page<IndividualPricing> list(int pageNo, int pageSize) {

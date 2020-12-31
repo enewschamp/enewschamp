@@ -17,12 +17,11 @@ import lombok.EqualsAndHashCode;
 public class IndividualPricingPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	@JsonInclude
-	private Long id;
+	private Long individualPricingId;
 	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
 	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
 	private String editionId;
 	@NotNull(message = MessageConstants.EFFECTIVE_DATE_NOT_NULL)
-	@NotEmpty(message = MessageConstants.EFFECTIVE_DATE_NOT_EMPTY)
 	private LocalDate effectiveDate;
 	@NotNull(message = MessageConstants.PRICING_DETAIL_NOT_NULL)
 	@NotEmpty(message = MessageConstants.PRICING_DETAIL_NOT_EMPTY)
