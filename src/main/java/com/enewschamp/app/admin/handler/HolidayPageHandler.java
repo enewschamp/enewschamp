@@ -12,15 +12,16 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.holiday.entity.Holiday;
@@ -61,6 +62,9 @@ public class HolidayPageHandler implements IPageHandler {
 		case "Close":
 			pageDto = closeHoliday(pageRequest);
 			break;
+		case "Reinstate":
+			pageDto = reinstateHoliday(pageRequest);
+			break;
 		case "List":
 			pageDto = listHoliday(pageRequest);
 			break;
@@ -92,29 +96,11 @@ public class HolidayPageHandler implements IPageHandler {
 	private PageDTO createHoliday(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		HolidayPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HolidayPageData.class);
-		pageData.setDate(LocalDate.parse(pageRequest.getData().get("date").asText()));
 		validate(pageData);
 		Holiday holiday = mapHolidayData(pageRequest, pageData);
 		holiday = holidayService.create(holiday);
-		mapHeaderData(pageRequest, pageDto, pageData, holiday);
-		pageData.setLastUpdate(holiday.getOperationDateTime());
-		pageData.setId(holiday.getHolidayId());
-		pageDto.setData(pageData);
+		mapHoliday(pageRequest, pageDto, holiday);
 		return pageDto;
-	}
-
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto, HolidayPageData pageData, Holiday holiday) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-	}
-
-	private Holiday mapHolidayData(PageRequestDTO pageRequest, HolidayPageData pageData) {
-		Holiday holiday = modelMapper.map(pageData, Holiday.class);
-		holiday.setOperatorId(pageRequest.getData().get("operator").asText());
-		holiday.setRecordInUse(RecordInUseType.Y);
-		return holiday;
 	}
 
 	@SneakyThrows
@@ -124,9 +110,7 @@ public class HolidayPageHandler implements IPageHandler {
 		validate(pageData);
 		Holiday holiday = mapHolidayData(pageRequest, pageData);
 		holiday = holidayService.update(holiday);
-		mapHeaderData(pageRequest, pageDto, pageData, holiday);
-		pageData.setLastUpdate(holiday.getOperationDateTime());
-		pageDto.setData(pageData);
+		mapHoliday(pageRequest, pageDto, holiday);
 		return pageDto;
 	}
 
@@ -136,20 +120,8 @@ public class HolidayPageHandler implements IPageHandler {
 		HolidayPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HolidayPageData.class);
 		Holiday holiday = modelMapper.map(pageData, Holiday.class);
 		holiday = holidayService.read(holiday);
-		mapHeaderData(pageRequest, pageDto, pageData, holiday);
-		mapPageData(pageData, holiday);
-		pageDto.setData(pageData);
+		mapHoliday(pageRequest, pageDto, holiday);
 		return pageDto;
-	}
-
-	private void mapPageData(HolidayPageData pageData, Holiday holiday) {
-		pageData.setId(holiday.getHolidayId());
-		pageData.setEditionId(holiday.getEditionId());
-		pageData.setHoliday(holiday.getHoliday());
-		pageData.setDate(holiday.getHolidayDate());
-		//pageData.setRecordInUse(holiday.getRecordInUse().toString());
-		//pageData.setOperator(holiday.getOperatorId());
-		pageData.setLastUpdate(holiday.getOperationDateTime());
 	}
 
 	@SneakyThrows
@@ -157,27 +129,35 @@ public class HolidayPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		HolidayPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HolidayPageData.class);
 		Holiday holiday = modelMapper.map(pageData, Holiday.class);
-		holiday.setHolidayId(pageData.getId());
 		holiday = holidayService.close(holiday);
-		mapHeaderData(pageRequest, pageDto, pageData, holiday);
-		mapPageData(pageData, holiday);
-		pageDto.setData(pageData);
+		mapHoliday(pageRequest, pageDto, holiday);
+		return pageDto;
+	}
+
+	@SneakyThrows
+	private PageDTO reinstateHoliday(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		HolidayPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HolidayPageData.class);
+		Holiday holiday = modelMapper.map(pageData, Holiday.class);
+		holiday = holidayService.reinstate(holiday);
+		mapHoliday(pageRequest, pageDto, holiday);
 		return pageDto;
 	}
 
 	@SneakyThrows
 	private PageDTO listHoliday(PageRequestDTO pageRequest) {
 		Page<Holiday> editionList = holidayService.list(
-				pageRequest.getData().get("pagination").get("pageNumber").asInt(),
-				pageRequest.getData().get("pagination").get("pageSize").asInt());
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
 		List<HolidayPageData> list = mapHolidayData(editionList);
 		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
+		pageData.getPagination().setIsLastPage(PageStatus.N);
 		dto.setHeader(pageRequest.getHeader());
 		if ((editionList.getNumber() + 1) == editionList.getTotalPages()) {
-			//pageData.getPagination().setLastPage(true);
+			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);
@@ -189,15 +169,40 @@ public class HolidayPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<Holiday> pageDataList = page.getContent();
 			for (Holiday holiday : pageDataList) {
-				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				HolidayPageData holidayPageData = modelMapper.map(holiday, HolidayPageData.class);
-				holidayPageData.setId(holiday.getHolidayId());
-			//	holidayPageData.setOperator(holiday.getOperatorId());
 				holidayPageData.setLastUpdate(holiday.getOperationDateTime());
 				holidayPageDataList.add(holidayPageData);
 			}
 		}
 		return holidayPageDataList;
+	}
+
+	private void mapHoliday(PageRequestDTO pageRequest, PageDTO pageDto, Holiday holiday) {
+		HolidayPageData pageData;
+		mapHeaderData(pageRequest, pageDto);
+		pageData = mapPageData(holiday);
+		pageDto.setData(pageData);
+	}
+
+	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
+		pageDto.setHeader(pageRequest.getHeader());
+		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
+		pageDto.getHeader().setTodaysDate(LocalDate.now());
+		pageDto.getHeader().setLoginCredentials(null);
+		pageDto.getHeader().setUserId(null);
+		pageDto.getHeader().setDeviceId(null);
+	}
+
+	private Holiday mapHolidayData(PageRequestDTO pageRequest, HolidayPageData pageData) {
+		Holiday holiday = modelMapper.map(pageData, Holiday.class);
+		holiday.setRecordInUse(RecordInUseType.Y);
+		return holiday;
+	}
+
+	private HolidayPageData mapPageData(Holiday holiday) {
+		HolidayPageData pageData = modelMapper.map(holiday, HolidayPageData.class);
+		pageData.setLastUpdate(holiday.getOperationDateTime());
+		return pageData;
 	}
 
 	private void validate(HolidayPageData pageData) {
@@ -206,7 +211,7 @@ public class HolidayPageHandler implements IPageHandler {
 		Set<ConstraintViolation<HolidayPageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}

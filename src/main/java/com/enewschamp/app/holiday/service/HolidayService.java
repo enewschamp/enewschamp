@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public class HolidayService {
 
 	@Autowired
 	HolidayRepository holidayRepository;
-	
+
 	@Autowired
 	HolidayRepositoryCustom holidayRepositoryCustom;
 
@@ -35,7 +36,13 @@ public class HolidayService {
 	ModelMapper modelMapperForPatch;
 
 	public Holiday create(Holiday holidayEntity) {
-		return holidayRepository.save(holidayEntity);
+		Holiday holiday = null;
+		try {
+			holiday = holidayRepository.save(holidayEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return holiday;
 	}
 
 	public Holiday update(Holiday holidayEntity) {
@@ -76,21 +83,38 @@ public class HolidayService {
 		else
 			return false;
 	}
-	
-	
 
 	public Holiday read(Holiday holidayEntity) {
 		Long holidayId = holidayEntity.getHolidayId();
 		Holiday existingHoliday = get(holidayId);
+		if (existingHoliday.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingHoliday;
+		}
 		existingHoliday.setRecordInUse(RecordInUseType.Y);
+		existingHoliday.setOperationDateTime(null);
 		return holidayRepository.save(existingHoliday);
 	}
 
 	public Holiday close(Holiday holidayEntity) {
 		Long holidayId = holidayEntity.getHolidayId();
 		Holiday existingEntity = get(holidayId);
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+			return existingEntity;
+		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
+		existingEntity.setOperationDateTime(null);
 		return holidayRepository.save(existingEntity);
+	}
+
+	public Holiday reinstate(Holiday holdayEntity) {
+		Long holidayId = holdayEntity.getHolidayId();
+		Holiday existingHoliday = get(holidayId);
+		if (existingHoliday.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingHoliday;
+		}
+		existingHoliday.setRecordInUse(RecordInUseType.Y);
+		existingHoliday.setOperationDateTime(null);
+		return holidayRepository.save(existingHoliday);
 	}
 
 	public Page<Holiday> list(int pageNo, int pageSize) {

@@ -15,13 +15,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.helpdesk.entity.HelpDesk;
 import com.enewschamp.domain.repository.RepositoryImpl;
+
 @Repository
-public class HelpDeskRepositoryCustomImpl extends RepositoryImpl implements HelpDeskRepositoryCustom{
-	
+public class HelpDeskRepositoryCustomImpl extends RepositoryImpl implements HelpDeskRepositoryCustom {
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -31,13 +33,22 @@ public class HelpDeskRepositoryCustomImpl extends RepositoryImpl implements Help
 		CriteriaQuery<HelpDesk> criteriaQuery = cb.createQuery(HelpDesk.class);
 		Root<HelpDesk> helpDeskRoot = criteriaQuery.from(HelpDesk.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		filterPredicates.add(cb.equal(helpDeskRoot.get("studentId"),  searchRequest.getStudentId()));
-		filterPredicates.add(cb.between(helpDeskRoot.get("createDateTime"), searchRequest.getCreateDateFrom(), searchRequest.getCreateDateTo()));
-		//filterPredicates.add(cb.like(helpDeskRoot.get("createDateTime"), "%" + searchRequest.getCreateDateFrom() + "%"));
-		//filterPredicates.add(cb.like(helpDeskRoot.get("createDateTo"), "%" + searchRequest.getCreateDateTo() + "%"));
-		filterPredicates.add(cb.equal(helpDeskRoot.get("categoryId"),  searchRequest.getCategoryId()));
-		filterPredicates.add(cb.equal(helpDeskRoot.get("closeFlag"), searchRequest.getCloseFlag() ));
-		filterPredicates.add(cb.equal(helpDeskRoot.get("operatorId"), searchRequest.getSupportUserId()));
+		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
+			filterPredicates.add(cb.equal(helpDeskRoot.get("studentId"), searchRequest.getStudentId()));
+		
+		if (!StringUtils.isEmpty(searchRequest.getCreateDateFrom()))
+			filterPredicates.add(cb.between(helpDeskRoot.get("createDateTime"), searchRequest.getCreateDateFrom(),
+					searchRequest.getCreateDateTo()));
+		
+		if (!StringUtils.isEmpty(searchRequest.getCategoryId()))
+			filterPredicates.add(cb.equal(helpDeskRoot.get("categoryId"), searchRequest.getCategoryId()));
+		
+		if (!StringUtils.isEmpty(searchRequest.getCloseFlag()))
+			filterPredicates.add(cb.equal(helpDeskRoot.get("closeFlag"), searchRequest.getCloseFlag()));
+		
+		if (!StringUtils.isEmpty(searchRequest.getSupportUserId()))
+			filterPredicates.add(cb.equal(helpDeskRoot.get("operatorId"), searchRequest.getSupportUserId()));
+		
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		// Build query
 		TypedQuery<HelpDesk> q = entityManager.createQuery(criteriaQuery);
