@@ -3,12 +3,14 @@ package com.enewschamp.master.badge.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.enewschamp.publication.domain.entity.Badge;
 
+@JaversSpringDataAuditable
 public interface BadgeRepository extends JpaRepository<Badge, Long> {
 
 	@Query("select d from Badge d where d.editionId= :editionId and d.genreId= :genreId and d.recordInUse ='Y'")
