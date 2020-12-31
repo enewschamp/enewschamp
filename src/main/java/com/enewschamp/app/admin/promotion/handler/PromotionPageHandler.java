@@ -12,7 +12,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -20,10 +19,12 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.admin.promotion.repository.Promotion;
 import com.enewschamp.app.admin.promotion.service.PromotionService;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
@@ -62,6 +63,9 @@ public class PromotionPageHandler implements IPageHandler {
 		case "Close":
 			pageDto = closePromotion(pageRequest);
 			break;
+		case "Reinstate":
+			pageDto = reinstatePromotion(pageRequest);
+			break;
 		case "List":
 			pageDto = listPromotion(pageRequest);
 			break;
@@ -96,25 +100,8 @@ public class PromotionPageHandler implements IPageHandler {
 		validate(pageData);
 		Promotion promotion = mapPromotionData(pageRequest, pageData);
 		promotion = promotionService.create(promotion);
-		mapHeaderData(pageRequest, pageDto, pageData, promotion);
-		pageData.setLastUpdate(promotion.getOperationDateTime());
-		pageData.setId(promotion.getPromotionId());
-		pageDto.setData(pageData);
+        mapPromotion(pageRequest, pageDto, promotion);
 		return pageDto;
-	}
-
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto, PromotionPageData pageData, Promotion promotion) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-	}
-
-	private Promotion mapPromotionData(PageRequestDTO pageRequest, PromotionPageData pageData) {
-		Promotion promotion = modelMapper.map(pageData, Promotion.class);
-		promotion.setOperatorId(pageRequest.getData().get("operator").asText());
-		promotion.setRecordInUse(RecordInUseType.Y);
-		return promotion;
 	}
 
 	@SneakyThrows
@@ -124,9 +111,7 @@ public class PromotionPageHandler implements IPageHandler {
 		validate(pageData);
 		Promotion promotion = mapPromotionData(pageRequest, pageData);
 		promotion = promotionService.update(promotion);
-		mapHeaderData(pageRequest, pageDto, pageData, promotion);
-		pageData.setLastUpdate(promotion.getOperationDateTime());
-		pageDto.setData(pageData);
+		mapPromotion(pageRequest, pageDto, promotion);
 		return pageDto;
 	}
 
@@ -136,26 +121,8 @@ public class PromotionPageHandler implements IPageHandler {
 		PromotionPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PromotionPageData.class);
 		Promotion promotion = modelMapper.map(pageData, Promotion.class);
 		promotion = promotionService.read(promotion);
-		mapHeaderData(pageRequest, pageDto, pageData, promotion);
-		mapPageData(pageData, promotion);
-		pageDto.setData(pageData);
+        mapPromotion(pageRequest, pageDto, promotion);
 		return pageDto;
-	}
-
-	private void mapPageData(PromotionPageData pageData, Promotion promotion) {
-		pageData.setId(promotion.getPromotionId());
-		pageData.setEditionId(promotion.getEditionId());
-		pageData.setCountryId(promotion.getCountryId());
-		pageData.setCouponCode(promotion.getCouponCode());
-		pageData.setStateId(promotion.getStateId());
-		pageData.setCityId(promotion.getCityId());
-		pageData.setDateFrom(promotion.getDateFrom());
-		pageData.setDateTo(promotion.getDateTo());
-		pageData.setPromotionDetails(promotion.getPromotionDetails());
-		pageData.setDescription(promotion.getDescription());
-	//	pageData.setRecordInUse(promotion.getRecordInUse().toString());
-	//	pageData.setOperator(promotion.getOperatorId());
-		pageData.setLastUpdate(promotion.getOperationDateTime());
 	}
 
 	@SneakyThrows
@@ -163,27 +130,35 @@ public class PromotionPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		PromotionPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PromotionPageData.class);
 		Promotion promotion = modelMapper.map(pageData, Promotion.class);
-		promotion.setPromotionId(pageData.getId());
 		promotion = promotionService.close(promotion);
-		mapHeaderData(pageRequest, pageDto, pageData, promotion);
-		mapPageData(pageData, promotion);
-		pageDto.setData(pageData);
+        mapPromotion(pageRequest, pageDto, promotion);
+		return pageDto;
+	}
+	
+	@SneakyThrows
+	private PageDTO reinstatePromotion(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		PromotionPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PromotionPageData.class);
+		Promotion promotion = modelMapper.map(pageData, Promotion.class);
+		promotion = promotionService.reinstate(promotion);
+        mapPromotion(pageRequest, pageDto, promotion);
 		return pageDto;
 	}
 
 	@SneakyThrows
 	private PageDTO listPromotion(PageRequestDTO pageRequest) {
 		Page<Promotion> promotionList = promotionService.list(
-				pageRequest.getData().get("pagination").get("pageNumber").asInt(),
-				pageRequest.getData().get("pagination").get("pageSize").asInt());
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
 		List<PromotionPageData> list = mapPromotionData(promotionList);
 		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
+		pageData.getPagination().setIsLastPage(PageStatus.N);
 		dto.setHeader(pageRequest.getHeader());
 		if ((promotionList.getNumber() + 1) == promotionList.getTotalPages()) {
-			//pageData.getPagination().setLastPage(true);
+			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);
@@ -195,15 +170,40 @@ public class PromotionPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<Promotion> pageDataList = page.getContent();
 			for (Promotion promotion : pageDataList) {
-				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-				PromotionPageData holidayPageData = modelMapper.map(promotion, PromotionPageData.class);
-				holidayPageData.setId(promotion.getPromotionId());
-			//	holidayPageData.setOperator(promotion.getOperatorId());
-				holidayPageData.setLastUpdate(promotion.getOperationDateTime());
-				promotionPageDataList.add(holidayPageData);
+				PromotionPageData promotionPageData = modelMapper.map(promotion, PromotionPageData.class);
+				promotionPageData.setLastUpdate(promotion.getOperationDateTime());
+				promotionPageDataList.add(promotionPageData);
 			}
 		}
 		return promotionPageDataList;
+	}
+	
+	private void mapPromotion(PageRequestDTO pageRequest, PageDTO pageDto, Promotion promotion) {
+		PromotionPageData pageData;
+		mapHeaderData(pageRequest, pageDto);
+		pageData = mapPageData(promotion);
+		pageDto.setData(pageData);
+	}
+
+	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
+		pageDto.setHeader(pageRequest.getHeader());
+		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
+		pageDto.getHeader().setTodaysDate(LocalDate.now());
+		pageDto.getHeader().setLoginCredentials(null);
+		pageDto.getHeader().setUserId(null);
+		pageDto.getHeader().setDeviceId(null);
+	}
+
+	private Promotion mapPromotionData(PageRequestDTO pageRequest, PromotionPageData pageData) {
+		Promotion promotion = modelMapper.map(pageData, Promotion.class);
+		promotion.setRecordInUse(RecordInUseType.Y);
+		return promotion;
+	}
+
+	private PromotionPageData mapPageData(Promotion promotion) {
+		PromotionPageData pageData = modelMapper.map(promotion, PromotionPageData.class);
+		pageData.setLastUpdate(promotion.getOperationDateTime());
+		return pageData;
 	}
 
 	private void validate(PromotionPageData pageData) {
@@ -212,7 +212,7 @@ public class PromotionPageHandler implements IPageHandler {
 		Set<ConstraintViolation<PromotionPageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}

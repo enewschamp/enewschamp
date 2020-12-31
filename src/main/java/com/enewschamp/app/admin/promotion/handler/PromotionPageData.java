@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 public class PromotionPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	@JsonInclude
-	private Long id;
+	private Long promotionId;
 
 	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
 	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
@@ -30,12 +30,10 @@ public class PromotionPageData extends PageData {
 	private String couponCode;
 
 	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
-	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
 	@JsonInclude
 	private LocalDate dateFrom;
 
 	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
-	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
 	@JsonInclude
 	private LocalDate dateTo;
 
