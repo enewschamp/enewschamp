@@ -20,6 +20,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "HelpDesk")
 @EqualsAndHashCode(callSuper = false)
+
 public class HelpDesk extends BaseEntity {
 
 	/**

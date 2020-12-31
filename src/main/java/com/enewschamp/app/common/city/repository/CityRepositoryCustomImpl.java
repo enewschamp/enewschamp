@@ -31,10 +31,10 @@ public class CityRepositoryCustomImpl extends RepositoryImpl implements CityRepo
 		CriteriaQuery<City> criteriaQuery = cb.createQuery(City.class);
 		Root<City> stateRoot = criteriaQuery.from(City.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		filterPredicates.add(cb.like(stateRoot.get("countryId"), "%" + searchRequest.getCountryId() + "%"));
-		filterPredicates.add(cb.like(stateRoot.get("stateId"), "%" + searchRequest.getStateId() + "%"));
+		filterPredicates.add(cb.equal(stateRoot.get("countryId"), searchRequest.getCountryId()));
+		filterPredicates.add(cb.equal(stateRoot.get("stateId"), searchRequest.getStateId()));
 		filterPredicates.add(cb.like(stateRoot.get("nameId"), "%" + searchRequest.getName() + "%"));
-		filterPredicates.add(cb.like(stateRoot.get("isApplicableForNewsEvents"), "%" + searchRequest.getNewsEventsApplicable() + "%"));
+		filterPredicates.add(cb.equal(stateRoot.get("isApplicableForNewsEvents"), searchRequest.getNewsEventsApplicable()));
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		// Build query
 		TypedQuery<City> q = entityManager.createQuery(criteriaQuery);

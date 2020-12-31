@@ -1,10 +1,12 @@
 package com.enewschamp.app.helpdesk.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,13 +37,21 @@ public class HelpDeskService {
 	private ModelMapper modelMapperForPatch;
 
 	public HelpDesk create(HelpDesk helpDeskEntity) {
-		return helpDeskRespository.save(helpDeskEntity);
+		HelpDesk helpDesk = null;
+		try {
+			helpDesk = helpDeskRespository.save(helpDeskEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return helpDesk;
 	}
 
 	public HelpDesk update(HelpDesk helpDeskEntity) {
 		Long HelpDeskId = helpDeskEntity.getRequestId();
 		HelpDesk existingHelpDesk = get(HelpDeskId);
+		LocalDateTime createDateTime = existingHelpDesk.getCreateDateTime();
 		modelMapper.map(helpDeskEntity, existingHelpDesk);
+		existingHelpDesk.setCreateDateTime(createDateTime);;
 		return helpDeskRespository.save(existingHelpDesk);
 	}
 
@@ -68,16 +78,36 @@ public class HelpDeskService {
 	public HelpDesk read(HelpDesk helpDeskEntity) {
 		Long helpDeskId = helpDeskEntity.getRequestId();
 		HelpDesk existingHelpDesk = get(helpDeskId);
+		if (existingHelpDesk.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingHelpDesk;
+		}
 		existingHelpDesk.setRecordInUse(RecordInUseType.Y);
+		existingHelpDesk.setOperationDateTime(null);
 		return helpDeskRespository.save(existingHelpDesk);
 	}
 
 	public HelpDesk close(HelpDesk helpDeskEntity) {
 		Long helpDeskId = helpDeskEntity.getRequestId();
 		HelpDesk existingEntity = get(helpDeskId);
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+			return existingEntity;
+		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
+		existingEntity.setOperationDateTime(null);
 		return helpDeskRespository.save(existingEntity);
 	}
+	
+	public HelpDesk reinstate(HelpDesk helpdeskEntity) {
+		Long helpdeskId = helpdeskEntity.getRequestId();
+		HelpDesk existingHelpdesk = get(helpdeskId);
+		if (existingHelpdesk.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingHelpdesk;
+		}
+		existingHelpdesk.setRecordInUse(RecordInUseType.Y);
+		existingHelpdesk.setOperationDateTime(null);
+		return helpDeskRespository.save(existingHelpdesk);
+	}
+
 
 	public Page<HelpDesk> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);

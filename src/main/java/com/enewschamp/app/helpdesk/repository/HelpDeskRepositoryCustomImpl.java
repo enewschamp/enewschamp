@@ -29,14 +29,15 @@ public class HelpDeskRepositoryCustomImpl extends RepositoryImpl implements Help
 	public Page<HelpDesk> findHelpDesks(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<HelpDesk> criteriaQuery = cb.createQuery(HelpDesk.class);
-		Root<HelpDesk> stateRoot = criteriaQuery.from(HelpDesk.class);
+		Root<HelpDesk> helpDeskRoot = criteriaQuery.from(HelpDesk.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		filterPredicates.add(cb.like(stateRoot.get("studentId"), "%" + searchRequest.getStudentId() + "%"));
-		filterPredicates.add(cb.like(stateRoot.get("createDateFrom"), "%" + searchRequest.getCreateDateFrom() + "%"));
-		filterPredicates.add(cb.like(stateRoot.get("createDateTo"), "%" + searchRequest.getCreateDateTo() + "%"));
-		filterPredicates.add(cb.like(stateRoot.get("categoryId"), "%" + searchRequest.getCategoryId() + "%"));
-		filterPredicates.add(cb.like(stateRoot.get("closeFlag"), "%" + searchRequest.getCloseFlag() + "%"));
-		filterPredicates.add(cb.like(stateRoot.get("supportUserId"), "%" + searchRequest.getSupportUserId() + "%"));
+		filterPredicates.add(cb.equal(helpDeskRoot.get("studentId"),  searchRequest.getStudentId()));
+		filterPredicates.add(cb.between(helpDeskRoot.get("createDateTime"), searchRequest.getCreateDateFrom(), searchRequest.getCreateDateTo()));
+		//filterPredicates.add(cb.like(helpDeskRoot.get("createDateTime"), "%" + searchRequest.getCreateDateFrom() + "%"));
+		//filterPredicates.add(cb.like(helpDeskRoot.get("createDateTo"), "%" + searchRequest.getCreateDateTo() + "%"));
+		filterPredicates.add(cb.equal(helpDeskRoot.get("categoryId"),  searchRequest.getCategoryId()));
+		filterPredicates.add(cb.equal(helpDeskRoot.get("closeFlag"), searchRequest.getCloseFlag() ));
+		filterPredicates.add(cb.equal(helpDeskRoot.get("operatorId"), searchRequest.getSupportUserId()));
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		// Build query
 		TypedQuery<HelpDesk> q = entityManager.createQuery(criteriaQuery);
@@ -46,7 +47,7 @@ public class HelpDeskRepositoryCustomImpl extends RepositoryImpl implements Help
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<HelpDesk> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, stateRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, helpDeskRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

@@ -1,6 +1,7 @@
 package com.enewschamp.app.admin.handler;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -12,16 +13,17 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.helpdesk.entity.HelpDesk;
@@ -62,6 +64,9 @@ public class HelpDeskPageHandler implements IPageHandler {
 		case "Close":
 			pageDto = closeHelpDesk(pageRequest);
 			break;
+		case "Reinstate":
+			pageDto = reinstateHelpDesk(pageRequest);
+			break;
 		case "List":
 			pageDto = listHelpDesk(pageRequest);
 			break;
@@ -95,39 +100,20 @@ public class HelpDeskPageHandler implements IPageHandler {
 		HelpDeskPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HelpDeskPageData.class);
 		validate(pageData);
 		HelpDesk helpDesk = mapHelpDeskData(pageRequest, pageData);
+		helpDesk.setCreateDateTime(LocalDateTime.now());
 		helpDesk = helpDeskService.create(helpDesk);
-		mapHeaderData(pageRequest, pageDto);
-		pageData.setId(helpDesk.getRequestId());
-		pageData.setLastUpdate(helpDesk.getOperationDateTime());
-		pageDto.setData(pageData);
+		mapHelpdesk(pageRequest, pageDto, helpDesk);
 		return pageDto;
-	}
-
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-	}
-
-	private HelpDesk mapHelpDeskData(PageRequestDTO pageRequest, HelpDeskPageData pageData) {
-		HelpDesk helpDesk = modelMapper.map(pageData, HelpDesk.class);
-		helpDesk.setOperatorId(pageRequest.getData().get("operator").asText());
-		helpDesk.setRecordInUse(RecordInUseType.Y);
-		return helpDesk;
 	}
 
 	@SneakyThrows
 	private PageDTO updateHelpDesk(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		HelpDeskPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HelpDeskPageData.class);
-		pageData.setRequestId(pageRequest.getData().get("id").asLong());
 		validate(pageData);
 		HelpDesk helpDesk = mapHelpDeskData(pageRequest, pageData);
 		helpDesk = helpDeskService.update(helpDesk);
-		mapHeaderData(pageRequest, pageDto);
-		pageData.setLastUpdate(helpDesk.getOperationDateTime());
-		pageDto.setData(pageData);
+		mapHelpdesk(pageRequest, pageDto, helpDesk);
 		return pageDto;
 	}
 
@@ -135,21 +121,10 @@ public class HelpDeskPageHandler implements IPageHandler {
 	private PageDTO readHelpDesk(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		HelpDeskPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HelpDeskPageData.class);
-		pageData.setRequestId(pageRequest.getData().get("id").asLong());
 		HelpDesk helpDesk = modelMapper.map(pageData, HelpDesk.class);
 		helpDesk = helpDeskService.read(helpDesk);
-		mapHeaderData(pageRequest, pageDto);
-		mapPageData(pageData, helpDesk);
-		pageDto.setData(pageData);
+		mapHelpdesk(pageRequest, pageDto, helpDesk);
 		return pageDto;
-	}
-
-	private void mapPageData(HelpDeskPageData pageData, HelpDesk helpDesk) {
-		pageData.setId(helpDesk.getRequestId());
-		pageData.setEditionId(helpDesk.getEditionId());
-		//pageData.setRecordInUse(helpDesk.getRecordInUse().toString());
-		//pageData.setOperator(helpDesk.getOperatorId());
-		pageData.setLastUpdate(helpDesk.getOperationDateTime());
 	}
 
 	@SneakyThrows
@@ -157,34 +132,38 @@ public class HelpDeskPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		HelpDeskPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HelpDeskPageData.class);
 		HelpDesk helpDesk = modelMapper.map(pageData, HelpDesk.class);
-		helpDesk.setRequestId(pageData.getId());
 		helpDesk = helpDeskService.close(helpDesk);
-		mapHeaderData(pageRequest, pageDto);
-		mapPageData(pageData, helpDesk);
-		pageDto.setData(pageData);
+        mapHelpdesk(pageRequest, pageDto, helpDesk);
+		return pageDto;
+	}
+	
+	@SneakyThrows
+	private PageDTO reinstateHelpDesk(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		HelpDeskPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HelpDeskPageData.class);
+		HelpDesk helpDesk = modelMapper.map(pageData, HelpDesk.class);
+		helpDesk = helpDeskService.reinstate(helpDesk);
+		mapHelpdesk(pageRequest, pageDto, helpDesk);
 		return pageDto;
 	}
 
 	@SneakyThrows
 	private PageDTO listHelpDesk(PageRequestDTO pageRequest) {
-		AdminSearchRequest searchRequest = new AdminSearchRequest();
-		searchRequest.setStudentId(pageRequest.getData().get("filter").get("studentId").asText());
-		searchRequest.setSupportUserId(pageRequest.getData().get("filter").get("supportUserId").asText());
-		searchRequest.setCloseFlag(pageRequest.getData().get("filter").get("closeFlag").asText());
-		searchRequest.setCategoryId(pageRequest.getData().get("filter").get("categoryId").asText());
-		searchRequest.setCreateDateTo(pageRequest.getData().get("filter").get("createDateTo").asText());
-		searchRequest.setCreateDateFrom(pageRequest.getData().get("filter").get("createDateFrom").asText());
+		AdminSearchRequest searchRequest = objectMapper
+				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
+
 		Page<HelpDesk> editionList = helpDeskService.list(searchRequest,
-				pageRequest.getData().get("pagination").get("pageNumber").asInt(),
-				pageRequest.getData().get("pagination").get("pageSize").asInt());
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
 		List<HelpDeskPageData> list = mapHelpDeskData(editionList);
 		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
+		pageData.getPagination().setIsLastPage(PageStatus.N);
 		dto.setHeader(pageRequest.getHeader());
 		if ((editionList.getNumber() + 1) == editionList.getTotalPages()) {
-			//pageData.getPagination().setLastPage(true);
+			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);
@@ -196,15 +175,41 @@ public class HelpDeskPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<HelpDesk> pageDataList = page.getContent();
 			for (HelpDesk helpDesk : pageDataList) {
-				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				HelpDeskPageData genrePageData = modelMapper.map(helpDesk, HelpDeskPageData.class);
-				genrePageData.setId(helpDesk.getRequestId());
-			//	genrePageData.setOperator(helpDesk.getOperatorId());
 				genrePageData.setLastUpdate(helpDesk.getOperationDateTime());
 				genrePageDataList.add(genrePageData);
 			}
 		}
 		return genrePageDataList;
+	}
+
+	private void mapHelpdesk(PageRequestDTO pageRequest, PageDTO pageDto, HelpDesk helpDesk) {
+		HelpDeskPageData pageData;
+		mapHeaderData(pageRequest, pageDto);
+		pageData = mapPageData(helpDesk);
+		pageDto.setData(pageData);
+	}
+
+	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
+		pageDto.setHeader(pageRequest.getHeader());
+		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
+		pageDto.getHeader().setTodaysDate(LocalDate.now());
+		pageDto.getHeader().setLoginCredentials(null);
+		pageDto.getHeader().setUserId(null);
+		pageDto.getHeader().setDeviceId(null);
+	}
+
+
+	private HelpDeskPageData mapPageData(HelpDesk helpdesk) {
+		HelpDeskPageData pageData = modelMapper.map(helpdesk, HelpDeskPageData.class);
+		pageData.setLastUpdate(helpdesk.getOperationDateTime());
+		return pageData;
+	}
+	
+	private HelpDesk mapHelpDeskData(PageRequestDTO pageRequest, HelpDeskPageData pageData) {
+		HelpDesk helpDesk = modelMapper.map(pageData, HelpDesk.class);
+		helpDesk.setRecordInUse(RecordInUseType.Y);
+		return helpDesk;
 	}
 
 	private void validate(HelpDeskPageData pageData) {
@@ -213,7 +218,7 @@ public class HelpDeskPageHandler implements IPageHandler {
 		Set<ConstraintViolation<HelpDeskPageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}

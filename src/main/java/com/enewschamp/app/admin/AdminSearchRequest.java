@@ -1,5 +1,7 @@
 package com.enewschamp.app.admin;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
@@ -13,9 +15,9 @@ public class AdminSearchRequest {
 	private String stateId;
 	private String name;
 	private String newsEventsApplicable;
-	private String studentId;
-	private String createDateFrom;
-	private String createDateTo;
+	private Long studentId;
+	private LocalDateTime createDateFrom;
+	private LocalDateTime createDateTo;
 	private String categoryId;
 	private String closeFlag;
 	private String supportUserId;
