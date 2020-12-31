@@ -15,13 +15,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.domain.repository.RepositoryImpl;
+
 @Repository
-public class CityRepositoryCustomImpl extends RepositoryImpl implements CityRepositoryCustom{
-	
+public class CityRepositoryCustomImpl extends RepositoryImpl implements CityRepositoryCustom {
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -31,10 +33,15 @@ public class CityRepositoryCustomImpl extends RepositoryImpl implements CityRepo
 		CriteriaQuery<City> criteriaQuery = cb.createQuery(City.class);
 		Root<City> stateRoot = criteriaQuery.from(City.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		filterPredicates.add(cb.equal(stateRoot.get("countryId"), searchRequest.getCountryId()));
-		filterPredicates.add(cb.equal(stateRoot.get("stateId"), searchRequest.getStateId()));
-		filterPredicates.add(cb.like(stateRoot.get("nameId"), "%" + searchRequest.getName() + "%"));
-		filterPredicates.add(cb.equal(stateRoot.get("isApplicableForNewsEvents"), searchRequest.getNewsEventsApplicable()));
+		if (!StringUtils.isEmpty(searchRequest.getCountryId()))
+			filterPredicates.add(cb.equal(stateRoot.get("countryId"), searchRequest.getCountryId()));
+		if (!StringUtils.isEmpty(searchRequest.getStateId()))
+			filterPredicates.add(cb.equal(stateRoot.get("stateId"), searchRequest.getStateId()));
+		if (!StringUtils.isEmpty(searchRequest.getName()))
+			filterPredicates.add(cb.like(stateRoot.get("nameId"), "%" + searchRequest.getName() + "%"));
+		if (!StringUtils.isEmpty(searchRequest.getNewsEventsApplicable()))
+			filterPredicates
+					.add(cb.equal(stateRoot.get("isApplicableForNewsEvents"), searchRequest.getNewsEventsApplicable()));
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		// Build query
 		TypedQuery<City> q = entityManager.createQuery(criteriaQuery);

@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.domain.repository.RepositoryImpl;
 @Repository

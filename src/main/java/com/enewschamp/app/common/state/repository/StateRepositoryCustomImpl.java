@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.state.entity.State;
@@ -31,7 +32,8 @@ public class StateRepositoryCustomImpl extends RepositoryImpl implements StateRe
 		CriteriaQuery<State> criteriaQuery = cb.createQuery(State.class);
 		Root<State> stateRoot = criteriaQuery.from(State.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		filterPredicates.add(cb.like(stateRoot.get("countryId"), "%" + searchRequest.getCountryId() + "%"));
+		if(StringUtils.isEmpty(searchRequest.getCountryId()))
+		filterPredicates.add(cb.equal(stateRoot.get("countryId"), searchRequest.getCountryId()));
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		// Build query
 		TypedQuery<State> q = entityManager.createQuery(criteriaQuery);
