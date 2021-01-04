@@ -33,12 +33,13 @@ public class UserLeaveController {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	private UserLeaveService userLeaveService;
 
 	@PostMapping(value = "/users/{userId}/leaves")
-	public ResponseEntity<UserLeaveDTO> create(@RequestBody @Valid UserLeaveDTO userLeaveDTO, @PathVariable String userId) {
+	public ResponseEntity<UserLeaveDTO> create(@RequestBody @Valid UserLeaveDTO userLeaveDTO,
+			@PathVariable String userId) {
 		UserLeave userLeave = modelMapper.map(userLeaveDTO, UserLeave.class);
 		userLeave = userLeaveService.create(userLeave);
 		userLeaveDTO = modelMapper.map(userLeave, UserLeaveDTO.class);
@@ -46,7 +47,8 @@ public class UserLeaveController {
 	}
 
 	@PutMapping(value = "/users/{userId}/leaves/{startDate}")
-	public ResponseEntity<UserLeaveDTO> update(@RequestBody @Valid UserLeaveDTO userLeaveDTO, @PathVariable String userId, @PathVariable LocalDate startDate) {
+	public ResponseEntity<UserLeaveDTO> update(@RequestBody @Valid UserLeaveDTO userLeaveDTO,
+			@PathVariable String userId, @PathVariable LocalDate startDate) {
 		UserLeaveKeyDTO userLeaveKeyDTO = new UserLeaveKeyDTO();
 		userLeaveKeyDTO.setUserId(userId);
 		userLeaveKeyDTO.setStartDate(startDate);
@@ -56,10 +58,11 @@ public class UserLeaveController {
 		userLeaveDTO = modelMapper.map(userLeave, UserLeaveDTO.class);
 		return new ResponseEntity<UserLeaveDTO>(userLeaveDTO, HttpStatus.OK);
 	}
-	
+
 	@PatchMapping(value = "/users/{userId}/leaves/{startDate}")
-	public ResponseEntity<UserLeaveDTO> patch(@RequestBody @Valid UserLeaveDTO userLeaveDTO, @PathVariable String userId, @PathVariable LocalDate startDate) {
-		
+	public ResponseEntity<UserLeaveDTO> patch(@RequestBody @Valid UserLeaveDTO userLeaveDTO,
+			@PathVariable String userId, @PathVariable LocalDate startDate) {
+
 		UserLeaveKeyDTO userLeaveKeyDTO = new UserLeaveKeyDTO();
 		userLeaveKeyDTO.setUserId(userId);
 		userLeaveKeyDTO.setStartDate(startDate);
@@ -69,7 +72,7 @@ public class UserLeaveController {
 		userLeaveDTO = modelMapper.map(userLeave, UserLeaveDTO.class);
 		return new ResponseEntity<UserLeaveDTO>(userLeaveDTO, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping(value = "/users/{userId}/leaves/{startDate}")
 	public ResponseEntity<Void> delete(@PathVariable String userId, @PathVariable LocalDate startDate) {
 		UserLeaveKeyDTO userLeaveKeyDTO = new UserLeaveKeyDTO();
@@ -79,7 +82,7 @@ public class UserLeaveController {
 		userLeaveService.delete(userLeaveKey);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/users/{userId}/leaves/{startDate}")
 	public ResponseEntity<UserLeaveDTO> get(@PathVariable String userId, @PathVariable LocalDate startDate) {
 		UserLeaveKeyDTO userLeaveKeyDTO = new UserLeaveKeyDTO();
@@ -90,7 +93,7 @@ public class UserLeaveController {
 		UserLeaveDTO userLeaveDTO = modelMapper.map(userLeave, UserLeaveDTO.class);
 		return new ResponseEntity<UserLeaveDTO>(userLeaveDTO, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/users/{userId}/leaves/{startDate}/audit")
 	public ResponseEntity<String> getAudit(@PathVariable String userId, @PathVariable LocalDate startDate) {
 		UserLeaveKeyDTO userLeaveKeyDTO = new UserLeaveKeyDTO();
@@ -100,7 +103,5 @@ public class UserLeaveController {
 		String audit = userLeaveService.getAudit(userLeaveKey);
 		return new ResponseEntity<String>(audit, HttpStatus.OK);
 	}
-	
-	
 
 }

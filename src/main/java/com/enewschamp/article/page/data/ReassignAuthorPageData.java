@@ -16,6 +16,6 @@ public class ReassignAuthorPageData extends PageData {
 	private static final long serialVersionUID = 5045320388542901124L;
 
 	private NewsArticleGroupDTO newsArticleGroup;
-	
+
 	private List<ListOfValuesItem> authorLOV;
 }

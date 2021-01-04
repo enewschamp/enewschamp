@@ -1,5 +1,9 @@
 package com.enewschamp.app.school.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -7,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.app.school.entity.School;
 import com.enewschamp.app.school.entity.SchoolPricing;
 import com.enewschamp.app.school.repository.SchoolPricingRepository;
+import com.enewschamp.app.school.repository.SchoolRepository;
 import com.enewschamp.problem.BusinessException;
 
 @Service
@@ -17,14 +23,17 @@ public class SchoolPricingService {
 
 	@Autowired
 	SchoolPricingRepository schoolPricingRepository;
-	
+
+	@Autowired
+	SchoolRepository schoolRepository;
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
-	
+
 	public SchoolPricing create(SchoolPricing SchoolPricingEntity) {
 		return schoolPricingRepository.save(SchoolPricingEntity);
 	}
@@ -52,19 +61,32 @@ public class SchoolPricingService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.SCHOOL_PRICING_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.SCHOOL_PRICING_NOT_FOUND);
 		}
 	}
-	
-	public SchoolPricing getPricingForInstitution(Long institutionId, String editionId)
-	{
-		Optional<SchoolPricing> schoolPrice = schoolPricingRepository.getPricingForInstitution(institutionId, editionId);
-		if(schoolPrice.isPresent())
-		{
-			return schoolPrice.get();
-		}
-		else {
-			throw new BusinessException(ErrorCodes.SCHOOL_PRICING_NOT_FOUND);
+
+	public SchoolPricing getPricingForInstitution(Long institutionId, String editionId) {
+		Date sysdate = new Date();
+		LocalDate localSysDate = sysdate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		List<SchoolPricing> schoolPrice = schoolPricingRepository.getPricingForInstitution(institutionId, editionId,
+				"S", localSysDate);
+		if (schoolPrice != null && schoolPrice.size() > 0) {
+			return schoolPrice.get(0);
+		} else {
+			// get school pricing for school chain id
+			Optional<School> existingEntity = schoolRepository.findById(institutionId);
+			if (existingEntity.isPresent()) {
+				School school = existingEntity.get();
+				schoolPrice = schoolPricingRepository.getPricingForInstitution(school.getSchoolChainId(), editionId,
+						"C", localSysDate);
+				if (schoolPrice != null && schoolPrice.size() > 0) {
+					return schoolPrice.get(0);
+				} else {
+					throw new BusinessException(ErrorCodeConstants.SCHOOL_PRICING_NOT_FOUND);
+				}
+			} else {
+				throw new BusinessException(ErrorCodeConstants.SCHOOL_PRICING_NOT_FOUND);
+			}
 		}
 	}
 }

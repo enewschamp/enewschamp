@@ -7,11 +7,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class NewsArticleAuditDTO extends AuditDTO {
-	
-	private static final long serialVersionUID = 776328071980637866L;	
+
+	private static final long serialVersionUID = 776328071980637866L;
 
 	private JsonNode objectDTO;
-	
+
 }

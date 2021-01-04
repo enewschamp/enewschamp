@@ -1,5 +1,6 @@
 package com.enewschamp.app.common.state.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,25 +9,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.app.common.state.repository.StateRepository;
+import com.enewschamp.domain.service.AbstractDomainService;
+import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.subscription.app.dto.CityPageData;
 import com.enewschamp.subscription.app.dto.StatePageData;
 
 @Service
-public class StateService {
+public class StateService extends AbstractDomainService {
 
 	@Autowired
 	StateRepository stateRepository;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
-	
+
 	public State create(State stateEntity) {
 		return stateRepository.save(stateEntity);
 	}
@@ -54,29 +59,35 @@ public class StateService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.STATE_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.STATE_NOT_FOUND);
 		}
 	}
-	
-	public List<State> getStateForCountry(String countryId)
-	{
+
+	public List<State> getStateForCountry(String countryId) {
 		return stateRepository.getStateForCountry(countryId);
 	}
-	public StatePageData getState(String stateId)
-	{
-		Optional<State> stateentity= stateRepository.getState(stateId);
-		StatePageData statePageData = new StatePageData();
-		if(stateentity.isPresent())
-		{
-			State state = stateentity.get();
-			
+
+	public List<StatePageData> getStatesForCountry(String country) {
+		List<State> existingEntity = stateRepository.getStateForCountry(country);
+		List<StatePageData> statePageDataList = new ArrayList<StatePageData>();
+		for (State state : existingEntity) {
+			StatePageData statePageData = new StatePageData();
 			statePageData.setId(state.getNameId());
 			statePageData.setName(state.getDescription());
-			
+			statePageDataList.add(statePageData);
 		}
-		
+		return statePageDataList;
+	}
+
+	public StatePageData getState(String stateId) {
+		Optional<State> stateentity = stateRepository.getState(stateId);
+		StatePageData statePageData = new StatePageData();
+		if (stateentity.isPresent()) {
+			State state = stateentity.get();
+			statePageData.setId(state.getNameId());
+			statePageData.setName(state.getDescription());
+		}
 		return statePageData;
 	}
-	
-	
+
 }

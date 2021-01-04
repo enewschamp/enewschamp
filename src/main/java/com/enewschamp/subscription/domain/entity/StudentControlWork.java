@@ -16,9 +16,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@EqualsAndHashCode(callSuper=false)
-@Table(name="StudentControl_Work")
-public class StudentControlWork extends BaseEntity{
+@EqualsAndHashCode(callSuper = false)
+@Table(name = "StudentControlWork")
+public class StudentControlWork extends BaseEntity {
 
 	/**
 	 * 
@@ -26,40 +26,61 @@ public class StudentControlWork extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "StudentControlWork_id_generator")
-	@SequenceGenerator(name="StudentControlWork_id_generator", sequenceName = "StudentControlWork_seq", allocationSize=1)
-	@Column(name = "StudentID", length=10)
-	private Long studentID= 0L;
-	
 	@NotNull
-	@Column(name = "eMail", length=99)
-	private String emailID;
-	
-	@Column(name = "StudentDetails", length=1)
-	private String studentDetails;
-	
-	@Column(name = "StudentPhoto", length=1)
-	private String studentPhoto;
+	@Column(name = "StudentId")
+	private Long studentId;
 
-	@Column(name = "SchoolDetails", length=1)
+	@NotNull
+	@Column(name = "nextPageName", length = 99)
+	private String nextPageName;
+
+	@NotNull
+	@Column(name = "nextPageOperation", length = 99)
+	private String nextPageOperation;
+
+	@Column(name = "nextPageLoadMethod", length = 99)
+	private String nextPageLoadMethod;
+
+	@NotNull
+	@Column(name = "emailId", length = 99)
+	private String emailId;
+
+	@Column(name = "studentDetails", length = 1)
+	private String studentDetails;
+
+	@Column(name = "studentDetailsW", length = 1)
+	private String studentDetailsW;
+
+	@Column(name = "schoolDetails", length = 1)
 	private String schoolDetails;
-	
-	@Column(name = "SubscriptionType", length=1)
+
+	@Column(name = "schoolDetailsW", length = 1)
+	private String schoolDetailsW;
+
+	@Column(name = "subscriptionType", length = 1)
 	private String subscriptionType;
-	
-	@Column(name = "Preferences", length=1)
+
+	@Column(name = "subscriptionTypeW", length = 1)
+	private String subscriptionTypeW;
+
+	@Column(name = "preferences", length = 1)
 	private String preferences;
-	
-	@Column(name = "eMailVerified", length=1)
-	private String eMailVerified;
-	
-	@Column(name = "EvalAvailed", length=1)
+
+	@Column(name = "preferencesW", length = 1)
+	private String preferencesW;
+
+	@Column(name = "emailIdVerified", length = 1)
+	private String emailIdVerified;
+
+	@Column(name = "emailIdVerifiedW", length = 1)
+	private String emailIdVerifiedW;
+
+	@Column(name = "evalAvailed", length = 1)
 	private String evalAvailed;
-	
-	@Column(name = "BOUserComments", length=999)
+
+	@Column(name = "boUserComments", length = 999)
 	private Long boUserComments;
-	
-	@Column(name = "BOAuthComments", length=999)
+
+	@Column(name = "boAuthComments", length = 999)
 	private Long boAuthComments;
-	
 }

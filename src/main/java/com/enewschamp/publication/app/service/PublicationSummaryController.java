@@ -23,21 +23,25 @@ public class PublicationSummaryController {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	private PublicationDailySummaryService dailySummaryService;
-	
+
 	@Autowired
 	private PublicationMonthlySummaryService monthlySummaryService;
-	
+
 	@GetMapping(value = "/publications/dailySummary")
-	public ResponseEntity<PublicationSummaryResponse> getDailySummary(@RequestBody PublicationSummaryRequest summaryRequest) {
-		return new ResponseEntity<PublicationSummaryResponse>(dailySummaryService.fetchSummary(summaryRequest), HttpStatus.OK);
+	public ResponseEntity<PublicationSummaryResponse> getDailySummary(
+			@RequestBody PublicationSummaryRequest summaryRequest) {
+		return new ResponseEntity<PublicationSummaryResponse>(dailySummaryService.fetchSummary(summaryRequest),
+				HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/publications/monthlySummary")
-	public ResponseEntity<PublicationSummaryResponse> getMonthlySummary(@RequestBody PublicationSummaryRequest summaryRequest) {
-		return new ResponseEntity<PublicationSummaryResponse>(monthlySummaryService.fetchSummary(summaryRequest), HttpStatus.OK);
+	public ResponseEntity<PublicationSummaryResponse> getMonthlySummary(
+			@RequestBody PublicationSummaryRequest summaryRequest) {
+		return new ResponseEntity<PublicationSummaryResponse>(monthlySummaryService.fetchSummary(summaryRequest),
+				HttpStatus.OK);
 	}
 
 }

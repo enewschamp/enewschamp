@@ -18,9 +18,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name="IndividualPricing")
-@EqualsAndHashCode(callSuper=false)
-public class IndividualPricing extends BaseEntity{
+@Table(name = "IndividualPricing")
+@EqualsAndHashCode(callSuper = false)
+public class IndividualPricing extends BaseEntity {
 
 	/**
 	 * 
@@ -28,32 +28,19 @@ public class IndividualPricing extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "individualPricing_id_generator")
-	@SequenceGenerator(name="individualPricing_id_generator", sequenceName = "individualPricing_seq", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "individual_pricing_id_generator")
+	@SequenceGenerator(name = "individual_pricing_id_generator", sequenceName = "individual_pricing_id_seq", allocationSize = 1)
 	@Column(name = "individualPricingId", updatable = false, nullable = false)
 	private Long individualPricingId;
 
 	@NotNull
-	@Column(name = "editionId", length=6)
+	@Column(name = "editionId", length = 6)
 	private String editionId;
-	
+
 	@NotNull
 	@Column(name = "effectiveDate")
 	private LocalDate effectiveDate;
-	
-	@Column(name = "feeCurrency", length=3)
-	private String feeCurrency;
-	
-	@Column(name = "feeMonthly", length=8)
-	private String feeMonthly;
-	
-	@Column(name = "feeQuarterly", length=8)
-	private String feeQuarterly;
-	
-	@Column(name = "feeHalfYearly", length=8)
-	private String feeHalfYearly;
-	
-	@Column(name = "feeYearly", length=8)
-	private String feeYearly;
-	
+
+	@Column(name = "pricingDetails", length = 2000)
+	private String pricingDetails;
 }

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
 import com.enewschamp.publication.app.dto.PublicationDTO;
 import com.enewschamp.publication.domain.entity.Publication;
 import com.enewschamp.publication.domain.service.PublicationService;
@@ -32,10 +31,10 @@ public class PublicationController {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	private PublicationService publicationService;
-	
+
 	@Autowired
 	private PublicationHelper publicationHelper;
 
@@ -46,48 +45,47 @@ public class PublicationController {
 	}
 
 	@PutMapping(value = "/publications/{publicationId}")
-	public ResponseEntity<PublicationDTO> update(@RequestBody @Valid PublicationDTO publicationDTO, @PathVariable Long publicationId) {
+	public ResponseEntity<PublicationDTO> update(@RequestBody @Valid PublicationDTO publicationDTO,
+			@PathVariable Long publicationId) {
 		publicationDTO.setPublicationId(publicationId);
 		Publication publication = modelMapper.map(publicationDTO, Publication.class);
 		publication = publicationService.update(publication);
 		publicationDTO = modelMapper.map(publication, PublicationDTO.class);
 		return new ResponseEntity<PublicationDTO>(publicationDTO, HttpStatus.OK);
 	}
-	
+
 	@PatchMapping(value = "/publications/{publicationId}")
-	public ResponseEntity<PublicationDTO> patch(@RequestBody PublicationDTO publicationDTO, @PathVariable Long publicationId) {
+	public ResponseEntity<PublicationDTO> patch(@RequestBody PublicationDTO publicationDTO,
+			@PathVariable Long publicationId) {
 		publicationDTO.setPublicationId(publicationId);
 		Publication publication = modelMapper.map(publicationDTO, Publication.class);
 		publication = publicationService.patch(publication);
 		publicationDTO = modelMapper.map(publication, PublicationDTO.class);
 		return new ResponseEntity<PublicationDTO>(publicationDTO, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping(value = "/publications/{publicationId}")
 	public ResponseEntity<Void> delete(@PathVariable Long publicationId) {
 		publicationService.delete(publicationId);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/publications/{publicationId}")
 	public ResponseEntity<PublicationDTO> get(@PathVariable Long publicationId) {
 		PublicationDTO publicationDTO = publicationHelper.getPublication(publicationId);
 		return new ResponseEntity<PublicationDTO>(publicationDTO, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/publications/{publicationId}/audit")
 	public ResponseEntity<String> getAudit(@PathVariable Long publicationId) {
 		ResponseEntity<String> response = null;
 		try {
 			String audit = publicationService.getAudit(publicationId);
 			response = new ResponseEntity<String>(audit, HttpStatus.OK);
-		}catch(BusinessException e) {
-			Fault fault = new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e); 
-			throw fault;
+		} catch (BusinessException e) {
+			throw new Fault(e);
 		}
 		return response;
 	}
-	
-	
 
 }

@@ -10,13 +10,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class AuditItemDTO extends AbstractDTO{	
-	
+@EqualsAndHashCode(callSuper = false)
+public class AuditItemDTO extends AbstractDTO {
+
 	private static final long serialVersionUID = 2145945760045182232L;
 
 	private String operatorId;
-	
+
 	private LocalDateTime operationDateTime;
 
 	Map<String, List<ChangeDTO>> changes;

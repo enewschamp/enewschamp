@@ -17,8 +17,9 @@ import org.springframework.data.domain.Pageable;
 
 import com.enewschamp.domain.common.AppConstants;
 import com.enewschamp.domain.repository.RepositoryImpl;
-import com.enewschamp.publication.app.dto.PublicationDTO;
+import com.enewschamp.publication.app.dto.PublicationSummaryDTO;
 import com.enewschamp.publication.domain.entity.Publication;
+import com.enewschamp.publication.domain.entity.PublicationGroup;
 import com.enewschamp.publication.page.data.PublicationSearchRequest;
 
 public class PublicationRepositoryImpl extends RepositoryImpl implements PublicationRepositoryCustom {
@@ -26,91 +27,101 @@ public class PublicationRepositoryImpl extends RepositoryImpl implements Publica
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	public Page<PublicationDTO> findPublications(PublicationSearchRequest searchRequest, Pageable pageable) {
+	public Page<PublicationSummaryDTO> findPublications(PublicationSearchRequest searchRequest, Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<PublicationDTO> criteriaQuery = cb.createQuery(PublicationDTO.class);
+		CriteriaQuery<PublicationSummaryDTO> criteriaQuery = cb.createQuery(PublicationSummaryDTO.class);
+		Root<PublicationGroup> publicationGroupRoot = criteriaQuery.from(PublicationGroup.class);
 		Root<Publication> publicationRoot = criteriaQuery.from(Publication.class);
 
-		criteriaQuery.select(cb.construct(PublicationDTO.class, publicationRoot.get("publicationId"),
-				publicationRoot.get("publicationGroupId"), publicationRoot.get("editionId"),
-				publicationRoot.get("readingLevel"), publicationRoot.get("publishDate"), publicationRoot.get("status"),
-				publicationRoot.get("editorId"), publicationRoot.get("publisherId")));
+		criteriaQuery.select(cb.construct(PublicationSummaryDTO.class, publicationRoot.get("publicationId"),
+				publicationRoot.get("readingLevel"), publicationRoot.get("status"),
+				publicationRoot.get("publicationDate"), publicationGroupRoot.get("publicationGroupId"),
+				publicationGroupRoot.get("editionId"), publicationGroupRoot.get("editorId"),
+				publicationGroupRoot.get("publisherId")));
 
 		// Build filter conditions
 		List<Predicate> filterPredicates = new ArrayList<>();
 
-		Predicate readingLevelPredicate = buildReadingLevelPredicate(searchRequest, cb, publicationRoot);
-		if(readingLevelPredicate != null) {
-			filterPredicates.add(readingLevelPredicate);
+		filterPredicates.add(
+				cb.equal(publicationGroupRoot.get("publicationGroupId"), publicationRoot.get("publicationGroupId")));
+
+		if (searchRequest.getEditionId() != null && (!"".equalsIgnoreCase(searchRequest.getEditionId()))) {
+			filterPredicates.add(cb.equal(publicationGroupRoot.get("editionId"), searchRequest.getEditionId()));
 		}
-		if (searchRequest.getEditionId() != null) {
-			filterPredicates.add(cb.equal(publicationRoot.get("editionId"), searchRequest.getEditionId()));
+		if (searchRequest.getEditorId() != null && (!"".equalsIgnoreCase(searchRequest.getEditorId()))) {
+			filterPredicates.add(cb.equal(publicationGroupRoot.get("editorId"), searchRequest.getEditorId()));
 		}
-		if (searchRequest.getEditorId() != null) {
-			filterPredicates.add(cb.equal(publicationRoot.get("editorId"), searchRequest.getEditorId()));
+		if (searchRequest.getPublisherId() != null && (!"".equalsIgnoreCase(searchRequest.getPublisherId()))) {
+			filterPredicates.add(cb.equal(publicationGroupRoot.get("publisherId"), searchRequest.getPublisherId()));
 		}
-		if (searchRequest.getPublisherId() != null) {
-			filterPredicates.add(cb.equal(publicationRoot.get("publisherId"), searchRequest.getPublisherId()));
+		if (searchRequest.getPublicationDateFrom() != null) {
+			filterPredicates.add(cb.greaterThanOrEqualTo(publicationRoot.get("publicationDate"),
+					searchRequest.getPublicationDateFrom()));
 		}
-		if (searchRequest.getPublicationDate() != null) {
-			filterPredicates.add(cb.equal(publicationRoot.get("publishDate"), searchRequest.getPublicationDate()));
+		if (searchRequest.getPublicationDateTo() != null) {
+			filterPredicates.add(
+					cb.lessThanOrEqualTo(publicationRoot.get("publicationDate"), searchRequest.getPublicationDateTo()));
 		}
-		if (searchRequest.getPublicationStatusList() != null && searchRequest.getPublicationStatusList().size() > 0) {
-			filterPredicates.add(publicationRoot.get("status").in(searchRequest.getPublicationStatusList()));
+		if (searchRequest.getStatus() != null && searchRequest.getStatus().size() > 0) {
+			filterPredicates.add(publicationRoot.get("status").in(searchRequest.getStatus()));
 		}
-		
+		List<Predicate> readingLevelPredicates = buildReadingLevelPredicate(searchRequest, cb, publicationRoot);
+		if (readingLevelPredicates != null && !readingLevelPredicates.isEmpty()) {
+			readingLevelPredicates.forEach(predicate -> {
+				filterPredicates.add(predicate);
+			});
+
+		}
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
-		
+
 		// Build query
-		TypedQuery<PublicationDTO> q = entityManager.createQuery(criteriaQuery);
-
-		if (pageable.getPageSize() > 0) {
-			int pageNumber = pageable.getPageNumber();
-			q.setFirstResult(pageNumber * pageable.getPageSize());
-			q.setMaxResults(pageable.getPageSize());
-
-		}
-		List<PublicationDTO> list = q.getResultList();
+		TypedQuery<PublicationSummaryDTO> q = entityManager.createQuery(criteriaQuery);
+		List<PublicationSummaryDTO> list = q.getResultList();
 		long count = getRecordCount(criteriaQuery, filterPredicates, publicationRoot);
-
 		return new PageImpl<>(list, pageable, count);
 	}
 
-	private Predicate buildReadingLevelPredicate(PublicationSearchRequest searchRequest, CriteriaBuilder cb,
-												 Root<Publication> publicationRoot) {
-		List<Predicate> readingLevelPredicates = new ArrayList<>();
+	private List<Predicate> buildReadingLevelPredicate(PublicationSearchRequest searchRequest, CriteriaBuilder cb,
+			Root<Publication> publicationRoot) {
+		List<Predicate> readingLevelOrPredicates = new ArrayList<>();
+		List<Predicate> readingLevelAndPredicates = new ArrayList<>();
+
 		if (searchRequest.getReadingLevel1() != null) {
 			if (searchRequest.getReadingLevel1().equals(AppConstants.YES)) {
-				readingLevelPredicates.add(cb.equal(publicationRoot.get("readingLevel"), 1));
+				readingLevelOrPredicates.add(cb.equal(publicationRoot.get("readingLevel"), 1));
 			} else {
-				readingLevelPredicates.add(cb.notEqual(publicationRoot.get("readingLevel"), 1));
+				readingLevelAndPredicates.add(cb.notEqual(publicationRoot.get("readingLevel"), 1));
 			}
 		}
 		if (searchRequest.getReadingLevel2() != null) {
 			if (searchRequest.getReadingLevel2().equals(AppConstants.YES)) {
-				readingLevelPredicates.add(cb.equal(publicationRoot.get("readingLevel"), 2));
+				readingLevelOrPredicates.add(cb.equal(publicationRoot.get("readingLevel"), 2));
 			} else {
-				readingLevelPredicates.add(cb.notEqual(publicationRoot.get("readingLevel"), 2));
+				readingLevelAndPredicates.add(cb.notEqual(publicationRoot.get("readingLevel"), 2));
 			}
 		}
 		if (searchRequest.getReadingLevel3() != null) {
 			if (searchRequest.getReadingLevel3().equals(AppConstants.YES)) {
-				readingLevelPredicates.add(cb.equal(publicationRoot.get("readingLevel"), 3));
+				readingLevelOrPredicates.add(cb.equal(publicationRoot.get("readingLevel"), 3));
 			} else {
-				readingLevelPredicates.add(cb.notEqual(publicationRoot.get("readingLevel"), 3));
+				readingLevelAndPredicates.add(cb.notEqual(publicationRoot.get("readingLevel"), 3));
 			}
 		}
 		if (searchRequest.getReadingLevel4() != null) {
 			if (searchRequest.getReadingLevel4().equals(AppConstants.YES)) {
-				readingLevelPredicates.add(cb.equal(publicationRoot.get("readingLevel"), 4));
+				readingLevelOrPredicates.add(cb.equal(publicationRoot.get("readingLevel"), 4));
 			} else {
-				readingLevelPredicates.add(cb.notEqual(publicationRoot.get("readingLevel"), 4));
+				readingLevelAndPredicates.add(cb.notEqual(publicationRoot.get("readingLevel"), 4));
 			}
 		}
-		Predicate predicate = null;
-		if (readingLevelPredicates.size() > 0) {
-			predicate = cb.or(readingLevelPredicates.toArray(new Predicate[0]));
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		if (readingLevelOrPredicates.size() > 0) {
+			predicates.add(cb.or(readingLevelOrPredicates.toArray(new Predicate[0])));
 		}
-		return predicate;
+		if (readingLevelAndPredicates.size() > 0) {
+			predicates.add(cb.and(readingLevelAndPredicates.toArray(new Predicate[0])));
+		}
+		return predicates;
 	}
+
 }

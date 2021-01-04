@@ -29,7 +29,7 @@ public class NewsArticleQuizController {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	private NewsArticleQuizService newsArticleQuizService;
 
@@ -42,29 +42,31 @@ public class NewsArticleQuizController {
 	}
 
 	@PutMapping(value = "/newsArticleQuizs/{newsArticleQuizId}")
-	public ResponseEntity<NewsArticleQuizDTO> update(@RequestBody @Valid NewsArticleQuizDTO newsArticleQuizDTO, @PathVariable Long newsArticleQuizId) {
+	public ResponseEntity<NewsArticleQuizDTO> update(@RequestBody @Valid NewsArticleQuizDTO newsArticleQuizDTO,
+			@PathVariable Long newsArticleQuizId) {
 		newsArticleQuizDTO.setNewsArticleQuizId(newsArticleQuizId);
 		NewsArticleQuiz newsArticleQuiz = modelMapper.map(newsArticleQuizDTO, NewsArticleQuiz.class);
 		newsArticleQuiz = newsArticleQuizService.update(newsArticleQuiz);
 		newsArticleQuizDTO = modelMapper.map(newsArticleQuiz, NewsArticleQuizDTO.class);
 		return new ResponseEntity<NewsArticleQuizDTO>(newsArticleQuizDTO, HttpStatus.OK);
 	}
-	
+
 	@PatchMapping(value = "/newsArticleQuizs/{newsArticleQuizId}")
-	public ResponseEntity<NewsArticleQuizDTO> patch(@RequestBody NewsArticleQuizDTO newsArticleQuizDTO, @PathVariable Long newsArticleQuizId) {
+	public ResponseEntity<NewsArticleQuizDTO> patch(@RequestBody NewsArticleQuizDTO newsArticleQuizDTO,
+			@PathVariable Long newsArticleQuizId) {
 		newsArticleQuizDTO.setNewsArticleQuizId(newsArticleQuizId);
 		NewsArticleQuiz newsArticleQuiz = modelMapper.map(newsArticleQuizDTO, NewsArticleQuiz.class);
 		newsArticleQuiz = newsArticleQuizService.patch(newsArticleQuiz);
 		newsArticleQuizDTO = modelMapper.map(newsArticleQuiz, NewsArticleQuizDTO.class);
 		return new ResponseEntity<NewsArticleQuizDTO>(newsArticleQuizDTO, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping(value = "/newsArticleQuizs/{newsArticleQuizId}")
 	public ResponseEntity<Void> delete(@PathVariable Long newsArticleQuizId) {
 		newsArticleQuizService.delete(newsArticleQuizId);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/newsArticleQuizs/{newsArticleQuizId}")
 	public ResponseEntity<NewsArticleQuizDTO> get(@PathVariable Long newsArticleQuizId) {
 		NewsArticleQuiz newsArticleQuiz = newsArticleQuizService.get(newsArticleQuizId);
@@ -72,13 +74,11 @@ public class NewsArticleQuizController {
 		newsArticleQuizService.get(newsArticleQuizId);
 		return new ResponseEntity<NewsArticleQuizDTO>(newsArticleQuizDTO, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/newsArticleQuizs/{newsArticleQuizId}/audit")
 	public ResponseEntity<String> getAudit(@PathVariable Long newsArticleQuizId) {
 		String audit = newsArticleQuizService.getAudit(newsArticleQuizId);
 		return new ResponseEntity<String>(audit, HttpStatus.OK);
 	}
-	
-	
 
 }

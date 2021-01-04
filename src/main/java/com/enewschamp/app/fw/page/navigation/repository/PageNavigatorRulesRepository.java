@@ -8,9 +8,9 @@ import org.springframework.data.repository.query.Param;
 
 import com.enewschamp.app.fw.page.navigation.entity.PageNavigatorRules;
 
-public interface PageNavigatorRulesRepository extends JpaRepository<PageNavigatorRules, Long>{
+public interface PageNavigatorRulesRepository extends JpaRepository<PageNavigatorRules, Long> {
 
 	@Query("select n from PageNavigatorRules n where n.navId= :navId and n.recordInUse ='Y' order by n.execSeq")
-	public List<PageNavigatorRules> getNavRules( @Param("navId") Long navId);
-	
+	public List<PageNavigatorRules> getNavRules(@Param("navId") Long navId);
+
 }

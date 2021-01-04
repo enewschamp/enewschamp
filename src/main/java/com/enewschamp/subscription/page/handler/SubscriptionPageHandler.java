@@ -1,30 +1,32 @@
 package com.enewschamp.subscription.page.handler;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.enewschamp.EnewschampApplicationProperties;
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
-import com.enewschamp.app.fw.page.navigation.common.PageAction;
 import com.enewschamp.app.fw.page.navigation.common.PageSaveTable;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
+import com.enewschamp.app.student.registration.business.StudentRegistrationBusiness;
+import com.enewschamp.app.student.registration.service.StudentRegistrationService;
+import com.enewschamp.app.user.login.service.UserLoginBusiness;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.app.dto.StudentControlWorkDTO;
-import com.enewschamp.subscription.app.dto.StudentSubscriptionDTO;
 import com.enewschamp.subscription.app.dto.StudentSubscriptionPageData;
-import com.enewschamp.subscription.app.dto.StudentSubscriptionWorkDTO;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
-import com.enewschamp.subscription.domain.entity.StudentControl;
 import com.enewschamp.subscription.domain.entity.StudentControlWork;
+import com.enewschamp.subscription.domain.service.StudentSubscriptionWorkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "SubscriptionPageHandler")
@@ -37,177 +39,182 @@ public class SubscriptionPageHandler implements IPageHandler {
 	SubscriptionBusiness subscriptionBusiness;
 
 	@Autowired
-	StudentControlBusiness StudentControlBusiness;
+	StudentControlBusiness studentControlBusiness;
+
+	@Autowired
+	StudentSubscriptionWorkService studentSubscriptionWorkService;
 
 	@Autowired
 	ObjectMapper objectMapper;
 
 	@Autowired
-	private EnewschampApplicationProperties appConfig;
+	UserLoginBusiness userLoginBusiness;
+
+	@Autowired
+	StudentRegistrationService regService;
+
+	@Autowired
+	StudentRegistrationBusiness studentRegBusiness;
 
 	@Override
-	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
+	public PageDTO handleAction(PageRequestDTO pageRequest) {
 		return null;
 	}
 
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
+		String methodName = pageNavigationContext.getLoadMethod();
+		if (methodName != null && !"".equals(methodName)) {
+			Class[] params = new Class[1];
+			params[0] = PageNavigationContext.class;
+			Method m = null;
+			try {
+				m = this.getClass().getDeclaredMethod(methodName, params);
+			} catch (NoSuchMethodException e1) {
+				e1.printStackTrace();
+			} catch (SecurityException e1) {
+				e1.printStackTrace();
+			}
+			try {
+				return (PageDTO) m.invoke(this, pageNavigationContext);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				if (e.getCause() instanceof BusinessException) {
+					throw ((BusinessException) e.getCause());
+				} else {
+					e.printStackTrace();
+				}
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		PageDTO pageDTO = new PageDTO();
+		return pageDTO;
+	}
+
+	public PageDTO loadSubscriptionPage(PageNavigationContext pageNavigationContext) {
+		PageDTO pageDto = new PageDTO();
+		StudentSubscriptionPageData subscripionPagedata = new StudentSubscriptionPageData();
+		if (pageNavigationContext.getPageRequest().getData().get("emailId") != null) {
+			subscripionPagedata.setEmailId(pageNavigationContext.getPageRequest().getData().get("emailId").asText());
+		}
+		pageDto.setData(subscripionPagedata);
+		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
+		return pageDto;
+	}
+
+	public PageDTO loadWorkDataPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
-		String action = pageNavigationContext.getActionName();
-		String editionId =  pageNavigationContext.getPageRequest().getHeader().getEditionID();
-		StudentControlDTO studentControlDTO = StudentControlBusiness.getStudentFromMaster(eMailId);
-		StudentControlWorkDTO studentControlWorkDTO = null;
-		Long studentId = 0L;
-		
-		if(PageAction.next.toString().equalsIgnoreCase(action) || PageAction.GoPremium.toString().equalsIgnoreCase(action) || PageAction.PicImage.toString().equalsIgnoreCase(action))
-		{
-			// add static data from proerties
-			StudentSubscriptionPageData subscripionPagedata = new StudentSubscriptionPageData();
-
-			subscripionPagedata.setTerms(appConfig.getSubscriptionText().get("TermsOfUseText"));
-			subscripionPagedata.setIncompeleteFormText(appConfig.getSubscriptionText().get("incompeleteFormText"));
-			subscripionPagedata.setPrivacyPolicy(appConfig.getSubscriptionText().get("privacyPolicy"));
-			subscripionPagedata.setWhatYouGetTextPremium(appConfig.getSubscriptionText().get("whatYouGetTextPremium"));
-			subscripionPagedata.setWhatYouGetTextStandard(appConfig.getSubscriptionText().get("whatYouGetTextStandard"));
-			pageDto.setData(subscripionPagedata);
-
-		}
-		else if(PageAction.previous.toString().equalsIgnoreCase(action) || PageAction.subscription.toString().equalsIgnoreCase(action) )
-		{
-			// if the user is new then fetch from work table
-			if (studentControlDTO == null) {
-				studentControlWorkDTO = StudentControlBusiness.getStudentFromWork(eMailId);
-				if(studentControlWorkDTO!=null) {
-				studentId = studentControlWorkDTO.getStudentID();
-				StudentSubscriptionWorkDTO studentSubscriptionWorkDTO = subscriptionBusiness.getStudentSubscriptionFromWork(studentId, editionId);
-				
-				StudentSubscriptionPageData subscripionPagedata = modelMapper.map(studentSubscriptionWorkDTO, StudentSubscriptionPageData.class);
-				subscripionPagedata.setEMailID(studentControlWorkDTO.getEmailID());
-				// add static data from proerties
-				subscripionPagedata.setTerms(appConfig.getSubscriptionText().get("TermsOfUseText"));
-				subscripionPagedata.setIncompeleteFormText(appConfig.getSubscriptionText().get("incompeleteFormText"));
-				subscripionPagedata.setPrivacyPolicy(appConfig.getSubscriptionText().get("privacyPolicy"));
-				subscripionPagedata.setWhatYouGetTextPremium(appConfig.getSubscriptionText().get("whatYouGetTextPremium"));
-				subscripionPagedata.setWhatYouGetTextStandard(appConfig.getSubscriptionText().get("whatYouGetTextStandard"));
-				pageDto.setData(subscripionPagedata);
-				}
-
-			} else {
-				
-				StudentSubscriptionDTO  studentSubscriptionDTO = subscriptionBusiness.getStudentSubscriptionFromMaster(studentControlDTO.getStudentID(), editionId);
-				
-				StudentSubscriptionPageData subscripionPagedata = modelMapper.map(studentSubscriptionDTO, StudentSubscriptionPageData.class);
-				subscripionPagedata.setEMailID(studentControlDTO.getEmailID());
-				// add static data from proerties
-				subscripionPagedata.setTerms(appConfig.getSubscriptionText().get("TermsOfUseText"));
-				subscripionPagedata.setIncompeleteFormText(appConfig.getSubscriptionText().get("incompeleteFormText"));
-				subscripionPagedata.setPrivacyPolicy(appConfig.getSubscriptionText().get("privacyPolicy"));
-				subscripionPagedata.setWhatYouGetTextPremium(appConfig.getSubscriptionText().get("whatYouGetTextPremium"));
-				subscripionPagedata.setWhatYouGetTextStandard(appConfig.getSubscriptionText().get("whatYouGetTextStandard"));
-				pageDto.setData(subscripionPagedata);
-
-			}
-		}
-
-		return pageDto;
-	}
-
-	@Override
-	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
-		PageDTO pageDto = new PageDTO();
-		String emailId = pageRequest.getHeader().getEmailID();
-		String eidtionId = pageRequest.getHeader().getEditionID();
-
-		StudentControlWorkDTO studentControlWorkDTO = StudentControlBusiness.getStudentFromWork(emailId);
-		Long studentId = 0L;
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+		StudentSubscriptionPageData subscripionPagedata = new StudentSubscriptionPageData();
 		if (studentControlWorkDTO != null) {
-			studentId = studentControlWorkDTO.getStudentID();
+			subscripionPagedata.setEmailId(studentControlWorkDTO.getEmailId());
+			subscripionPagedata.setSubscriptionSelected(studentControlWorkDTO.getSubscriptionTypeW());
 		}
+		pageDto.setData(subscripionPagedata);
+		return pageDto;
+	}
 
-		subscriptionBusiness.saveWorkToMaster(studentId, eidtionId);
-		StudentControlBusiness.workToMaster(studentId);
-
-		pageDto.setHeader(pageRequest.getHeader());
+	public PageDTO loadExistingSubscriptionPage(PageNavigationContext pageNavigationContext) {
+		PageDTO pageDto = new PageDTO();
+		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+		StudentSubscriptionPageData subscripionPagedata = new StudentSubscriptionPageData();
+		if (studentControlDTO != null) {
+			subscripionPagedata.setEmailId(studentControlDTO.getEmailId());
+			subscripionPagedata.setSubscriptionSelected(studentControlDTO.getSubscriptionType());
+		}
+		pageDto.setData(subscripionPagedata);
 		return pageDto;
 	}
 
 	@Override
-	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
+	public PageDTO saveAsMaster(PageRequestDTO pageRequest) {
 		PageDTO pageDTO = new PageDTO();
+		String emailId = pageRequest.getHeader().getEmailId();
+		String editionId = pageRequest.getHeader().getEditionId();
+		Long studentId = studentControlBusiness.getStudentId(emailId);
+		subscriptionBusiness.workToMaster(pageRequest.getHeader().getModule(), studentId, editionId);
+		studentSubscriptionWorkService.delete(studentId);
+		pageDTO.setHeader(pageRequest.getHeader());
+		return pageDTO;
+	}
 
-		if (PageAction.next.toString().equals(actionName)) {
-			String saveIn = pageNavigatorDTO.getUpdationTable();
-
-			if (PageSaveTable.W.toString().equals(saveIn)) {
-				Long studentId = 0L;
-
-				StudentSubscriptionPageData subscripionPagedata = null;
-			
-				subscripionPagedata = mapPagedata(pageRequest);
-				
-				String emailId = subscripionPagedata.getEMailID();
-				StudentControlWorkDTO studentControlWorkDTO = StudentControlBusiness.getStudentFromWork(emailId);
-				if (studentControlWorkDTO == null) {
-					// create student control in work
-					StudentControlWorkDTO studentControlWorkDto = new StudentControlWorkDTO();
-					studentControlWorkDto.setEmailID(subscripionPagedata.getEMailID());
-					studentControlWorkDto.setSubscriptionType(subscripionPagedata.getSubscriptionSelected());
-					StudentControlWork studentControlWorkEntity = StudentControlBusiness
-							.saveAsWork(studentControlWorkDto);
-					studentId = studentControlWorkEntity.getStudentID();
-				}
-				else 
-				{
-					//throw an error...that student already exists in registration table.
-				}
-
-				subscriptionBusiness.saveAsWork(studentId, pageRequest);
+	@Override
+	public PageDTO handleAppAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
+		String methodName = pageNavigatorDTO.getSubmissionMethod();
+		if (methodName != null && !"".equals(methodName)) {
+			Class[] params = new Class[2];
+			params[0] = PageRequestDTO.class;
+			params[1] = PageNavigatorDTO.class;
+			Method m = null;
+			try {
+				m = this.getClass().getDeclaredMethod(methodName, params);
+			} catch (NoSuchMethodException e1) {
+				e1.printStackTrace();
+			} catch (SecurityException e1) {
+				e1.printStackTrace();
 			}
-			if (PageSaveTable.M.toString().equals(saveIn)) {
-
-				Long studentId = 0L;
-				StudentSubscriptionPageData subscripionPagedata = null;
-				
-				subscripionPagedata = mapPagedata(pageRequest);
-				
-				String emailId = subscripionPagedata.getEMailID();
-				StudentControlDTO studentControlDTO = StudentControlBusiness.getStudentFromMaster(emailId);
-				if (studentControlDTO == null) {
-					// create student control in work
-					StudentControlDTO studentControlDto = new StudentControlDTO();
-					studentControlDto.setEmailID(subscripionPagedata.getEMailID());
-					studentControlDto.setSubscriptionType(subscripionPagedata.getSubscriptionSelected());
-					StudentControl studentControlEntity = StudentControlBusiness
-							.saveAsMaster(studentControlDto);
-					studentId = studentControlEntity.getStudentID();
-					
-					subscriptionBusiness.saveAsMaster(studentId,pageRequest);
-
+			try {
+				return (PageDTO) m.invoke(this, pageRequest, pageNavigatorDTO);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				if (e.getCause() instanceof BusinessException) {
+					throw ((BusinessException) e.getCause());
+				} else {
+					e.printStackTrace();
 				}
-				else 
-				{
-					//throw an error...that student already exists in registration table.
-				}
-
-
+			} catch (SecurityException e) {
+				e.printStackTrace();
 			}
-		} 
-		else if(PageAction.previous.toString().equals(actionName))
-		{
-				// TO Do may want to delete the data from work table
+		}
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageRequest.getHeader());
+		return pageDTO;
+	}
+
+	public PageDTO handleNextAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
+		PageDTO pageDTO = new PageDTO();
+		String operation = pageRequest.getHeader().getOperation();
+		String editionId = pageRequest.getHeader().getEditionId();
+		String saveIn = pageNavigatorDTO.getUpdationTable();
+		String evalAvailed = "";
+		StudentSubscriptionPageData subscripionPagedata = mapPagedata(pageRequest);
+		String emailId = subscripionPagedata.getEmailId();
+		studentRegBusiness.checkAndUpdateIfEvalPeriodExpired(emailId, editionId);
+		Long studentId = 0L;
+		if (PageSaveTable.W.toString().equals(saveIn)) {
+			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+			if (studentControlWorkDTO != null) {
+				studentId = studentControlWorkDTO.getStudentId();
+				if ("Y".equalsIgnoreCase(studentControlWorkDTO.getEvalAvailed())) {
+					evalAvailed = studentControlWorkDTO.getEvalAvailed();
+				}
+			}
+			studentControlWorkDTO.setSubscriptionTypeW(subscripionPagedata.getSubscriptionSelected());
+			if ("Subscription".equalsIgnoreCase(operation)
+					&& "P".equalsIgnoreCase(subscripionPagedata.getSubscriptionSelected())) {
+				studentControlWorkDTO.setNextPageOperation("PremiumSubs");
+			} else if ("Subscription".equalsIgnoreCase(operation)
+					&& "S".equalsIgnoreCase(subscripionPagedata.getSubscriptionSelected())) {
+				studentControlWorkDTO.setNextPageOperation("SchoolSubs");
+			}
+			StudentControlWork studentControlWork = studentControlBusiness.saveAsWork(studentControlWorkDTO);
+			studentId = studentControlWork.getStudentId();
+			subscriptionBusiness.saveAsWork(studentId, evalAvailed, pageRequest);
 		}
 		pageDTO.setHeader(pageRequest.getHeader());
 		return pageDTO;
 	}
-	public StudentSubscriptionPageData mapPagedata(PageRequestDTO pageRequest)
-	{
-		StudentSubscriptionPageData studentSubscriptionPageData=null;
+
+	public StudentSubscriptionPageData mapPagedata(PageRequestDTO pageRequest) {
+		StudentSubscriptionPageData studentSubscriptionPageData = null;
 		try {
-			studentSubscriptionPageData = objectMapper.readValue(pageRequest.getData().toString(),StudentSubscriptionPageData.class);
-		} catch(IOException e){
-			throw new BusinessException(ErrorCodes.SREVER_ERROR);
+			studentSubscriptionPageData = objectMapper.readValue(pageRequest.getData().toString(),
+					StudentSubscriptionPageData.class);
+		} catch (IOException e) {
+			throw new BusinessException(ErrorCodeConstants.SREVER_ERROR);
 		}
 		return studentSubscriptionPageData;
 	}

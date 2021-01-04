@@ -7,11 +7,11 @@ public abstract class AbstractPageHandler implements IPageHandler {
 
 	// Method to process the data based on action take on the page
 	@Override
-	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
-		PageDTO pageDTO = handlePageAction(actionName, pageRequest);
+	public PageDTO handleAction(PageRequestDTO pageRequest) {
+		PageDTO pageDTO = handlePageAction(pageRequest);
 		return pageDTO;
 	}
 
-	protected abstract PageDTO handlePageAction(String actionName, PageRequestDTO pageRequest);
+	protected abstract PageDTO handlePageAction(PageRequestDTO pageRequest);
 
 }

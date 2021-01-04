@@ -32,10 +32,10 @@ public class NewsArticleController {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	private NewsArticleService newsArticleService;
-	
+
 	@Autowired
 	private NewsArticleHelper newsArticleHelper;
 
@@ -46,14 +46,15 @@ public class NewsArticleController {
 	}
 
 	@PutMapping(value = "/articles/{articleId}")
-	public ResponseEntity<NewsArticleDTO> update(@RequestBody @Valid NewsArticleDTO articleDTO, @PathVariable Long articleId) {
+	public ResponseEntity<NewsArticleDTO> update(@RequestBody @Valid NewsArticleDTO articleDTO,
+			@PathVariable Long articleId) {
 		articleDTO.setNewsArticleId(articleId);
 		NewsArticle article = modelMapper.map(articleDTO, NewsArticle.class);
 		article = newsArticleService.update(article);
 		articleDTO = modelMapper.map(article, NewsArticleDTO.class);
 		return new ResponseEntity<NewsArticleDTO>(articleDTO, HttpStatus.OK);
 	}
-	
+
 	@PatchMapping(value = "/articles/{articleId}")
 	public ResponseEntity<NewsArticleDTO> patch(@RequestBody NewsArticleDTO articleDTO, @PathVariable Long articleId) {
 		articleDTO.setNewsArticleId(articleId);
@@ -62,31 +63,30 @@ public class NewsArticleController {
 		articleDTO = modelMapper.map(article, NewsArticleDTO.class);
 		return new ResponseEntity<NewsArticleDTO>(articleDTO, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping(value = "/articles/{articleId}")
 	public ResponseEntity<Void> delete(@PathVariable Long articleId) {
 		newsArticleService.delete(articleId);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/articles/{articleId}")
 	public ResponseEntity<NewsArticleDTO> get(@PathVariable Long articleId) {
 		NewsArticleDTO articleDTO = newsArticleHelper.get(articleId);
 		return new ResponseEntity<NewsArticleDTO>(articleDTO, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/articles/{articleId}/audit")
 	public ResponseEntity<String> getAudit(@PathVariable Long articleId) {
 		ResponseEntity<String> response = null;
 		try {
 			String audit = newsArticleService.getAudit(articleId);
 			response = new ResponseEntity<String>(audit, HttpStatus.OK);
-		}catch(BusinessException e) {
-			Fault fault = new Fault(new HttpStatusAdapter(HttpStatus.INTERNAL_SERVER_ERROR), e); 
+		} catch (BusinessException e) {
+			Fault fault = new Fault(e);
 			throw fault;
 		}
 		return response;
 	}
-	
 
 }

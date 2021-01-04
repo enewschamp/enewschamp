@@ -13,48 +13,49 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.io.IOUtils;
 
-public class MultiReadHttpServletRequest extends HttpServletRequestWrapper{
+public class MultiReadHttpServletRequest extends HttpServletRequestWrapper {
 
-    private ByteArrayOutputStream cachedBytes;
+	private ByteArrayOutputStream cachedBytes;
 
-    public MultiReadHttpServletRequest(HttpServletRequest request) {
-        super(request);
-    }
+	public MultiReadHttpServletRequest(HttpServletRequest request) {
+		super(request);
+	}
 
-    @Override
-    public ServletInputStream getInputStream() throws IOException {
-        if (cachedBytes == null)
-            cacheInputStream();
+	@Override
+	public ServletInputStream getInputStream() throws IOException {
+		if (cachedBytes == null)
+			cacheInputStream();
 
-        return new CachedServletInputStream();
-    }
+		return new CachedServletInputStream();
+	}
 
-    @Override
-    public BufferedReader getReader() throws IOException {
-        return new BufferedReader(new InputStreamReader(getInputStream()));
-    }
+	@Override
+	public BufferedReader getReader() throws IOException {
+		return new BufferedReader(new InputStreamReader(getInputStream()));
+	}
 
-    private void cacheInputStream() throws IOException {
-        /*
-         * Cache the inputstream in order to read it multiple times. For convenience, I use apache.commons IOUtils
-         */
-        cachedBytes = new ByteArrayOutputStream();
-        IOUtils.copy(super.getInputStream(), cachedBytes);
-    }
+	private void cacheInputStream() throws IOException {
+		/*
+		 * Cache the inputstream in order to read it multiple times. For convenience, I
+		 * use apache.commons IOUtils
+		 */
+		cachedBytes = new ByteArrayOutputStream();
+		IOUtils.copy(super.getInputStream(), cachedBytes);
+	}
 
-    /* An inputstream which reads the cached request body */
-    public class CachedServletInputStream extends ServletInputStream {
-        private ByteArrayInputStream input;
+	/* An inputstream which reads the cached request body */
+	public class CachedServletInputStream extends ServletInputStream {
+		private ByteArrayInputStream input;
 
-        public CachedServletInputStream() {
-            /* create a new input stream from the cached request body */
-            input = new ByteArrayInputStream(cachedBytes.toByteArray());
-        }
+		public CachedServletInputStream() {
+			/* create a new input stream from the cached request body */
+			input = new ByteArrayInputStream(cachedBytes.toByteArray());
+		}
 
-        @Override
-        public int read() throws IOException {
-            return input.read();
-        }
+		@Override
+		public int read() throws IOException {
+			return input.read();
+		}
 
 		@Override
 		public boolean isFinished() {
@@ -71,7 +72,7 @@ public class MultiReadHttpServletRequest extends HttpServletRequestWrapper{
 		@Override
 		public void setReadListener(ReadListener listener) {
 			// TODO Auto-generated method stub
-			
+
 		}
-    }
+	}
 }

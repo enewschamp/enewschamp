@@ -9,6 +9,10 @@ import com.enewschamp.app.student.dto.ChampStudentDTO;
 public interface ChampStudentRepository {
 
 	public Page<ChampStudentDTO> findChampStudents(ChampsSearchData searchRequest, Pageable pageable);
-	public Page<ChampStudentDTO> findChampions(ChampsSearchData searchRequest, Pageable pageable) ;
 
+	public Page<ChampStudentDTO> findChampions(ChampsSearchData searchRequest, Pageable pageable);
+
+	public Page<ChampStudentDTO> findQuarterlyChampions(ChampsSearchData searchRequest, Pageable pageable);
+
+	public Page<ChampStudentDTO> findYearlyChampions(ChampsSearchData searchRequest, Pageable pageable);
 }

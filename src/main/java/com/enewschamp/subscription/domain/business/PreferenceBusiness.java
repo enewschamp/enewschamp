@@ -7,61 +7,66 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.subscription.app.dto.StudentPreferencesDTO;
 import com.enewschamp.subscription.app.dto.StudentPreferencesWorkDTO;
-import com.enewschamp.subscription.domain.entity.StudentPreference;
-import com.enewschamp.subscription.domain.entity.StudentPreferenceWork;
-import com.enewschamp.subscription.domain.service.StudentPreferenceService;
-import com.enewschamp.subscription.domain.service.StudentPreferenceWorkService;
+import com.enewschamp.subscription.domain.entity.StudentPreferences;
+import com.enewschamp.subscription.domain.entity.StudentPreferencesWork;
+import com.enewschamp.subscription.domain.service.StudentPreferencesService;
+import com.enewschamp.subscription.domain.service.StudentPreferencesWorkService;
 
 @Service
 public class PreferenceBusiness {
-	
+
 	@Autowired
-	ModelMapper modelMapper; 
-	
+	ModelMapper modelMapper;
+
 	@Autowired
-	StudentPreferenceService  studentPreferenceService;
-	
+	StudentPreferencesService studentPreferencesService;
+
 	@Autowired
-	StudentPreferenceWorkService  studentPreferenceWorkService;
-	
-	public void saveAsMaster(StudentPreferencesDTO studentPreferencePageDTO)
-	{
-		System.out.println("Sving in master");
-		StudentPreference studentPref = modelMapper.map(studentPreferencePageDTO,StudentPreference.class);
+	StudentPreferencesWorkService studentPreferencesWorkService;
+
+	public void saveAsMaster(StudentPreferencesDTO studentPreferencesPageDTO) {
+		StudentPreferences studentPref = modelMapper.map(studentPreferencesPageDTO, StudentPreferences.class);
 		studentPref.setRecordInUse(RecordInUseType.Y);
-		
-		// to be corrected
 		studentPref.setOperatorId("SYSTEM");
-		
-		studentPreferenceService.create(studentPref);
+		studentPreferencesService.create(studentPref);
 	}
-	
-	public void saveAsWork(StudentPreferencesWorkDTO studentPreferenceWorkDTO)
-	{
-		StudentPreferenceWork studentPref = modelMapper.map(studentPreferenceWorkDTO,StudentPreferenceWork.class);
-		studentPreferenceWorkService.create(studentPref);
+
+	public void saveAsWork(StudentPreferencesWorkDTO studentPreferencesWorkDTO) {
+		StudentPreferencesWork studentPref = modelMapper.map(studentPreferencesWorkDTO, StudentPreferencesWork.class);
+		studentPref.setRecordInUse(RecordInUseType.Y);
+		studentPref.setOperatorId("SYSTEM");
+		studentPreferencesWorkService.create(studentPref);
 	}
-	
-	public void workToMaster(Long studentId)
-	{
-		StudentPreferenceWork workEntity = studentPreferenceWorkService.get(studentId);
-		StudentPreference masterEntity = modelMapper.map(workEntity,StudentPreference.class);
-		masterEntity.setOperatorId("SYSTEM");
-		masterEntity.setRecordInUse(RecordInUseType.Y);
-		studentPreferenceService.create(masterEntity);
+
+	public void workToMaster(Long studentId) {
+		StudentPreferencesWork workEntity = studentPreferencesWorkService.get(studentId);
+		if (workEntity != null) {
+			StudentPreferences masterEntity = modelMapper.map(workEntity, StudentPreferences.class);
+			masterEntity.setOperatorId("SYSTEM");
+			masterEntity.setRecordInUse(RecordInUseType.Y);
+			studentPreferencesService.create(masterEntity);
+		}
 	}
-	
-	public StudentPreferencesWorkDTO getPreferenceFromWork(Long studentId)
-	{
-		StudentPreferenceWork studentPreferenceWork= studentPreferenceWorkService.get(studentId);
-		StudentPreferencesWorkDTO studentPreferencesWorkDTO = modelMapper.map(studentPreferenceWork, StudentPreferencesWorkDTO.class);
-		return studentPreferencesWorkDTO;
+
+	public StudentPreferencesWorkDTO getPreferenceFromWork(Long studentId) {
+		StudentPreferencesWork studentPreferencesWork = studentPreferencesWorkService.get(studentId);
+		if (studentPreferencesWork != null) {
+			StudentPreferencesWorkDTO studentPreferencesWorkDTO = modelMapper.map(studentPreferencesWork,
+					StudentPreferencesWorkDTO.class);
+			return studentPreferencesWorkDTO;
+		} else {
+			return null;
+		}
 	}
-	
-	public StudentPreferencesDTO getPreferenceFromMaster(Long studentId)
-	{
-		StudentPreference studentPreference= studentPreferenceService.get(studentId);
-		StudentPreferencesDTO studentPreferencesDTO = modelMapper.map(studentPreference, StudentPreferencesDTO.class);
-		return studentPreferencesDTO;
+
+	public StudentPreferencesDTO getPreferenceFromMaster(Long studentId) {
+		StudentPreferences studentPreferences = studentPreferencesService.get(studentId);
+		if (studentPreferences != null) {
+			StudentPreferencesDTO studentPreferencesDTO = modelMapper.map(studentPreferences,
+					StudentPreferencesDTO.class);
+			return studentPreferencesDTO;
+		} else {
+			return null;
+		}
 	}
 }

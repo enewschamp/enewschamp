@@ -22,7 +22,6 @@ import lombok.EqualsAndHashCode;
 @Table(name = "PublicationDailySummary")
 public class PublicationDailySummary extends TransactionEntity {
 
-
 	private static final long serialVersionUID = 9135020752738860024L;
 
 	@Id
@@ -32,20 +31,19 @@ public class PublicationDailySummary extends TransactionEntity {
 	@NotNull
 	@Column(name = "NewsArticleCount")
 	private Integer newsArticleCount = 0;
-	
+
 	@NotNull
 	@Column(name = "QuizCount")
 	private Integer quizCount = 0;
-	
+
 	@NotNull
 	@Column(name = "Month")
 	private int month = 0;
-	
+
 	@NotNull
 	@Column(name = "Year")
 	private int year = 0;
-	
-	
+
 	public String getKeyAsString() {
 		return String.valueOf(this.publicationDate);
 	}
@@ -53,7 +51,7 @@ public class PublicationDailySummary extends TransactionEntity {
 	@PrePersist
 	@PreUpdate
 	public void prePersist() {
-		if(operationDateTime == null) {
+		if (operationDateTime == null) {
 			operationDateTime = LocalDateTime.now();
 		}
 		month = publicationDate.getMonthValue();

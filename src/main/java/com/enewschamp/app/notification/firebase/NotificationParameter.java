@@ -1,17 +1,15 @@
 package com.enewschamp.app.notification.firebase;
 
-
 public enum NotificationParameter {
-    SOUND("default"),
-    COLOR("#FFFF00");
+	SOUND("default"), COLOR("#FFFF00");
 
-    private String value;
+	private String value;
 
-    NotificationParameter(String value) {
-        this.value = value;
-    }
+	NotificationParameter(String value) {
+		this.value = value;
+	}
 
-    public String getValue() {
-        return this.value;
-    }
+	public String getValue() {
+		return this.value;
+	}
 }

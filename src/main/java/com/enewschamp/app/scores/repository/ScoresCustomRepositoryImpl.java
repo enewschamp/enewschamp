@@ -9,200 +9,158 @@ import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
-import com.enewschamp.app.scores.dto.DailyScoreDTO;
-import com.enewschamp.app.scores.dto.MonthlyScoreGenreDTO;
-import com.enewschamp.app.scores.dto.MonthlyScoresDTO;
-import com.enewschamp.app.scores.dto.YearlyScoresGenreDTO;
-import com.enewschamp.app.scores.entity.DailyScore;
-import com.enewschamp.app.scores.entity.MonthlyScoreGenre;
-import com.enewschamp.app.scores.entity.MonthlyScores;
-import com.enewschamp.app.scores.entity.YearlyScoresGenre;
+import com.enewschamp.app.scores.dto.StudentScoresYearlyGenreDTO;
 import com.enewschamp.app.scores.page.data.ScoresSearchData;
-import com.enewschamp.app.trends.dto.TrendsSearchData;
-
+import com.enewschamp.app.student.scores.dto.StudentScoresDailyDTO;
+import com.enewschamp.app.student.scores.dto.StudentScoresMonthlyGenreDTO;
+import com.enewschamp.app.student.scores.dto.StudentScoresMonthlyTotalDTO;
 
 @Repository
 public class ScoresCustomRepositoryImpl implements ScoresCustomRepository {
 	@PersistenceContext
 	private EntityManager entityManager;
-	
-	public List<DailyScoreDTO> findDailyScores(ScoresSearchData searchRequest)
-	{
+
+	public List<StudentScoresDailyDTO> findScoresDaily(ScoresSearchData searchRequest) {
 		Long studentId = searchRequest.getStudentId();
-		String monthYear = searchRequest.getMonth();
+		int readingLevel = searchRequest.getReadingLevel();
+		String yearMonth = searchRequest.getYearMonth();
 		LocalDate startDate = null;
 		LocalDate endDate = null;
-		Query query = entityManager.createNativeQuery(
-				"select \n" + 
-				"articles_published,\n" + 
-				"((select article_read from trends_daily aa where aa.quiz_date = a.publish_date and aa.student_id=?1)) as articles_read,\n" + 
-				"a.quiz_published,\n" + 
-				"((select quiz_attempted from trends_daily aa where aa.quiz_date = a.publish_date and aa.student_id=?2)) as quiz_attempted,\n" + 
-				"((select quiz_correct from trends_daily aa where aa.quiz_date = a.publish_date and aa.student_id=?3)) as quiz_correct,\n" + 
-				"a.publish_date\n" + 
-				"from published_acrticles_vw a where a.publish_date>= ?4 and a.publish_date<= ?5 \n" + 
-				"group by a.publish_date,articles_read,quiz_published,quiz_attempted,quiz_correct\n" , DailyScore.class );
-
-		if (monthYear != null && !"".equals(monthYear)) {
-			String year = monthYear.substring(0, 4);
-			String month = monthYear.substring(monthYear.length() - 2, monthYear.length());
+		Query query = entityManager.createNativeQuery("select\n" + "a.publication_date, \n" + "a.articles_published,\n"
+				+ "ifnull(td.articles_read,0) AS articles_read,\n" + "ifnull(a.quiz_published,0) AS quiz_published,\n"
+				+ "ifnull(td.quiz_attempted,0) AS quiz_attempted,\n" + "ifnull(td.quiz_correct,0) AS quiz_correct\n"
+				+ "from daily_published_articles_vw a \n"
+				+ "left outer join scores_daily td on (td.student_id=?1 and td.publication_date=a.publication_date)\n"
+				+ "where a.reading_level=?2 and  a.publication_date>= ?3 and a.publication_date<= ?4 \n"
+				+ "group by publication_date", StudentScoresDailyDTO.class);
+		if (yearMonth != null && !"".equals(yearMonth)) {
+			String year = yearMonth.substring(0, 4);
+			String month = yearMonth.substring(yearMonth.length() - 2, yearMonth.length());
 			String day1 = "01";
-			// form date..
 			startDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day1));
 			endDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1).plusMonths(1).minusDays(1);
-
 		} else {
 			startDate = LocalDate.now();
 			startDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1);
 			endDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1).plusMonths(1).minusDays(1);
-
 		}
-
 		query.setParameter(1, studentId);
-		query.setParameter(2, studentId);
-		query.setParameter(3, studentId);
-		query.setParameter(4, startDate);
-		query.setParameter(5, endDate);
-		
-		List<DailyScoreDTO> list = query.getResultList();
-		System.out.println("Daily article: " + list);
-		return list;
-
-	}
-
-	@Override
-	public List<MonthlyScoreGenreDTO> findMonthlyScoresByGenre(ScoresSearchData searchRequest) {
-		
-		Long studentId = searchRequest.getStudentId();
-		String monthYear = searchRequest.getMonth();
-		LocalDate startDate = null;
-		LocalDate endDate = null;
-		Query query = entityManager.createNativeQuery(
-				"select \n" + 
-				" articles_published,\n" + 
-				"((select article_read from trends_daily aa where aa.quiz_date = a.publish_date and aa.student_id=?1)) as articles_read,\n" + 
-				"quiz_published,\n" + 
-				"((select quiz_attempted from trends_daily aa where aa.quiz_date = a.publish_date and aa.student_id=?2)) as quiz_attempted,\n" + 
-				"((select quiz_correct from trends_daily aa where aa.quiz_date = a.publish_date and aa.student_id=?3)) as quiz_correct,\n" + 
-				"a.genreid\n" + 
-				"from published_acrticles_genre_vw a where a.publish_date>=?4 and a.publish_date<=?5\n" + 
-				"\n" + 
-				"", MonthlyScoreGenre.class);
-
-		if (monthYear != null && !"".equals(monthYear)) {
-			String year = monthYear.substring(0, 4);
-			String month = monthYear.substring(monthYear.length() - 2, monthYear.length());
-			String day1 = "01";
-			// form date..
-			startDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day1));
-			endDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1).plusMonths(1).minusDays(1);
-
-		} else {
-			startDate = LocalDate.now();
-			startDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1);
-			endDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1).plusMonths(1).minusDays(1);
-
-		}
-
-		query.setParameter(1, studentId);
-		query.setParameter(2, studentId);
-		query.setParameter(3, studentId);
-		query.setParameter(4, startDate);
-		query.setParameter(5, endDate);
-		
-		List<MonthlyScoreGenreDTO> list = query.getResultList();
-		System.out.println("Daily article: " + list);
+		query.setParameter(2, readingLevel);
+		query.setParameter(3, startDate);
+		query.setParameter(4, endDate);
+		List<StudentScoresDailyDTO> list = query.getResultList();
 		return list;
 	}
 
 	@Override
-	public List<YearlyScoresGenreDTO> findYearlyScoresByGenre(ScoresSearchData searchRequest) {
+	public List<StudentScoresMonthlyGenreDTO> findScoresMonthlyGenre(ScoresSearchData searchRequest) {
 		Long studentId = searchRequest.getStudentId();
-		String monthYear = searchRequest.getMonth();
-		LocalDate startDate = null;
-		LocalDate endDate = null;
-		Query query = entityManager.createNativeQuery(
-				"select \n" + 
-				"sum(a.articles_published) as articles_published,\n" + 
-				"sum((select (articles_read) from trends_monthly_total aa where year(a.publish_date)= SUBSTRING(aa.trendyear_month, 1,4) and month(a.publish_date)=SUBSTRING(aa.trendyear_month, 5,6) and aa.student_id= ?1)) as articles_read,\n" + 
-				"sum(a.quiz_published) as quiz_published,\n" + 
-				"sum((select (quiz_attempted) from trends_monthly_total aa where  year(a.publish_date)= SUBSTRING(aa.trendyear_month, 1,4) and month(a.publish_date)=SUBSTRING(aa.trendyear_month, 5,6) and aa.student_id= ?2)) as quiz_attempted,\n" + 
-				"sum((select (quiz_correct) from trends_monthly_total aa where  year(a.publish_date)= SUBSTRING(aa.trendyear_month, 1,4) and month(a.publish_date)=SUBSTRING(aa.trendyear_month, 5,6) and aa.student_id=?3)) as quiz_correct,\n" + 
-				"a.genreid\n" + 
-				"from published_acrticles_genre_vw a \n" + 
-				"where a.publish_date>= ?4 and a.publish_date<= ?5 \n" + 
-				"group by genreid,articles_published,quiz_published", YearlyScoresGenre.class);
-
-		if (monthYear != null && !"".equals(monthYear)) {
-			String year = monthYear.substring(0, 4);
-			//String month = monthYear.substring(monthYear.length() - 2, monthYear.length());
-			String day1 = "01";
-			String month="01";
-			// form date..
-			startDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day1));
-			endDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1).plusMonths(12).minusDays(1);
-
-		} else {
-			startDate = LocalDate.now();
-			startDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1);
-			endDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1).plusMonths(12).minusDays(1);
-
-		}
-
+		int readingLevel = searchRequest.getReadingLevel();
+		String yearMonth = searchRequest.getYearMonth();
+		Query query = entityManager.createNativeQuery("select\n" + "a.genre_id as genre, \n"
+				+ "ifnull(sum(a.articles_published),0) AS articles_published,\n"
+				+ "ifnull(sum(td.articles_read),0) AS articles_read,\n"
+				+ "ifnull(sum(a.quiz_published),0) AS quiz_published,\n"
+				+ "ifnull(sum(td.quiz_attempted),0) AS quiz_attempted,\n"
+				+ "ifnull(sum(td.quiz_correct),0) AS quiz_correct\n" + "from monthly_published_articles_genre_vw a \n"
+				+ "left outer join scores_monthly_genre td on (td.student_id=?1 and td.genre_id=a.genre_id and td.score_year_month=a.year_month)\n"
+				+ "where a.reading_level=?2 and a.year_month= ?3\n" + "group by genre",
+				StudentScoresMonthlyGenreDTO.class);
 		query.setParameter(1, studentId);
-		query.setParameter(2, studentId);
-		query.setParameter(3, studentId);
-		query.setParameter(4, startDate);
-		query.setParameter(5, endDate);
-		
-		List<YearlyScoresGenreDTO> list = query.getResultList();
-		System.out.println("findYearlyScoresByGenre : " + list);
+		query.setParameter(2, readingLevel);
+		query.setParameter(3, yearMonth);
+		List<StudentScoresMonthlyGenreDTO> list = query.getResultList();
 		return list;
 	}
 
 	@Override
-	public List<MonthlyScoresDTO> findYMonthlyScores(ScoresSearchData searchRequest) {
+	public List<StudentScoresMonthlyTotalDTO> findYScoresMonthly(ScoresSearchData searchRequest) {
 		Long studentId = searchRequest.getStudentId();
-		String monthYear = searchRequest.getMonth();
+		String yearMonth = searchRequest.getYearMonth();
+		int readingLevel = searchRequest.getReadingLevel();
 		LocalDate startDate = null;
 		LocalDate endDate = null;
-		Query query = entityManager.createNativeQuery(
-				"select \n" + 
-				"sum(a.articles_published) as articles_published,\n" + 
-				"sum((select (articles_read) from trends_monthly_total aa where year(a.publish_date)= SUBSTRING(aa.trendyear_month, 1,4) and month(a.publish_date)=SUBSTRING(aa.trendyear_month, 5,6) and aa.student_id= ?1)) as articles_read,\n" + 
-				"sum(a.quiz_published) as quiz_published,\n" + 
-				"sum((select (quiz_attempted) from trends_monthly_total aa where  year(a.publish_date)= SUBSTRING(aa.trendyear_month, 1,4) and month(a.publish_date)=SUBSTRING(aa.trendyear_month, 5,6) and aa.student_id= ?2)) as quiz_attempted,\n" + 
-				"sum((select (quiz_correct) from trends_monthly_total aa where  year(a.publish_date)= SUBSTRING(aa.trendyear_month, 1,4) and month(a.publish_date)=SUBSTRING(aa.trendyear_month, 5,6) and aa.student_id= ?3)) as quiz_correct,\n" + 
-				"month(a.publish_date) publish_date\n" + 
-				"from published_acrticles_vw a where a.publish_date>= ?4 and a.publish_date<= ?5 \n" + 
-				"group by (a.publish_date)", MonthlyScores.class);
-
-		if (monthYear != null && !"".equals(monthYear)) {
-			String year = monthYear.substring(0, 4);
-			//String month = monthYear.substring(monthYear.length() - 2, monthYear.length());
-			String day1 = "01";
-			String month="01";
-			
-			// form date..
-			startDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day1));
-			endDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1).plusMonths(12).minusDays(1);
-
-		} else {
-			startDate = LocalDate.now();
-			startDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1);
-			endDate = LocalDate.of(startDate.getYear(), startDate.getMonthValue(), 1).plusMonths(12).minusDays(1);
-
-		}
-
+		Query query = entityManager.createNativeQuery("select \n" + "a.year_month as month,\n"
+				+ "ifnull(sum(a.articles_published),0) as articles_published,\n"
+				+ "ifnull(sum(td.articles_read),0) as articles_read,\n"
+				+ "ifnull(sum(a.quiz_published),0) as quiz_published,\n"
+				+ "ifnull(sum(td.quiz_attempted),0) as quiz_attempted,\n"
+				+ "ifnull(sum(td.quiz_correct),0) as quiz_correct\n" + "from monthly_published_articles_total_vw a \n"
+				+ "left outer join scores_monthly_total td on (td.student_id=?1 and td.score_year_month=a.year_month)\n"
+				+ "where a.reading_level=?2 and a.year_month>= ?3 and a.year_month<= ?4 \n" + "group by month",
+				StudentScoresMonthlyTotalDTO.class);
+		endDate = LocalDate.of(Integer.parseInt(yearMonth.substring(0, 4)), Integer.parseInt(yearMonth.substring(4, 6)),
+				LocalDate.now().getDayOfMonth());
+		startDate = LocalDate.of(endDate.getYear(), endDate.getMonthValue(), 1).minusMonths(11);
+		String startYearMonth = startDate.getYear() + ""
+				+ (startDate.getMonthValue() > 9 ? startDate.getMonthValue() : "0" + startDate.getMonthValue());
 		query.setParameter(1, studentId);
-		query.setParameter(2, studentId);
-		query.setParameter(3, studentId);
-		query.setParameter(4, startDate);
-		query.setParameter(5, endDate);
-		
-		List<MonthlyScoresDTO> list = query.getResultList();
-		System.out.println("findYearlyScoresByGenre : " + list);
+		query.setParameter(2, readingLevel);
+		query.setParameter(3, startYearMonth);
+		query.setParameter(4, yearMonth);
+		List<StudentScoresMonthlyTotalDTO> list = query.getResultList();
 		return list;
 	}
-	
+
+	@Override
+	public List<StudentScoresYearlyGenreDTO> findScoresYearlyGenre(ScoresSearchData searchRequest) {
+		Long studentId = searchRequest.getStudentId();
+		String yearMonth = searchRequest.getYearMonth();
+		int readingLevel = searchRequest.getReadingLevel();
+		LocalDate startDate = null;
+		LocalDate endDate = null;
+		Query query = entityManager.createNativeQuery("select \n" + "a.genre_id as genre,\n"
+				+ "ifnull(sum(a.articles_published),0) as articles_published,\n"
+				+ "ifnull(sum(td.articles_read),0) as articles_read,\n"
+				+ "ifnull(sum(a.quiz_published),0) as quiz_published,\n"
+				+ "ifnull(sum(td.quiz_attempted),0) as quiz_attempted,\n"
+				+ "ifnull(sum(td.quiz_correct),0) as quiz_correct\n" + "from monthly_published_articles_genre_vw a \n"
+				+ "left outer join scores_monthly_genre td on (td.student_id=?1 and td.genre_id=a.genre_id and td.score_year_month=a.year_month)\n"
+				+ "where a.reading_level=?2 and a.year_month>= ?3 and a.year_month<= ?4 \n" + "group by genre",
+				StudentScoresYearlyGenreDTO.class);
+		endDate = LocalDate.of(Integer.parseInt(yearMonth.substring(0, 4)), Integer.parseInt(yearMonth.substring(4, 6)),
+				LocalDate.now().getDayOfMonth());
+		startDate = LocalDate.of(endDate.getYear(), endDate.getMonthValue(), 1).minusMonths(11);
+		String startYearMonth = startDate.getYear() + ""
+				+ (startDate.getMonthValue() > 9 ? startDate.getMonthValue() : "0" + startDate.getMonthValue());
+		query.setParameter(1, studentId);
+		query.setParameter(2, readingLevel);
+		query.setParameter(3, startYearMonth);
+		query.setParameter(4, yearMonth);
+		List<StudentScoresYearlyGenreDTO> list = query.getResultList();
+		return list;
+	}
+
+	@Override
+	public List<StudentScoresMonthlyTotalDTO> findMonthWiseTotalScores(ScoresSearchData searchRequest) {
+		Long studentId = searchRequest.getStudentId();
+		String yearMonth = searchRequest.getYearMonth();
+		int readingLevel = searchRequest.getReadingLevel();
+		Query query = entityManager.createNativeQuery("select td.score_year_month as month,\n"
+				+ "ifnull(sum(td.quiz_correct),0) as quiz_correct,'0' as articles_published,'0' as articles_read,'0' as quiz_attempted,'0' as quiz_published\n"
+				+ "from scores_monthly_total td where td.student_id=?1 and td.reading_level=?2 and td.score_year_month= ?3 group by month\n",
+				StudentScoresMonthlyTotalDTO.class);
+		query.setParameter(1, studentId);
+		query.setParameter(2, readingLevel);
+		query.setParameter(3, yearMonth);
+		List<StudentScoresMonthlyTotalDTO> list = query.getResultList();
+		return list;
+	}
+
+	@Override
+	public List<StudentScoresMonthlyGenreDTO> findMonthWiseGenreScores(ScoresSearchData searchRequest) {
+		Long studentId = searchRequest.getStudentId();
+		String yearMonth = searchRequest.getYearMonth();
+		int readingLevel = searchRequest.getReadingLevel();
+		Query query = entityManager.createNativeQuery("select td.genre_id as genre,\n"
+				+ "ifnull(sum(td.quiz_correct),0) as quiz_correct,'0' as articles_published,'0' as articles_read,'0' as quiz_attempted,'0' as quiz_published\n"
+				+ "from scores_monthly_genre td where td.student_id=?1 and td.reading_level=?2 and td.score_year_month= ?3 group by genre\n",
+				StudentScoresMonthlyGenreDTO.class);
+		query.setParameter(1, studentId);
+		query.setParameter(2, readingLevel);
+		query.setParameter(3, yearMonth);
+		List<StudentScoresMonthlyGenreDTO> list = query.getResultList();
+		return list;
+	}
+
 }

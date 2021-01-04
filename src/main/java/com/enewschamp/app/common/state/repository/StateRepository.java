@@ -9,11 +9,11 @@ import org.springframework.data.repository.query.Param;
 
 import com.enewschamp.app.common.state.entity.State;
 
-public interface StateRepository extends JpaRepository<State, Long>{
+public interface StateRepository extends JpaRepository<State, Long> {
 
 	@Query("Select s from State s where s.countryId= :countryId and s.recordInUse = 'Y' ")
-	public List<State> getStateForCountry(@Param("countryId" )String countryId);
-	
+	public List<State> getStateForCountry(@Param("countryId") String countryId);
+
 	@Query("Select s from State s where s.nameId= :nameId and s.recordInUse = 'Y' ")
-	public Optional<State> getState(@Param("nameId" )String nameId);
+	public Optional<State> getState(@Param("nameId") String nameId);
 }

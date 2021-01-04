@@ -17,11 +17,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name="UserLeaves")
+@Table(name = "UserLeaves")
 public class UserLeave extends BaseEntity {
-	
+
 	private static final long serialVersionUID = -1254968870368475725L;
 
 	@EmbeddedId
@@ -30,15 +30,15 @@ public class UserLeave extends BaseEntity {
 	@NotNull
 	@Column(name = "EndDate")
 	private LocalDate endDate;
-	
+
 	@Column(name = "NumberOfDays")
 	private int numberOfDays;
-	
+
 	@NotNull
 	@Column(name = "ApprovalStatus")
 	@Enumerated(EnumType.STRING)
 	private LeaveApprovalStatus approvalStatus;
-	
+
 	@NotNull
 	@Column(name = "ApplicationDateTime")
 	private LocalDateTime applicationDateTime;

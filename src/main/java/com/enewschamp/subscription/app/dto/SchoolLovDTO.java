@@ -8,16 +8,19 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class SchoolLovDTO extends PageData{
+@EqualsAndHashCode(callSuper = false)
+public class SchoolLovDTO extends PageData {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String countryID;
-	private String stateID;
-	private String cityID;
+	private String countryId;
+	private String stateId;
+	private String cityId;
+	private List<CountryPageData> countryLOV;
+	private List<StatePageData> stateLOV;
+	private List<CityPageData> cityLOV;
 	private List<SchoolData> schoolLOV;
-	
+
 }

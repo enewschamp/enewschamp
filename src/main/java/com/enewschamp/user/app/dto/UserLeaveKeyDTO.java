@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class UserLeaveKeyDTO implements Serializable {
 
 	private static final long serialVersionUID = 8946600292510794786L;
@@ -22,7 +22,6 @@ public class UserLeaveKeyDTO implements Serializable {
 	private String userId;
 
 	@NotNull
-	private LocalDate startDate;	
-	
+	private LocalDate startDate;
 
 }

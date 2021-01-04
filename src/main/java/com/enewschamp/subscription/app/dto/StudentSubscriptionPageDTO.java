@@ -9,12 +9,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class StudentSubscriptionPageDTO extends PageDTO {
 
-	
 	private static final long serialVersionUID = 1L;
-	
+
 	StudentSubscriptionPageData data;
 	List<UIControlsDTO> screenProperties;
 }

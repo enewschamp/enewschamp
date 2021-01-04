@@ -18,9 +18,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@EqualsAndHashCode(callSuper=false)
-@Table(name="StudentPayment")
-public class StudentPayment extends BaseEntity{
+@EqualsAndHashCode(callSuper = false)
+@Table(name = "StudentPayment")
+public class StudentPayment extends BaseEntity {
 
 	/**
 	 * 
@@ -28,31 +28,27 @@ public class StudentPayment extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studentPay_id_generator")
-	@SequenceGenerator(name="studentPay_id_generator", sequenceName = "studentPay_seq", allocationSize=1)
-	private Long paymentID=0L;
-	
 	@NotNull
-	@Column(name="StudentID", length=10)
-	private Long studentID=0L;
+	private Long paymentId = 0L;
+
 	@NotNull
-	@Column(name="EditionID", length=6)
-	private String editionID;
+	@Column(name = "StudentId", length = 10)
+	private Long studentId = 0L;
 	@NotNull
-	@Column(name="SubscriptionType", length=1)
+	@Column(name = "EditionId", length = 6)
+	private String editionId;
+	@NotNull
+	@Column(name = "SubscriptionType", length = 1)
 	private String subscriptionType;
-	
-	@Column(name="StartDate")
-	private Date startDate;
-	
-	@Column(name="EndDate")
-	private Date endDate;
-	
-	@Column(name="PayCurrency", length=4)
-	private String payCurrency;
-	
-	@Column(name="PayAmount", length=9)
-	private Double payAmount;
-	
-	
+
+	@NotNull
+	@Column(name = "SubscriptionPeriod", length = 100)
+	private String subscriptionPeriod;
+
+	@Column(name = "PaymentCurrency", length = 4)
+	private String paymentCurrency;
+
+	@Column(name = "PaymentAmount", length = 9)
+	private Double paymentAmount;
+
 }

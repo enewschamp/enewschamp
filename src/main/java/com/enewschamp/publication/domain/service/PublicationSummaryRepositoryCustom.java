@@ -8,7 +8,10 @@ import com.enewschamp.publication.app.dto.PublicationMonthlySummaryDTO;
 import com.enewschamp.publication.page.data.PublicationSummaryRequest;
 
 public interface PublicationSummaryRepositoryCustom {
-	public Page<PublicationDailySummaryDTO> fetchDailySummary(PublicationSummaryRequest summaryRequest, Pageable pageable);
-	public Page<PublicationMonthlySummaryDTO> fetchMonthlySummary(PublicationSummaryRequest summaryRequest, Pageable pageable);
+	public Page<PublicationDailySummaryDTO> fetchDailySummary(PublicationSummaryRequest summaryRequest,
+			Pageable pageable);
+
+	public Page<PublicationMonthlySummaryDTO> fetchMonthlySummary(PublicationSummaryRequest summaryRequest,
+			Pageable pageable);
 
 }

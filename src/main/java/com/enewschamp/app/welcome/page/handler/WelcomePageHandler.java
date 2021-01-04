@@ -1,37 +1,61 @@
 package com.enewschamp.app.welcome.page.handler;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
-import com.enewschamp.app.fw.page.navigation.common.PageAction;
+import com.enewschamp.app.common.city.service.CityService;
+import com.enewschamp.app.common.country.service.CountryService;
+import com.enewschamp.app.common.state.service.StateService;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
+import com.enewschamp.app.recognition.page.data.RecognitionData;
+import com.enewschamp.app.school.service.SchoolService;
+import com.enewschamp.app.scores.dto.StudentScoresMonthlyDTO;
+import com.enewschamp.app.scores.page.data.ScoresSearchData;
+import com.enewschamp.app.scores.service.ScoreService;
 import com.enewschamp.app.student.badges.business.StudentBadgesBusiness;
-import com.enewschamp.app.student.badges.entity.StudentBadges;
-import com.enewschamp.app.student.monthlytrends.business.TrendsMonthlyByGenreBusiness;
-import com.enewschamp.app.student.monthlytrends.business.TrendsMonthlyTotalBusiness;
-import com.enewschamp.app.student.monthlytrends.dto.TrendsMonthlyByGenreDTO;
-import com.enewschamp.app.student.monthlytrends.dto.TrendsMonthlyTotalDTO;
-import com.enewschamp.app.trends.service.TrendsService;
-import com.enewschamp.app.user.login.entity.UserLogin;
+import com.enewschamp.app.student.registration.business.StudentRegistrationBusiness;
+import com.enewschamp.app.student.registration.entity.StudentRegistration;
+import com.enewschamp.app.student.registration.service.StudentRegistrationService;
+import com.enewschamp.app.student.scores.business.ScoresMonthlyGenreBusiness;
+import com.enewschamp.app.student.scores.business.ScoresMonthlyTotalBusiness;
+import com.enewschamp.app.student.scores.dto.StudentScoresMonthlyGenreDTO;
+import com.enewschamp.app.student.scores.dto.StudentScoresMonthlyTotalDTO;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
+import com.enewschamp.app.user.login.service.UserLoginService;
 import com.enewschamp.app.welcome.page.data.WelcomePageData;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
-import com.enewschamp.master.badge.entity.Badge;
 import com.enewschamp.master.badge.service.BadgeService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.entity.Edition;
 import com.enewschamp.publication.domain.service.EditionService;
+import com.enewschamp.subscription.app.dto.AppearancePageData;
+import com.enewschamp.subscription.app.dto.MyPicturePageData;
+import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.app.dto.StudentDetailsDTO;
+import com.enewschamp.subscription.app.dto.StudentDetailsPageData;
+import com.enewschamp.subscription.app.dto.StudentPreferencesDTO;
+import com.enewschamp.subscription.app.dto.StudentPreferencesPageData;
+import com.enewschamp.subscription.app.dto.StudentSchoolDTO;
+import com.enewschamp.subscription.app.dto.StudentSchoolPageData;
+import com.enewschamp.subscription.app.dto.StudentSubscriptionDTO;
+import com.enewschamp.subscription.app.dto.StudentSubscriptionPageData;
+import com.enewschamp.subscription.domain.business.PreferenceBusiness;
+import com.enewschamp.subscription.domain.business.SchoolDetailsBusiness;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.StudentDetailsBusiness;
+import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "WelcomePageHandler")
@@ -44,10 +68,14 @@ public class WelcomePageHandler implements IPageHandler {
 	StudentControlBusiness studentControlBusiness;
 
 	@Autowired
-	ObjectMapper objectMapper;
+	SchoolDetailsBusiness schoolDetailsBusiness;
 
 	@Autowired
-	TrendsService trendsService;
+	UserLoginService loginService;
+
+	@Autowired
+	ObjectMapper objectMapper;
+
 	@Autowired
 	StudentDetailsBusiness studentDetailsBusiness;
 
@@ -59,124 +87,229 @@ public class WelcomePageHandler implements IPageHandler {
 
 	@Autowired
 	StudentBadgesBusiness studentBadgesBusiness;
+
+	@Autowired
+	StudentRegistrationService studentRegistrationService;
+
 	@Autowired
 	BadgeService badgeService;
-	@Autowired
-	TrendsMonthlyTotalBusiness trendsMonthlyTotalBusiness;
 
 	@Autowired
-	TrendsMonthlyByGenreBusiness trendsMonthlyByGenreBusiness;
+	ScoresMonthlyTotalBusiness scoresMonthlyTotalBusiness;
+
+	@Autowired
+	ScoresMonthlyGenreBusiness scoresMonthlyGenreBusiness;
+
+	@Autowired
+	StudentRegistrationService regService;
+
+	@Autowired
+	StudentRegistrationBusiness studentRegBusiness;
+
+	@Autowired
+	PreferenceBusiness preferenceBusiness;
+
+	@Autowired
+	SubscriptionBusiness studentSubscriptionBusiness;
+
+	@Autowired
+	CityService cityService;
+
+	@Autowired
+	CountryService countryService;
+
+	@Autowired
+	StateService stateService;
+
+	@Autowired
+	SchoolService schoolService;
+
+	@Autowired
+	ScoreService scoreService;
 
 	@Override
-	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
+	public PageDTO handleAction(PageRequestDTO pageRequest) {
 		return null;
 	}
 
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
+		String methodName = pageNavigationContext.getLoadMethod();
+		if (methodName != null && !"".equals(methodName)) {
+			Class[] params = new Class[1];
+			params[0] = PageNavigationContext.class;
+			Method m = null;
+			try {
+				m = this.getClass().getDeclaredMethod(methodName, params);
+			} catch (NoSuchMethodException e1) {
+				e1.printStackTrace();
+			} catch (SecurityException e1) {
+				e1.printStackTrace();
+			}
+			try {
+				return (PageDTO) m.invoke(this, pageNavigationContext);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				if (e.getCause() instanceof BusinessException) {
+					throw ((BusinessException) e.getCause());
+				} else {
+					e.printStackTrace();
+				}
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
+		return pageDTO;
+	}
+
+	public PageDTO loadWelcomePage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		//no page number to be returned..
-		
-		pageDto.getHeader().setPageNo(0);
-		
-		String operation = pageNavigationContext.getPageRequest().getHeader().getOperation();
-		String action = pageNavigationContext.getPageRequest().getHeader().getAction();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
-		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionID();
+		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
+		studentRegBusiness.checkAndUpdateIfEvalPeriodExpired(emailId, editionId);
+		studentRegBusiness.checkAndUpdateIfSubscriptionExpired(emailId, editionId);
 		String editionName = "";
 		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
-		String badgeGenre = "";
-		Long yearMonth = null;
-		Long pointsToNextBadge = 0L;
+		WelcomePageData pageData = new WelcomePageData();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		if (studentId == null || studentId == 0L) {
-			throw new BusinessException(ErrorCodes.STUDENT_DTLS_NOT_FOUND);
-		}
+		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+		StudentSubscriptionDTO studentSubscriptionDTO = studentSubscriptionBusiness
+				.getStudentSubscriptionFromMaster(studentId, editionId);
 
-		if (PageAction.WelcomeUser.toString().equalsIgnoreCase(action)) {
-			WelcomePageData pageData = new WelcomePageData();
-
-			StudentDetailsDTO studentDetailsDTO = studentDetailsBusiness.getStudentDetailsFromMaster(studentId);
-			pageData.setStudentName(studentDetailsDTO.getName());
-			pageData.setUserImage(studentDetailsDTO.getPhoto());
-
-			Edition edition = editionService.getEdition(editionId);
-			editionName = edition.getEditionName();
-			pageData.setEditionName(editionName);
-
-			UserLogin studentLogin = studentLoginBusiness.getLoginDetails(deviceId, emailId, UserType.S);
-			if(studentLogin!=null) {
-			LocalDateTime lastLoginTime = studentLogin.getLastLoginTime();
-
-			if (lastLoginTime != null)
-				pageData.setLastLoginDatetime(lastLoginTime);
-			}
-
-			// get Student Badge..
-			StudentBadges studentbadge = studentBadgesBusiness.getLastestBadge(studentId, editionId);
-			Badge badge = null;
-			if (studentbadge != null) {
-				badge = badgeService.get(studentbadge.getBadgeId());
-				badgeGenre = badge.getGenreId();
-				System.out.println(" badgeGenre :"+badgeGenre);
-				yearMonth = studentbadge.getYearMonth();
-				pageData.setBadgeDate(studentbadge.getOperationDateTime().toLocalDate());
-				pageData.setBadgeImage(studentbadge.getBadgeImage());
-
-			}
-
-			// display the next bagde message..
-			// get the existing points for this edition..
-			if (badgeGenre != null && !"".equals(badgeGenre)) {
-				// get data from Trends Monthly by Genre
-
-				TrendsMonthlyByGenreDTO trendsMonthlyByGenreDTO = trendsMonthlyByGenreBusiness
-						.getMonthlyTrend(studentId, editionId, "" + yearMonth, badgeGenre);
-
-				if (trendsMonthlyByGenreDTO != null) {
-					Long points = trendsMonthlyByGenreDTO.getQuizQCorrect();
-					Badge nextbadge = badgeService.getNextBadgeForGenre(editionId, trendsMonthlyByGenreDTO.getGenreId(),
-							points);
-					Long monthlyPointsToScore = nextbadge.getMonthlyPointsToScore();
-					pointsToNextBadge = monthlyPointsToScore - points;
-					String message = "Just " + pointsToNextBadge + " away from winning a " + nextbadge.getName();
-					pageData.setNextBadgeMessage(message);
-
-				}
-
+		StudentSubscriptionPageData studentSubscriptionPageData = new StudentSubscriptionPageData();
+		if (studentSubscriptionDTO != null) {
+			studentSubscriptionPageData = modelMapper.map(studentSubscriptionDTO, StudentSubscriptionPageData.class);
+			if ("F".equals(studentSubscriptionDTO.getSubscriptionSelected())) {
+				studentSubscriptionPageData
+						.setSubscriptionSelected(("Y".equals(studentControlDTO.getEvalAvailed()) ? "F" : "E"));
+				studentSubscriptionPageData.setValidity(studentSubscriptionDTO.getEndDate().toString());
+			} else if (studentSubscriptionDTO.getEndDate().isBefore(LocalDate.now())) {
+				studentSubscriptionPageData.setValidity("");
 			} else {
-				// get data from Trends Monthly Total
-
-				TrendsMonthlyTotalDTO trendsMonthlyTotalDTO = trendsMonthlyTotalBusiness.getMonthlyTrend(studentId,
-						editionId, "" + yearMonth);
-				if (trendsMonthlyTotalDTO != null) {
-					Long points = trendsMonthlyTotalDTO.getQuizQCorrect();
-					Badge nextbadge = badgeService.getNextBadge(editionId, points);
-					Long monthlyPointsToScore = nextbadge.getMonthlyPointsToScore();
-					pointsToNextBadge = monthlyPointsToScore - points;
-					String message = "Just " + pointsToNextBadge + " away from winning a " + nextbadge.getName();
-					pageData.setNextBadgeMessage(message);
-				}
-
+				studentSubscriptionPageData.setValidity(studentSubscriptionDTO.getEndDate().toString());
 			}
-			pageDto.setData(pageData);
+		} else {
+			studentSubscriptionPageData.setValidity("");
 		}
+		StudentDetailsPageData studentDetailsPageData = new StudentDetailsPageData();
+		StudentDetailsDTO studentDetailsDTO = studentDetailsBusiness.getStudentDetailsFromMaster(studentId);
+		if (studentDetailsDTO != null) {
+			studentDetailsPageData = modelMapper.map(studentDetailsDTO, StudentDetailsPageData.class);
+		}
+		MyPicturePageData myPicturePageData = new MyPicturePageData();
+		StudentRegistration studentRegistration = studentRegistrationService.getStudentReg(emailId);
+		if (studentRegistration != null) {
+			myPicturePageData.setAvatarName(studentRegistration.getAvatarName());
+			myPicturePageData.setPhotoName(studentRegistration.getPhotoName());
+			if ("Y".equalsIgnoreCase(studentRegistration.getIsTestUser())) {
+				pageData.setTestUser("Y");
+			} else {
+				pageData.setTestUser("N");
+			}
+		} else {
+			myPicturePageData.setAvatarName("");
+			myPicturePageData.setPhotoName("");
+			pageData.setTestUser("N");
+		}
+		StudentSchoolPageData studentSchoolPageData = new StudentSchoolPageData();
+		StudentSchoolDTO studentSchoolDTO = schoolDetailsBusiness.getStudentFromMaster(studentId);
+		if (studentSchoolDTO != null) {
+			studentSchoolPageData = modelMapper.map(studentSchoolDTO, StudentSchoolPageData.class);
+			if (studentSchoolPageData.getCity() != null && !"Y".equals(studentSchoolPageData.getCityNotInTheList())) {
+				studentSchoolPageData.setCity(cityService.getCity(studentSchoolPageData.getCity()).getDescription());
+			}
+			if (studentSchoolPageData.getState() != null && !"Y".equals(studentSchoolPageData.getStateNotInTheList())) {
+				studentSchoolPageData.setState(stateService.getState(studentSchoolPageData.getState()).getName());
+			}
+			if (studentSchoolPageData.getCountry() != null
+					&& !"Y".equals(studentSchoolPageData.getCountryNotInTheList())) {
+				studentSchoolPageData
+						.setCountry(countryService.getCountry(studentSchoolPageData.getCountry()).getName());
+			}
+			if (studentSchoolPageData.getSchool() != null
+					&& !"Y".equals(studentSchoolPageData.getSchoolNotInTheList())) {
+				studentSchoolPageData
+						.setSchool(schoolService.get(Long.valueOf(studentSchoolPageData.getSchool())).getName());
+			}
+		}
+		StudentPreferencesPageData studentPreferencesPageData = new StudentPreferencesPageData();
+		StudentPreferencesDTO studentPreferencesDTO = preferenceBusiness.getPreferenceFromMaster(studentId);
+		if (studentPreferencesDTO != null) {
+			studentPreferencesPageData = modelMapper.map(studentPreferencesDTO, StudentPreferencesPageData.class);
+		}
+		AppearancePageData appearancePageData = new AppearancePageData();
+		StudentRegistration studReg = regService.getStudentReg(emailId);
+		if (studReg != null) {
+			appearancePageData.setTheme(studReg.getTheme());
+			appearancePageData.setFontHeight(studReg.getFontHeight());
+		}
+		Edition edition = editionService.getEdition(editionId);
+		editionName = edition.getEditionName();
+		pageData.setEditionName(editionName);
+		pageData.setStudentId(studentId);
+		int readingLevel = 3;
+		if (studentPreferencesDTO != null) {
+			readingLevel = Integer.valueOf(studentPreferencesDTO.getReadingLevel());
+		}
+		LocalDateTime lastLogin = loginService.getUserLastLoginDetails(emailId, deviceId, UserType.S);
+		LocalDate fromDate = LocalDate.now().minusMonths(1);
+		int year = fromDate.getYear();
+		int month = fromDate.getMonthValue();
+		Long yearMonth = Long.valueOf(year + "" + (month > 9 ? month : "0" + month));
+		List<RecognitionData> studentbadges = studentBadgesBusiness.getBadgeDetails(studentId, editionId, readingLevel,
+				yearMonth);
 
+		List<StudentScoresMonthlyDTO> scoresMonthly = new ArrayList<StudentScoresMonthlyDTO>();
+		ScoresSearchData searchData = new ScoresSearchData();
+		searchData.setStudentId(studentId);
+		searchData.setReadingLevel(readingLevel);
+		searchData.setYearMonth("" + yearMonth);
+		List<StudentScoresMonthlyTotalDTO> monthlyTotalScoresDTO = scoreService.findMonthWiseTotalScores(searchData);
+		List<StudentScoresMonthlyGenreDTO> monthlyGenreScoresDTO = scoreService.findMonthWiseGenreScores(searchData);
+		StudentScoresMonthlyDTO prevMonth = new StudentScoresMonthlyDTO();
+		prevMonth.setMonth("" + yearMonth);
+		prevMonth.setTotal(monthlyTotalScoresDTO);
+		prevMonth.setByGenre(monthlyGenreScoresDTO);
+		scoresMonthly.add(prevMonth);
+		LocalDate todaysDate = LocalDate.now();
+		year = todaysDate.getYear();
+		month = todaysDate.getMonthValue();
+		yearMonth = Long.valueOf(year + "" + (month > 9 ? month : "0" + month));
+		searchData.setYearMonth("" + yearMonth);
+		monthlyTotalScoresDTO = scoreService.findMonthWiseTotalScores(searchData);
+		monthlyGenreScoresDTO = scoreService.findMonthWiseGenreScores(searchData);
+		StudentScoresMonthlyDTO currMonth = new StudentScoresMonthlyDTO();
+		currMonth.setMonth("" + yearMonth);
+		currMonth.setTotal(monthlyTotalScoresDTO);
+		currMonth.setByGenre(monthlyGenreScoresDTO);
+		scoresMonthly.add(currMonth);
+		pageData.setScoresMonthly(scoresMonthly);
+		pageData.setAppearance(appearancePageData);
+		pageData.setMyPicture(myPicturePageData);
+		pageData.setPreferences(studentPreferencesPageData);
+		pageData.setSchoolDetails(studentSchoolPageData);
+		pageData.setStudentDetails(studentDetailsPageData);
+		pageData.setSubscription(studentSubscriptionPageData);
+		pageData.setBadgeDetails(studentbadges);
+		pageData.setLastActivityDatetime(lastLogin);
+
+		pageDto.setData(pageData);
 		return pageDto;
 	}
 
 	@Override
-	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
+	public PageDTO saveAsMaster(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 
 		return pageDto;
 	}
 
 	@Override
-	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
+	public PageDTO handleAppAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDto = new PageDTO();
-
+		pageDto.setHeader(pageRequest.getHeader());
 		return pageDto;
 	}
 

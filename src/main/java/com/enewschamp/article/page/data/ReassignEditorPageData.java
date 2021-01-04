@@ -16,6 +16,6 @@ public class ReassignEditorPageData extends PageData {
 	private static final long serialVersionUID = 3248355847834322345L;
 
 	private NewsArticleGroupDTO newsArticleGroup;
-	
+
 	private List<ListOfValuesItem> editorLOV;
 }

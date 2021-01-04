@@ -16,88 +16,101 @@ import com.enewschamp.subscription.domain.service.StudentControlWorkService;
 public class StudentControlBusiness {
 
 	@Autowired
-	StudentControlWorkService studentControlWorkService; 
-	
+	StudentControlWorkService studentControlWorkService;
+
 	@Autowired
-	StudentControlService studentControlService; 
-	
+	StudentControlService studentControlService;
+
 	@Autowired
 	ModelMapper modelMapper;
-	public StudentControlWork saveAsWork(StudentControlWorkDTO studenControlWorkDto)
-	{
-		
-		StudentControlWork studentControlWork =modelMapper.map(studenControlWorkDto,StudentControlWork.class);
+
+	public StudentControlWork saveAsWork(StudentControlWorkDTO studenControlWorkDTO) {
+		StudentControlWork studentControlWork = modelMapper.map(studenControlWorkDTO, StudentControlWork.class);
 		// to be changed
 		studentControlWork.setOperatorId("APP");
-		
 		studentControlWork.setRecordInUse(RecordInUseType.Y);
-
 		studentControlWork = studentControlWorkService.create(studentControlWork);
 		return studentControlWork;
 	}
-	public StudentControl saveAsMaster(StudentControlDTO studenControlDto)
-	{
-		
-		StudentControl studentControl =modelMapper.map(studenControlDto,StudentControl.class);
+
+	public StudentControlWork updateAsWork(StudentControlWorkDTO studenControlWorkDto) {
+		StudentControlWork studentControlWork = modelMapper.map(studenControlWorkDto, StudentControlWork.class);
+		studentControlWork.setOperatorId("APP");
+		studentControlWork.setRecordInUse(RecordInUseType.Y);
+		studentControlWork = studentControlWorkService.update(studentControlWork);
+		return studentControlWork;
+	}
+
+	public StudentControl saveAsMaster(StudentControlDTO studenControlDto) {
+		StudentControl studentControl = modelMapper.map(studenControlDto, StudentControl.class);
 		// to be changed
 		studentControl.setOperatorId("APP");
-		
 		studentControl.setRecordInUse(RecordInUseType.Y);
-
 		studentControl = studentControlService.create(studentControl);
 		return studentControl;
 	}
-	public void workToMaster(Long studentId)
-	{
+
+	public void workToMaster(Long studentId) {
 		StudentControlWork workEntity = studentControlWorkService.get(studentId);
-		StudentControl masterEntity = modelMapper.map(workEntity,StudentControl.class);
-		studentControlService.create(masterEntity);
+		if (workEntity != null) {
+			StudentControl masterEntity = modelMapper.map(workEntity, StudentControl.class);
+			if (workEntity.getSubscriptionTypeW() != null && !"".equals(workEntity.getSubscriptionTypeW())) {
+				masterEntity.setSubscriptionType(workEntity.getSubscriptionTypeW());
+			}
+			if (workEntity.getStudentDetailsW() != null && !"".equals(workEntity.getStudentDetailsW())) {
+				masterEntity.setStudentDetails(workEntity.getStudentDetailsW());
+			}
+			if (workEntity.getSchoolDetailsW() != null && !"".equals(workEntity.getSchoolDetailsW())) {
+				masterEntity.setSchoolDetails(workEntity.getSchoolDetailsW());
+			}
+			if (workEntity.getPreferencesW() != null && !"".equals(workEntity.getPreferencesW())) {
+				masterEntity.setPreferences(workEntity.getPreferencesW());
+			}
+			if (workEntity.getEmailIdVerified() != null && !"".equals(workEntity.getEmailIdVerified())) {
+				masterEntity.setEmailIdVerified(workEntity.getEmailIdVerified());
+			}
+			masterEntity.setStudentId(studentId);
+			studentControlService.create(masterEntity);
+		}
 	}
-	
-	public void deleteFromWork(StudentControlWorkDTO studenControlWorkDto)
-	{
-		studentControlWorkService.delete(studenControlWorkDto.getStudentID());
+
+	public void deleteFromWork(StudentControlWorkDTO studenControlWorkDto) {
+		studentControlWorkService.delete(studenControlWorkDto.getStudentId());
 	}
-	
-	public boolean isStudentExist(Long studentId)
-	{
+
+	public boolean isStudentExist(Long studentId) {
 		return studentControlService.studentExist(studentId);
 	}
-	
-	public StudentControlDTO getStudentFromMaster(String emailId)
-	{
-		StudentControl studentEntity = 	studentControlService.getStudentByEmail(emailId);
-		if(studentEntity!=null) {
-		StudentControlDTO studentDto = modelMapper.map(studentEntity,StudentControlDTO.class);
-		return studentDto;
-		}
-		else
+
+	public StudentControlDTO getStudentFromMaster(String emailId) {
+		StudentControl studentEntity = studentControlService.getStudentByEmail(emailId);
+		if (studentEntity != null) {
+			StudentControlDTO studentDto = modelMapper.map(studentEntity, StudentControlDTO.class);
+			return studentDto;
+		} else
 			return null;
-		
+
 	}
-	
-	public StudentControlWorkDTO getStudentFromWork(String emailId)
-	{
-		StudentControlWork studentEntityWork = 	studentControlWorkService.getStudentByEmail(emailId);
-		if(studentEntityWork!=null) {
-		StudentControlWorkDTO studentDto = modelMapper.map(studentEntityWork,StudentControlWorkDTO.class);
-		return studentDto;
-		}
-		else
+
+	public StudentControlWorkDTO getStudentFromWork(String emailId) {
+		StudentControlWork studentEntityWork = studentControlWorkService.getStudentByEmail(emailId);
+		if (studentEntityWork != null) {
+			StudentControlWorkDTO studentDto = modelMapper.map(studentEntityWork, StudentControlWorkDTO.class);
+			return studentDto;
+		} else
 			return null;
-		
+
 	}
-	
-	public Long getStudentId(String emailId)
-	{
-		Long studentId=0L;
+
+	public Long getStudentId(String emailId) {
+		Long studentId = 0L;
 		StudentControlDTO studentControlDTO = getStudentFromMaster(emailId);
 		if (studentControlDTO != null) {
-			studentId = studentControlDTO.getStudentID();
+			studentId = studentControlDTO.getStudentId();
 		} else {
 			StudentControlWorkDTO studentControlWorkDTO = getStudentFromWork(emailId);
-			if(studentControlWorkDTO!=null)
-			studentId = studentControlWorkDTO.getStudentID();
+			if (studentControlWorkDTO != null)
+				studentId = studentControlWorkDTO.getStudentId();
 		}
 		return studentId;
 	}

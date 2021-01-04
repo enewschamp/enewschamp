@@ -13,5 +13,5 @@ public class StatusTransitionDTO {
 	private String fromStatus;
 	private String action;
 	private String toStatus;
-	
+
 }

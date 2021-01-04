@@ -13,25 +13,24 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name="HashTag")
+@Table(name = "HashTag")
 public class HashTag extends BaseEntity {
-	
+
 	private static final long serialVersionUID = 2844284287599966841L;
 
 	@Id
 	@NotNull
-	@Column(name = "HashTag", length=25)
+	@Column(name = "HashTag", length = 25)
 	private String hashTag;
-	
+
 	@NotNull
 	@Column(name = "GenreId", length = ForeignKeyColumnLength.GenreId)
 	private String genreId;
-	
+
 	@NotNull
 	@Column(name = "LanguageId", length = 3)
 	private String languageId;
-	
-	
+
 }
