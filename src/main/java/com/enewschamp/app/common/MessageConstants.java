@@ -70,6 +70,8 @@ public class MessageConstants {
 	public static final String STAKE_HOLDER_NAME_NOT_EMPTY = "Stake holder name must not be empty";
 	public static final String STAKE_HOLDER_SURNAME_NOT_NULL ="Stake holder surname must not be null";
 	public static final String STAKE_HOLDER_SURNAME_NOT_EMPTY = "Stake holder surname must not be empty";
+	public static final String STAKE_HOLDER_NOT_NULL = "Stake holder id must not be null";
+	public static final String STAKE_HOLDER_NOT_EMPTY = "Stake holder id must not be empty";
 
 
 }
