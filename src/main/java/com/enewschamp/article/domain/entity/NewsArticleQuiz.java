@@ -26,8 +26,8 @@ public class NewsArticleQuiz extends BaseEntity {
 
 	@Id
 	@NotNull
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_id_generator")
-	@SequenceGenerator(name = "quiz_id_generator", sequenceName = "art_quiz_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "news_article_quiz_id_generator")
+	@SequenceGenerator(name = "news_article_quiz_id_generator", sequenceName = "news_article_quiz_id_seq", allocationSize = 1)
 	@Column(name = "NewsArticleQuizId", updatable = false, nullable = false)
 	private long newsArticleQuizId = 0L;
 

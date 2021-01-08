@@ -28,8 +28,8 @@ public class StudentPaymentWork extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studentPayment_id_generator")
-	@SequenceGenerator(name = "studentPayment_id_generator", sequenceName = "studentPayment_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_payment_id_generator")
+	@SequenceGenerator(name = "student_payment_id_generator", sequenceName = "student_payment_id_seq", allocationSize = 1)
 	private Long paymentId = 0L;
 
 	@NotNull
@@ -46,11 +46,11 @@ public class StudentPaymentWork extends BaseEntity {
 	@Column(name = "SubscriptionPeriod", length = 100)
 	private String subscriptionPeriod;
 
-	@Column(name = "PayCurrency", length = 4)
-	private String payCurrency;
+	@Column(name = "PaymentCurrency", length = 4)
+	private String paymentCurrency;
 
-	@Column(name = "PayAmount", length = 9)
-	private Double payAmount;
+	@Column(name = "PaymentAmount", length = 9)
+	private Double paymentAmount;
 
 	@Column(name = "OrderId")
 	private String orderId;

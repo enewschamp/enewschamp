@@ -18,7 +18,6 @@ import com.enewschamp.app.user.login.entity.UserAction;
 import com.enewschamp.app.user.login.entity.UserActivityTracker;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
-import com.enewschamp.common.domain.service.PropertiesService;
 import com.enewschamp.domain.common.AbstractPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -40,8 +39,7 @@ public class MenuPageHandler extends AbstractPageHandler {
 
 	@Autowired
 	StudentControlBusiness studentControlBusiness;
-	@Autowired
-	private PropertiesService propertiesService;
+
 	@Autowired
 	StudentDetailsBusiness studentDetailsBusiness;
 

@@ -41,4 +41,7 @@ public class Genre extends BaseEntity {
 	@Transient
 	private String base64Image;
 
+	@Transient
+	private String imageTypeExt;
+
 }

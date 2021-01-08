@@ -26,7 +26,7 @@ public class StudentActivityDTO extends AbstractDTO {
 
 	private String saved;
 
-	private String likeLevel;
+	private String reaction;
 
 	private String opinion;
 

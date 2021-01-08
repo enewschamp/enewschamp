@@ -66,8 +66,8 @@ public class StudentControlBusiness {
 			if (workEntity.getPreferencesW() != null && !"".equals(workEntity.getPreferencesW())) {
 				masterEntity.setPreferences(workEntity.getPreferencesW());
 			}
-			if (workEntity.getEmailVerified() != null && !"".equals(workEntity.getEmailVerified())) {
-				masterEntity.setEmailVerified(workEntity.getEmailVerified());
+			if (workEntity.getEmailIdVerified() != null && !"".equals(workEntity.getEmailIdVerified())) {
+				masterEntity.setEmailIdVerified(workEntity.getEmailIdVerified());
 			}
 			masterEntity.setStudentId(studentId);
 			studentControlService.create(masterEntity);

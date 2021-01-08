@@ -17,5 +17,5 @@ public class StudentBadgesDTO extends AbstractDTO {
 	private Long studentBadgesId;
 	private Long studentId;
 	private Long badgeId;
-	private Long monthYear;
+	private Long yearMonth;
 }

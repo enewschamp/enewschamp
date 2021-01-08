@@ -72,15 +72,17 @@ public class NewsArticleGroupDTO extends MaintenanceDTO {
 	private String hashTags;
 
 	@JsonInclude
-	private boolean noQuiz;
+	private String noQuiz;
 
 	@JsonInclude
-	private boolean imageOnly;
+	private String imageOnly;
 
 	@JsonInclude
 	private String imageName;
 
 	private String base64Image;
+
+	private String imageTypeExt = "jpg";
 
 	@JsonInclude
 	@Size(max = ForeignKeyColumnLength.UserId)

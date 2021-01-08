@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.enewschamp.subscription.pricing.entity.IndividualPricing;
-
 @JaversSpringDataAuditable
 public interface IndividualPricingRepository extends JpaRepository<IndividualPricing, Long> {
 

@@ -13,11 +13,11 @@ import com.enewschamp.app.article.page.dto.ArticleQuizCompletionDTO;
 import com.enewschamp.app.student.badges.business.StudentBadgesBusiness;
 import com.enewschamp.app.student.badges.entity.StudentBadges;
 import com.enewschamp.app.student.business.StudentActivityBusiness;
-import com.enewschamp.app.student.dailytrends.business.TrendsDailyBusiness;
-import com.enewschamp.app.student.monthlytrends.business.TrendsMonthlyByGenreBusiness;
-import com.enewschamp.app.student.monthlytrends.business.TrendsMonthlyTotalBusiness;
-import com.enewschamp.app.student.monthlytrends.dto.TrendsMonthlyByGenreDTO;
-import com.enewschamp.app.student.monthlytrends.dto.TrendsMonthlyTotalDTO;
+import com.enewschamp.app.student.scores.business.ScoresDailyBusiness;
+import com.enewschamp.app.student.scores.business.ScoresMonthlyGenreBusiness;
+import com.enewschamp.app.student.scores.business.ScoresMonthlyTotalBusiness;
+import com.enewschamp.app.student.scores.dto.ScoresMonthlyGenreDTO;
+import com.enewschamp.app.student.scores.dto.ScoresMonthlyTotalDTO;
 import com.enewschamp.app.student.quiz.dto.QuizScoreDTO;
 import com.enewschamp.app.student.quiz.entity.QuizScore;
 import com.enewschamp.app.student.quiz.service.QuizScoreService;
@@ -43,13 +43,13 @@ public class QuizScoreBusiness {
 	NewsArticleQuizService newsArticleQuizService;
 
 	@Autowired
-	TrendsDailyBusiness trendsDailyBusiness;
+	ScoresDailyBusiness scoresDailyBusiness;
 
 	@Autowired
-	TrendsMonthlyByGenreBusiness trendsMonthlyByGenreBusiness;
+	ScoresMonthlyGenreBusiness scoresMonthlyGenreBusiness;
 
 	@Autowired
-	TrendsMonthlyTotalBusiness trendsMonthlyTotalBusiness;
+	ScoresMonthlyTotalBusiness scoresMonthlyTotalBusiness;
 
 	@Autowired
 	StudentActivityBusiness studentActivityBusiness;
@@ -82,16 +82,16 @@ public class QuizScoreBusiness {
 			quizScore = quizScoreService.create(quizScore);
 		}
 
-		// update the daily trend entity..
-		trendsDailyBusiness.saveQuizData(newsArticleId, studentId, editionId, readingLevel, quizQAttempted,
+		// update the daily score entity..
+		scoresDailyBusiness.saveQuizData(newsArticleId, studentId, editionId, readingLevel, quizQAttempted,
 				quizQCorrect);
 
-		// update the Monthly Trend Genre Entity
-		TrendsMonthlyByGenreDTO trendsMonthlyByGenreDTO = trendsMonthlyByGenreBusiness.saveQuizData(newsArticleId,
-				studentId, editionId, readingLevel, quizQAttempted, quizQCorrect);
+		// update the Monthly Score Genre Entity
+		ScoresMonthlyGenreDTO scoresMonthlyGenreDTO = scoresMonthlyGenreBusiness.saveQuizData(newsArticleId, studentId,
+				editionId, readingLevel, quizQAttempted, quizQCorrect);
 
-		// update Monthly Total Entity
-		TrendsMonthlyTotalDTO trendsMonthlyTotalDTO = trendsMonthlyTotalBusiness.saveQuizData(newsArticleId, studentId,
+		// update Monthly Score Total Entity
+		ScoresMonthlyTotalDTO scoresMonthlyTotalDTO = scoresMonthlyTotalBusiness.saveQuizData(newsArticleId, studentId,
 				editionId, readingLevel, quizQAttempted, quizQCorrect);
 
 		// update Student Activity
@@ -103,12 +103,12 @@ public class QuizScoreBusiness {
 		LocalDate publicationDate = newsArticle.getPublicationDate();
 		int year = publicationDate.getYear();
 		int month = publicationDate.getMonthValue();
-		String monthYear = year + "" + (month > 9 ? month : "0" + month);
-		String genreId = trendsMonthlyByGenreBusiness.getGenreId(newsArticleId);
+		String yearMonth = year + "" + (month > 9 ? month : "0" + month);
+		String genreId = scoresMonthlyGenreBusiness.getGenreId(newsArticleId);
 		StudentBadges studGenreBadge = studentBadgesBusiness.grantGenreBadge(studentId, editionId, readingLevel,
-				Long.valueOf(monthYear), genreId, trendsMonthlyByGenreDTO);
+				Long.valueOf(yearMonth), genreId, scoresMonthlyGenreDTO);
 		StudentBadges studBadge = studentBadgesBusiness.grantBadge(studentId, editionId, readingLevel,
-				Long.valueOf(monthYear), "MONTHLY", trendsMonthlyTotalDTO);
+				Long.valueOf(yearMonth), "MONTHLY", scoresMonthlyTotalDTO);
 		ArticleQuizCompletionDTO quizCompletiondto = new ArticleQuizCompletionDTO();
 		quizCompletiondto.setArticleId(newsArticleId);
 		String message = "You got " + quizQCorrect + " correct answers...";
@@ -119,7 +119,6 @@ public class QuizScoreBusiness {
 			genreBadgeDetailsDTO.setBadgeName(badge.getNameId());
 			genreBadgeDetailsDTO.setImageName(badge.getImageName());
 			genreBadgeDetailsDTO.setBadgeGenre(badge.getGenreId());
-			// modelMapper.map(badge, BadgeDetailsDTO.class);
 			quizCompletiondto.setGenreBadge(genreBadgeDetailsDTO);
 		}
 		if (studBadge != null) {
@@ -129,7 +128,6 @@ public class QuizScoreBusiness {
 			monthlyBadgeDetailsDTO.setBadgeName(badge.getNameId());
 			monthlyBadgeDetailsDTO.setImageName(badge.getImageName());
 			monthlyBadgeDetailsDTO.setBadgeGenre(badge.getGenreId());
-			// modelMapper.map(badge, BadgeDetailsDTO.class);
 			quizCompletiondto.setMonthlyBadge(monthlyBadgeDetailsDTO);
 		}
 		if (studGenreBadge != null || studBadge != null) {

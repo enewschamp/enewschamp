@@ -51,9 +51,6 @@ public class StudentRegistration extends BaseEntity {
 	@Column(name = "isDeleted", length = 1)
 	private String isDeleted;
 
-	@Column(name = "lastLoginTime")
-	private LocalDateTime lastLoginTime;
-
 	@NotNull
 	@Column(name = "isAccountLocked", length = 1)
 	private String isAccountLocked = "N";
@@ -85,4 +82,13 @@ public class StudentRegistration extends BaseEntity {
 
 	@Column(name = "avatarName", length = 100)
 	private String avatarName;
+
+	@Column(name = "isTestUser", length = 1)
+	private String isTestUser = "N";
+
+	@Column(name = "forcePasswordChange", length = 1)
+	private String forcePasswordChange = "N";
+
+	@Column(name = "creationDateTime")
+	private LocalDateTime creationDateTime;
 }

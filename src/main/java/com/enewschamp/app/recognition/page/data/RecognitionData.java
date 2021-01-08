@@ -2,11 +2,11 @@ package com.enewschamp.app.recognition.page.data;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.enewschamp.app.common.AbstractDTO;
-import com.enewschamp.subscription.app.dto.SchoolProgramLOV;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +28,8 @@ public class RecognitionData extends AbstractDTO {
 	private String badgeName;
 	private LocalDateTime badgeGrantDate;
 	private String badgeGenre;
-	private Long monthYear;
+
+	@Column(name = "badgeYearMonth")
+	private Long yearMonth;
 
 }

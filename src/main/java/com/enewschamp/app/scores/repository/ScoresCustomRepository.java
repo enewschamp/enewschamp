@@ -2,18 +2,24 @@ package com.enewschamp.app.scores.repository;
 
 import java.util.List;
 
-import com.enewschamp.app.scores.dto.DailyScoreDTO;
-import com.enewschamp.app.scores.dto.MonthlyScoreGenreDTO;
-import com.enewschamp.app.scores.dto.MonthlyScoresDTO;
-import com.enewschamp.app.scores.dto.YearlyScoresGenreDTO;
+import com.enewschamp.app.scores.dto.StudentScoresMonthlyDTO;
+import com.enewschamp.app.scores.dto.StudentScoresYearlyGenreDTO;
 import com.enewschamp.app.scores.page.data.ScoresSearchData;
+import com.enewschamp.app.student.scores.dto.StudentScoresDailyDTO;
+import com.enewschamp.app.student.scores.dto.StudentScoresMonthlyGenreDTO;
+import com.enewschamp.app.student.scores.dto.StudentScoresMonthlyTotalDTO;
 
 public interface ScoresCustomRepository {
-	public List<DailyScoreDTO> findDailyScores(ScoresSearchData searchRequest);
 
-	public List<MonthlyScoreGenreDTO> findMonthlyScoresByGenre(ScoresSearchData searchRequest);
+	public List<StudentScoresDailyDTO> findScoresDaily(ScoresSearchData searchRequest);
 
-	public List<YearlyScoresGenreDTO> findYearlyScoresByGenre(ScoresSearchData searchRequest);
+	public List<StudentScoresMonthlyGenreDTO> findScoresMonthlyGenre(ScoresSearchData searchRequest);
 
-	public List<MonthlyScoresDTO> findYMonthlyScores(ScoresSearchData searchRequest);
+	public List<StudentScoresMonthlyTotalDTO> findYScoresMonthly(ScoresSearchData searchRequest);
+
+	public List<StudentScoresYearlyGenreDTO> findScoresYearlyGenre(ScoresSearchData searchRequest);
+
+	public List<StudentScoresMonthlyTotalDTO> findMonthWiseTotalScores(ScoresSearchData searchRequest);
+
+	public List<StudentScoresMonthlyGenreDTO> findMonthWiseGenreScores(ScoresSearchData searchRequest);
 }

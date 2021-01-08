@@ -1,15 +1,9 @@
 package com.enewschamp.subscription.page.handler;
 
-import java.awt.Dimension;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,11 +11,9 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
-import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.fw.page.navigation.common.PageSaveTable;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.fw.page.navigation.service.PageNavigationService;
-import com.enewschamp.common.domain.service.PropertiesService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
@@ -34,7 +26,6 @@ import com.enewschamp.subscription.app.dto.StudentDetailsWorkDTO;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.StudentDetailsBusiness;
 import com.enewschamp.subscription.domain.service.StudentDetailsWorkService;
-import com.enewschamp.utils.ImageUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "StudentDetailsPageHandler")
@@ -54,9 +45,6 @@ public class StudentDetailsPageHandler implements IPageHandler {
 
 	@Autowired
 	ModelMapper modelMapper;
-
-	@Autowired
-	private PropertiesService propertiesService;
 
 	@Autowired
 	AvatarService avatarService;

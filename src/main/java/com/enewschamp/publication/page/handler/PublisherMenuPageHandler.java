@@ -13,7 +13,7 @@ import com.enewschamp.app.signin.page.handler.LoginPageData;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.app.user.login.service.UserLoginService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.AbstractPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.user.domain.entity.User;
@@ -23,7 +23,7 @@ import com.enewschamp.user.domain.service.UserService;
 public class PublisherMenuPageHandler extends AbstractPageHandler {
 
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 
 	@Autowired
 	UserLoginBusiness userLoginBusiness;
@@ -46,12 +46,6 @@ public class PublisherMenuPageHandler extends AbstractPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String userId = pageNavigationContext.getPageRequest().getHeader().getUserId();
-		LoginPageData loginPageData = getLoginPageData(userId);
-		pageDto.setData(loginPageData);
-		return pageDto;
-	}
-
-	private LoginPageData getLoginPageData(String userId) {
 		User user = userService.get(userId);
 		LoginPageData loginPageData = new LoginPageData();
 		if (user != null) {
@@ -61,9 +55,10 @@ public class PublisherMenuPageHandler extends AbstractPageHandler {
 			loginPageData.setUserRole(userLoginBusiness.getUserRole(userId));
 			loginPageData.setLoginCredentials(userLoginService.getOperatorLogin(userId, UserType.P).getTokenId());
 			loginPageData
-					.setTokenValidity(propertiesService.getProperty(PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));
+					.setTokenValidity(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),PropertyConstants. PUBLISHER_SESSION_EXPIRY_SECS));
 		}
-		return loginPageData;
+		pageDto.setData(loginPageData);
+		return pageDto;
 	}
 
 	@Override

@@ -17,8 +17,8 @@ public interface PropertyConstants {
 	public static String INCOMPLETE_FORM_TEXT = "incompleteFormText";
 	public static String PREMIUM_SUBS_MSG = "premiumSubsMsg";
 	public static String ABOUT_US_TEXT = "aboutUs.aboutUsText";
-	public static String HELP_DESK_TEXT = "helpDesk.helpDeskText";
-	public static String HELP_DESK_EMAIL = "helpDeskEmail";
+	public static String HELP_DESK_TEXT = "helpdesk.helpdeskText";
+	public static String HELP_DESK_EMAIL = "helpdeskEmail";
 	public static String REGISTRATION_MESSAGE = "registrationMessage";
 	public static String ACCOUNT_DELETION_MESSAGE = "accountDeletionMessage";
 	public static String PASSWORD_RESET_MESSAGE = "pwdResetMessage";
@@ -129,7 +129,6 @@ public interface PropertyConstants {
 	public static String VIEW_CHAMPS_LIMIT = "viewChampsLimit";
 	public static String VIEW_RECOGNITIONS_LIMIT = "viewRecognitionsLimit";
 	public static String DEFAULT_COUNTRY = "defaultCountry";
-	public static String APP_AVAILABLE = "appAvailable";
 	public static String APP_UNAVAILABLE_PAGE_NAME = "appUnavailablePageName";
 	public static String APP_UNAVAILABLE_PAGE_OPERATION = "appUnavailablePageOperation";
 	public static String APP_UNAVAILABLE_PAGE_ACTION = "appUnavailablePageAction";

@@ -40,16 +40,16 @@ public class StudentBadgesService {
 	}
 
 	public StudentBadges update(StudentBadges studentBadgesEntity) {
-		Long trendsDailyId = studentBadgesEntity.getStudentBadgesId();
-		StudentBadges existingStudentBadges = get(trendsDailyId);
+		Long scoresDailyId = studentBadgesEntity.getStudentBadgesId();
+		StudentBadges existingStudentBadges = get(scoresDailyId);
 		modelMapper.map(studentBadgesEntity, existingStudentBadges);
 		return studentBadgesRepository.save(existingStudentBadges);
 	}
 
-	public StudentBadges patch(StudentBadges trendsDaily) {
-		Long navId = trendsDaily.getStudentBadgesId();
+	public StudentBadges patch(StudentBadges scoresDaily) {
+		Long navId = scoresDaily.getStudentBadgesId();
 		StudentBadges existingEntity = get(navId);
-		modelMapperForPatch.map(trendsDaily, existingEntity);
+		modelMapperForPatch.map(scoresDaily, existingEntity);
 		return studentBadgesRepository.save(existingEntity);
 	}
 
@@ -57,8 +57,8 @@ public class StudentBadgesService {
 		studentBadgesRepository.deleteById(StudentBadgesId);
 	}
 
-	public StudentBadges get(Long trendsDailyId) {
-		Optional<StudentBadges> existingEntity = studentBadgesRepository.findById(trendsDailyId);
+	public StudentBadges get(Long scoresDailyId) {
+		Optional<StudentBadges> existingEntity = studentBadgesRepository.findById(scoresDailyId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
@@ -67,8 +67,8 @@ public class StudentBadgesService {
 		}
 	}
 
-	public StudentBadges getStudentBadges(Long studentId, String editionId, Long monthYear) {
-		Optional<StudentBadges> existingEntity = studentBadgesRepository.getStudentBadges(studentId, monthYear);
+	public StudentBadges getStudentBadges(Long studentId, String editionId, Long yearMonth) {
+		Optional<StudentBadges> existingEntity = studentBadgesRepository.getStudentBadges(studentId, yearMonth);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
@@ -77,9 +77,9 @@ public class StudentBadgesService {
 	}
 
 	public List<RecognitionData> getStudentBadgeDetails(Long studentId, String editionId, int readingLevel,
-			Long monthYear) {
+			Long yearMonth) {
 		List<RecognitionData> studentBadges = studentBadgesCustomRepository.getStudentBadgeDetails(studentId,
-				monthYear);
+				yearMonth);
 		return studentBadges;
 	}
 
@@ -99,6 +99,11 @@ public class StudentBadgesService {
 			badge = studentBadgeList.get(0);
 		}
 		return badge;
+	}
+
+	public Long isBadgeUnlocked(Long badgeId, Long studentId, Long yearMonth) {
+		Long unlockBadgeId = studentBadgesCustomRepository.isBadgeUnlocked(badgeId, studentId, yearMonth);
+		return unlockBadgeId;
 	}
 
 	public RecognitionData getBadgeDetails(Long studentId, String editionId, int readingLevel) {

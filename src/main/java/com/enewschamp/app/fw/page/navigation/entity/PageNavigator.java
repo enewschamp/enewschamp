@@ -24,8 +24,8 @@ public class PageNavigator extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pagenavigator_id_generator")
-	@SequenceGenerator(name = "pagenavigator_id_generator", sequenceName = "pagenavigator_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "page_navigator_id_generator")
+	@SequenceGenerator(name = "page_navigator_id_generator", sequenceName = "page_navigator_id_seq", allocationSize = 1)
 	@Column(name = "navId", length = 10)
 	private Long navId = 0L;
 

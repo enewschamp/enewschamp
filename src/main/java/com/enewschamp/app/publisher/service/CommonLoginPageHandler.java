@@ -22,7 +22,7 @@ import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.app.user.login.service.UserLoginService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.AppConstants;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
@@ -55,7 +55,7 @@ public class CommonLoginPageHandler implements IPageHandler {
 	OTPRepository otpRepository;
 
 	@Autowired
-	PropertiesService propertiesService;
+	PropertiesBackendService propertiesService;
 
 	@Autowired
 	UserLoginService loginService;
@@ -151,12 +151,13 @@ public class CommonLoginPageHandler implements IPageHandler {
 			loginPageData.setMessage("User Logout Successfully");
 			pageDto.setData(loginPageData);
 		} else if ("forgotpassword".equalsIgnoreCase(action)) {
-			String emailId = userService.get(userId).getEmail1();
+			String emailId = userService.get(userId).getEmailId1();
 			if (emailId == null && "".equals(emailId)) {
 				throw new BusinessException(ErrorCodeConstants.INVALID_EMAIL_ID, emailId);
 			}
-			loginPageData.setMessage(propertiesService.getProperty(PropertyConstants.OTP_MESSAGE));
-			otpService.genOTP(emailId, userActivityTracker);
+			loginPageData.setMessage(
+					propertiesService.getValue(pageRequest.getHeader().getModule(), PropertyConstants.OTP_MESSAGE));
+			otpService.genOTP(pageRequest.getHeader().getModule(), emailId, userActivityTracker);
 			userActivityTracker.setActionStatus(UserAction.SUCCESS);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			loginPageData = new PublisherLoginPageData();
@@ -165,19 +166,20 @@ public class CommonLoginPageHandler implements IPageHandler {
 			loginPageData.setEmailId(maskedEmail);
 			pageDto.setData(loginPageData);
 		} else if ("resendsecuritycode".equalsIgnoreCase(action)) {
-			String emailId = userService.get(userId).getEmail1();
+			String emailId = userService.get(userId).getEmailId1();
 			if (emailId == null && "".equals(emailId)) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 				throw new BusinessException(ErrorCodeConstants.INVALID_EMAIL_ID);
 			}
-			loginPageData.setMessage(propertiesService.getProperty(PropertyConstants.OTP_MESSAGE));
+			loginPageData.setMessage(
+					propertiesService.getValue(pageRequest.getHeader().getModule(), PropertyConstants.OTP_MESSAGE));
 			List<OTP> otpGenList = otpRepository.getOtpGenListForEmail(emailId, RecordInUseType.Y);
-			if (otpGenList != null && otpGenList.size() >= Integer
-					.valueOf(propertiesService.getProperty(PropertyConstants.OTP_GEN_MAX_ATTEMPTS))) {
+			if (otpGenList != null && otpGenList.size() >= Integer.valueOf(propertiesService
+					.getValue(pageRequest.getHeader().getModule(), PropertyConstants.OTP_GEN_MAX_ATTEMPTS))) {
 				throw new BusinessException(ErrorCodeConstants.OTP_GEN_MAX_ATTEMPTS_EXHAUSTED);
 			}
-			otpService.genOTP(emailId, userActivityTracker);
+			otpService.genOTP(pageRequest.getHeader().getModule(), emailId, userActivityTracker);
 			userActivityTracker.setActionStatus(UserAction.SUCCESS);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			loginPageData = new PublisherLoginPageData();
@@ -217,13 +219,14 @@ public class CommonLoginPageHandler implements IPageHandler {
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 				throw new BusinessException(ErrorCodeConstants.INVALID_SECURITY_CODE);
 			}
-			String emailId = userService.get(userId).getEmail1();
+			String emailId = userService.get(userId).getEmailId1();
 			if (emailId == null && "".equals(emailId)) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 				throw new BusinessException(ErrorCodeConstants.INVALID_EMAIL_ID);
 			}
-			boolean validOtp = otpService.validateOtp(securityCode, emailId, userActivityTracker);
+			boolean validOtp = otpService.validateOtp(pageRequest.getHeader().getModule(), securityCode, emailId,
+					userActivityTracker);
 			if (!validOtp) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);

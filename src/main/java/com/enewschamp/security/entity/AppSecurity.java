@@ -10,8 +10,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import com.enewschamp.domain.common.BaseEntity;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,15 +17,15 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "AppSecurity", uniqueConstraints={@UniqueConstraint(columnNames= {"module"})})
-public class AppSecurity extends BaseEntity {
+public class AppSecurity {
 
 	private static final long serialVersionUID = -6268188630471167106L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appsec_id_generator")
-	@SequenceGenerator(name = "appsec_id_generator", sequenceName = "appsec_id_seq", allocationSize = 1)
-	@Column(name = "appSecId", updatable = false, nullable = false)
-	private Long appSecId;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "app_security_id_generator")
+	@SequenceGenerator(name = "app_security_id_generator", sequenceName = "app_security_id_seq", allocationSize = 1)
+	@Column(name = "appSecurityId", updatable = false, nullable = false)
+	private Long appSecurityId;
 
 	@NotNull
 	@Column(name = "appName", length = 130)
@@ -40,5 +38,9 @@ public class AppSecurity extends BaseEntity {
 	@NotNull
 	@Column(name = "module", length = 20)
 	private String module;
+
+	@NotNull
+	@Column(name = "isAppAvailable", length = 1)
+	private String isAppAvailable;
 
 }

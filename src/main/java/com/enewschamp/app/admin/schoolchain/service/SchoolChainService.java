@@ -62,13 +62,9 @@ public class SchoolChainService {
 
 	public SchoolChain read(SchoolChain schoolChainEntity) {
 		Long schoolChainId = schoolChainEntity.getSchoolChainId();
-		SchoolChain existingSchoolChain = get(schoolChainId);
-		if (existingSchoolChain.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingSchoolChain;
-		}
-		existingSchoolChain.setRecordInUse(RecordInUseType.Y);
-		existingSchoolChain.setOperationDateTime(null);
-		return repository.save(existingSchoolChain);
+		SchoolChain schoolChain = get(schoolChainId);
+		return schoolChain;
+
 	}
 
 	public SchoolChain close(SchoolChain schoolChainEntity) {

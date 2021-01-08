@@ -18,6 +18,8 @@ import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.publication.domain.common.BadgeList;
+import com.enewschamp.publication.domain.common.GenreList;
 import com.enewschamp.publication.domain.entity.Genre;
 import com.enewschamp.publication.domain.repository.GenreRepositoryCustom;
 
@@ -118,6 +120,10 @@ public class GenreService extends AbstractDomainService {
 		existingGenre.setRecordInUse(RecordInUseType.Y);
 		existingGenre.setOperationDateTime(null);
 		return repository.save(existingGenre);
+	}
+	
+	public List<GenreList> getGenreList() {
+		return repository.getGenreList();
 	}
 
 	public Page<Genre> list(int pageNo, int pageSize) {

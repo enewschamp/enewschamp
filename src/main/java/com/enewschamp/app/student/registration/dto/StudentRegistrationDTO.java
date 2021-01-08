@@ -2,6 +2,8 @@ package com.enewschamp.app.student.registration.dto;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
+
 import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
@@ -19,9 +21,9 @@ public class StudentRegistrationDTO extends BaseEntity {
 	private String emailId;
 	private String password;
 	private String isDeleted;
-	private LocalDateTime lastLoginTime;
 	private String theme;
 	private String fontHeight;
 	private String photoName;
 	private String avatarName;
+	private LocalDateTime creationDateTime;
 }

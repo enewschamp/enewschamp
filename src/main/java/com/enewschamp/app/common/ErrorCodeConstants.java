@@ -44,8 +44,6 @@ public interface ErrorCodeConstants {
 
 	public static String STUDENT_DTLS_NOT_FOUND = "STUD_DTLS_001";
 
-	public static String TREND_DAILY_NOT_FOUND = "TREND_004";
-	public static String TREND_MONTHLY_TOTAL_NOT_FOUND = "TREND_005";
 	public static String QUIZ_SCORE_NOT_FOUND = "QUIZ_001";
 	public static String STUDENT_ACTIVITY_NOT_FOUND = "STUD_ACT_001";
 
@@ -87,9 +85,12 @@ public interface ErrorCodeConstants {
 
 	public static String STUD_BADGES_NOT_FOUND = "BADGE_001";
 
-	public static String INVALID_YEARMONTH_FORMAT = "TREND_001";
-	public static String INVALID_YEAR = "TREND_002";
-	public static String INVALID_MONTH = "TREND_003";
+	public static String INVALID_YEARMONTH_FORMAT = "SCORE_001";
+	public static String INVALID_YEAR = "SCORE_002";
+	public static String INVALID_MONTH = "SCORE_003";
+	public static String SCORES_DAILY_NOT_FOUND = "SCORE_004";
+	public static String SCORES_MONTHLY_TOTAL_NOT_FOUND = "SCORE_005";
+	public static String SCORES_MONTHLY_GENRE_NOT_FOUND = "SCORE_006";
 
 	public static String INVALID_NOT_PRESENT = "SNA_01";
 	public static String HOLIDAY_NOT_FOUND = "HOL_01";
@@ -101,7 +102,6 @@ public interface ErrorCodeConstants {
 	public static String STUDENT_NOTIFICATION_NOT_FOUND = "STUD_NOTIF_001";
 	public static String EMAIL_NOT_SENT = "EM_NOT_01";
 	public static String NO_RECORD_FOUND = "NO_REC_01";
-	public static String RECORD_ALREADY_EXIST = "REC_EXIST";
 	public static String OTP_EXPIRED = "OTP_001";
 	public static String OTP_GEN_MAX_ATTEMPTS_EXHAUSTED = "OTP_002";
 	public static String OTP_VERIFY_MAX_ATTEMPTS_EXHAUSTED = "OTP_003";
@@ -123,5 +123,6 @@ public interface ErrorCodeConstants {
 	public static String MISSING_REQUEST_PARAMS = "REQ_002";
 	public static String UNAUTH_ACCESS = "REQ_003";
 	public static String USER_TOKEN_EXPIRED = "REQ_004";
+	public static String RECORD_ALREADY_EXIST = "REC_EXIST";
 
 }

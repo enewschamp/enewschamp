@@ -8,7 +8,7 @@ import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 
@@ -16,7 +16,7 @@ import com.enewschamp.domain.common.PageNavigationContext;
 public class AboutUsPageHandler implements IPageHandler {
 
 	@Autowired
-	PropertiesService propertiesService;
+	PropertiesBackendService propertiesService;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -28,7 +28,8 @@ public class AboutUsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		AboutUsPageData aboutUsPageData = new AboutUsPageData();
-		aboutUsPageData.setAboutUsText(propertiesService.getValue(PropertyConstants.ABOUT_US_TEXT));
+		aboutUsPageData.setAboutUsText(propertiesService.getValue(
+				pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.ABOUT_US_TEXT));
 		pageDto.setData(aboutUsPageData);
 		return pageDto;
 	}

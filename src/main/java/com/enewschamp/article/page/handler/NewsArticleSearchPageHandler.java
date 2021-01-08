@@ -19,7 +19,7 @@ import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.article.page.data.NewsArticleSearchPageData;
 import com.enewschamp.article.page.data.NewsArticleSearchRequest;
 import com.enewschamp.article.page.data.NewsArticleSearchResultData;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.MonthType;
 import com.enewschamp.domain.common.PageNavigationContext;
@@ -59,7 +59,7 @@ public class NewsArticleSearchPageHandler implements IPageHandler {
 	CityService cityService;
 
 	@Autowired
-	PropertiesService propertiesService;
+	PropertiesBackendService propertiesService;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -79,8 +79,8 @@ public class NewsArticleSearchPageHandler implements IPageHandler {
 		NewsArticleSearchResultData searchResult = new NewsArticleSearchResultData();
 		Page<PublisherNewsArticleSummaryDTO> pageResult = newsArticleService.findPublisherArticles(searchRequestData, 1,
 				10, pageRequest.getHeader());
-		if (pageResult.getNumberOfElements() > Integer
-				.valueOf(propertiesService.getProperty(PropertyConstants.MAX_SEARCH_RESULTS_FOR_PUBLISHER))) {
+		if (pageResult.getNumberOfElements() > Integer.valueOf(propertiesService
+				.getValue(pageRequest.getHeader().getModule(), PropertyConstants.MAX_SEARCH_RESULTS_FOR_PUBLISHER))) {
 			throw new BusinessException(ErrorCodeConstants.MAX_SEARCH_LIMIT_EXCEEDED);
 		}
 		searchResult.setNewsArticles(pageResult.getContent());

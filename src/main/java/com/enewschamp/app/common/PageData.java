@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class PageData implements Serializable {
+
 	@JsonInclude
 	protected String operatorId;
 	@JsonInclude

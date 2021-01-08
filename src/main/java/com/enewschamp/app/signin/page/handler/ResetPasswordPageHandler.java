@@ -26,7 +26,7 @@ import com.enewschamp.app.user.login.entity.UserAction;
 import com.enewschamp.app.user.login.entity.UserActivityTracker;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -70,7 +70,7 @@ public class ResetPasswordPageHandler implements IPageHandler {
 	UserLoginBusiness userLoginBusiness;
 
 	@Autowired
-	PropertiesService propertiesService;
+	PropertiesBackendService propertiesService;
 
 	@Autowired
 	SubscriptionBusiness subscriptionBusiness;
@@ -150,15 +150,17 @@ public class ResetPasswordPageHandler implements IPageHandler {
 	public PageDTO loadResetPasswordPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
+		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		pageDto.setHeader(header);
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		ResetPasswordPageData resetPasswordPageData = new ResetPasswordPageData();
 		List<OTP> otpGenList = otpRepository.getOtpGenListForEmail(emailId, RecordInUseType.Y);
 		if (otpGenList != null && otpGenList.size() >= Integer
-				.valueOf(propertiesService.getProperty(PropertyConstants.OTP_GEN_MAX_ATTEMPTS))) {
+				.valueOf(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+						PropertyConstants.OTP_GEN_MAX_ATTEMPTS))) {
 			throw new BusinessException(ErrorCodeConstants.OTP_GEN_MAX_ATTEMPTS_EXHAUSTED);
 		}
-		studentRegBusiness.sendOtp(emailId);
+		studentRegBusiness.sendOtp(module, emailId);
 		pageDto.setData(resetPasswordPageData);
 		return pageDto;
 	}
@@ -168,13 +170,14 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
 		pageDto.setHeader(header);
 		ResetPasswordPageData resetPasswordPageData = new ResetPasswordPageData();
+		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		List<OTP> otpGenList = otpRepository.getOtpGenListForEmail(emailId, RecordInUseType.Y);
 		if (otpGenList != null && otpGenList.size() >= Integer
-				.valueOf(propertiesService.getProperty(PropertyConstants.OTP_GEN_MAX_ATTEMPTS))) {
+				.valueOf(propertiesService.getValue(module, PropertyConstants.OTP_GEN_MAX_ATTEMPTS))) {
 			throw new BusinessException(ErrorCodeConstants.OTP_GEN_MAX_ATTEMPTS_EXHAUSTED);
 		}
-		studentRegBusiness.sendOtp(pageNavigationContext.getPageRequest().getHeader().getEmailId());
+		studentRegBusiness.sendOtp(module, emailId);
 		pageDto.setData(resetPasswordPageData);
 		return pageDto;
 	}
@@ -229,6 +232,7 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		String action = pageRequest.getHeader().getAction();
 		String emailId = pageRequest.getHeader().getEmailId();
+		String module = pageRequest.getHeader().getModule();
 		ResetPasswordPageData resetPasswordPageData = new ResetPasswordPageData();
 		String password = "";
 		String securityCode = null;
@@ -291,7 +295,7 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		}
 		userActivityTracker.setActionStatus(UserAction.SUCCESS);
 		userLoginBusiness.auditUserActivity(userActivityTracker);
-		boolean validOtp = studentRegBusiness.validateOtp(securityCode, emailId);
+		boolean validOtp = studentRegBusiness.validateOtp(module, securityCode, emailId);
 		if (!validOtp) {
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
@@ -299,9 +303,9 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		}
 		studentRegBusiness.resetPassword(emailId, password);
 		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
-		studentControlWorkDTO.setEmailVerified("Y");
+		studentControlWorkDTO.setEmailIdVerified("Y");
 		studentControlBusiness.saveAsWork(studentControlWorkDTO);
-		resetPasswordPageData.setMessage(propertiesService.getProperty(PropertyConstants.PASSWORD_RESET_MESSAGE));
+		resetPasswordPageData.setMessage(propertiesService.getValue(module, PropertyConstants.PASSWORD_RESET_MESSAGE));
 		pageDto.setData(resetPasswordPageData);
 		pageDto.setHeader(pageRequest.getHeader());
 		return pageDto;
@@ -312,6 +316,7 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		pageDto.setHeader(pageRequest.getHeader());
 		String action = pageRequest.getHeader().getAction();
 		String emailId = pageRequest.getHeader().getEmailId();
+		String module = pageRequest.getHeader().getModule();
 		ResetPasswordPageData resetPasswordPageData = new ResetPasswordPageData();
 		String password = "";
 		String securityCode = null;
@@ -367,14 +372,14 @@ public class ResetPasswordPageHandler implements IPageHandler {
 				|| password.equals(student.getPassword2())) {
 			throw new BusinessException(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO);
 		}
-		boolean validOtp = studentRegBusiness.validateOtp(securityCode, emailId);
+		boolean validOtp = studentRegBusiness.validateOtp(module, securityCode, emailId);
 		if (!validOtp) {
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_SECURITY_CODE);
 		}
 		studentRegBusiness.resetPassword(emailId, password);
-		resetPasswordPageData.setMessage(propertiesService.getProperty(PropertyConstants.PASSWORD_RESET_MESSAGE));
+		resetPasswordPageData.setMessage(propertiesService.getValue(module, PropertyConstants.PASSWORD_RESET_MESSAGE));
 		userActivityTracker.setActionStatus(UserAction.SUCCESS);
 		userLoginBusiness.auditUserActivity(userActivityTracker);
 		pageDto.setData(resetPasswordPageData);
@@ -386,6 +391,7 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		pageDto.setHeader(pageRequest.getHeader());
 		String action = pageRequest.getHeader().getAction();
 		String emailId = pageRequest.getHeader().getEmailId();
+		String module = pageRequest.getHeader().getModule();
 		ResetPasswordPageData resetPasswordPageData = new ResetPasswordPageData();
 		String deviceId = "";
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
@@ -414,11 +420,11 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		}
 		List<OTP> otpGenList = otpRepository.getOtpGenListForEmail(emailId, RecordInUseType.Y);
 		if (otpGenList != null && otpGenList.size() >= Integer
-				.valueOf(propertiesService.getProperty(PropertyConstants.OTP_GEN_MAX_ATTEMPTS))) {
+				.valueOf(propertiesService.getValue(module, PropertyConstants.OTP_GEN_MAX_ATTEMPTS))) {
 			throw new BusinessException(ErrorCodeConstants.OTP_GEN_MAX_ATTEMPTS_EXHAUSTED);
 		}
-		resetPasswordPageData.setMessage(propertiesService.getProperty(PropertyConstants.OTP_MESSAGE));
-		studentRegBusiness.sendOtp(emailId);
+		resetPasswordPageData.setMessage(propertiesService.getValue(module, PropertyConstants.OTP_MESSAGE));
+		studentRegBusiness.sendOtp(module, emailId);
 		userActivityTracker.setActionStatus(UserAction.SUCCESS);
 		userLoginBusiness.auditUserActivity(userActivityTracker);
 		pageDto.setData(resetPasswordPageData);
@@ -432,6 +438,7 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		String tokenId = pageRequest.getHeader().getLoginCredentials();
 		String emailId = pageRequest.getHeader().getEmailId();
 		String deviceId = pageRequest.getHeader().getDeviceId();
+		String module = pageRequest.getHeader().getModule();
 		ResetPasswordPageData resetPasswordPageData = new ResetPasswordPageData();
 
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
@@ -479,7 +486,7 @@ public class ResetPasswordPageHandler implements IPageHandler {
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.OLD_NEW_PASSWORD_SAME);
 		}
-		boolean validPassword = studentRegBusiness.validatePassword(emailId, password, deviceId, tokenId);
+		boolean validPassword = studentRegBusiness.validatePassword(module, emailId, password, deviceId, tokenId);
 		if (!validPassword) {
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);

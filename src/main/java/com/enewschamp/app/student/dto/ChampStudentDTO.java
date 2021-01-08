@@ -2,7 +2,8 @@ package com.enewschamp.app.student.dto;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -11,12 +12,17 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@Entity
 public class ChampStudentDTO implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	@Id
+	@JsonInclude
+	private Long studentId;
 
 	@JsonInclude
 	private String name;
@@ -34,10 +40,10 @@ public class ChampStudentDTO implements Serializable {
 	private String city;
 
 	@JsonInclude
-	private Long monthlyScore;
+	private Long score;
 
 	@JsonInclude
-	private Long studentRank;
+	private Long rank;
 
 	@JsonInclude
 	private String avatarName;

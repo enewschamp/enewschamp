@@ -15,10 +15,12 @@ public class BadgeDTO extends MaintenanceDTO {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@JsonInclude
 	private Long badgeId;
 
 	private String nameId;
 
+	@JsonInclude
 	private String genreId;
 
 	private Long monthlyPointsToScore;
@@ -29,6 +31,14 @@ public class BadgeDTO extends MaintenanceDTO {
 
 	private String base64Image;
 
+	private String imageTypeExt = "jpg";
+
 	@JsonInclude
 	private String imageName;
+
+	@JsonInclude
+	private String successImageName;
+
+	@JsonInclude
+	private String audioFileName;
 }

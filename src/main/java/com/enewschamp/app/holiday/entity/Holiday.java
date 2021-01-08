@@ -29,8 +29,8 @@ public class Holiday extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "holiday_id_generator")
-	@SequenceGenerator(name = "holiday_id_generator", sequenceName = "holiday_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "holidays_id_generator")
+	@SequenceGenerator(name = "holidays_id_generator", sequenceName = "holidays_id_seq", allocationSize = 1)
 	@Column(name = "holidayId", updatable = false, nullable = false)
 	private Long holidayId;
 

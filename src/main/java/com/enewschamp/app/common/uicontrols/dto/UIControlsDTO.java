@@ -28,7 +28,9 @@ public class UIControlsDTO {
 	private String visibility;
 	private String mandatory;
 	private String regex;
+	private String successMessage;
 	private String errorMessage;
 	private String confirmationMessage;
 	private String isPremiumFeature;
+	private String unavailableMessage;
 }

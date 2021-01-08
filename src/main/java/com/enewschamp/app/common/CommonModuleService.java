@@ -21,7 +21,7 @@ import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.app.user.login.service.UserLoginService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.service.EditionService;
@@ -45,7 +45,7 @@ public class CommonModuleService {
 	EditionService editionService;
 	
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 	
 	@Autowired
 	private UserLoginService userLoginService;
@@ -54,6 +54,7 @@ public class CommonModuleService {
 	public PageDTO performRefreshToken(PageRequestDTO pageRequest, String loginCredentials, String userId,
 			String deviceId, UserActivityTracker userActivityTracker, UserType userType) {
 		PageDTO pageResponse;
+		String module = pageRequest.getHeader().getModule();
 		String edition = pageRequest.getHeader().getEditionId();
 		editionService.getEdition(edition);
 		userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, userType, userActivityTracker);
@@ -67,7 +68,7 @@ public class CommonModuleService {
 		loginPageData.setMessage("Token Refreshed Successfully");
 		loginPageData.setLoginCredentials(userLogin.getTokenId());
 		loginPageData.setTokenValidity(
-				propertiesService.getProperty(PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));
+				propertiesService.getValue(module, PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));
 		pageResponse.setData(loginPageData);
 		pageResponse.getHeader().setLoginCredentials(null);
 		return pageResponse;
@@ -107,7 +108,7 @@ public class CommonModuleService {
 		return userActivityTracker;
 	}
 	
-	public LoginPageData getLoginPageData(String userId, UserType userType) {
+	public LoginPageData getLoginPageData(String module, String userId, UserType userType) {
 		User user = userService.get(userId);
 		LoginPageData loginPageData = new LoginPageData();
 		if (user != null) {
@@ -116,9 +117,8 @@ public class CommonModuleService {
 			loginPageData.setTheme(user.getTheme());
 			loginPageData.setUserRole(userLoginBusiness.getUserRole(userId));
 			loginPageData.setLoginCredentials(userLoginService.getOperatorLogin(userId, userType).getTokenId());
-			loginPageData
-					.setTokenValidity(propertiesService.getProperty(PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));
-		}
+			loginPageData.setTokenValidity(
+					propertiesService.getValue(module, PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));		}
 		return loginPageData;
 	}
 	
@@ -133,7 +133,7 @@ public class CommonModuleService {
 			throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
 		}
 		
-		if ((!propertiesService.getProperty(PropertyConstants.ADMIN_MODULE_NAME).equals(module))) {
+		if ((!propertiesService.getProperty("Admin", PropertyConstants.ADMIN_MODULE_NAME).equals(module))) {
 			log.error("Module name doesn't match");
 			throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
 		}

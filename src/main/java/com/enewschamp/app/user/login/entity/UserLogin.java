@@ -42,9 +42,6 @@ public class UserLogin extends BaseEntity {
 	@Column(name = "loginFlag", length = 1)
 	private String loginFlag;
 
-	@Column(name = "status", length = 1)
-	private String status;
-
 	@Column(name = "lastLoginTime")
 	private LocalDateTime lastLoginTime;
 

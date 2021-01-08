@@ -1,11 +1,13 @@
 package com.enewschamp.app.student.notification;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;

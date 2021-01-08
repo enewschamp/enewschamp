@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
@@ -53,7 +53,7 @@ public class PublicationSearchPageHandler implements IPageHandler {
 	EditionService editionService;
 
 	@Autowired
-	PropertiesService propertiesService;
+	PropertiesBackendService propertiesService;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -75,8 +75,8 @@ public class PublicationSearchPageHandler implements IPageHandler {
 		PublicationSearchResultData searchResult = new PublicationSearchResultData();
 		Page<PublicationSummaryDTO> pageResult = publicationService.findPublications(searchRequestData,
 				pageRequest.getHeader());
-		if (pageResult.getNumberOfElements() > Integer
-				.valueOf(propertiesService.getProperty(PropertyConstants.MAX_SEARCH_RESULTS_FOR_PUBLISHER))) {
+		if (pageResult.getNumberOfElements() > Integer.valueOf(propertiesService
+				.getValue(pageRequest.getHeader().getModule(), PropertyConstants.MAX_SEARCH_RESULTS_FOR_PUBLISHER))) {
 			throw new BusinessException(ErrorCodeConstants.MAX_SEARCH_LIMIT_EXCEEDED);
 		}
 		// HeaderDTO header = new HeaderDTO();

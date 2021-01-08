@@ -10,12 +10,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-@Entity
 public class NewsArticleSummaryDTO extends AbstractDTO {
 
 	private static final long serialVersionUID = 1L;

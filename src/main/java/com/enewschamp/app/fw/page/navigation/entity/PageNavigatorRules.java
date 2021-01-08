@@ -24,8 +24,8 @@ public class PageNavigatorRules extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pagenavigatorrules_id_generator")
-	@SequenceGenerator(name = "pagenavigatorrules_id_generator", sequenceName = "pagenavigatorrules_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pagenavigator_rules_id_generator")
+	@SequenceGenerator(name = "pagenavigator_rules_id_generator", sequenceName = "pagenavigator_rules_id_seq", allocationSize = 1)
 	@Column(name = "ruleId", length = 10)
 	private Long ruleId = 0L;
 

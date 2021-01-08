@@ -1,15 +1,7 @@
 package com.enewschamp.user.app.service;
 
-import java.awt.Dimension;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-
 import javax.validation.Valid;
 
-import org.apache.commons.io.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,16 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enewschamp.common.domain.service.PropertiesService;
 import com.enewschamp.app.common.CommonService;
-import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PropertyConstants;
-import com.enewschamp.common.domain.service.PropertiesService;
-import com.enewschamp.problem.BusinessException;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.user.app.dto.UserDTO;
 import com.enewschamp.user.domain.entity.User;
 import com.enewschamp.user.domain.service.UserService;
-import com.enewschamp.utils.ImageUtils;
 
 import lombok.extern.java.Log;
 
@@ -52,18 +40,18 @@ public class UserController {
 	CommonService commonService;
 
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 
 	@PostMapping(value = "/admin/users")
 	public ResponseEntity<UserDTO> create(@RequestBody @Valid UserDTO userDTO) {
 		if (userDTO.getTheme() == null || "".equals(userDTO.getTheme())) {
-			userDTO.setTheme(propertiesService.getProperty(PropertyConstants.PUBLISHER_DEFAULT_THEME));
+			userDTO.setTheme(propertiesService.getValue("Admin", PropertyConstants.PUBLISHER_DEFAULT_THEME));
 		}
 		User user = modelMapper.map(userDTO, User.class);
 		user = userService.create(user);
 		String newImageName = user.getUserId() + "_" + System.currentTimeMillis();
-		String imageType = "jpg";
-		boolean saveFlag = commonService.saveImages("user", imageType, user.getBase64Image(), newImageName,
+		String imageType = userDTO.getImageTypeExt();
+		boolean saveFlag = commonService.saveImages("Admin", "user", imageType, userDTO.getBase64Image(), newImageName,
 				user.getImageName());
 		if (saveFlag) {
 			user.setImageName(newImageName + "." + imageType);

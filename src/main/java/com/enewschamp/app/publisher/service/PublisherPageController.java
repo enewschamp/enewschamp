@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,24 +28,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.EnewschampApplicationProperties;
-import com.enewschamp.app.common.CommonModuleService;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.common.RequestStatusType;
+import com.enewschamp.app.signin.page.handler.LoginPageData;
+import com.enewschamp.app.user.login.entity.UserAction;
 import com.enewschamp.app.user.login.entity.UserActivityTracker;
+import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.domain.common.PageNavigationContext;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.publication.domain.service.EditionService;
 import com.enewschamp.publication.domain.service.HashTagService;
+import com.enewschamp.user.domain.entity.User;
 import com.enewschamp.user.domain.service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lombok.extern.java.Log;
 
@@ -56,7 +65,7 @@ public class PublisherPageController {
 	private PageHandlerFactory pageHandlerFactory;
 
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 
 	@Autowired
 	private EnewschampApplicationProperties appConfig;
@@ -75,9 +84,6 @@ public class PublisherPageController {
 
 	@Autowired
 	HashTagService hashTagService;
-	
-	@Autowired
-	private CommonModuleService commonModuleService;
 
 	@PostMapping(value = "/publisher")
 	@Transactional
@@ -92,22 +98,62 @@ public class PublisherPageController {
 			String deviceId = pageRequest.getHeader().getDeviceId();
 			String operation = pageRequest.getHeader().getOperation();
 			String editionId = pageRequest.getHeader().getEditionId();
+			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userId, null));
 			if (module == null || pageName == null || operation == null || actionName == null || userId == null
 					|| deviceId == null || loginCredentials == null || editionId == null
-					|| (!propertiesService.getProperty(PropertyConstants.PUBLISHER_MODULE_NAME).equals(module))
+					|| (!propertiesService.getValue(module, PropertyConstants.PUBLISHER_MODULE_NAME).equals(module))
 					|| pageName.trim().isEmpty() || actionName.trim().isEmpty() || deviceId.trim().isEmpty()
 					|| editionId.trim().isEmpty()) {
 				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
 			}
-			UserActivityTracker userActivityTracker = commonModuleService.validateUser(pageRequest, module, pageName, actionName,
-					loginCredentials, userId, deviceId, operation, editionId, UserType.P, PropertyConstants.PUBLISHER_MODULE_NAME);
+			User user = userService.get(userId);
+			UserActivityTracker userActivityTracker = new UserActivityTracker();
+			userActivityTracker.setOperatorId("SYSTEM");
+			userActivityTracker.setRecordInUse(RecordInUseType.Y);
+			userActivityTracker.setActionPerformed(actionName);
+			userActivityTracker.setDeviceId(deviceId);
+			userActivityTracker.setUserId(userId);
+			userActivityTracker.setUserType(UserType.P);
+			userActivityTracker.setActionTime(LocalDateTime.now());
+			if (user == null) {
+				userActivityTracker.setActionStatus(UserAction.FAILURE);
+				userLoginBusiness.auditUserActivity(userActivityTracker);
+				throw new BusinessException(ErrorCodeConstants.INVALID_USER_ID, userId);
+			}
+			if (!user.getIsActive().equalsIgnoreCase(RecordInUseType.Y.toString())) {
+				userActivityTracker.setActionStatus(UserAction.FAILURE);
+				userLoginBusiness.auditUserActivity(userActivityTracker);
+				throw new BusinessException(ErrorCodeConstants.USER_IS_INACTIVE, userId);
+			}
+			// Check if user has been logged in
+			if (!(pageName.equalsIgnoreCase("Login"))) {
+				userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.P);
+				JsonNode dataNode = pageRequest.getData();
+				if (dataNode != null && dataNode instanceof ObjectNode) {
+					((ObjectNode) dataNode).put("operatorId", userId);
+				}
+			}
 			pageRequest.getHeader().setPageName(pageName);
 			pageRequest.getHeader().setAction(actionName);
 
 			PageDTO pageResponse = null;
 			if (actionName.equalsIgnoreCase("RefreshToken")) {
-				pageResponse = commonModuleService.performRefreshToken(pageRequest, loginCredentials, userId, deviceId,
-						userActivityTracker, UserType.P);
+				String edition = pageRequest.getHeader().getEditionId();
+				editionService.getEdition(edition);
+				userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.P, userActivityTracker);
+				UserLogin userLogin = userLoginBusiness.login(userId, deviceId, loginCredentials, UserType.P);
+				userActivityTracker.setActionStatus(UserAction.SUCCESS);
+				userLoginBusiness.auditUserActivity(userActivityTracker);
+				pageResponse = new PageDTO();
+				pageRequest.getHeader().setRequestStatus(RequestStatusType.S);
+				pageResponse.setHeader(pageRequest.getHeader());
+				LoginPageData loginPageData = new LoginPageData();
+				loginPageData.setMessage("Token Refreshed Successfully");
+				loginPageData.setLoginCredentials(userLogin.getTokenId());
+				loginPageData.setTokenValidity(
+						propertiesService.getValue(module, PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));
+				pageResponse.setData(loginPageData);
+				pageResponse.getHeader().setLoginCredentials(null);
 			} else {
 				pageResponse = processRequest(pageName, actionName, pageRequest, "publisher");
 				pageResponse.getHeader().setLoginCredentials(null);
@@ -116,8 +162,8 @@ public class PublisherPageController {
 			pageResponse.getHeader().setUserId(null);
 			pageResponse.getHeader().setEditionId(null);
 			pageResponse.getHeader().setTodaysDate(LocalDate.now());
-			String helpText = propertiesService
-					.getProperty("publisher." + pageResponse.getHeader().getPageName().toLowerCase());
+			String helpText = propertiesService.getProperty(module,
+					"publisher." + pageResponse.getHeader().getPageName().toLowerCase());
 			pageResponse.getHeader().setHelpText(helpText);
 			response = new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
 		} catch (BusinessException e) {
@@ -148,8 +194,6 @@ public class PublisherPageController {
 		return response;
 	}
 
-
-
 	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest, String context) {
 		// Process current page
 		String edition = pageRequest.getHeader().getEditionId();
@@ -164,10 +208,11 @@ public class PublisherPageController {
 		if (fromPageWiseActions != null) {
 			nextPageName = fromPageWiseActions.get(actionName.toLowerCase());
 		}
-		System.out.println(">>>>>>fromPageWiseActions>>>>>>>>" + fromPageWiseActions);
-		System.out.println(">>>>>>nextPageName>>>>>>>>" + nextPageName);
-		System.out.println(">>>>>>actionName>>>>>>>>" + actionName);
-		System.out.println(">>>>>>pageName>>>>>>>>" + pageName);
+		// System.out.println(">>>>>>fromPageWiseActions>>>>>>>>" +
+		// fromPageWiseActions);
+		// System.out.println(">>>>>>nextPageName>>>>>>>>" + nextPageName);
+		// System.out.println(">>>>>>actionName>>>>>>>>" + actionName);
+		// System.out.println(">>>>>>pageName>>>>>>>>" + pageName);
 		if (nextPageName == null) {
 			throw new BusinessException(ErrorCodeConstants.NEXT_PAGE_NOT_FOUND, pageName, actionName);
 		}
@@ -196,7 +241,42 @@ public class PublisherPageController {
 
 	@RequestMapping(value = "/publisher/images/article", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
 	public void getArticleImage(HttpServletResponse response, @RequestParam String imagePath,
-			@RequestParam String appKey, @RequestParam String appName, @RequestParam String userId,
+			@RequestParam String appKey, @RequestParam String appName, @RequestParam String module,
+			@RequestParam String userId, @RequestParam String deviceId, @RequestParam String loginCredentials)
+			throws IOException {
+		try {
+			if (imagePath == null || appKey == null || appName == null || userId == null || deviceId == null
+					|| loginCredentials == null) {
+				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
+
+			} else if (imagePath.trim().isEmpty() || appKey.trim().isEmpty() || appName.trim().isEmpty()
+					|| userId.trim().isEmpty() || deviceId.trim().isEmpty() || loginCredentials.trim().isEmpty()) {
+				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
+			}
+			if (!userService.validateUser(userId)) {
+				throw new BusinessException(ErrorCodeConstants.INVALID_USER_ID, userId);
+			} else {
+				userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.P);
+			}
+			if (imagePath.startsWith("/")) {
+				imagePath = imagePath.substring(2, imagePath.length());
+			}
+			String imagesFolderPath = propertiesService.getValue(module,
+					PropertyConstants.ARTICLE_IMAGE_CONFIG_FOLDER_PATH);
+			File imageFile = new File(imagesFolderPath + imagePath);
+			if (imageFile != null && imageFile.exists()) {
+				InputStream imageStream = new FileInputStream(imageFile);
+				response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+				StreamUtils.copy(imageStream, response.getOutputStream());
+			}
+		} catch (BusinessException e) {
+			throw new Fault(e);
+		}
+	}
+
+	@RequestMapping(value = "/publisher/images/user", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+	public void getUserImage(HttpServletResponse response, @RequestParam String imagePath, @RequestParam String appKey,
+			@RequestParam String appName, @RequestParam String module, @RequestParam String userId,
 			@RequestParam String deviceId, @RequestParam String loginCredentials) throws IOException {
 		try {
 			if (imagePath == null || appKey == null || appName == null || userId == null || deviceId == null
@@ -215,40 +295,8 @@ public class PublisherPageController {
 			if (imagePath.startsWith("/")) {
 				imagePath = imagePath.substring(2, imagePath.length());
 			}
-			String imagesFolderPath = propertiesService.getProperty(PropertyConstants.ARTICLE_IMAGE_CONFIG_FOLDER_PATH);
-			File imageFile = new File(imagesFolderPath + imagePath);
-			if (imageFile != null && imageFile.exists()) {
-				InputStream imageStream = new FileInputStream(imageFile);
-				response.setContentType(MediaType.IMAGE_JPEG_VALUE);
-				StreamUtils.copy(imageStream, response.getOutputStream());
-			}
-		} catch (BusinessException e) {
-			throw new Fault(e);
-		}
-	}
-
-	@RequestMapping(value = "/publisher/images/user", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
-	public void getUserImage(HttpServletResponse response, @RequestParam String imagePath, @RequestParam String appKey,
-			@RequestParam String appName, @RequestParam String userId, @RequestParam String deviceId,
-			@RequestParam String loginCredentials) throws IOException {
-		try {
-			if (imagePath == null || appKey == null || appName == null || userId == null || deviceId == null
-					|| loginCredentials == null) {
-				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
-
-			} else if (imagePath.trim().isEmpty() || appKey.trim().isEmpty() || appName.trim().isEmpty()
-					|| userId.trim().isEmpty() || deviceId.trim().isEmpty() || loginCredentials.trim().isEmpty()) {
-				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
-			}
-			if (!userService.validateUser(userId)) {
-				throw new BusinessException(ErrorCodeConstants.INVALID_USER_ID, userId);
-			} else {
-				userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.P);
-			}
-			if (imagePath.startsWith("/")) {
-				imagePath = imagePath.substring(2, imagePath.length());
-			}
-			String imagesFolderPath = propertiesService.getProperty(PropertyConstants.USER_IMAGE_CONFIG_FOLDER_PATH);
+			String imagesFolderPath = propertiesService.getValue(module,
+					PropertyConstants.USER_IMAGE_CONFIG_FOLDER_PATH);
 			File imageFile = new File(imagesFolderPath + imagePath);
 			if (imageFile != null && imageFile.exists()) {
 				InputStream imageStream = new FileInputStream(imageFile);

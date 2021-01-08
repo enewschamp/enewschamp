@@ -1,15 +1,9 @@
 package com.enewschamp.publication.app.service;
 
-import java.awt.Dimension;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 
 import javax.validation.Valid;
 
-import org.apache.commons.io.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,15 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.app.common.CommonService;
-import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.app.common.PropertyConstants;
-import com.enewschamp.common.domain.service.PropertiesService;
 import com.enewschamp.page.dto.ListOfValuesItem;
-import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.app.dto.AvatarDTO;
 import com.enewschamp.publication.domain.entity.Avatar;
 import com.enewschamp.publication.domain.service.AvatarService;
-import com.enewschamp.utils.ImageUtils;
 
 @RestController
 @RequestMapping("/enewschamp-api/v1")
@@ -48,17 +37,14 @@ public class AvatarController {
 	@Autowired
 	CommonService commonService;
 
-	@Autowired
-	private PropertiesService propertiesService;
-
 	@PostMapping(value = "/admin/avatars")
 	public ResponseEntity<AvatarDTO> create(@RequestBody @Valid AvatarDTO avatarDTO) {
 		Avatar avatar = modelMapper.map(avatarDTO, Avatar.class);
 		avatar = avatarService.create(avatar);
 		String newImageName = avatar.getAvatarId() + "_" + System.currentTimeMillis();
-		String imageType = "jpg";
-		boolean saveFlag = commonService.saveImages("avatar", imageType, avatar.getBase64Image(), newImageName,
-				avatar.getImageName());
+		String imageType = avatarDTO.getImageTypeExt();
+		boolean saveFlag = commonService.saveImages("Admin", "avatar", imageType, avatarDTO.getBase64Image(),
+				newImageName, avatar.getImageName());
 		if (saveFlag) {
 			avatar.setImageName(newImageName + "." + imageType);
 			avatar = avatarService.update(avatar);

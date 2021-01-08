@@ -42,20 +42,14 @@ public class StudentControlWork extends BaseEntity {
 	private String nextPageLoadMethod;
 
 	@NotNull
-	@Column(name = "email", length = 99)
-	private String email;
+	@Column(name = "emailId", length = 99)
+	private String emailId;
 
 	@Column(name = "studentDetails", length = 1)
 	private String studentDetails;
 
 	@Column(name = "studentDetailsW", length = 1)
 	private String studentDetailsW;
-
-	@Column(name = "studentPhoto", length = 1)
-	private String studentPhoto;
-
-	@Column(name = "studentPhotoW", length = 1)
-	private String studentPhotoW;
 
 	@Column(name = "schoolDetails", length = 1)
 	private String schoolDetails;
@@ -75,11 +69,11 @@ public class StudentControlWork extends BaseEntity {
 	@Column(name = "preferencesW", length = 1)
 	private String preferencesW;
 
-	@Column(name = "emailVerified", length = 1)
-	private String emailVerified;
+	@Column(name = "emailIdVerified", length = 1)
+	private String emailIdVerified;
 
-	@Column(name = "emailVerifiedW", length = 1)
-	private String emailVerifiedW;
+	@Column(name = "emailIdVerifiedW", length = 1)
+	private String emailIdVerifiedW;
 
 	@Column(name = "evalAvailed", length = 1)
 	private String evalAvailed;

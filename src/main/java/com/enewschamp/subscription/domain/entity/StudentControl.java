@@ -28,8 +28,8 @@ public class StudentControl extends BaseEntity {
 	private Long studentId;
 
 	@NotNull
-	@Column(name = "email", length = 99)
-	private String email;
+	@Column(name = "emailId", length = 99)
+	private String emailId;
 
 	@Column(name = "StudentDetails", length = 1)
 	private String studentDetails;
@@ -43,8 +43,8 @@ public class StudentControl extends BaseEntity {
 	@Column(name = "Preferences", length = 1)
 	private String preferences;
 
-	@Column(name = "eMailVerified", length = 1)
-	private String emailVerified;
+	@Column(name = "emailIdVerified", length = 1)
+	private String emailIdVerified;
 
 	@Column(name = "EvalAvailed", length = 1)
 	private String evalAvailed;

@@ -11,9 +11,17 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class PaginationData implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@JsonInclude
 	private int pageNumber;
 
 	@JsonInclude
 	private int pageSize;
+
+	@JsonInclude
+	private String isLastPage;
 }

@@ -14,6 +14,7 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -46,9 +47,13 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 				articleGroupRoot.get("newsArticleGroupId"), articleRoot.get("publicationDate"),
 				articleRoot.get("readingLevel"), articleGroupRoot.get("genreId"), articleGroupRoot.get("headline"),
 				articleRoot.get("content"), articleRoot.get("authorWorked"), articleGroupRoot.get("credits"),
-				student.<String>get("quizAvailable"), student.<String>get("quizCompleted"),
+				(cb.selectCase()
+						.when(cb.or(cb.equal(articleGroupRoot.get("noQuiz"), "Y"),
+								cb.equal(articleGroupRoot.get("imageOnly"), "Y")), cb.literal("N"))
+						.otherwise(cb.literal("Y"))),
+				(cb.selectCase().when(cb.isNull(student.get("quizScore")), cb.literal("N")).otherwise(cb.literal("Y"))),
 				student.<String>get("quizScore"), student.<String>get("saved"), student.<String>get("opinion"),
-				student.<String>get("likeLevel"), articleRoot.get("likeHCount"), articleRoot.get("likeLCount"),
+				student.<String>get("reaction"), articleRoot.get("likeHCount"), articleRoot.get("likeLCount"),
 				articleRoot.get("likeOCount"), articleRoot.get("likeSCount"), articleRoot.get("likeWCount"),
 				articleGroupRoot.get("cityId"), articleGroupRoot.get("imageName")));
 
@@ -56,9 +61,13 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 		List<Predicate> filterPredicates = new ArrayList<>();
 		filterPredicates
 				.add(cb.equal(articleGroupRoot.get("newsArticleGroupId"), articleRoot.get("newsArticleGroupId")));
-		filterPredicates.add(cb.equal(articleRoot.get("status"), ArticleStatusType.Published));
-		filterPredicates.add(cb.lessThanOrEqualTo(articleRoot.get("publicationDate"), LocalDate.now()));
-
+		if ("Y".equalsIgnoreCase(searchRequest.getIsTestUser())) {
+			filterPredicates.add(cb.or(cb.equal(articleRoot.get("status"), ArticleStatusType.Published),
+					cb.equal(articleRoot.get("readyForTest"), "Y")));
+		} else {
+			filterPredicates.add(cb.equal(articleRoot.get("status"), ArticleStatusType.Published));
+			filterPredicates.add(cb.lessThanOrEqualTo(articleRoot.get("publicationDate"), LocalDate.now()));
+		}
 		if (searchRequest.getIsLinked() != null && ("Y".equalsIgnoreCase(searchRequest.getIsLinked().toString()))) {
 			filterPredicates.add(cb.isNotNull(articleRoot.get("publicationId")));
 		} else if (searchRequest.getIsLinked() != null
@@ -74,7 +83,7 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 		if (searchRequest.getPublicationDate() != null) {
 			filterPredicates.add(cb.equal(articleRoot.get("publicationDate"), searchRequest.getPublicationDate()));
 		}
-		if (searchRequest.getPublicationDateLimit() != null) {
+		if (!"Y".equalsIgnoreCase(searchRequest.getIsTestUser()) && searchRequest.getPublicationDateLimit() != null) {
 			filterPredicates.add(cb.greaterThanOrEqualTo(articleRoot.get("publicationDate"),
 					searchRequest.getPublicationDateLimit()));
 		}
@@ -131,22 +140,6 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 		return new PageImpl<>(list, pageable, count);
 	}
 
-	/*
-	 * public List<NewsArticlePageData> getArticleDetaiils(Long newsArticleId, Long
-	 * studentId) { Query query = entityManager.createNativeQuery(
-	 * "select s.saved as saved,s.opinion as opinion,n.news_article_id as news_article_id,n.news_article_group_id as news_article_group_id "
-	 * +
-	 * "from news_article n left join news_article_group g on g.news_article_group_id=n.news_article_group_id "
-	 * +
-	 * "left join student_activity s on (s.student_id=?1 and s.news_article_id=n.news_article_id) "
-	 * +
-	 * "left join user u on u.user_id=n.author_worked where n.news_article_id=?2");
-	 * query.setParameter(1, studentId); query.setParameter(2, newsArticleId);
-	 * System.out.println(">>>>>>>query.getResultList()>>>>>>>>>>>>>>" +
-	 * query.getResultList().size()); List<NewsArticlePageData> list =
-	 * query.getResultList(); return list; }
-	 */
-
 	@Override
 	public Page<PublisherNewsArticleSummaryDTO> findPublisherArticles(NewsArticleSearchRequest searchRequest,
 			Pageable pageable) {
@@ -170,7 +163,6 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 
 		// Build filter conditions
 		List<Predicate> filterPredicates = new ArrayList<>();
-
 		filterPredicates
 				.add(cb.equal(articleGroupRoot.get("newsArticleGroupId"), articleRoot.get("newsArticleGroupId")));
 

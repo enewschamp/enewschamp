@@ -1,6 +1,7 @@
 package com.enewschamp.app.helpdesk.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.app.helpdesk.entity.HelpDesk;
-import com.enewschamp.app.helpdesk.repository.HelpDeskRepository;
-import com.enewschamp.app.helpdesk.repository.HelpDeskRepositoryCustom;
+import com.enewschamp.app.helpdesk.entity.Helpdesk;
+import com.enewschamp.app.helpdesk.repository.HelpdeskRepositoryCustom;
+import com.enewschamp.app.helpdesk.repository.HelpdeskRepository;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 
@@ -24,10 +25,10 @@ import com.enewschamp.problem.BusinessException;
 public class HelpDeskService {
 
 	@Autowired
-	private HelpDeskRepository helpDeskRespository;
-	
+	private HelpdeskRepository helpdeskRespository;
+
 	@Autowired
-	private HelpDeskRepositoryCustom helpDeskRespositoryCustom;
+	private HelpdeskRepositoryCustom helpDeskRespositoryCustom;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -36,38 +37,39 @@ public class HelpDeskService {
 	@Qualifier("modelPatcher")
 	private ModelMapper modelMapperForPatch;
 
-	public HelpDesk create(HelpDesk helpDeskEntity) {
-		HelpDesk helpDesk = null;
+	public Helpdesk create(Helpdesk helpDeskEntity) {
+		Helpdesk helpDesk = null;
 		try {
-			helpDesk = helpDeskRespository.save(helpDeskEntity);
+			helpDesk = helpdeskRespository.save(helpDeskEntity);
 		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		return helpDesk;
 	}
 
-	public HelpDesk update(HelpDesk helpDeskEntity) {
-		Long HelpDeskId = helpDeskEntity.getRequestId();
-		HelpDesk existingHelpDesk = get(HelpDeskId);
+	public Helpdesk update(Helpdesk helpDeskEntity) {
+		Long HelpDeskId = helpDeskEntity.getHelpdeskId();
+		Helpdesk existingHelpDesk = get(HelpDeskId);
 		LocalDateTime createDateTime = existingHelpDesk.getCreateDateTime();
 		modelMapper.map(helpDeskEntity, existingHelpDesk);
-		existingHelpDesk.setCreateDateTime(createDateTime);;
-		return helpDeskRespository.save(existingHelpDesk);
+		existingHelpDesk.setCreateDateTime(createDateTime);
+		;
+		return helpdeskRespository.save(existingHelpDesk);
 	}
 
-	public HelpDesk patch(HelpDesk HelpDesk) {
-		Long navId = HelpDesk.getRequestId();
-		HelpDesk existingEntity = get(navId);
-		modelMapperForPatch.map(HelpDesk, existingEntity);
-		return helpDeskRespository.save(existingEntity);
+	public Helpdesk patch(Helpdesk helpdesk) {
+		Long navId = helpdesk.getHelpdeskId();
+		Helpdesk existingEntity = get(navId);
+		modelMapperForPatch.map(helpdesk, existingEntity);
+		return helpdeskRespository.save(existingEntity);
 	}
 
 	public void delete(Long HelpDeskId) {
-		helpDeskRespository.deleteById(HelpDeskId);
+		helpdeskRespository.deleteById(HelpDeskId);
 	}
 
-	public HelpDesk get(Long HelpDeskId) {
-		Optional<HelpDesk> existingEntity = helpDeskRespository.findById(HelpDeskId);
+	public Helpdesk get(Long HelpDeskId) {
+		Optional<Helpdesk> existingEntity = helpdeskRespository.findById(HelpDeskId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
@@ -75,44 +77,52 @@ public class HelpDeskService {
 		}
 	}
 
-	public HelpDesk read(HelpDesk helpDeskEntity) {
-		Long helpDeskId = helpDeskEntity.getRequestId();
-		HelpDesk existingHelpDesk = get(helpDeskId);
+	public Helpdesk read(Helpdesk helpDeskEntity) {
+		Long helpDeskId = helpDeskEntity.getHelpdeskId();
+		Helpdesk existingHelpDesk = get(helpDeskId);
 		if (existingHelpDesk.getRecordInUse().equals(RecordInUseType.Y)) {
 			return existingHelpDesk;
 		}
 		existingHelpDesk.setRecordInUse(RecordInUseType.Y);
 		existingHelpDesk.setOperationDateTime(null);
-		return helpDeskRespository.save(existingHelpDesk);
+		return helpdeskRespository.save(existingHelpDesk);
 	}
 
-	public HelpDesk close(HelpDesk helpDeskEntity) {
-		Long helpDeskId = helpDeskEntity.getRequestId();
-		HelpDesk existingEntity = get(helpDeskId);
+	public Helpdesk close(Helpdesk helpDeskEntity) {
+		Long helpDeskId = helpDeskEntity.getHelpdeskId();
+		Helpdesk existingEntity = get(helpDeskId);
 		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
 			return existingEntity;
 		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
 		existingEntity.setOperationDateTime(null);
-		return helpDeskRespository.save(existingEntity);
+		return helpdeskRespository.save(existingEntity);
 	}
-	
-	public HelpDesk reinstate(HelpDesk helpdeskEntity) {
-		Long helpdeskId = helpdeskEntity.getRequestId();
-		HelpDesk existingHelpdesk = get(helpdeskId);
+
+	public Helpdesk reinstate(Helpdesk helpdeskEntity) {
+		Long helpdeskId = helpdeskEntity.getHelpdeskId();
+		Helpdesk existingHelpdesk = get(helpdeskId);
 		if (existingHelpdesk.getRecordInUse().equals(RecordInUseType.Y)) {
 			return existingHelpdesk;
 		}
 		existingHelpdesk.setRecordInUse(RecordInUseType.Y);
 		existingHelpdesk.setOperationDateTime(null);
-		return helpDeskRespository.save(existingHelpdesk);
+		return helpdeskRespository.save(existingHelpdesk);
 	}
 
+	public Helpdesk getByStudentId(Long studentId) {
+		List<Helpdesk> existingEntity = helpdeskRespository.findByStudentId(studentId);
+		if (existingEntity != null && existingEntity.size() > 0) {
+			return existingEntity.get(0);
+		} else {
+			return null;
+		}
+	}
 
-	public Page<HelpDesk> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+	public Page<Helpdesk> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<HelpDesk> genreList = helpDeskRespositoryCustom.findHelpDesks(pageable, searchRequest);
-		return genreList;
+		Page<Helpdesk> helpDeskList = helpDeskRespositoryCustom.findHelpDesks(pageable, searchRequest);
+		return helpDeskList;
 	}
 
 }

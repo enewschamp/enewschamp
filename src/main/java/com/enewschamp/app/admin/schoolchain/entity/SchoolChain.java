@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -39,50 +38,49 @@ public class SchoolChain extends BaseEntity {
 	@Column(name = "countryId")
 	private String countryId;
 
-	@NotNull
 	@Column(name = "stateId")
 	private String stateId;
 
-	@NotNull
 	@Column(name = "cityId")
 	private String cityId;
 	@NotNull
-	@NotEmpty
+	@Column(name = "presence")
 	private String presence;
-	@NotNull
-	@NotEmpty
+	
+	@Column(name = "eduBoard")
 	private String eduBoard;
-	@NotNull
-	@NotEmpty
+	
+	@Column(name = "eduMedium")
 	private String eduMedium;
-	@NotNull
-	@NotEmpty
+
+	@Column(name = "genderDiversity")
 	private String genderDiversity;
-	@NotNull
-	@NotEmpty
+
+	@Column(name = "feeStructure")
 	private String feeStructure;
-	@NotNull
-	@NotEmpty
+
+	@Column(name = "ownership")
 	private String ownership;
-	@NotNull
-	@NotEmpty
+
+	@Column(name = "schoolProgram")
 	private String schoolProgram;
-	@NotNull
-	@NotEmpty
+
+	@Column(name = "shiftDetails")
 	private String shiftDetails;
-	@NotNull
-	@NotEmpty
+
+	@Column(name = "studentResidences")
 	private String studentResidences;
-	@NotNull
-	@NotEmpty
+
+	@Column(name = "website")
 	private String website;
+	
 	@NotNull
-	@NotEmpty
+	@Column(name = "comments")
 	private String comments;
-	@NotNull
-	@NotEmpty
+
+	@Column(name = "operator")
 	private String operator;
-	@NotNull
-	@NotEmpty
+	
+	@Column(name = "lastUpdate")
 	private LocalDateTime lastUpdate;
 }

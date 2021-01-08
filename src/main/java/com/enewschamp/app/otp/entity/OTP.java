@@ -30,7 +30,7 @@ public class OTP extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "otp_id_generator")
-	@SequenceGenerator(name = "otp_id_generator", sequenceName = "otp_seq", allocationSize = 1)
+	@SequenceGenerator(name = "otp_id_generator", sequenceName = "otp_id_seq", allocationSize = 1)
 	@Column(name = "otpId", updatable = false, nullable = false)
 	private Long otpId;
 

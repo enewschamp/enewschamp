@@ -8,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -31,7 +30,6 @@ public class State extends BaseEntity {
 	private Long stateId;
 
 	@NotNull
-	@NotEmpty
 	@Column(name = "countryId", length = 2)
 	private String countryId;
 

@@ -12,8 +12,8 @@ import com.enewschamp.app.recognition.page.data.RecognitionData;
 import com.enewschamp.app.student.badges.dto.StudentBadgesDTO;
 import com.enewschamp.app.student.badges.entity.StudentBadges;
 import com.enewschamp.app.student.badges.service.StudentBadgesService;
-import com.enewschamp.app.student.monthlytrends.dto.TrendsMonthlyByGenreDTO;
-import com.enewschamp.app.student.monthlytrends.dto.TrendsMonthlyTotalDTO;
+import com.enewschamp.app.student.scores.dto.ScoresMonthlyGenreDTO;
+import com.enewschamp.app.student.scores.dto.ScoresMonthlyTotalDTO;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.master.badge.service.BadgeService;
 import com.enewschamp.publication.domain.entity.Badge;
@@ -37,42 +37,48 @@ public class StudentBadgesBusiness {
 		return studentBadgesDTONew;
 	}
 
-	public StudentBadgesDTO getDailyTrend(Long studentId, String editionId, Long monthYear) {
-		StudentBadges studentBadges = studentBadgesService.getStudentBadges(studentId, editionId, monthYear);
+	public StudentBadgesDTO getScoresDaily(Long studentId, String editionId, Long yearMonth) {
+		StudentBadges studentBadges = studentBadgesService.getStudentBadges(studentId, editionId, yearMonth);
 		StudentBadgesDTO studentActivityDTO = modelMapper.map(studentBadges, StudentBadgesDTO.class);
 		return studentActivityDTO;
 	}
 
-	public StudentBadges grantGenreBadge(Long studentId, String editionId, int readingLevel, Long monthYear,
-			String genreId, TrendsMonthlyByGenreDTO trendsMonthlyByGenreDTO) {
+	public StudentBadges grantGenreBadge(Long studentId, String editionId, int readingLevel, Long yearMonth,
+			String genreId, ScoresMonthlyGenreDTO scoresMonthlyGenreDTO) {
 		Badge badge = bagdeService.getBadgeForStudent(editionId, readingLevel, genreId,
-				trendsMonthlyByGenreDTO.getQuizCorrect());
+				scoresMonthlyGenreDTO.getQuizCorrect());
 		StudentBadges studBadge = null;
 		if (badge != null) {
-			studBadge = new StudentBadges();
-			studBadge.setStudentId(studentId);
-			studBadge.setBadgeId(badge.getBadgeId());
-			studBadge.setMonthYear(monthYear);
-			studBadge.setOperatorId("SYSTEM");
-			studBadge.setRecordInUse(RecordInUseType.Y);
-			studentBadgesService.create(studBadge);
+			Long unlockBadgeId = studentBadgesService.isBadgeUnlocked(badge.getBadgeId(), studentId, yearMonth);
+			if (unlockBadgeId == null || unlockBadgeId == 0) {
+				studBadge = new StudentBadges();
+				studBadge.setStudentId(studentId);
+				studBadge.setBadgeId(badge.getBadgeId());
+				studBadge.setYearMonth(yearMonth);
+				studBadge.setOperatorId("SYSTEM");
+				studBadge.setRecordInUse(RecordInUseType.Y);
+				studentBadgesService.create(studBadge);
+			}
 		}
 		return studBadge;
 	}
 
-	public StudentBadges grantBadge(Long studentId, String editionId, int readingLevel, Long monthYear, String genreId,
-			TrendsMonthlyTotalDTO trendsMonthlyTotalDTO) {
+	public StudentBadges grantBadge(Long studentId, String editionId, int readingLevel, Long yearMonth, String genreId,
+			ScoresMonthlyTotalDTO scoresMonthlyTotalDTO) {
 		Badge badge = bagdeService.getBadgeForStudent(editionId, readingLevel, genreId,
-				trendsMonthlyTotalDTO.getQuizCorrect());
+				scoresMonthlyTotalDTO.getQuizCorrect());
 		StudentBadges studBadge = null;
 		if (badge != null) {
-			studBadge = new StudentBadges();
-			studBadge.setStudentId(studentId);
-			studBadge.setBadgeId(badge.getBadgeId());
-			studBadge.setMonthYear(monthYear);
-			studBadge.setOperatorId("SYSTEM");
-			studBadge.setRecordInUse(RecordInUseType.Y);
-			studentBadgesService.create(studBadge);
+			Long unlockBadgeId = studentBadgesService.isBadgeUnlocked(badge.getBadgeId(), studentId, yearMonth);
+			if (unlockBadgeId == null || unlockBadgeId == 0) {
+				studBadge = new StudentBadges();
+				studBadge.setStudentId(studentId);
+				studBadge.setBadgeId(badge.getBadgeId());
+				studBadge.setYearMonth(yearMonth);
+				studBadge.setOperatorId("SYSTEM");
+				studBadge.setRecordInUse(RecordInUseType.Y);
+				studentBadgesService.create(studBadge);
+			}
 		}
 		return studBadge;
 	}
@@ -89,9 +95,9 @@ public class StudentBadgesBusiness {
 		return latestBadge;
 	}
 
-	public List<RecognitionData> getBadgeDetails(Long studentId, String editionId, int readingLevel, Long monthYear) {
+	public List<RecognitionData> getBadgeDetails(Long studentId, String editionId, int readingLevel, Long yearMonth) {
 		List<RecognitionData> latestBadge = studentBadgesService.getStudentBadgeDetails(studentId, editionId,
-				readingLevel, monthYear);
+				readingLevel, yearMonth);
 		return latestBadge;
 	}
 

@@ -18,10 +18,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "HelpDesk")
+@Table(name = "Helpdesk")
 @EqualsAndHashCode(callSuper = false)
-
-public class HelpDesk extends BaseEntity {
+public class Helpdesk extends BaseEntity {
 
 	/**
 	 * 
@@ -31,8 +30,8 @@ public class HelpDesk extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "helpdesk_id_generator")
 	@SequenceGenerator(name = "helpdesk_id_generator", sequenceName = "helpdesk_id_seq", allocationSize = 1)
-	@Column(name = "requestId", updatable = false, nullable = false)
-	private Long requestId;
+	@Column(name = "helpdeskId", updatable = false, nullable = false)
+	private Long helpdeskId;
 
 	@NotNull
 	@Column(name = "studentId", length = 10)
@@ -53,14 +52,17 @@ public class HelpDesk extends BaseEntity {
 	@Column(name = "phoneNumber", length = 15)
 	private String phoneNumber;
 
-	@Column(name = "supportingComments", length = 399)
-	private String supportingComments;
+	@Column(name = "supportUserId", length = 20)
+	private String supportUserId;
+
+	@Column(name = "supportComments", length = 399)
+	private String supportComments;
 
 	@Column(name = "closeFlag", length = 1)
 	private String closeFlag;
 
-	@Column(name = "callBackTime")
-	private LocalDateTime callBackTime;
+	@Column(name = "callbackDateTime")
+	private LocalDateTime callbackDateTime;
 
 	@Column(name = "createDateTime")
 	private LocalDateTime createDateTime;

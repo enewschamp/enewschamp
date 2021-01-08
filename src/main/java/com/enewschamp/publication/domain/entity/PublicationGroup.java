@@ -31,8 +31,8 @@ public class PublicationGroup extends BaseEntity {
 	private static final long serialVersionUID = 819426502462078317L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "publication_grp_id_generator")
-	@SequenceGenerator(name = "publication_grp_id_generator", sequenceName = "pub_grp_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "publication_group_id_generator")
+	@SequenceGenerator(name = "publication_group_id_generator", sequenceName = "publication_group_id_seq", allocationSize = 1)
 	@Column(name = "PublicationGroupId", updatable = false, nullable = false)
 	private Long publicationGroupId;
 

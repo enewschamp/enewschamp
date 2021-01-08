@@ -20,6 +20,6 @@ public class StudentPaymentWorkDTO extends AbstractDTO {
 	private String editionId;
 	private String subscriptionType;
 	private String subscriptionPeriod;
-	private String payCurrency;
-	private Double payAmount;
+	private String paymentCurrency;
+	private Double paymentAmount;
 }

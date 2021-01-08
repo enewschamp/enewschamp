@@ -99,6 +99,7 @@ public class LoginPageHandler implements IPageHandler {
 		String password = "";
 		String deviceId = pageRequest.getHeader().getDeviceId();
 		String tokenId = pageRequest.getHeader().getLoginCredentials();
+		String module = pageRequest.getHeader().getModule();
 		boolean loginSuccess = false;
 		try {
 			loginPageData = objectMapper.readValue(pageRequest.getData().toString(), LoginPageData.class);
@@ -111,7 +112,7 @@ public class LoginPageHandler implements IPageHandler {
 			throw new RuntimeException(e);
 		}
 
-		loginSuccess = studentRegBusiness.validatePassword(userId, password, deviceId, tokenId);
+		loginSuccess = studentRegBusiness.validatePassword(module, userId, password, deviceId, tokenId);
 		if (loginSuccess) {
 			userLoginBusiess.login(userId, deviceId, "", UserType.S);
 		} else {

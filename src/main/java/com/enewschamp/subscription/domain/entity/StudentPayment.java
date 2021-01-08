@@ -45,10 +45,10 @@ public class StudentPayment extends BaseEntity {
 	@Column(name = "SubscriptionPeriod", length = 100)
 	private String subscriptionPeriod;
 
-	@Column(name = "PayCurrency", length = 4)
-	private String payCurrency;
+	@Column(name = "PaymentCurrency", length = 4)
+	private String paymentCurrency;
 
-	@Column(name = "PayAmount", length = 9)
-	private Double payAmount;
+	@Column(name = "PaymentAmount", length = 9)
+	private Double paymentAmount;
 
 }

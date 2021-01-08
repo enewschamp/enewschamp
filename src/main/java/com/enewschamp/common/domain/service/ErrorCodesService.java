@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.common.domain.entity.ErrorCodes;
-import com.enewschamp.common.domain.entity.Properties;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;

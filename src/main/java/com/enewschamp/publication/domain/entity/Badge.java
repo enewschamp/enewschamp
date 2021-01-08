@@ -55,7 +55,16 @@ public class Badge extends BaseEntity {
 	@Column(name = "imageName", length = 100)
 	private String imageName;
 
+	@Column(name = "successImageName", length = 100)
+	private String successImageName;
+
+	@Column(name = "audioFileName", length = 100)
+	private String audioFileName;
+
 	@Transient
 	private String base64Image;
+
+	@Transient
+	private String imageTypeExt;
 
 }

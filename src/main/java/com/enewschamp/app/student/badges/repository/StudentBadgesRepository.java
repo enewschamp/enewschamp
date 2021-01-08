@@ -10,8 +10,8 @@ import com.enewschamp.app.student.badges.entity.StudentBadges;
 
 public interface StudentBadgesRepository extends JpaRepository<StudentBadges, Long> {
 
-	@Query("select d from StudentBadges d where d.studentId = :studentId and d.monthYear= :monthYear and d.recordInUse ='Y'")
+	@Query("select d from StudentBadges d where d.studentId = :studentId and d.yearMonth= :yearMonth and d.recordInUse ='Y'")
 	public Optional<StudentBadges> getStudentBadges(@Param("studentId") Long studentId,
-			@Param("monthYear") Long monthYear);
+			@Param("yearMonth") Long yearMonth);
 
 }

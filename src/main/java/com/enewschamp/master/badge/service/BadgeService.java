@@ -18,6 +18,7 @@ import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.master.badge.repository.BadgeRepository;
 import com.enewschamp.master.badge.repository.BadgeRepositoryCustom;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.publication.domain.common.BadgeList;
 import com.enewschamp.publication.domain.entity.Badge;
 
 @Service
@@ -25,7 +26,7 @@ public class BadgeService {
 
 	@Autowired
 	BadgeRepository badgeRepository;
-	
+
 	@Autowired
 	BadgeRepositoryCustom badgeRepositoryCustom;
 
@@ -43,8 +44,7 @@ public class BadgeService {
 		Badge badge = null;
 		try {
 			badge = badgeRepository.save(badgeEntity);
-		}
-		catch(DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		return badge;
@@ -136,11 +136,11 @@ public class BadgeService {
 		badge.setBadgeId(badgeId);
 		return auditService.getEntityAudit(badge);
 	}
-	
+
 	public Badge read(Badge badgeEntity) {
 		Long badgeId = badgeEntity.getBadgeId();
 		Badge existingBadge = get(badgeId);
-		if(existingBadge.getRecordInUse().equals(RecordInUseType.Y)) {
+		if (existingBadge.getRecordInUse().equals(RecordInUseType.Y)) {
 			return existingBadge;
 		}
 		existingBadge.setRecordInUse(RecordInUseType.Y);
@@ -151,23 +151,27 @@ public class BadgeService {
 	public Badge close(Badge badgeEntity) {
 		Long badgeId = badgeEntity.getBadgeId();
 		Badge existingBadge = get(badgeId);
-		if(existingBadge.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingBadge.getRecordInUse().equals(RecordInUseType.N)) {
 			return existingBadge;
 		}
 		existingBadge.setRecordInUse(RecordInUseType.N);
 		existingBadge.setOperationDateTime(null);
 		return badgeRepository.save(existingBadge);
 	}
-	
+
 	public Badge reInstate(Badge badgeEntity) {
 		Long badgeId = badgeEntity.getBadgeId();
 		Badge existingCountry = get(badgeId);
-		if(existingCountry.getRecordInUse().equals(RecordInUseType.Y)) {
+		if (existingCountry.getRecordInUse().equals(RecordInUseType.Y)) {
 			return existingCountry;
 		}
 		existingCountry.setRecordInUse(RecordInUseType.Y);
 		existingCountry.setOperationDateTime(null);
 		return badgeRepository.save(existingCountry);
+	}
+
+	public List<BadgeList> getBadgeList() {
+		return badgeRepository.getBadgeList();
 	}
 
 	public Page<Badge> list(int pageNo, int pageSize) {

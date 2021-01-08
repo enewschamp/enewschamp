@@ -115,7 +115,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 
 	private AppSecurity mapAppSecurityData(PageRequestDTO pageRequest, AppSecurityPageData pageData) {
 		AppSecurity appSecurity = modelMapper.map(pageData, AppSecurity.class);
-		appSecurity.setRecordInUse(RecordInUseType.Y);
+		//appSecurity.setRecordInUse(RecordInUseType.Y);
 		return appSecurity;
 	}
 
@@ -151,7 +151,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 	
 	private AppSecurityPageData mapPageData(AppSecurity appSecurity) {
 		AppSecurityPageData pageData = modelMapper.map(appSecurity, AppSecurityPageData.class);
-		pageData.setLastUpdate(appSecurity.getOperationDateTime());
+		//pageData.setLastUpdate(appSecurity.getOperationDateTime());
 		return pageData;
 	}
 
@@ -202,7 +202,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 			List<AppSecurity> pageDataList = page.getContent();
 			for (AppSecurity appSecurity : pageDataList) {
 				AppSecurityPageData appSecPageData = modelMapper.map(appSecurity, AppSecurityPageData.class);
-				appSecPageData.setLastUpdate(appSecurity.getOperationDateTime());
+			//	appSecPageData.setLastUpdate(appSecurity.getOperationDateTime());
 				countryPageDataList.add(appSecPageData);
 			}
 		}

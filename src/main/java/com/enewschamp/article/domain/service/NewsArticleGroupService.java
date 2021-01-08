@@ -21,7 +21,7 @@ import com.enewschamp.article.page.data.PropertyAuditData;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditQueryCriteria;
 import com.enewschamp.audit.domain.AuditService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.user.domain.service.UserRoleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,9 +55,6 @@ public class NewsArticleGroupService {
 	private NewsArticleRepository newsArticleRepository;
 
 	@Autowired
-	private PropertiesService propertiesService;
-
-	@Autowired
 	private EnewschampApplicationProperties appConfig;
 
 	@Autowired
@@ -67,9 +64,9 @@ public class NewsArticleGroupService {
 		deriveStatus(articleGroup);
 		articleGroup = repository.save(articleGroup);
 		String newImageName = articleGroup.getNewsArticleGroupId() + "_" + System.currentTimeMillis();
-		String imageType = "jpg";
-		boolean saveFlag = commonService.saveImages("article", imageType, articleGroup.getBase64Image(), newImageName,
-				articleGroup.getImageName());
+		String imageType = articleGroup.getImageTypeExt();
+		boolean saveFlag = commonService.saveImages("Publisher", "article", imageType, articleGroup.getBase64Image(),
+				newImageName, articleGroup.getImageName());
 		if (saveFlag) {
 			articleGroup.setImageName(newImageName + "." + imageType);
 			repository.save(articleGroup);
@@ -84,9 +81,9 @@ public class NewsArticleGroupService {
 		modelMapper.map(articleGroup, existingEntity);
 		articleGroup = repository.save(existingEntity);
 		String newImageName = articleGroup.getNewsArticleGroupId() + "_" + System.currentTimeMillis();
-		String imageType = "jpg";
-		boolean saveFlag = commonService.saveImages("article", imageType, articleGroup.getBase64Image(), newImageName,
-				articleGroup.getImageName());
+		String imageType = articleGroup.getImageTypeExt();
+		boolean saveFlag = commonService.saveImages("Publisher", "article", imageType, articleGroup.getBase64Image(),
+				newImageName, articleGroup.getImageName());
 		if (saveFlag) {
 			articleGroup.setImageName(newImageName + "." + imageType);
 			repository.save(articleGroup);
@@ -101,9 +98,9 @@ public class NewsArticleGroupService {
 		modelMapperForPatch.map(articleGroup, existingEntity);
 		articleGroup = repository.save(existingEntity);
 		String newImageName = articleGroup.getNewsArticleGroupId() + "_" + System.currentTimeMillis();
-		String imageType = "jpg";
-		boolean saveFlag = commonService.saveImages("article", imageType, articleGroup.getBase64Image(), newImageName,
-				articleGroup.getImageName());
+		String imageType = articleGroup.getImageTypeExt();
+		boolean saveFlag = commonService.saveImages("Publisher", "article", imageType, articleGroup.getBase64Image(),
+				newImageName, articleGroup.getImageName());
 		if (saveFlag) {
 			articleGroup.setImageName(newImageName + "." + imageType);
 			repository.save(articleGroup);

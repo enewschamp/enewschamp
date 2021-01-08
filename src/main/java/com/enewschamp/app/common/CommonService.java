@@ -18,13 +18,12 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.article.page.dto.PublicationData;
 import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.utils.ImageUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class CommonService {
@@ -33,31 +32,12 @@ public class CommonService {
 	ModelMapper modelMapper;
 
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 
 	@Autowired
 	private StudentControlBusiness studentControlBusiness;
 
-	@Autowired
-	private static ObjectMapper objectMapper;
-
-	public List<ListOfValuesItem> getMonthsLOV() {
-		List<ListOfValuesItem> monthsLovList = new ArrayList<ListOfValuesItem>();
-		LocalDate currdate = LocalDate.now();
-		int monthLov = Integer.valueOf(propertiesService.getProperty(PropertyConstants.MONTH_LOV));
-		String monthLovFormat = propertiesService.getProperty(PropertyConstants.MONTH_LOV_FORMAT);
-		for (int i = 0; i < monthLov; i++) {
-			String value = currdate.format(DateTimeFormatter.ofPattern(monthLovFormat));
-			ListOfValuesItem monthlov = new ListOfValuesItem();
-			monthlov.setId(value);
-			monthlov.setName(value);
-			monthsLovList.add(monthlov);
-			currdate = currdate.minusMonths(1);
-		}
-		return monthsLovList;
-	}
-
-	public LocalDate getLimitDate(String constantName, String emailId) {
+	public LocalDate getLimitDate(String module, String constantName, String emailId) {
 		String unitType = "";
 		int unitValue = 0;
 		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
@@ -68,7 +48,7 @@ public class CommonService {
 				subscriptionType = "E";
 			}
 		}
-		String viewSavedArticlesLimit = propertiesService.getProperty(constantName);
+		String viewSavedArticlesLimit = propertiesService.getProperty(module, constantName);
 		String[] limitArr = viewSavedArticlesLimit.split(",");
 		for (int i = 0; i < limitArr.length; i++) {
 			if (limitArr[i].startsWith(subscriptionType)) {
@@ -108,34 +88,27 @@ public class CommonService {
 			for (NewsArticleSummaryDTO article : pageDataList) {
 				PublicationData publicationData = new PublicationData();
 				publicationData = modelMapper.map(article, PublicationData.class);
-				/*
-				 * publicationData.setQuizAvailable(article.isNoQuiz() == true ? "N" : "Y"); if
-				 * (!article.isNoQuiz() && studentId > 0) { StudentActivityDTO stdactivity =
-				 * studentActivityBusiness.getActivity(studentId, article.getNewsArticleId());
-				 * if (stdactivity != null) {
-				 * publicationData.setQuizCompleted(stdactivity.getQuizScore() != null ? "Y" :
-				 * "N"); } } else { publicationData.setQuizCompleted("N"); }
-				 */
 				publicationPageDataList.add(publicationData);
 			}
 		}
 		return publicationPageDataList;
 	}
 
-	public boolean saveImages(String imageType, String imageExtType, String base64Image, String newImageName,
-			String currentImageName) {
+	public boolean saveImages(String module, String imageType, String imageExtType, String base64Image,
+			String newImageName, String currentImageName) {
 		if (base64Image == null || "".equalsIgnoreCase(base64Image)) {
 			return false;
 		}
-		String imagesFolderPath = propertiesService.getProperty(imageType + "-image-config.imagesRootFolderPath");
+		String imagesFolderPath = propertiesService.getProperty(module,
+				imageType + "-image-config.imagesRootFolderPath");
 		String size1FileNameWithoutExtension = imagesFolderPath
-				+ propertiesService.getProperty(imageType + "-image-config.size1-folder-path") + newImageName;
+				+ propertiesService.getProperty(module, imageType + "-image-config.size1-folder-path") + newImageName;
 		String size2FileNameWithoutExtension = imagesFolderPath
-				+ propertiesService.getProperty(imageType + "-image-config.size2-folder-path") + newImageName;
+				+ propertiesService.getProperty(module, imageType + "-image-config.size2-folder-path") + newImageName;
 		String size3FileNameWithoutExtension = imagesFolderPath
-				+ propertiesService.getProperty(imageType + "-image-config.size3-folder-path") + newImageName;
+				+ propertiesService.getProperty(module, imageType + "-image-config.size3-folder-path") + newImageName;
 		String size4FileNameWithoutExtension = imagesFolderPath
-				+ propertiesService.getProperty(imageType + "-image-config.size4-folder-path") + newImageName;
+				+ propertiesService.getProperty(module, imageType + "-image-config.size4-folder-path") + newImageName;
 		String outputFileName = imagesFolderPath + "temp-" + newImageName;
 		File imageFile = null;
 		try {
@@ -143,42 +116,42 @@ public class CommonService {
 			imageFile = new File(outputFileName);
 			FileUtils.writeByteArrayToFile(imageFile, decodedBytes);
 			// Size 1
-			List<String> size1Dimension = Arrays
-					.asList(propertiesService.getProperty(imageType + "-image-config.size1-dimension").split(","));
+			List<String> size1Dimension = Arrays.asList(
+					propertiesService.getProperty(module, imageType + "-image-config.size1-dimension").split(","));
 			ImageUtils.resizeImage(imageFile,
 					new Dimension(Integer.valueOf(size1Dimension.get(0)), Integer.valueOf(size1Dimension.get(1))),
 					imageExtType, size1FileNameWithoutExtension);
 			// Size 2
-			List<String> size2Dimension = Arrays
-					.asList(propertiesService.getProperty(imageType + "-image-config.size2-dimension").split(","));
+			List<String> size2Dimension = Arrays.asList(
+					propertiesService.getProperty(module, imageType + "-image-config.size2-dimension").split(","));
 			ImageUtils.resizeImage(imageFile,
 					new Dimension(Integer.valueOf(size2Dimension.get(0)), Integer.valueOf(size2Dimension.get(1))),
 					imageExtType, size2FileNameWithoutExtension);
 			// Size 3
-			List<String> size3Dimension = Arrays
-					.asList(propertiesService.getProperty(imageType + "-image-config.size3-dimension").split(","));
+			List<String> size3Dimension = Arrays.asList(
+					propertiesService.getProperty(module, imageType + "-image-config.size3-dimension").split(","));
 			ImageUtils.resizeImage(imageFile,
 					new Dimension(Integer.valueOf(size3Dimension.get(0)), Integer.valueOf(size3Dimension.get(1))),
 					imageExtType, size3FileNameWithoutExtension);
 			// Size 4
-			List<String> size4Dimension = Arrays
-					.asList(propertiesService.getProperty(imageType + "-image-config.size4-dimension").split(","));
+			List<String> size4Dimension = Arrays.asList(
+					propertiesService.getProperty(module, imageType + "-image-config.size4-dimension").split(","));
 			ImageUtils.resizeImage(imageFile,
 					new Dimension(Integer.valueOf(size4Dimension.get(0)), Integer.valueOf(size4Dimension.get(1))),
 					imageExtType, size4FileNameWithoutExtension);
 			FileUtils.forceDelete(imageFile);
 			if (currentImageName != null && !"".equals(currentImageName)) {
 				String size1OldFileName = imagesFolderPath
-						+ propertiesService.getProperty(imageType + "-image-config.size1-folder-path")
+						+ propertiesService.getProperty(module, imageType + "-image-config.size1-folder-path")
 						+ currentImageName;
 				String size2OldFileName = imagesFolderPath
-						+ propertiesService.getProperty(imageType + "-image-config.size2-folder-path")
+						+ propertiesService.getProperty(module, imageType + "-image-config.size2-folder-path")
 						+ currentImageName;
 				String size3OldFileName = imagesFolderPath
-						+ propertiesService.getProperty(imageType + "-image-config.size3-folder-path")
+						+ propertiesService.getProperty(module, imageType + "-image-config.size3-folder-path")
 						+ currentImageName;
 				String size4OldFileName = imagesFolderPath
-						+ propertiesService.getProperty(imageType + "-image-config.size4-folder-path")
+						+ propertiesService.getProperty(module, imageType + "-image-config.size4-folder-path")
 						+ currentImageName;
 				File oldFileJPG1 = new File(size1OldFileName);
 				oldFileJPG1.delete();
@@ -191,6 +164,7 @@ public class CommonService {
 			}
 			return true;
 		} catch (IOException e) {
+			e.printStackTrace();
 			throw new BusinessException(ErrorCodeConstants.IMAGE_SAVE_ERROR);
 		} finally {
 			base64Image = null;

@@ -20,7 +20,7 @@ public class UIControlsGlobalService {
 	ModelMapper modelMapper;
 
 	public UIControlsGlobalDTO get(String globalControlRef) {
-		System.out.println(">>>>>>globalControlRef>>>>>" + globalControlRef);
+		// System.out.println(">>>>>>globalControlRef>>>>>" + globalControlRef);
 		UIControlsGlobal existingEntity = repository.findByGlobalControlRef(globalControlRef);
 		UIControlsGlobalDTO uicontrolsGlobalDto = null;
 		if (existingEntity != null) {

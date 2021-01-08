@@ -116,13 +116,8 @@ public class CountryService extends AbstractDomainService {
 	
 	public Country read(Country countryEntity) {
 		Long countryId = countryEntity.getCountryId();
-		Country existingCountry = get(countryId);
-		if(existingCountry.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingCountry;
-		}
-		existingCountry.setRecordInUse(RecordInUseType.Y);
-		existingCountry.setOperationDateTime(null);
-		return countryRepository.save(existingCountry);
+		Country country = get(countryId);
+        return country;
 	}
 
 	public Country close(Country countryEntity) {

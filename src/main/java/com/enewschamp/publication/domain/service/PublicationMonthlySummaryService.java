@@ -16,7 +16,7 @@ import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.service.NewsArticleGroupService;
 import com.enewschamp.article.domain.service.NewsArticleService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.app.dto.PublicationMonthlySummaryDTO;
@@ -42,7 +42,7 @@ public class PublicationMonthlySummaryService extends AbstractDomainService {
 	private PublicationSummaryRepositoryCustom customRepository;
 
 	@Autowired
-	PropertiesService propertiesService;
+	PropertiesBackendService propertiesService;
 
 	public PublicationMonthlySummary get(String recordId) {
 		Optional<PublicationMonthlySummary> existingEntity = repository.findById(recordId);

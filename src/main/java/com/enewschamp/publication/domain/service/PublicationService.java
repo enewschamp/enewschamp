@@ -12,7 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
@@ -176,12 +176,12 @@ public class PublicationService {
 				PublicationStatusType previousStatus = repository.getPreviousStatus(publication.getPublicationId());
 				nextStatus = previousStatus.toString();
 			}
-			System.out.println(">>>>..nextStatus......>>>>>" + nextStatus);
+			// System.out.println(">>>>..nextStatus......>>>>>" + nextStatus);
 			status = PublicationStatusType.fromValue(nextStatus);
 		}
-		System.out.println(">>>>..publication......>>>>>" + publication);
-		System.out.println(">>>>..transition......>>>>>" + transition);
-		System.out.println(">>>>..status......>>>>>" + status);
+		// System.out.println(">>>>..publication......>>>>>" + publication);
+		// System.out.println(">>>>..transition......>>>>>" + transition);
+		// System.out.println(">>>>..status......>>>>>" + status);
 		if (transition != null && validateAccess) {
 			statusTransitionHandler.validateStateTransitionAccess(transition, null,
 					existingPublicationGroup.getEditorId(), publication.getOperatorId());

@@ -27,6 +27,6 @@ public class CountryDTO extends BaseEntity {
 
 	private String currencyId;
 
-	private String language;
+	private String languageId;
 
 }

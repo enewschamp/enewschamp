@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.app.common.CommonService;
-import com.enewschamp.common.domain.service.PropertiesService;
 import com.enewschamp.master.badge.service.BadgeService;
 import com.enewschamp.publication.app.dto.BadgeDTO;
 import com.enewschamp.publication.domain.entity.Badge;
@@ -35,17 +34,14 @@ public class BadgeController {
 	@Autowired
 	CommonService commonService;
 
-	@Autowired
-	private PropertiesService propertiesService;
-
 	@PostMapping(value = "/admin/badges")
 	public ResponseEntity<BadgeDTO> create(@RequestBody @Valid BadgeDTO badgeDTO) {
 		Badge badge = modelMapper.map(badgeDTO, Badge.class);
 		badge = badgeService.create(badge);
 		String newImageName = badge.getBadgeId() + "_" + System.currentTimeMillis();
-		String imageType = "jpg";
-		boolean saveFlag = commonService.saveImages("badge", imageType, badge.getBase64Image(), newImageName,
-				badge.getImageName());
+		String imageType = badgeDTO.getImageTypeExt();
+		boolean saveFlag = commonService.saveImages("Admin", "badge", imageType, badgeDTO.getBase64Image(),
+				newImageName, badge.getImageName());
 		if (saveFlag) {
 			badge.setImageName(newImageName + "." + imageType);
 			badge = badgeService.update(badge);

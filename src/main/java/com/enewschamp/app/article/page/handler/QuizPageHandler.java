@@ -5,8 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +24,13 @@ import com.enewschamp.app.student.business.StudentActivityBusiness;
 import com.enewschamp.app.student.dto.StudentActivityDTO;
 import com.enewschamp.app.student.quiz.business.QuizScoreBusiness;
 import com.enewschamp.app.student.quiz.dto.QuizScoreDTO;
+import com.enewschamp.app.student.registration.entity.StudentRegistration;
+import com.enewschamp.app.student.registration.service.StudentRegistrationService;
 import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
 import com.enewschamp.article.domain.entity.NewsArticleQuiz;
 import com.enewschamp.article.domain.service.NewsArticleQuizService;
 import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.article.page.data.NewsArticleSearchRequest;
-import com.enewschamp.common.domain.service.PropertiesService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.master.badge.service.BadgeService;
@@ -58,9 +57,6 @@ public class QuizPageHandler implements IPageHandler {
 	ObjectMapper objectMapper;
 
 	@Autowired
-	private PropertiesService propertiesService;
-
-	@Autowired
 	QuizScoreBusiness quizScoreBusiness;
 
 	@Autowired
@@ -77,6 +73,9 @@ public class QuizPageHandler implements IPageHandler {
 
 	@Autowired
 	PreferenceBusiness preferenceBusiness;
+
+	@Autowired
+	StudentRegistrationService regService;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -117,6 +116,11 @@ public class QuizPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+		String isTestUser = "";
+		StudentRegistration studReg = regService.getStudentReg(emailId);
+		if (studReg != null) {
+			isTestUser = studReg.getIsTestUser();
+		}
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		ArticleQuizDetailsPageData pageData = new ArticleQuizDetailsPageData();
 		pageData = mapPageDataOnLoad(pageData, pageNavigationContext.getPageRequest());
@@ -135,13 +139,13 @@ public class QuizPageHandler implements IPageHandler {
 		}
 		NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 		searchRequestData.setArticleId(newsArticleId);
+		searchRequestData.setIsTestUser(isTestUser);
 		Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData, studentId, 1, 10,
 				pageNavigationContext.getPageRequest().getHeader());
 		List<NewsArticleSummaryDTO> articleDtoList = pageResult.getContent();
 		if (articleDtoList != null && !articleDtoList.isEmpty()) {
 			pageData.setHeadline(articleDtoList.get(0).getHeadline());
 		}
-
 		List<NewsArticleQuiz> newsArticleQuizList = newsArticleQuizService.getByNewsArticleId(newsArticleId);
 		List<ArticleQuizQuestionsPageData> qList = mapQuizDataWithAnswers(newsArticleQuizList, studentId);
 		pageData.setQuizQuestions(qList);

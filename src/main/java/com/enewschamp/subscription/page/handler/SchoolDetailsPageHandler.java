@@ -24,7 +24,7 @@ import com.enewschamp.app.school.entity.School;
 import com.enewschamp.app.school.entity.SchoolPricing;
 import com.enewschamp.app.school.service.SchoolPricingService;
 import com.enewschamp.app.school.service.SchoolService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
@@ -74,7 +74,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 	CityService cityService;
 
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 
 	@Autowired
 	PageNavigationService pageNavigationService;
@@ -119,7 +119,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		StudentSchoolPageData studentSchoolPageData = new StudentSchoolPageData();
 		studentSchoolPageData.setCountryLOV(countryService.getCountries());
-		studentSchoolPageData.setCountry(propertiesService.getProperty(PropertyConstants.DEFAULT_COUNTRY));
+		studentSchoolPageData.setCountry(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),PropertyConstants. DEFAULT_COUNTRY));
 		studentSchoolPageData.setStateLOV(stateService.getStatesForCountry(studentSchoolPageData.getCountry()));
 		pageDTO.setData(studentSchoolPageData);
 		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
@@ -182,7 +182,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 		} else {
 			studentSchoolPageData.setCountryLOV(countryService.getCountries());
 			if (studentSchoolPageData.getCountry() == null || "".equals(studentSchoolPageData.getCountry())) {
-				studentSchoolPageData.setCountry(propertiesService.getProperty(PropertyConstants.DEFAULT_COUNTRY));
+				studentSchoolPageData.setCountry(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),PropertyConstants. DEFAULT_COUNTRY));
 			}
 			studentSchoolPageData.setStateLOV(stateService.getStatesForCountry(studentSchoolPageData.getCountry()));
 			studentSchoolPageData.setCityLOV(cityService.getCitiesForStateCountry(studentSchoolPageData.getState(),
@@ -199,6 +199,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 	public PageDTO loadExistingSchoolDetailsPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDTO = new PageDTO();
 		Long studentId = 0L;
+		String subscriptionType = "";
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		studentId = studentControlBusiness.getStudentId(emailId);
 		StudentSchoolDTO studentSchoolDTO = schoolDetailsBusiness.getStudentFromMaster(studentId);
@@ -208,12 +209,26 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 		} else {
 			studentSchoolDTO = new StudentSchoolDTO();
 		}
-		studentSchoolPageData.setCountryLOV(countryService.getCountries());
-		studentSchoolPageData.setStateLOV(stateService.getStatesForCountry(studentSchoolDTO.getCountry()));
-		studentSchoolPageData.setCityLOV(
-				cityService.getCitiesForStateCountry(studentSchoolDTO.getState(), studentSchoolDTO.getCountry()));
-		studentSchoolPageData.setSchoolLOV(schoolService.getSchoolsForCityStateCountry(studentSchoolDTO.getCity(),
-				studentSchoolDTO.getState(), studentSchoolDTO.getCountry()));
+		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+		if (studentControlWorkDTO != null) {
+			subscriptionType = studentControlWorkDTO.getSubscriptionTypeW();
+		} else {
+			StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+			if (studentControlDTO != null) {
+				subscriptionType = studentControlDTO.getSubscriptionType();
+			}
+		}
+
+		if ("S".equals(subscriptionType)) {
+			studentSchoolPageData.setSchoolProgramLOV(schoolService.getSchoolProgramDetails());
+		} else {
+			studentSchoolPageData.setCountryLOV(countryService.getCountries());
+			studentSchoolPageData.setStateLOV(stateService.getStatesForCountry(studentSchoolDTO.getCountry()));
+			studentSchoolPageData.setCityLOV(
+					cityService.getCitiesForStateCountry(studentSchoolDTO.getState(), studentSchoolDTO.getCountry()));
+			studentSchoolPageData.setSchoolLOV(schoolService.getSchoolsForCityStateCountry(studentSchoolDTO.getCity(),
+					studentSchoolDTO.getState(), studentSchoolDTO.getCountry()));
+		}
 		pageDTO.setData(studentSchoolPageData);
 		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;

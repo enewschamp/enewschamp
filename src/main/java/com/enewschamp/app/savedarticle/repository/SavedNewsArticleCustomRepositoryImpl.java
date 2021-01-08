@@ -41,9 +41,13 @@ public class SavedNewsArticleCustomRepositoryImpl extends RepositoryImpl impleme
 				articleGroupRoot.get("newsArticleGroupId"), articleRoot.get("publicationDate"),
 				articleRoot.get("readingLevel"), articleGroupRoot.get("genreId"), articleGroupRoot.get("headline"),
 				articleRoot.get("content"), articleRoot.get("authorWorked"), articleGroupRoot.get("credits"),
-				student.<String>get("quizAvailable"), student.<String>get("quizCompleted"),
+				(cb.selectCase()
+						.when(cb.or(cb.equal(articleGroupRoot.get("noQuiz"), "Y"),
+								cb.equal(articleGroupRoot.get("imageOnly"), "Y")), cb.literal("N"))
+						.otherwise(cb.literal("Y"))),
+				(cb.selectCase().when(cb.isNull(student.get("quizScore")), cb.literal("N")).otherwise(cb.literal("Y"))),
 				student.<String>get("quizScore"), student.<String>get("saved"), student.<String>get("opinion"),
-				student.<String>get("likeLevel"), articleRoot.get("likeHCount"), articleRoot.get("likeLCount"),
+				student.<String>get("reaction"), articleRoot.get("likeHCount"), articleRoot.get("likeLCount"),
 				articleRoot.get("likeOCount"), articleRoot.get("likeSCount"), articleRoot.get("likeWCount"),
 				articleGroupRoot.get("cityId"), articleGroupRoot.get("imageName")));
 
@@ -76,7 +80,7 @@ public class SavedNewsArticleCustomRepositoryImpl extends RepositoryImpl impleme
 			filterPredicates.add(cb.equal(articleGroupRoot.get("editionId"), searchRequest.getEditionId()));
 		}
 		if (searchRequest.getHeadline() != null && (!"".equalsIgnoreCase(searchRequest.getHeadline()))) {
-			filterPredicates.add(cb.like(articleGroupRoot.get("headline"), searchRequest.getHeadline()));
+			filterPredicates.add(cb.like(articleGroupRoot.get("headline"), "%" + searchRequest.getHeadline() + "%"));
 		}
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
@@ -110,9 +114,13 @@ public class SavedNewsArticleCustomRepositoryImpl extends RepositoryImpl impleme
 				articleGroupRoot.get("newsArticleGroupId"), articleRoot.get("publicationDate"),
 				articleRoot.get("readingLevel"), articleGroupRoot.get("genreId"), articleGroupRoot.get("headline"),
 				articleRoot.get("content"), articleRoot.get("authorWorked"), articleGroupRoot.get("credits"),
-				student.<String>get("quizAvailable"), student.<String>get("quizCompleted"),
+				(cb.selectCase()
+						.when(cb.or(cb.equal(articleGroupRoot.get("noQuiz"), "Y"),
+								cb.equal(articleGroupRoot.get("imageOnly"), "Y")), cb.literal("N"))
+						.otherwise(cb.literal("Y"))),
+				(cb.selectCase().when(cb.isNull(student.get("quizScore")), cb.literal("N")).otherwise(cb.literal("Y"))),
 				student.<String>get("quizScore"), student.<String>get("saved"), student.<String>get("opinion"),
-				student.<String>get("likeLevel"), articleRoot.get("likeHCount"), articleRoot.get("likeLCount"),
+				student.<String>get("reaction"), articleRoot.get("likeHCount"), articleRoot.get("likeLCount"),
 				articleRoot.get("likeOCount"), articleRoot.get("likeSCount"), articleRoot.get("likeWCount"),
 				articleGroupRoot.get("cityId"), articleGroupRoot.get("imageName")));
 
@@ -145,7 +153,7 @@ public class SavedNewsArticleCustomRepositoryImpl extends RepositoryImpl impleme
 			filterPredicates.add(cb.equal(articleGroupRoot.get("editionId"), searchRequest.getEditionId()));
 		}
 		if (searchRequest.getHeadline() != null && (!"".equalsIgnoreCase(searchRequest.getHeadline()))) {
-			filterPredicates.add(cb.like(articleGroupRoot.get("headline"), searchRequest.getHeadline()));
+			filterPredicates.add(cb.like(articleGroupRoot.get("headline"), "%" + searchRequest.getHeadline() + "%"));
 		}
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));

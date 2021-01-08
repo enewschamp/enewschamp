@@ -1,5 +1,6 @@
 package com.enewschamp.app.student.registration.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -27,6 +28,9 @@ public class StudentRegistrationService {
 	ModelMapper modelMapperForPatch;
 
 	public StudentRegistration create(StudentRegistration studentRegistration) {
+		if (studentRegistration.getCreationDateTime() == null) {
+			studentRegistration.setCreationDateTime(LocalDateTime.now());
+		}
 		StudentRegistration student = repository.save(studentRegistration);
 		return student;
 	}

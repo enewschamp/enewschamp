@@ -28,12 +28,13 @@ import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.common.city.service.CityService;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.business.StudentActivityBusiness;
-import com.enewschamp.app.student.dto.StudentActivityDTO;
+import com.enewschamp.app.student.registration.entity.StudentRegistration;
+import com.enewschamp.app.student.registration.service.StudentRegistrationService;
 import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
 import com.enewschamp.article.domain.common.ArticleType;
 import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.article.page.data.NewsArticleSearchRequest;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.AppConstants;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
@@ -77,10 +78,13 @@ public class NewsEventsPageHandler implements IPageHandler {
 	private StudentActivityBusiness studentActivityBusiness;
 
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 
 	@Autowired
 	CityService cityService;
+
+	@Autowired
+	StudentRegistrationService regService;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -122,16 +126,25 @@ public class NewsEventsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
+		String isTestUser = "";
+		StudentRegistration studReg = regService.getStudentReg(emailId);
+		if (studReg != null) {
+			isTestUser = studReg.getIsTestUser();
+		}
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		NewsEventsPageData pageData = new NewsEventsPageData();
 		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
 		int pageNo = 1;
-		int pageSize = Integer.valueOf(propertiesService.getProperty(PropertyConstants.PAGE_SIZE));
+		int pageSize = Integer.valueOf(propertiesService
+				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
 		if (pageData.getPagination() != null) {
 			pageNo = pageData.getPagination().getPageNumber() > 0 ? pageData.getPagination().getPageNumber() : 1;
 			pageSize = pageData.getPagination().getPageSize() > 0 ? pageData.getPagination().getPageSize()
-					: Integer.valueOf(propertiesService.getProperty(PropertyConstants.PAGE_SIZE));
+					: Integer.valueOf(
+							propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+									PropertyConstants.PAGE_SIZE));
 		} else {
 			PaginationData paginationData = new PaginationData();
 			paginationData.setPageNumber(pageNo);
@@ -146,9 +159,10 @@ public class NewsEventsPageHandler implements IPageHandler {
 		}
 		NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
 		searchRequestData.setEditionId(editionId);
+		searchRequestData.setIsTestUser(isTestUser);
 		searchRequestData.setArticleType(ArticleType.NEWSEVENT);
-		searchRequestData
-				.setPublicationDateFrom(commonService.getLimitDate(PropertyConstants.VIEW_NEWS_EVENTS_LIMIT, emailId));
+		searchRequestData.setPublicationDateFrom(
+				commonService.getLimitDate(module, PropertyConstants.VIEW_NEWS_EVENTS_LIMIT, emailId));
 		if (readingLevel == 1) {
 			searchRequestData.setReadingLevel1(AppConstants.YES);
 		} else if (readingLevel == 2) {
@@ -163,12 +177,12 @@ public class NewsEventsPageHandler implements IPageHandler {
 			searchRequestData.setCityId(filterPageData.getCity());
 			searchRequestData.setHeadline(filterPageData.getHeadline());
 			searchRequestData.setGenreId(filterPageData.getGenre());
-			String monthYear = filterPageData.getMonth();
+			String yearMonth = filterPageData.getYearMonth();
 
-			if (monthYear != null && !"".equals(monthYear)) {
-				String monthStr = monthYear.substring(0, 3);
-				String year = monthYear.substring(4, 8);
-				SimpleDateFormat inputFormat = new SimpleDateFormat("MMM");
+			if (yearMonth != null && !"".equals(yearMonth)) {
+				String monthStr = yearMonth.substring(4, 6);
+				String year = yearMonth.substring(0, 4);
+				SimpleDateFormat inputFormat = new SimpleDateFormat("MM");
 				Calendar cal = Calendar.getInstance();
 				try {
 					cal.setTime(inputFormat.parse(monthStr));
@@ -187,6 +201,11 @@ public class NewsEventsPageHandler implements IPageHandler {
 		}
 		Page<NewsArticleSummaryDTO> pageResult = newsArticleService.findArticles(searchRequestData, studentId, pageNo,
 				pageSize, pageNavigationContext.getPageRequest().getHeader());
+		if (pageResult == null || pageResult.isLast()) {
+			pageData.getPagination().setIsLastPage("Y");
+		} else {
+			pageData.getPagination().setIsLastPage("N");
+		}
 		HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
 		pageDto.setHeader(header);
 		List<NewsEventsPublicationData> eventsList = mapStudentData(pageResult, studentId);
@@ -208,17 +227,6 @@ public class NewsEventsPageHandler implements IPageHandler {
 			for (NewsArticleSummaryDTO article : pageData) {
 				NewsEventsPublicationData publicationData = new NewsEventsPublicationData();
 				publicationData = modelMapper.map(article, NewsEventsPublicationData.class);
-				// publicationData.setQuizAvailable(article.isNoQuiz() == true ? "N" : "Y");
-				// if (!article.isNoQuiz() && studentId > 0) {
-				if (1 == 1) {
-					StudentActivityDTO stdactivity = studentActivityBusiness.getActivity(studentId,
-							article.getNewsArticleId());
-					if (stdactivity != null) {
-						publicationData.setQuizCompleted(stdactivity.getQuizScore() != null ? "Y" : "N");
-					}
-				} else {
-					publicationData.setQuizCompleted("N");
-				}
 				publicationPageDataList.add(publicationData);
 			}
 		}

@@ -24,7 +24,7 @@ import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.app.user.login.service.UserLoginService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.AppConstants;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
@@ -65,7 +65,7 @@ public class SignInPageHandler implements IPageHandler {
 	ModelMapper modelMapper;
 
 	@Autowired
-	PropertiesService propertiesService;
+	PropertiesBackendService propertiesService;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -140,7 +140,7 @@ public class SignInPageHandler implements IPageHandler {
 		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
 		if (student != null && "Y".equals(student.getIsDeleted())) {
 			throw new BusinessException(ErrorCodeConstants.STUD_ACCOUNT_DELETED, emailId);
-		} else if (studentControlDTO != null && "Y".equals(studentControlDTO.getEmailVerified())) {
+		} else if (studentControlDTO != null && "Y".equals(studentControlDTO.getEmailIdVerified())) {
 			throw new BusinessException(ErrorCodeConstants.STUD_ALREADY_REGISTERED);
 		}
 		return pageDto;
@@ -152,6 +152,7 @@ public class SignInPageHandler implements IPageHandler {
 		String action = pageRequest.getHeader().getAction();
 		SignInPageData signInPageData = new SignInPageData();
 		String emailId = pageRequest.getHeader().getEmailId();
+		String module = pageRequest.getHeader().getModule();
 		String password = "";
 		String deviceId = pageRequest.getHeader().getDeviceId();
 		String tokenId = pageRequest.getHeader().getLoginCredentials();
@@ -173,7 +174,7 @@ public class SignInPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		boolean loginSuccess = studentRegBusiness.validatePassword(emailId, password, deviceId, tokenId);
+		boolean loginSuccess = studentRegBusiness.validatePassword(module, emailId, password, deviceId, tokenId);
 		if (loginSuccess) {
 			UserLogin userLogin = loginService.getDeviceLogin(emailId, deviceId, tokenId, UserType.S);
 			userLogin.setLoginFlag(AppConstants.NO);
@@ -182,7 +183,7 @@ public class SignInPageHandler implements IPageHandler {
 			throw new BusinessException(ErrorCodeConstants.INVALID_EMAILID_OR_PASSWORD);
 		}
 		studentRegBusiness.deleteAccount(emailId);
-		signInPageData.setMessage(propertiesService.getProperty(PropertyConstants.ACCOUNT_DELETION_MESSAGE));
+		signInPageData.setMessage(propertiesService.getValue(module, PropertyConstants.ACCOUNT_DELETION_MESSAGE));
 		userActivityTracker.setActionStatus(UserAction.SUCCESS);
 		userLoginBusiness.auditUserActivity(userActivityTracker);
 		pageDto.setData(signInPageData);
@@ -192,6 +193,7 @@ public class SignInPageHandler implements IPageHandler {
 	public PageDTO handleSignInAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDto = new PageDTO();
 		String action = pageRequest.getHeader().getAction();
+		String module = pageRequest.getHeader().getModule();
 		SignInPageData signInPageData = new SignInPageData();
 		String emailId = "";
 		String password = "";
@@ -223,7 +225,7 @@ public class SignInPageHandler implements IPageHandler {
 		if (studentControlDTO == null) {
 			throw new BusinessException(ErrorCodeConstants.STUD_REG_NOT_FOUND, emailId);
 		}
-		loginSuccess = studentRegBusiness.validatePassword(emailId, password, deviceId, tokenId);
+		loginSuccess = studentRegBusiness.validatePassword(module, emailId, password, deviceId, tokenId);
 		if (loginSuccess) {
 			UserLogin userLogin = userLoginBusiness.login(emailId, deviceId, tokenId, UserType.S);
 			userLogin.setLoginFlag(AppConstants.YES);
@@ -256,7 +258,7 @@ public class SignInPageHandler implements IPageHandler {
 		StudentRegistration student = regService.getStudentReg(emailId);
 		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
 		if ((student != null && "Y".equals(student.getIsDeleted()))
-				|| (studentControlDTO == null || !"Y".equals(studentControlDTO.getEmailVerified()))) {
+				|| (studentControlDTO == null || !"Y".equals(studentControlDTO.getEmailIdVerified()))) {
 			throw new BusinessException(ErrorCodeConstants.STUD_REG_NOT_FOUND, emailId);
 		}
 		userActivityTracker.setActionStatus(UserAction.SUCCESS);

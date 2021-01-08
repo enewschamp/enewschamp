@@ -106,13 +106,8 @@ public class StateService extends AbstractDomainService {
 
 	public State read(State stateEntity) {
 		Long StateId = stateEntity.getStateId();
-		State existingState = get(StateId);
-		if(existingState.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingState;
-		}
-		existingState.setRecordInUse(RecordInUseType.Y);
-		existingState.setOperationDateTime(null);
-		return stateRepository.save(existingState);
+		State state = get(StateId);
+        return state;
 	}
 
 	public State close(State stateEntity) {

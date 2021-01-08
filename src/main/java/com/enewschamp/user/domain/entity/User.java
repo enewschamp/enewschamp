@@ -54,6 +54,9 @@ public class User extends BaseEntity {
 	@Column(name = "gender", length = 1)
 	private Gender gender;
 
+	@Column(name = "DoB")
+	private LocalDate doB;
+
 	@NotNull
 	@Column(name = "contractStartDate")
 	private LocalDate contractStartDate;
@@ -63,30 +66,33 @@ public class User extends BaseEntity {
 	private LocalDate contractEndDate;
 
 	@NotNull
-	@Column(name = "mobile1", length = 15)
-	private long mobile1 = 0;
+	@Column(name = "mobileNumber1", length = 15)
+	private String mobileNumber1;
 
-	@Column(name = "mobile2", length = 15)
-	private long mobile2 = 0;
+	@Column(name = "mobileNumber2", length = 15)
+	private String mobileNumber2;
 
-	@Column(name = "landLine1", length = 12)
-	private long landLine1 = 0;
+	@Column(name = "landline1", length = 12)
+	private String landline1;
 
-	@Column(name = "landLine2", length = 12)
-	private long landLine2 = 0;
+	@Column(name = "landline2", length = 12)
+	private String landline2;
 
 	@NotNull
-	@Column(name = "email1", length = 99)
-	private String email1;
+	@Column(name = "emailId1", length = 99)
+	private String emailId1;
 
-	@Column(name = "email2", length = 99)
-	private String email2;
+	@Column(name = "emailId2", length = 99)
+	private String emailId2;
 
 	@Column(name = "comments", length = 999)
 	private String comments;
 
 	@Transient
 	private String base64Image;
+
+	@Transient
+	private String imageTypeExt;
 
 	@Column(name = "password", length = 80)
 	private String password;
@@ -116,10 +122,16 @@ public class User extends BaseEntity {
 	@NotNull
 	@Column(name = "isActive", length = 1)
 	private String isActive = "Y";
-
+	
 	@Column(name = "theme", length = 1)
 	private String theme;
 
+	@Column(name = "fontHeight", length = 1)
+	private String fontHeight;
+
 	@Column(name = "ImageName", length = 100)
 	private String imageName;
+
+	@Column(name = "creationDateTime")
+	private LocalDateTime creationDateTime;
 }

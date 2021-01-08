@@ -56,10 +56,10 @@ public class NewsArticleDTO extends MaintenanceDTO {
 	private String hashTags;
 
 	@JsonInclude
-	private boolean noQuiz;
+	private String noQuiz;
 
 	@JsonInclude
-	private boolean imageOnly;
+	private String imageOnly;
 
 	@JsonInclude
 	private String cityId;

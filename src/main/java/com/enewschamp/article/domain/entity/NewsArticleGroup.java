@@ -7,12 +7,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
@@ -26,7 +24,6 @@ import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.domain.common.MonthType;
 import com.enewschamp.domain.common.WeekDayType;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
-import com.enewschamp.user.domain.entity.User;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,8 +37,8 @@ public class NewsArticleGroup extends BaseEntity {
 	private static final long serialVersionUID = 5585724931483394475L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "article_group_id_generator")
-	@SequenceGenerator(name = "article_group_id_generator", sequenceName = "art_grp_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "news_article_group_id_generator")
+	@SequenceGenerator(name = "news_article_group_id_generator", sequenceName = "news_article_group_id_seq", allocationSize = 1)
 	@Column(name = "NewsArticleGroupId", updatable = false, nullable = false)
 	private Long newsArticleGroupId;
 
@@ -91,16 +88,19 @@ public class NewsArticleGroup extends BaseEntity {
 	private String hashTags;
 
 	@Column(name = "NoQuiz", length = 1)
-	private boolean noQuiz;
+	private String noQuiz;
 
 	@Column(name = "ImageOnly", length = 1)
-	private boolean imageOnly;
+	private String imageOnly;
 
 	@Column(name = "ImageName", length = 100)
 	private String imageName;
 
 	@Transient
 	private String base64Image;
+
+	@Transient
+	private String imageTypeExt;
 
 	@Column(name = "TextCoordinateX", length = 10)
 	private String textCoordinateX;

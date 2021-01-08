@@ -26,8 +26,8 @@ public class QuizScore extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quizScoreId_id_generator")
-	@SequenceGenerator(name = "quizScoreId_id_generator", sequenceName = "quizScore_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_score_id_generator")
+	@SequenceGenerator(name = "quiz_score_id_generator", sequenceName = "quiz_score_id_seq", allocationSize = 1)
 	@Column(name = "quizScoreId", updatable = false, nullable = false)
 	private Long quizScoreId;
 

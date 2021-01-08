@@ -8,7 +8,10 @@ import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import com.enewschamp.app.common.uicontrols.dto.UIControlsDTO;
-import com.enewschamp.common.app.dto.PropertiesDTO;
+import com.enewschamp.common.app.dto.PropertiesFrontendDTO;
+import com.enewschamp.publication.domain.common.BadgeList;
+import com.enewschamp.publication.domain.common.GenreList;
+import com.enewschamp.publication.domain.common.HolidayList;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -30,10 +33,17 @@ public class PageDTO implements Serializable {
 
 	private List<UIControlsDTO> screenProperties;
 
-	private List<PropertiesDTO> globalProperties;
+	private List<PropertiesFrontendDTO> globalProperties;
+
+	private List<GenreList> genres;
+
+	private List<BadgeList> badges;
+
+	private List<HolidayList> holidays;
 
 	private String errorMessage;
+	
 	private JsonNode filter;
-	@JsonInclude
+	
 	private List<PageData> records;
 }

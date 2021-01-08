@@ -34,6 +34,7 @@ public class AppSecFilter extends GenericFilterBean {
 
 	@Autowired
 	AppSecurityService appSecService;
+	
 	@Autowired
 	ObjectMapper objectMapper;
 

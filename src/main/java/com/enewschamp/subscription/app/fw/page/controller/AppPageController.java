@@ -41,20 +41,25 @@ import com.enewschamp.app.fw.page.navigation.common.PageSaveTable;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.fw.page.navigation.rules.PageNavRuleExecutionService;
 import com.enewschamp.app.fw.page.navigation.service.PageNavigationService;
+import com.enewschamp.app.holiday.service.HolidayService;
 import com.enewschamp.app.student.registration.business.StudentRegistrationBusiness;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.app.student.registration.service.StudentRegistrationService;
 import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
+import com.enewschamp.common.domain.service.PropertiesFrontendService;
 import com.enewschamp.domain.common.AppConstants;
 import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
+import com.enewschamp.master.badge.service.BadgeService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.publication.domain.service.EditionService;
+import com.enewschamp.publication.domain.service.GenreService;
+import com.enewschamp.security.service.AppSecurityService;
 import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.app.dto.StudentControlWorkDTO;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
@@ -80,7 +85,13 @@ public class AppPageController {
 	private PageHandlerFactory pageHandlerFactory;
 
 	@Autowired
-	private PropertiesService propertiesService;
+	AppSecurityService appSecService;
+
+	@Autowired
+	private PropertiesBackendService propertiesService;
+
+	@Autowired
+	private PropertiesFrontendService propertiesFrontendService;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -139,6 +150,15 @@ public class AppPageController {
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	GenreService genreService;
+
+	@Autowired
+	BadgeService badgeService;
+
+	@Autowired
+	HolidayService holidayService;
+
 	@PostMapping(value = "/app")
 	public ResponseEntity<PageDTO> processAppRequest(@RequestBody PageRequestDTO pageRequest) {
 
@@ -155,14 +175,14 @@ public class AppPageController {
 			pageRequest.getHeader().setAction(actionName);
 			if (module == null || pageName == null || actionName == null || deviceId == null || operation == null
 					|| loginCredentials == null
-					|| (!propertiesService.getValue(PropertyConstants.STUDENT_APP_MODULE_NAME).equals(module))
+					|| (!propertiesService.getValue(module, PropertyConstants.STUDENT_APP_MODULE_NAME).equals(module))
 					|| pageName.trim().isEmpty() || actionName.trim().isEmpty() || operation.trim().isEmpty()
 					|| deviceId.trim().isEmpty()) {
 				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
 
 			}
 			UserLogin userLogin = null;
-			String appStatus = propertiesService.getProperty(PropertyConstants.APP_AVAILABLE);
+			String appStatus = appSecService.getAppAvailability(module);
 			if ("Y".equals(appStatus)) {
 				if ((!pageName.equalsIgnoreCase("SignIn")) && (!pageName.equalsIgnoreCase("ResetPassword"))
 						&& (deviceId != null && !"".equals(deviceId))
@@ -170,17 +190,17 @@ public class AppPageController {
 						&& (emailId != null && !"".equals(emailId))) {
 					StudentRegistration studReg = regService.getStudentReg(emailId);
 					if (studReg != null && !"Y".equals(studReg.getIsActive())) {
-						pageName = propertiesService.getProperty(PropertyConstants.ACCOUNT_INACTIVE_PAGE_NAME);
-						actionName = propertiesService.getProperty(PropertyConstants.ACCOUNT_INACTIVE_PAGE_ACTION);
+						pageName = propertiesService.getValue(module, PropertyConstants.ACCOUNT_INACTIVE_PAGE_NAME);
+						actionName = propertiesService.getValue(module, PropertyConstants.ACCOUNT_INACTIVE_PAGE_ACTION);
 						pageRequest.getHeader().setAction(actionName);
 						pageRequest.getHeader().setPageName(pageName);
 						pageRequest.getHeader().setOperation(
-								propertiesService.getProperty(PropertyConstants.ACCOUNT_INACTIVE_PAGE_OPERATION));
+								propertiesService.getValue(module, PropertyConstants.ACCOUNT_INACTIVE_PAGE_OPERATION));
 					} else {
 						userLogin = userLoginBusiness.getLoginDetails(deviceId, loginCredentials, emailId, UserType.S);
 						StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
 						if (userLogin != null && "Y".equals(userLogin.getLoginFlag().toString())
-								&& studentControlDTO != null && "Y".equals(studentControlDTO.getEmailVerified())) {
+								&& studentControlDTO != null && "Y".equals(studentControlDTO.getEmailIdVerified())) {
 							LocalDateTime tokenRefershTime = userLogin.getTokenExpirationTime().minusSeconds(60);
 							if (tokenRefershTime.isBefore(LocalDateTime.now())) {
 								userLogin = userLoginBusiness.login(emailId, deviceId, loginCredentials, UserType.S);
@@ -188,7 +208,7 @@ public class AppPageController {
 							}
 						} else if (userLogin == null || !"Y".equals(userLogin.getLoginFlag().toString())) {
 							boolean incomepleteRegistration = false;
-							if (studentControlDTO == null || !"Y".equals(studentControlDTO.getEmailVerified())) {
+							if (studentControlDTO == null || !"Y".equals(studentControlDTO.getEmailIdVerified())) {
 								incomepleteRegistration = true;
 								userLogin = userLoginBusiness.getNonLoginDetails(emailId, deviceId, loginCredentials,
 										UserType.S);
@@ -209,20 +229,21 @@ public class AppPageController {
 								userLogin = userLoginBusiness.newDeviceLogin(emailId, deviceId, UserType.S);
 								pageRequest.getHeader().setLoginCredentials(userLogin.getTokenId());
 							}
-							String unknownUserPageName = propertiesService
-									.getProperty(PropertyConstants.UNKNOWN_USER_PAGE_NAME);
-							String unknownUserPageOperation = propertiesService
-									.getProperty(PropertyConstants.UNKNOWN_USER_PAGE_OPERATION);
+							String unknownUserPageName = propertiesService.getProperty(module,
+									PropertyConstants.UNKNOWN_USER_PAGE_NAME);
+							String unknownUserPageOperation = propertiesService.getProperty(module,
+									PropertyConstants.UNKNOWN_USER_PAGE_OPERATION);
 							if (unknownUserPageName.equals(pageRequest.getHeader().getPageName())
 									&& unknownUserPageOperation.equals(pageRequest.getHeader().getOperation())
 									|| incomepleteRegistration) {
 								// do nothing!!!
 							} else {
-								pageName = propertiesService.getProperty(PropertyConstants.LAUNCH_APP_PAGE_NAME);
-								actionName = propertiesService.getProperty(PropertyConstants.LAUNCH_APP_PAGE_ACTION);
+								pageName = propertiesService.getValue(module, PropertyConstants.LAUNCH_APP_PAGE_NAME);
+								actionName = propertiesService.getValue(module,
+										PropertyConstants.LAUNCH_APP_PAGE_ACTION);
 								pageRequest.getHeader().setPageName(pageName);
-								pageRequest.getHeader().setOperation(
-										propertiesService.getProperty(PropertyConstants.LAUNCH_APP_PAGE_OPERATION));
+								pageRequest.getHeader().setOperation(propertiesService.getValue(module,
+										PropertyConstants.LAUNCH_APP_PAGE_OPERATION));
 								pageRequest.getHeader().setAction(actionName);
 							}
 						}
@@ -244,12 +265,12 @@ public class AppPageController {
 					pageRequest.getHeader().setLoginCredentials(userLogin.getTokenId());
 				}
 			} else {
-				pageName = propertiesService.getProperty(PropertyConstants.APP_UNAVAILABLE_PAGE_NAME);
-				actionName = propertiesService.getProperty(PropertyConstants.APP_UNAVAILABLE_PAGE_ACTION);
+				pageName = propertiesService.getValue(module, PropertyConstants.APP_UNAVAILABLE_PAGE_NAME);
+				actionName = propertiesService.getValue(module, PropertyConstants.APP_UNAVAILABLE_PAGE_ACTION);
 				pageRequest.getHeader().setAction(actionName);
 				pageRequest.getHeader().setPageName(pageName);
-				pageRequest.getHeader()
-						.setOperation(propertiesService.getProperty(PropertyConstants.APP_UNAVAILABLE_PAGE_OPERATION));
+				pageRequest.getHeader().setOperation(
+						propertiesService.getValue(module, PropertyConstants.APP_UNAVAILABLE_PAGE_OPERATION));
 			}
 			PageDTO pageResponse = processRequest(pageName, actionName, pageRequest, "app");
 			response = new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
@@ -271,12 +292,13 @@ public class AppPageController {
 	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest, String context) {
 		String operation = pageRequest.getHeader().getOperation();
 		String edition = pageRequest.getHeader().getEditionId();
+		String module = pageRequest.getHeader().getModule();
 		editionService.getEdition(edition);
 		pageRequest.getHeader().setTodaysDate(LocalDate.now());
 		// get the page navigation based for current page
 		PageNavigatorDTO pageNavDto = pageNavigationService.getNavPage(actionName, operation, pageName);
 		String saveIn = pageNavDto.getUpdationTable();
-		System.out.println(">>>>>submission pageNavDto>>>>>>>>" + pageNavDto);
+		// System.out.println(">>>>>submission pageNavDto>>>>>>>>" + pageNavDto);
 		// check of the page page has secured access....and if the student subscription
 		// is valid...
 		if (pageNavDto != null && AppConstants.YES.toString().equals(pageNavDto.getSecured())) {
@@ -288,7 +310,9 @@ public class AppPageController {
 			} else {
 				boolean isLogged = userLoginBusiness.isUserLoggedIn(deviceId, "", emailId, UserType.S);
 				if (!isLogged) {
-					boolean isSubscriptiionValid = subscriptionBusiness.isStudentSubscriptionValid(emailId, edition);
+					boolean isSubscriptiionValid = subscriptionBusiness.isStudentSubscriptionValid(module,
+							emailId,
+							edition);
 					if (!isSubscriptiionValid)
 						throw new BusinessException(ErrorCodeConstants.UNAUTH_ACCESS);
 				}
@@ -301,7 +325,8 @@ public class AppPageController {
 		System.out.println(">>>>>submission data>>>>>>>>" + pageRequest.getData());
 		PageDTO pageResponse = pageHandlerFactory.getPageHandler(pageName, context).handleAppAction(pageRequest,
 				pageNavDto);
-		System.out.println(">>>>>getErrorMessage>>>>>>>>" + pageResponse.getErrorMessage());
+		// System.out.println(">>>>>getErrorMessage>>>>>>>>" +
+		// pageResponse.getErrorMessage());
 		if (pageResponse.getErrorMessage() == null) {
 			// save data in master Tables (including the previous unsaved data
 			String workToMaster = pageNavDto.getWorkToMaster();
@@ -363,10 +388,15 @@ public class AppPageController {
 			addUIControls(nextPageName, nextPageOperation, pageRequest, pageResponse);
 			if ("WelcomeUser".equalsIgnoreCase(nextPageOperation)
 					|| "UnknownUser".equalsIgnoreCase(nextPageOperation)) {
-				String lastPropChangeTime = propertiesService.getProperty(PropertyConstants.LAST_PROP_CHANGE_TIME);
+				String lastPropChangeTime = propertiesService.getValue(
+						pageNavigationContext.getPageRequest().getHeader().getModule(),
+						PropertyConstants.LAST_PROP_CHANGE_TIME);
 				if (!lastPropChangeTime.equals(pageRequest.getHeader().getLastPropChangeTime())) {
-					pageResponse.setGlobalProperties(propertiesService.getPropertyList());
+					pageResponse.setGlobalProperties(propertiesFrontendService.getPropertyList(module));
 				}
+				pageResponse.setGenres(genreService.getGenreList());
+				pageResponse.setBadges(badgeService.getBadgeList());
+				pageResponse.setHolidays(holidayService.getHolidayList());
 			}
 		}
 		return pageResponse;
@@ -430,12 +460,12 @@ public class AppPageController {
 		if (studentControlDTO != null) {
 			studentControlWorkDTO = new StudentControlWorkDTO();
 			studentControlWorkDTO.setStudentId(studentControlDTO.getStudentId());
-			studentControlWorkDTO.setEmail(studentControlDTO.getEmail());
+			studentControlWorkDTO.setEmailId(studentControlDTO.getEmailId());
 			studentControlWorkDTO.setSubscriptionType(studentControlDTO.getSubscriptionType());
 			studentControlWorkDTO.setStudentDetails(studentControlDTO.getStudentDetails());
 			studentControlWorkDTO.setSchoolDetails(studentControlDTO.getSchoolDetails());
 			studentControlWorkDTO.setPreferences(studentControlDTO.getPreferences());
-			studentControlWorkDTO.setEmailVerified(studentControlDTO.getEmailVerified());
+			studentControlWorkDTO.setEmailIdVerified(studentControlDTO.getEmailIdVerified());
 			studentControlWorkDTO.setEvalAvailed(studentControlDTO.getEvalAvailed());
 			studentControlWorkDTO.setNextPageName(pageDTO.getHeader().getPageName());
 			studentControlWorkDTO.setNextPageOperation(pageDTO.getHeader().getOperation());
@@ -462,7 +492,7 @@ public class AppPageController {
 			studentControlWorkDTO.setNextPageName(pageDTO.getHeader().getPageName());
 			studentControlWorkDTO.setNextPageOperation(pageDTO.getHeader().getOperation());
 			studentControlWorkDTO.setNextPageLoadMethod(nextPageLoadMethod);
-			studentControlWorkDTO.setEmail(emailId);
+			studentControlWorkDTO.setEmailId(emailId);
 			studentControlWorkDTO.setStudentId(studReg.getStudentId());
 			studentControlBusiness.saveAsWork(studentControlWorkDTO);
 		}
@@ -560,6 +590,10 @@ public class AppPageController {
 					uiControlsDTO.setRegex(uiControlsDTO.getRegex() != null && !"".equals(uiControlsDTO.getRegex())
 							? uiControlsDTO.getRegex()
 							: uiControlsGlobalDTO.getRegex());
+					uiControlsDTO.setSuccessMessage(
+							uiControlsDTO.getSuccessMessage() != null && !"".equals(uiControlsDTO.getSuccessMessage())
+									? uiControlsDTO.getSuccessMessage()
+									: uiControlsGlobalDTO.getSuccessMessage());
 					uiControlsDTO.setErrorMessage(
 							uiControlsDTO.getErrorMessage() != null && !"".equals(uiControlsDTO.getErrorMessage())
 									? uiControlsDTO.getErrorMessage()
@@ -571,6 +605,9 @@ public class AppPageController {
 					uiControlsDTO.setIsPremiumFeature(uiControlsDTO.getIsPremiumFeature() != null
 							&& !"".equals(uiControlsDTO.getIsPremiumFeature()) ? uiControlsDTO.getIsPremiumFeature()
 									: uiControlsGlobalDTO.getIsPremiumFeature());
+					uiControlsDTO.setUnavailableMessage(uiControlsDTO.getUnavailableMessage() != null
+							&& !"".equals(uiControlsDTO.getUnavailableMessage()) ? uiControlsDTO.getUnavailableMessage()
+									: uiControlsGlobalDTO.getUnavailableMessage());
 				}
 			}
 			uiControls.add(uiControlsRuleExecutionService.getControlParamsBasedOnRule(pageRequest, pageResponse,
@@ -581,8 +618,9 @@ public class AppPageController {
 
 	@RequestMapping(value = "/app/images", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
 	public void getImage(HttpServletResponse response, @RequestParam String imageType, @RequestParam String imagePath,
-			@RequestParam String appKey, @RequestParam String appName, @RequestParam String userId,
-			@RequestParam String deviceId, @RequestParam String loginCredentials) throws IOException {
+			@RequestParam String appKey, @RequestParam String appName, @RequestParam String module,
+			@RequestParam String userId, @RequestParam String deviceId, @RequestParam String loginCredentials)
+			throws IOException {
 		try {
 			if (imageType == null || imagePath == null || appKey == null || appName == null || deviceId == null
 					|| loginCredentials == null) {
@@ -591,7 +629,8 @@ public class AppPageController {
 					|| appName.trim().isEmpty() || deviceId.trim().isEmpty() || loginCredentials.trim().isEmpty()) {
 				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
 			}
-			String imagesFolderPath = propertiesService.getProperty(imageType + "-image-config.imagesRootFolderPath");
+			String imagesFolderPath = propertiesService.getProperty(module,
+					imageType + "-image-config.imagesRootFolderPath");
 			if ("STUDENT".equalsIgnoreCase(imageType)) {
 				if (studentControlBusiness.getStudentId(userId) == 0L) {
 					throw new BusinessException(ErrorCodeConstants.INVALID_USER_ID, userId);

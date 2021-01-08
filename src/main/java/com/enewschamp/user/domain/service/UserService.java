@@ -18,7 +18,7 @@ import com.enewschamp.app.user.login.entity.UserAction;
 import com.enewschamp.app.user.login.entity.UserActivityTracker;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.audit.domain.AuditService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
@@ -45,9 +45,12 @@ public class UserService extends AbstractDomainService {
 	UserLoginBusiness userLoginBusiness;
 
 	@Autowired
-	PropertiesService propertiesService;
+	PropertiesBackendService propertiesService;
 
 	public User create(User user) {
+		if (user.getCreationDateTime() == null) {
+			user.setCreationDateTime(LocalDateTime.now());
+		}
 		return repository.save(user);
 	}
 
@@ -144,7 +147,7 @@ public class UserService extends AbstractDomainService {
 			user.setLastUnsuccessfulLoginAttempt(LocalDateTime.now());
 			user.setIncorrectLoginAttempts(user.getIncorrectLoginAttempts() + 1);
 			if (user.getIncorrectLoginAttempts() == Integer
-					.valueOf(propertiesService.getValue(PropertyConstants.PUBLISHER_LOGIN_MAX_ATTEMPTS))) {
+					.valueOf(propertiesService.getValue("Publisher", PropertyConstants.PUBLISHER_LOGIN_MAX_ATTEMPTS))) {
 				user.setIsAccountLocked("Y");
 			}
 			repository.save(user);

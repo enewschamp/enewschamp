@@ -49,10 +49,10 @@ public class PageNavRuleExecutionService {
 			String ruleStr = rule.getRule();
 			if (!"".equals(ruleStr)) {
 				dataMap = businessRulePlugin.initializeRuleVariables(pageRequest, page, ruleStr, dataMap);
-				System.out.println(">>>>>ruleStr>>>>>" + ruleStr);
+				// System.out.println(">>>>>ruleStr>>>>>" + ruleStr);
 				successEval = execRule(ruleStr, dataMap);
-				System.out.println(">>>>>dataMap>>>>>" + dataMap);
-				System.out.println(">>>>>successEval>>>>>" + successEval);
+				// System.out.println(">>>>>dataMap>>>>>" + dataMap);
+				// System.out.println(">>>>>successEval>>>>>" + successEval);
 				if (successEval == true) {
 					nextPageData.put("nextPage", rule.getNextPage());
 					nextPageData.put("nextPageOperation", rule.getNextPageOperation());
@@ -66,19 +66,20 @@ public class PageNavRuleExecutionService {
 	}
 
 	private boolean execRule(String ruleStr, Map<String, String> dataMap) {
-		System.out.println("ruleStr :" + ruleStr);
+		// System.out.println("ruleStr :" + ruleStr);
 
 		boolean success = false;
 
 		Evaluator eval = new Evaluator();
 
 		eval.setVariables(dataMap);
-		System.out.println(eval.getVariables());
+		// System.out.println(eval.getVariables());
 		try {
 
 			// System.out.println("On evaluation :"+ eval.evaluate(ruleStr));
 			String result = eval.evaluate(ruleStr);
-			System.out.println("String result " + result + "Boolean result : " + eval.getBooleanResult(ruleStr));
+			// System.out.println("String result " + result + "Boolean result : " +
+			// eval.getBooleanResult(ruleStr));
 
 			if (eval.getBooleanResult(ruleStr)) {
 				success = true;

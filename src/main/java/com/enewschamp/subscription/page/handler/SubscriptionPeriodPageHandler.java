@@ -19,7 +19,7 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.fw.page.navigation.service.PageNavigationService;
 import com.enewschamp.app.school.entity.SchoolPricing;
 import com.enewschamp.app.school.service.SchoolPricingService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -67,9 +67,6 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 
 	@Autowired
 	IndividualPricingService individualPricingService;
-
-	@Autowired
-	private PropertiesService propertiesService;
 
 	@Autowired
 	PageNavigationService pageNavigationService;
@@ -128,7 +125,7 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 		if (studentControlWorkDTO != null) {
 			studentId = studentControlWorkDTO.getStudentId();
 			subscriptionType = studentControlWorkDTO.getSubscriptionTypeW();
-			emailId = studentControlWorkDTO.getEmail();
+			emailId = studentControlWorkDTO.getEmailId();
 		}
 		subscriptionPeriodPageData = mapPricingDetails(subscriptionPeriodPageData, subscriptionType, studentId,
 				editionId);
@@ -148,7 +145,7 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 		if (studentControlWorkDTO != null) {
 			studentId = studentControlWorkDTO.getStudentId();
 			subscriptionType = studentControlWorkDTO.getSubscriptionTypeW();
-			emailId = studentControlWorkDTO.getEmail();
+			emailId = studentControlWorkDTO.getEmailId();
 		}
 		StudentSubscriptionWorkDTO studentSubscriptionWorkDTO = subscriptionBusiness
 				.getStudentSubscriptionFromWork(studentId, editionId);
@@ -256,8 +253,8 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 			StudentPaymentWork studentPaymentWork = new StudentPaymentWork();
 			studentPaymentWork.setStudentId(studentId);
 			studentPaymentWork.setEditionId(editionId);
-			studentPaymentWork.setPayAmount(feeAmount);
-			studentPaymentWork.setPayCurrency(feeCurrency);
+			studentPaymentWork.setPaymentAmount(feeAmount);
+			studentPaymentWork.setPaymentCurrency(feeCurrency);
 			studentPaymentWork.setSubscriptionPeriod(subscriptionPeriod);
 			studentPaymentWork.setOperatorId("APP");
 			studentPaymentWork.setRecordInUse(RecordInUseType.Y);
@@ -296,9 +293,9 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 			StudentPaymentWork studentPaymentWork = new StudentPaymentWork();
 			studentPaymentWork.setStudentId(studentId);
 			studentPaymentWork.setEditionId(editionId);
-			studentPaymentWork.setPayAmount(feeAmount);
+			studentPaymentWork.setPaymentAmount(feeAmount);
 			studentPaymentWork.setSubscriptionPeriod(subscriptionPeriod);
-			studentPaymentWork.setPayCurrency(feeCurrency);
+			studentPaymentWork.setPaymentCurrency(feeCurrency);
 			studentPaymentWork.setOperatorId("APP");
 			studentPaymentWork.setRecordInUse(RecordInUseType.Y);
 			studentPaymentWork.setSubscriptionType(studentSubscpritionWorkDTO.getSubscriptionSelected());

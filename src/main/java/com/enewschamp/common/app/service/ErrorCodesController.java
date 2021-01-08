@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.common.app.dto.ErrorCodesDTO;
 import com.enewschamp.common.domain.entity.ErrorCodes;
 import com.enewschamp.common.domain.service.ErrorCodesService;
@@ -33,9 +33,6 @@ public class ErrorCodesController {
 
 	@Autowired
 	private ErrorCodesService errorCodesService;
-
-	@Autowired
-	private PropertiesService propertiesService;
 
 	@PostMapping(value = "/admin/errorcodes")
 	public ResponseEntity<ErrorCodesDTO> create(@RequestBody @Valid ErrorCodesDTO errorCodeDTO) {

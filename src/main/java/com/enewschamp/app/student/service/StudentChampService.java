@@ -1,8 +1,5 @@
 package com.enewschamp.app.student.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.champs.page.data.ChampsSearchData;
 import com.enewschamp.app.student.dto.ChampStudentDTO;
 import com.enewschamp.app.student.repository.ChampRepositoryImpl;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 
 @Service
 public class StudentChampService {
@@ -21,15 +18,17 @@ public class StudentChampService {
 	ChampRepositoryImpl repository;
 
 	@Autowired
-	PropertiesService propertiesService;
+	PropertiesBackendService propertiesService;
 
-	public List<ChampStudentDTO> findChampStudents(ChampsSearchData searchRequest, int pageNo, int pageSize) {
+	public Page<ChampStudentDTO> findChampStudents(ChampsSearchData searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<ChampStudentDTO> champStudentPage = repository.findChampions(searchRequest, pageable);
-		List<ChampStudentDTO> champStudentList = new ArrayList<ChampStudentDTO>();
-		if (!champStudentPage.isEmpty()) {
-			champStudentList = champStudentPage.getContent();
+		if (searchRequest.getYearMonth() != null && (searchRequest.getYearMonth().length() == 4)) {
+			return repository.findYearlyChampions(searchRequest, pageable);
+		} else if (searchRequest.getYearMonth() != null
+				&& (searchRequest.getYearMonth().substring(4, 5).equalsIgnoreCase("Q"))) {
+			return repository.findQuarterlyChampions(searchRequest, pageable);
+		} else {
+			return repository.findChampions(searchRequest, pageable);
 		}
-		return champStudentList;
 	}
 }

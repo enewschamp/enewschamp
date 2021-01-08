@@ -26,11 +26,6 @@ public class StudentShareAchievements extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "StudentShareAchievements_id_generator")
-	@SequenceGenerator(name = "StudentShareAchievements_id_generator", sequenceName = "StudentShareAchievements_seq", allocationSize = 1)
-	@Column(name = "studentShareAchievementsId", length = 10)
-	private Long studentShareAchievementsId = 0L;
-
 	@NotNull
 	@Column(name = "studentId", length = 10)
 	private Long studentId;

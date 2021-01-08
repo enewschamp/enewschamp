@@ -34,16 +34,14 @@ public class StudentShareAchievementsService {
 	}
 
 	public StudentShareAchievements update(StudentShareAchievements StudentShareAchievements) {
-		Long studentId = StudentShareAchievements.getStudentShareAchievementsId();
-
+		Long studentId = StudentShareAchievements.getStudentId();
 		StudentShareAchievements existingEntity = get(studentId);
 		modelMapper.map(StudentShareAchievements, existingEntity);
 		return repository.save(existingEntity);
 	}
 
 	public StudentShareAchievements patch(StudentShareAchievements StudentShareAchievements) {
-		Long studentId = StudentShareAchievements.getStudentShareAchievementsId();
-
+		Long studentId = StudentShareAchievements.getStudentId();
 		StudentShareAchievements existingEntity = get(studentId);
 		modelMapperForPatch.map(StudentShareAchievements, existingEntity);
 		return repository.save(existingEntity);

@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -28,7 +27,7 @@ public class StudentActivity extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_activity_id_generator")
-	@SequenceGenerator(name = "student_activity_id_generator", sequenceName = "student_activity_seq", allocationSize = 1)
+	@SequenceGenerator(name = "student_activity_id_generator", sequenceName = "student_activity_id_seq", allocationSize = 1)
 	@Column(name = "studentActivityId", updatable = false, nullable = false)
 	private Long studentActivityId;
 
@@ -43,8 +42,8 @@ public class StudentActivity extends BaseEntity {
 	@Column(name = "saved", length = 1)
 	private String saved;
 
-	@Column(name = "likeLevel", length = 1)
-	private String likeLevel;
+	@Column(name = "reaction", length = 1)
+	private String reaction;
 
 	@Column(name = "opinion", length = 400)
 	private String opinion;
@@ -57,11 +56,4 @@ public class StudentActivity extends BaseEntity {
 
 	@Column(name = "readingLevel", length = 1)
 	private int readingLevel;
-
-	@Column(name = "quizCompleted", length = 1)
-	private String quizCompleted;
-
-	@Column(name = "quizAvailable", length = 1)
-	private String quizAvailable;
-
 }

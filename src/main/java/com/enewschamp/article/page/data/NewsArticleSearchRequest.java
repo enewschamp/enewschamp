@@ -47,4 +47,5 @@ public class NewsArticleSearchRequest extends PageData {
 	private YesNoType isLinked;
 	private String cityId;
 	private List<ArticleStatusType> status;
+	private String isTestUser;
 }

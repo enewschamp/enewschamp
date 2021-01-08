@@ -26,7 +26,7 @@ public class UIControlsGlobal extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uicontrols_global_id_generator")
-	@SequenceGenerator(name = "uicontrols_global_id_generator", sequenceName = "uicontrols_seq", allocationSize = 1)
+	@SequenceGenerator(name = "uicontrols_global_id_generator", sequenceName = "uicontrols_global_id_seq", allocationSize = 1)
 	@Column(name = "uiControlGlobalId", updatable = false, nullable = false)
 	private Long uiControlGlobalId;
 
@@ -92,6 +92,9 @@ public class UIControlsGlobal extends BaseEntity {
 	@Column(name = "action", length = 50)
 	private String action;
 
+	@Column(name = "successMessage", length = 500)
+	private String successMessage;
+
 	@Column(name = "errorMessage", length = 500)
 	private String errorMessage;
 
@@ -100,4 +103,7 @@ public class UIControlsGlobal extends BaseEntity {
 
 	@Column(name = "isPremiumFeature", length = 1)
 	private String isPremiumFeature;
+
+	@Column(name = "unavailableMessage", length = 500)
+	private String unavailableMessage;
 }

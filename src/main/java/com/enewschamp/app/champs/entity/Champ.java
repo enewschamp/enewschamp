@@ -33,17 +33,17 @@ public class Champ {
 	@Column(name = "cityName")
 	private String cityName;
 
-	@Column(name = "monthlyScore")
-	private Long monthlyScore;
+	@Column(name = "score")
+	private Long score;
 
-	@Column(name = "trendyearMonth")
-	private Long trendyearMonth;
+	@Column(name = "yearMonth")
+	private Long yearMonth;
 
 	@Column(name = "readingLevel")
 	private Long readingLevel;
 
-	@Column(name = "studentRank")
-	private Long studentRank;
+	@Column(name = "rank")
+	private Long rank;
 
 	@Column(name = "avatarName")
 	private String avatarName;

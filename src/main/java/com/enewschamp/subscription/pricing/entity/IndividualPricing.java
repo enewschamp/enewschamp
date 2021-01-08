@@ -29,8 +29,8 @@ public class IndividualPricing extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "individualPricing_id_generator")
-	@SequenceGenerator(name = "individualPricing_id_generator", sequenceName = "individualPricing_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "individual_pricing_id_generator")
+	@SequenceGenerator(name = "individual_pricing_id_generator", sequenceName = "individual_pricing_id_seq", allocationSize = 1)
 	@Column(name = "individualPricingId", updatable = false, nullable = false)
 	private Long individualPricingId;
 

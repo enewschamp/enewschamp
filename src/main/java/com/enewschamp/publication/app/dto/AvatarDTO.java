@@ -27,4 +27,6 @@ public class AvatarDTO extends MaintenanceDTO {
 	private String imageName;
 
 	private String base64Image;
+
+	private String imageTypeExt = "jpg";
 }

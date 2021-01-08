@@ -23,7 +23,7 @@ public class ImageUtils {
 		String folderPath = "/Users/mayu/Quiz App/workspace/enewschamp/src/test/resources/images/";
 		File folder = new File(folderPath);
 		File[] listOfFiles = folder.listFiles();
-		System.out.println("Total No of Files:" + listOfFiles.length);
+		// System.out.println("Total No of Files:" + listOfFiles.length);
 		Image img = null;
 		BufferedImage tempPNG = null;
 		BufferedImage tempJPG = null;
@@ -31,12 +31,12 @@ public class ImageUtils {
 		File newFileJPG = null;
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile() && !listOfFiles[i].getName().startsWith(".")) {
-				System.out.println("File " + listOfFiles[i].getName());
+				// System.out.println("File " + listOfFiles[i].getName());
 				img = ImageIO.read(new File(folderPath + listOfFiles[i].getName()));
 
 				BufferedImage origImg = ImageIO.read(new File(folderPath + listOfFiles[i].getName()));
 
-				System.out.println(origImg.getHeight() + " X " + origImg.getWidth());
+				// System.out.println(origImg.getHeight() + " X " + origImg.getWidth());
 
 				Dimension imgSize = new Dimension(origImg.getWidth(), origImg.getHeight());
 				Dimension boundary = new Dimension(400, 200);
@@ -53,7 +53,7 @@ public class ImageUtils {
 				ImageIO.write(tempJPG, "jpg", newFileJPG);
 			}
 		}
-		System.out.println("DONE");
+		// System.out.println("DONE");
 	}
 
 	public static void resizeImage(File file, Dimension size, String imageType, String outputFileNameWithoutExtension) {

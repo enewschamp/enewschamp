@@ -16,7 +16,7 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.registration.business.StudentRegistrationBusiness;
 import com.enewschamp.app.student.registration.service.StudentRegistrationService;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
@@ -46,9 +46,6 @@ public class SubscriptionPageHandler implements IPageHandler {
 
 	@Autowired
 	ObjectMapper objectMapper;
-
-	@Autowired
-	private PropertiesService propertiesService;
 
 	@Autowired
 	UserLoginBusiness userLoginBusiness;
@@ -112,7 +109,7 @@ public class SubscriptionPageHandler implements IPageHandler {
 		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
 		StudentSubscriptionPageData subscripionPagedata = new StudentSubscriptionPageData();
 		if (studentControlWorkDTO != null) {
-			subscripionPagedata.setEmailId(studentControlWorkDTO.getEmail());
+			subscripionPagedata.setEmailId(studentControlWorkDTO.getEmailId());
 			subscripionPagedata.setSubscriptionSelected(studentControlWorkDTO.getSubscriptionTypeW());
 		}
 		pageDto.setData(subscripionPagedata);
@@ -126,7 +123,7 @@ public class SubscriptionPageHandler implements IPageHandler {
 		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
 		StudentSubscriptionPageData subscripionPagedata = new StudentSubscriptionPageData();
 		if (studentControlDTO != null) {
-			subscripionPagedata.setEmailId(studentControlDTO.getEmail());
+			subscripionPagedata.setEmailId(studentControlDTO.getEmailId());
 			subscripionPagedata.setSubscriptionSelected(studentControlDTO.getSubscriptionType());
 		}
 		pageDto.setData(subscripionPagedata);
@@ -139,7 +136,7 @@ public class SubscriptionPageHandler implements IPageHandler {
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		subscriptionBusiness.workToMaster(studentId, editionId);
+		subscriptionBusiness.workToMaster(pageRequest.getHeader().getModule(), studentId, editionId);
 		studentSubscriptionWorkService.delete(studentId);
 		pageDTO.setHeader(pageRequest.getHeader());
 		return pageDTO;

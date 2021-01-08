@@ -21,6 +21,7 @@ import com.enewschamp.app.notification.page.data.NotificationsSearchRequest;
 import com.enewschamp.app.student.notification.ReadFlag;
 import com.enewschamp.app.student.notification.StudentNotification;
 import com.enewschamp.app.student.notification.StudentNotificationDTO;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.RepositoryImpl;
 
 @Repository
@@ -50,6 +51,7 @@ public class StudentNotificationCustomRepositoryImpl extends RepositoryImpl
 		filterPredicates.add(cb.equal(notificationRoot.get("editionId"), searchRequest.getEditionId()));
 		filterPredicates.add(cb.greaterThanOrEqualTo(notificationRoot.get("notificationDate"),
 				searchRequest.getOperationDateTime()));
+		filterPredicates.add(cb.equal(notificationRoot.get("recordInUse"), RecordInUseType.Y));
 		if (searchRequest.getIsRead() != null && !"".equals(searchRequest.getIsRead())) {
 			if ("Y".equals(searchRequest.getIsRead())) {
 				filterPredicates.add(cb.equal(notificationRoot.get("readFlag"), ReadFlag.Y));

@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.enewschamp.publication.domain.common.BadgeList;
 import com.enewschamp.publication.domain.entity.Badge;
-
 @JaversSpringDataAuditable
 public interface BadgeRepository extends JpaRepository<Badge, Long> {
 
@@ -34,4 +34,7 @@ public interface BadgeRepository extends JpaRepository<Badge, Long> {
 	@Query("select d from Badge d where d.editionId= :editionId and d.recordInUse ='Y' and d.genreId= :genreId and d.readingLevel= :readingLevel and d.monthlyPointsToScore > :studentpoints order by d.monthlyPointsToScore")
 	public List<Badge> getNextBadgeForGenre(@Param("editionId") String editionId, @Param("genreId") String genreId,
 			@Param("readingLevel") int readingLevel, @Param("studentpoints") Long studentpoints);
+
+	@Query(value = "select a.badgeId as badgeId,a.genreId as genre,a.nameId as name,a.readingLevel as readingLevel,a.monthlyPointsToScore as points,a.imageName as image,a.successImageName as successImage,a.audioFileName as audio from Badge a")
+	public List<BadgeList> getBadgeList();
 }

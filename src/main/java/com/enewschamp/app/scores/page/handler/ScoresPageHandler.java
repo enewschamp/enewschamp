@@ -15,14 +15,14 @@ import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
-import com.enewschamp.app.scores.dto.DailyScoreDTO;
-import com.enewschamp.app.scores.dto.MonthlyScoreGenreDTO;
-import com.enewschamp.app.scores.dto.MonthlyScoresDTO;
-import com.enewschamp.app.scores.dto.ScorePageData;
-import com.enewschamp.app.scores.dto.YearlyScorePageData;
-import com.enewschamp.app.scores.dto.YearlyScoresGenreDTO;
+import com.enewschamp.app.scores.dto.StudentScoresYearlyGenreDTO;
+import com.enewschamp.app.scores.page.data.ScorePageData;
 import com.enewschamp.app.scores.page.data.ScoresSearchData;
-import com.enewschamp.app.scores.service.ScoreTrendService;
+import com.enewschamp.app.scores.page.data.YearlyScorePageData;
+import com.enewschamp.app.scores.service.ScoreService;
+import com.enewschamp.app.student.scores.dto.StudentScoresDailyDTO;
+import com.enewschamp.app.student.scores.dto.StudentScoresMonthlyGenreDTO;
+import com.enewschamp.app.student.scores.dto.StudentScoresMonthlyTotalDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
@@ -53,7 +53,7 @@ public class ScoresPageHandler implements IPageHandler {
 	NewsArticlePageHandler newsArticlePageHandler;
 
 	@Autowired
-	ScoreTrendService scoreTrendService;
+	ScoreService scoreService;
 
 	@Autowired
 	PreferenceBusiness preferenceBusiness;
@@ -93,7 +93,7 @@ public class ScoresPageHandler implements IPageHandler {
 		return pageDTO;
 	}
 
-	public PageDTO loadYearlyScoreTrends(PageNavigationContext pageNavigationContext) {
+	public PageDTO loadScoresYearly(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		ScoresSearchData searchData = new ScoresSearchData();
@@ -128,17 +128,17 @@ public class ScoresPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		List<YearlyScoresGenreDTO> yearlyScoresByGenre = scoreTrendService.findYearlyScoresByGenre(searchData);
-		List<MonthlyScoresDTO> monthlyScores = scoreTrendService.findYMonthlyScores(searchData);
+		List<StudentScoresYearlyGenreDTO> scoresYearlyGenre = scoreService.findScoresYearlyGenre(searchData);
+		List<StudentScoresMonthlyTotalDTO> scoresMonthly = scoreService.findYScoresMonthly(searchData);
 		YearlyScorePageData pageData = new YearlyScorePageData();
-		pageData.setYearlyScoresByGenre(yearlyScoresByGenre);
-		pageData.setMonthlyScores(monthlyScores);
+		pageData.setScoresYearlyGenre(scoresYearlyGenre);
+		pageData.setScoresMonthly(scoresMonthly);
 		pageDto.setData(pageData);
 		return pageDto;
 
 	}
 
-	public PageDTO loadMonthlyScoreTrends(PageNavigationContext pageNavigationContext) {
+	public PageDTO loadScoresMonthly(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		ScoresSearchData searchData = new ScoresSearchData();
@@ -182,18 +182,18 @@ public class ScoresPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		List<DailyScoreDTO> dailyScores = scoreTrendService.findDailyScores(searchData);
-		List<MonthlyScoreGenreDTO> monthlyScoresByGenre = scoreTrendService.findMonthlyScoresByGenre(searchData);
+		List<StudentScoresDailyDTO> scoresDaily = scoreService.findScoresDaily(searchData);
+		List<StudentScoresMonthlyGenreDTO> scoresMonthlyGenre = scoreService.findScoresMonthlyGenre(searchData);
 		ScorePageData pageData = new ScorePageData();
 		pageData.setYearMonth("" + searchData.getYearMonth());
-		pageData.setDailyScores(dailyScores);
-		pageData.setMonthlyScoresByGenre(monthlyScoresByGenre);
+		pageData.setScoresDaily(scoresDaily);
+		pageData.setScoresMonthlyGenre(scoresMonthlyGenre);
 		pageDto.setData(pageData);
 		return pageDto;
 
 	}
 
-	public PageDTO loadNextMonthlyScoreTrends(PageNavigationContext pageNavigationContext) {
+	public PageDTO loadNextScoresMonthly(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		ScoresSearchData searchData = new ScoresSearchData();
@@ -251,18 +251,18 @@ public class ScoresPageHandler implements IPageHandler {
 		monthStr = (month >= 10) ? "" + month : "0" + month;
 		yearMonth = year + monthStr;
 		searchData.setYearMonth(yearMonth);
-		List<DailyScoreDTO> dailyScores = scoreTrendService.findDailyScores(searchData);
-		List<MonthlyScoreGenreDTO> monthlyScoresByGenre = scoreTrendService.findMonthlyScoresByGenre(searchData);
+		List<StudentScoresDailyDTO> scoresDaily = scoreService.findScoresDaily(searchData);
+		List<StudentScoresMonthlyGenreDTO> scoresMonthlyGenre = scoreService.findScoresMonthlyGenre(searchData);
 		ScorePageData pageData = new ScorePageData();
 		pageData.setYearMonth("" + searchData.getYearMonth());
-		pageData.setDailyScores(dailyScores);
-		pageData.setMonthlyScoresByGenre(monthlyScoresByGenre);
+		pageData.setScoresDaily(scoresDaily);
+		pageData.setScoresMonthlyGenre(scoresMonthlyGenre);
 		pageDto.setData(pageData);
 		return pageDto;
 
 	}
 
-	public PageDTO loadPreviousMonthlyScoreTrends(PageNavigationContext pageNavigationContext) {
+	public PageDTO loadPreviousScoresMonthly(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		ScoresSearchData searchData = new ScoresSearchData();
@@ -317,12 +317,12 @@ public class ScoresPageHandler implements IPageHandler {
 		monthStr = (month >= 10) ? "" + month : "0" + month;
 		yearMonth = year + monthStr;
 		searchData.setYearMonth(yearMonth);
-		List<DailyScoreDTO> dailyScores = scoreTrendService.findDailyScores(searchData);
-		List<MonthlyScoreGenreDTO> monthlyScoresByGenre = scoreTrendService.findMonthlyScoresByGenre(searchData);
+		List<StudentScoresDailyDTO> scoresDaily = scoreService.findScoresDaily(searchData);
+		List<StudentScoresMonthlyGenreDTO> scoresMonthlyGenre = scoreService.findScoresMonthlyGenre(searchData);
 		ScorePageData pageData = new ScorePageData();
 		pageData.setYearMonth("" + searchData.getYearMonth());
-		pageData.setDailyScores(dailyScores);
-		pageData.setMonthlyScoresByGenre(monthlyScoresByGenre);
+		pageData.setScoresDaily(scoresDaily);
+		pageData.setScoresMonthlyGenre(scoresMonthlyGenre);
 		pageDto.setData(pageData);
 		return pageDto;
 

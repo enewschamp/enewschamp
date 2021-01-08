@@ -12,8 +12,7 @@ import com.enewschamp.publication.domain.entity.Avatar;
 @JaversSpringDataAuditable
 interface AvatarRepository extends JpaRepository<Avatar, Long> {
 
-	@Query(value = "select a.avatarId as id, b.text as name " + "from Avatar a, MultiLanguageText b "
-			+ "where a.nameId=b.multiLanguageTextId")
+	@Query(value = "select a.avatarId as id, a.nameId as name " + "from Avatar a")
 	public List<LOVProjection> getAvatarLOV();
 
 	@Query(value = "select a from Avatar a")

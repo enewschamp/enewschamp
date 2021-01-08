@@ -32,7 +32,7 @@ import com.enewschamp.article.page.data.NewsArticleSearchRequest;
 import com.enewschamp.article.page.data.PropertyAuditData;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.StatusTransitionDTO;
 import com.enewschamp.domain.common.StatusTransitionHandler;
 import com.enewschamp.problem.BusinessException;
@@ -69,7 +69,7 @@ public class NewsArticleService {
 	ObjectMapper objectMapper;
 
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 
 	@Autowired
 	private EnewschampApplicationProperties appConfig;
@@ -84,8 +84,8 @@ public class NewsArticleService {
 		new ArticleBusinessPolicy(article).validateAndThrow();
 		NewsArticleGroup articleGroup = repositoryGroup.getOne(article.getNewsArticleGroupId());
 		article.setStatus(deriveArticleStatus(articleGroup, article, true), article.getStatus());
-		if (ArticleActionType.SaveAsDraft.equals(article.getCurrentAction())
-				&& Boolean.valueOf(propertiesService.getProperty(PropertyConstants.SAVE_AS_DRAFT_AUDIT_DISABLE))) {
+		if (ArticleActionType.SaveAsDraft.equals(article.getCurrentAction()) && Boolean
+				.valueOf(propertiesService.getValue("Publisher", PropertyConstants.SAVE_AS_DRAFT_AUDIT_DISABLE))) {
 			return repositoryNoAudit.save(article);
 		} else {
 			return repository.save(article);
@@ -197,12 +197,12 @@ public class NewsArticleService {
 				ArticleStatusType previousStatus = repository.getPreviousStatus(article.getNewsArticleId());
 				nextStatus = previousStatus.toString();
 			}
-			System.out.println(">>>>..nextStatus......>>>>>" + nextStatus);
+			// System.out.println(">>>>..nextStatus......>>>>>" + nextStatus);
 			status = ArticleStatusType.fromValue(nextStatus);
 		}
-		System.out.println(">>>>..article......>>>>>" + article);
-		System.out.println(">>>>..transition......>>>>>" + transition);
-		System.out.println(">>>>..status......>>>>>" + status);
+		// System.out.println(">>>>..article......>>>>>" + article);
+		// System.out.println(">>>>..transition......>>>>>" + transition);
+		// System.out.println(">>>>..status......>>>>>" + status);
 
 		if (transition != null && validateAccess) {
 			statusTransitionHandler.validateStateTransitionAccess(transition, existingArticleGroup.getAuthorId(),
@@ -336,29 +336,58 @@ public class NewsArticleService {
 		});
 	}
 
-	public LocalDate getLatestPublication(String editionId, int readingLevel, ArticleType articleType) {
-		return repository.getLatestPublicationDate(editionId, readingLevel, articleType);
-	}
-
-	public LocalDate getNextAvailablePublicationDate(LocalDate givenDate, String editionId, int readingLevel,
+	public LocalDate getLatestPublication(String editionId, String isTestUser, int readingLevel,
 			ArticleType articleType) {
-		return repository.getNextAvailablePublicationDate(givenDate, editionId, readingLevel, articleType);
+		if ("Y".equalsIgnoreCase(isTestUser)) {
+			return repository.getLatestPublicationDateTestUser(editionId, readingLevel, articleType);
+		} else {
+			return repository.getLatestPublicationDate(editionId, readingLevel, articleType);
+		}
 	}
 
-	public LocalDate getPreviousAvailablePublicationDate(LocalDate givenDate, String editionId, int readingLevel,
-			ArticleType articleType) {
-		return repository.getPreviousAvailablePublicationDate(givenDate, editionId, readingLevel, articleType);
+	public LocalDate getNextAvailablePublicationDate(LocalDate givenDate, String isTestUser, String editionId,
+			int readingLevel, ArticleType articleType) {
+		if ("Y".equalsIgnoreCase(isTestUser)) {
+			return repository.getNextAvailablePublicationDateTestUser(givenDate, editionId, readingLevel, articleType);
+		} else {
+			return repository.getNextAvailablePublicationDate(givenDate, editionId, readingLevel, articleType);
+		}
 	}
 
-	public Long getNextNewsArticleAvailable(LocalDate givenDate, String editionId, int readingLevel,
+	public LocalDate getPreviousAvailablePublicationDate(LocalDate givenDate, String isTestUser, String editionId,
+			int readingLevel, ArticleType articleType) {
+		if ("Y".equalsIgnoreCase(isTestUser)) {
+			return repository.getPreviousAvailablePublicationDateTestUser(givenDate, editionId, readingLevel,
+					articleType);
+		} else {
+			return repository.getPreviousAvailablePublicationDate(givenDate, editionId, readingLevel, articleType);
+		}
+	}
+
+	public Long getNextNewsArticleAvailable(LocalDate givenDate, String isTestUser, String editionId, int readingLevel,
 			ArticleType articleType, Long newsArticleId) {
-		return repository.getNextNewsArticleAvailable(givenDate, editionId, readingLevel, articleType, newsArticleId);
+		if ("Y".equalsIgnoreCase(isTestUser)) {
+			return repository.getNextNewsArticleAvailableTestUser(givenDate, editionId, readingLevel, articleType,
+					newsArticleId);
+		} else {
+			return repository.getNextNewsArticleAvailable(givenDate, editionId, readingLevel, articleType,
+					newsArticleId);
+		}
 	}
 
-	public Long getPreviousNewsArticleAvailable(LocalDate givenDate, String editionId, int readingLevel,
-			ArticleType articleType, Long newsArticleId) {
-		return repository.getPreviousNewsArticleAvailable(givenDate, editionId, readingLevel, articleType,
-				newsArticleId);
+	public Long getPreviousNewsArticleAvailable(LocalDate givenDate, String isTestUser, String editionId,
+			int readingLevel, ArticleType articleType, Long newsArticleId) {
+		if ("Y".equalsIgnoreCase(isTestUser)) {
+			return repository.getPreviousNewsArticleAvailableTestUser(givenDate, editionId, readingLevel, articleType,
+					newsArticleId);
+		} else {
+			return repository.getPreviousNewsArticleAvailable(givenDate, editionId, readingLevel, articleType,
+					newsArticleId);
+		}
+	}
+
+	public String isQuizAvailable(Long newsArticleId) {
+		return repository.isQuizAvailable(newsArticleId);
 	}
 
 }

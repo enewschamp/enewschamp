@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.champs.page.data.ChampsPageData;
@@ -21,7 +23,7 @@ import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.dto.ChampStudentDTO;
 import com.enewschamp.app.student.service.StudentChampService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
@@ -52,7 +54,7 @@ public class ChampsPageHandler implements IPageHandler {
 	CommonService commonService;
 
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -97,11 +99,14 @@ public class ChampsPageHandler implements IPageHandler {
 		ChampsPageData pageData = new ChampsPageData();
 		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
 		int pageNo = 1;
-		int pageSize = Integer.valueOf(propertiesService.getProperty(PropertyConstants.PAGE_SIZE));
+		int pageSize = Integer.valueOf(propertiesService
+				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
 		if (pageData.getPagination() != null) {
 			pageNo = pageData.getPagination().getPageNumber() > 0 ? pageData.getPagination().getPageNumber() : 1;
 			pageSize = pageData.getPagination().getPageSize() > 0 ? pageData.getPagination().getPageSize()
-					: Integer.valueOf(propertiesService.getProperty(PropertyConstants.PAGE_SIZE));
+					: Integer.valueOf(
+							propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+									PropertyConstants.PAGE_SIZE));
 		} else {
 			PaginationData paginationData = new PaginationData();
 			paginationData.setPageNumber(pageNo);
@@ -109,23 +114,34 @@ public class ChampsPageHandler implements IPageHandler {
 			pageData.setPagination(paginationData);
 		}
 		ChampsSearchData champsSearchData = new ChampsSearchData();
-		champsSearchData.setLimitDate(commonService.getLimitDate(PropertyConstants.VIEW_RECOGNITIONS_LIMIT, emailId));
+		champsSearchData
+				.setLimitDate(commonService.getLimitDate(pageNavigationContext.getPageRequest().getHeader().getModule(),
+						PropertyConstants.VIEW_RECOGNITIONS_LIMIT, emailId));
 		CommonFilterData filterData = pageData.getFilter();
 		if (filterData != null) {
-			if (filterData.getMonth() == null || "".equals(filterData.getMonth())) {
+			if (filterData.getYearMonth() == null || "".equals(filterData.getYearMonth())) {
 				LocalDate currdate = LocalDate.now();
 				int month = currdate.getMonthValue();
 				String monthStr = (month < 10) ? "0" + month : "" + month;
 				int year = currdate.getYear();
 				String newYearMonth = year + monthStr;
-				filterData.setMonth(newYearMonth);
+				filterData.setYearMonth(newYearMonth);
 			}
-			champsSearchData.setMonth(filterData.getMonth());
+			champsSearchData.setYearMonth(filterData.getYearMonth());
 			champsSearchData.setReadingLevel(filterData.getReadingLevel());
 		} else {
 			champsSearchData.setReadingLevel("3");
 		}
-		List<ChampStudentDTO> champList = studentChampService.findChampStudents(champsSearchData, pageNo, pageSize);
+		Page<ChampStudentDTO> pageResult = studentChampService.findChampStudents(champsSearchData, pageNo, pageSize);
+		if (pageResult == null || pageResult.isLast()) {
+			pageData.getPagination().setIsLastPage("Y");
+		} else {
+			pageData.getPagination().setIsLastPage("N");
+		}
+		List<ChampStudentDTO> champList = new ArrayList<ChampStudentDTO>();
+		if (!pageResult.isEmpty()) {
+			champList = pageResult.getContent();
+		}
 		if (champList == null || champList.size() == 0) {
 			pageData.getPagination().setPageNumber(-1);
 		}

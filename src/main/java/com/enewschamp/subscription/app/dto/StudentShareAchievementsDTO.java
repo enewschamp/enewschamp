@@ -14,8 +14,6 @@ public class StudentShareAchievementsDTO extends AbstractDTO {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Long studentShareAchievementsId = 0L;
-
 	private Long studentId;
 
 	private String personalisedMessage;

@@ -1,5 +1,7 @@
 package com.enewschamp.app.common.uicontrols.dto;
 
+import javax.persistence.Column;
+
 import lombok.Data;
 
 @Data
@@ -26,7 +28,9 @@ public class UIControlsGlobalDTO {
 	private String visibility;
 	private String mandatory;
 	private String regex;
+	private String successMessage;
 	private String errorMessage;
 	private String confirmationMessage;
 	private String isPremiumFeature;
+	private String unavailableMessage;
 }

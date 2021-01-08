@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @Table(name = "StudentBadges", uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "studentId", "monthYear", "badgeId" }) })
+		@UniqueConstraint(columnNames = { "studentId", "badgeYearMonth", "badgeId" }) })
 @EqualsAndHashCode(callSuper = false)
 public class StudentBadges extends BaseEntity {
 
@@ -28,8 +28,8 @@ public class StudentBadges extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studentBadges_id_generator")
-	@SequenceGenerator(name = "studentBadges_id_generator", sequenceName = "studentBadges_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_badges_id_generator")
+	@SequenceGenerator(name = "student_badges_id_generator", sequenceName = "student_badges_id_seq", allocationSize = 1)
 	@Column(name = "studentBadgesId", updatable = false, nullable = false)
 	private Long studentBadgesId;
 
@@ -41,6 +41,6 @@ public class StudentBadges extends BaseEntity {
 	private Long badgeId;
 
 	@NotNull
-	@Column(name = "monthYear")
-	private Long monthYear;
+	@Column(name = "badgeYearMonth")
+	private Long yearMonth;
 }

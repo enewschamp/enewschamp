@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.security.entity.AppSecurity;
 import com.enewschamp.security.repository.AppSecurityRepository;
@@ -24,7 +23,7 @@ public class AppSecurityService {
 
 	@Autowired
 	private AppSecurityRepository appSecurityRepository;
-	
+
 	@Autowired
 	private AppSecurityRepositoryCustom appSecurityRepositoryCustom;
 
@@ -46,14 +45,14 @@ public class AppSecurityService {
 	}
 
 	public AppSecurity update(AppSecurity appSecurityEntity) {
-		Long appSecurityId = appSecurityEntity.getAppSecId();
+		Long appSecurityId = appSecurityEntity.getAppSecurityId();
 		AppSecurity existingAppSecurity = get(appSecurityId);
 		modelMapper.map(appSecurityEntity, existingAppSecurity);
 		return appSecurityRepository.save(existingAppSecurity);
 	}
 
 	public AppSecurity patch(AppSecurity appSecurity) {
-		Long appSecurityId = appSecurity.getAppSecId();
+		Long appSecurityId = appSecurity.getAppSecurityId();
 		AppSecurity existingEntity = get(appSecurityId);
 		modelMapperForPatch.map(appSecurity, existingEntity);
 		return appSecurityRepository.save(existingEntity);
@@ -81,38 +80,47 @@ public class AppSecurityService {
 			return false;
 		}
 	}
-	
+
 	public AppSecurity read(AppSecurity appSecurity) {
-		Long appSecId = appSecurity.getAppSecId();
+		Long appSecId = appSecurity.getAppSecurityId();
 		AppSecurity existingAppSecurity = get(appSecId);
-		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingAppSecurity;
-		}
-		existingAppSecurity.setRecordInUse(RecordInUseType.Y);
-		existingAppSecurity.setOperationDateTime(null);
+//		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.Y)) {
+//			return existingAppSecurity;
+//		}
+//		existingAppSecurity.setRecordInUse(RecordInUseType.Y);
+//		existingAppSecurity.setOperationDateTime(null);
 		return appSecurityRepository.save(existingAppSecurity);
 	}
 
 	public AppSecurity close(AppSecurity appSecurityEntity) {
-		Long appSecId = appSecurityEntity.getAppSecId();
+		Long appSecId = appSecurityEntity.getAppSecurityId();
 		AppSecurity existingAppSecurity = get(appSecId);
-		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingAppSecurity;
-		}
-		existingAppSecurity.setRecordInUse(RecordInUseType.N);
-		existingAppSecurity.setOperationDateTime(null);
+//		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.N)) {
+//			return existingAppSecurity;
+//		}
+		//existingAppSecurity.setRecordInUse(RecordInUseType.N);
+		//existingAppSecurity.setOperationDateTime(null);
 		return appSecurityRepository.save(existingAppSecurity);
 	}
-	
+
 	public AppSecurity reinstate(AppSecurity appSecurityEntity) {
-		Long appSecId = appSecurityEntity.getAppSecId();
+		Long appSecId = appSecurityEntity.getAppSecurityId();
 		AppSecurity existingAppSec = get(appSecId);
-		if (existingAppSec.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingAppSec;
-		}
-		existingAppSec.setRecordInUse(RecordInUseType.Y);
-		existingAppSec.setOperationDateTime(null);
+//		if (existingAppSec.getRecordInUse().equals(RecordInUseType.Y)) {
+//			return existingAppSec;
+//		}
+		//existingAppSec.setRecordInUse(RecordInUseType.Y);
+		//existingAppSec.setOperationDateTime(null);
 		return appSecurityRepository.save(existingAppSec);
+	}
+
+	public String getAppAvailability(final String module) {
+		Optional<AppSecurity> existingEntity = appSecurityRepository.getAppSecurityByModule(module);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get().getIsAppAvailable();
+		} else {
+			throw new BusinessException(ErrorCodeConstants.APP_SEC_KEY_NOT_FOUND);
+		}
 	}
 
 	public Page<AppSecurity> list(int pageNo, int pageSize) {

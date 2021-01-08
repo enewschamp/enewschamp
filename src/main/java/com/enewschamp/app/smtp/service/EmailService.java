@@ -14,28 +14,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.PropertyConstants;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 
 @Service
 public class EmailService {
 
 	@Autowired
-	PropertiesService propertiesService;
+	PropertiesBackendService propertiesService;
 
-	public boolean sendOTP(final String otp, final String toEmailId) {
-		String otpBody = propertiesService.getProperty(PropertyConstants.OTP_EMAIL_BODY_TEXT);
+	public boolean sendOTP(final String appName, final String otp, final String toEmailId) {
+		String otpBody = propertiesService.getValue(appName, PropertyConstants.OTP_EMAIL_BODY_TEXT);
 		otpBody = otpBody.replace("{OTP}", otp);
-		String subject = propertiesService.getProperty(PropertyConstants.OTP_EMAIL_SUBJECT);
-		return this.sendMail(subject, otpBody, toEmailId);
+		String subject = propertiesService.getValue(appName, PropertyConstants.OTP_EMAIL_SUBJECT);
+		return this.sendMail(appName, subject, otpBody, toEmailId);
 	}
 
-	public boolean sendMail(final String subject, final String body, final String toEmail) {
+	public boolean sendMail(final String appName, final String subject, final String body, final String toEmail) {
 		boolean sendSuccess = true;
-		final String username = propertiesService.getProperty(PropertyConstants.FROM_MAIL_ID);
-		final String password = propertiesService.getProperty(PropertyConstants.EMAIL_PWD);
+		final String username = propertiesService.getValue(appName, PropertyConstants.FROM_MAIL_ID);
+		final String password = propertiesService.getValue(appName, PropertyConstants.EMAIL_PWD);
 		Properties prop = new Properties();
-		prop.put("mail.smtp.host", propertiesService.getProperty(PropertyConstants.EMAIL_HOST));
-		prop.put("mail.smtp.port", propertiesService.getProperty(PropertyConstants.EMAIL_PORT));
+		prop.put("mail.smtp.host", propertiesService.getValue(appName, PropertyConstants.EMAIL_HOST));
+		prop.put("mail.smtp.port", propertiesService.getValue(appName, PropertyConstants.EMAIL_PORT));
 		prop.put("mail.smtp.auth", "true");
 		prop.put("mail.smtp.starttls.enable", "true"); // TLS
 		Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
@@ -45,7 +45,7 @@ public class EmailService {
 		});
 		try {
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(propertiesService.getProperty(PropertyConstants.FROM_MAIL_ID)));
+			message.setFrom(new InternetAddress(propertiesService.getValue(appName, PropertyConstants.FROM_MAIL_ID)));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
 			message.setSubject(subject);
 			message.setText(body);

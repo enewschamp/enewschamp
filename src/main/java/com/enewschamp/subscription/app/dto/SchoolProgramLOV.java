@@ -1,6 +1,5 @@
 package com.enewschamp.subscription.app.dto;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.enewschamp.app.common.AbstractDTO;
@@ -12,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-@Entity
+//@Entity
 public class SchoolProgramLOV extends AbstractDTO {
 
 	/**

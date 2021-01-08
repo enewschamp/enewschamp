@@ -93,7 +93,7 @@ public class UserLoginService {
 		return repository.getLastLoginDate(userId, deviceId, userType);
 	}
 
-	public UserLogin getOperatorLogin(final String userId, final String deviceId, final String tokenId, UserType userType) {
+	public UserLogin getOperatorLogin(final String userId, final String deviceId, final String tokenId, final UserType userType) {
 		Optional<UserLogin> existingEntity = repository.getOperatorLogin(userId, deviceId, tokenId, userType);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();

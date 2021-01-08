@@ -21,7 +21,7 @@ public class GenreDTO extends MaintenanceDTO {
 
 	private String base64Image;
 
-	private String genreName;
+	private String imageTypeExt = "jpg";
 
 	@JsonInclude
 	private String imageName;

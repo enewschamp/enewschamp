@@ -1,6 +1,5 @@
 package com.enewschamp.app.student.notification;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -29,8 +28,8 @@ public class StudentNotification extends BaseEntity {
 	private static final long serialVersionUID = 4683001717131495711L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_notify_action_id_generator")
-	@SequenceGenerator(name = "student_notify_action_id_generator", sequenceName = "student_notify_action_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_notification_id_generator")
+	@SequenceGenerator(name = "student_notification_id_generator", sequenceName = "student_notification_id_seq", allocationSize = 1)
 	@Column(name = "StudentNotificationId", updatable = false, nullable = false)
 	private Long studentNotificationId;
 

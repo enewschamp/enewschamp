@@ -40,10 +40,4 @@ public class StudentDetailsWorkDTO extends AbstractDTO {
 
 	@JsonInclude
 	private String mobileNumber;
-
-	@JsonInclude
-	private Long avatarId;
-
-	@JsonInclude
-	private String photoBase64;
 }

@@ -1,5 +1,6 @@
 package com.enewschamp.subscription.page.handler;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.modelmapper.ModelMapper;
@@ -13,16 +14,13 @@ import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.app.student.registration.service.StudentRegistrationService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.service.AvatarService;
 import com.enewschamp.subscription.app.dto.MyPicturePageData;
-import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
-import com.enewschamp.subscription.domain.entity.StudentControl;
-import com.enewschamp.subscription.domain.entity.StudentDetails;
 import com.enewschamp.subscription.domain.service.StudentControlService;
 import com.enewschamp.subscription.domain.service.StudentDetailsService;
 import com.enewschamp.subscription.domain.service.StudentDetailsWorkService;
@@ -33,9 +31,6 @@ public class MyPicturePageHandler implements IPageHandler {
 
 	@Autowired
 	ObjectMapper objectMapper;
-
-	@Autowired
-	private PropertiesService propertiesService;
 
 	@Autowired
 	StudentControlBusiness studentControlBusiness;
@@ -60,6 +55,9 @@ public class MyPicturePageHandler implements IPageHandler {
 
 	@Autowired
 	CommonService commonService;
+
+	@Autowired
+	private PropertiesBackendService propertiesService;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -96,6 +94,7 @@ public class MyPicturePageHandler implements IPageHandler {
 	public PageDTO handleAppAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDto = new PageDTO();
 		String emailId = pageRequest.getHeader().getEmailId();
+		String module = pageRequest.getHeader().getModule();
 		MyPicturePageData myPicturePageData = new MyPicturePageData();
 		StudentRegistration studentRegistration = studentRegistrationService.getStudentReg(emailId);
 		myPicturePageData = mapPagedata(pageRequest);
@@ -106,15 +105,40 @@ public class MyPicturePageHandler implements IPageHandler {
 		} else {
 			if (myPicturePageData.getAvatarName() != null && !"".equals(myPicturePageData.getAvatarName())) {
 				studentRegistration.setAvatarName(myPicturePageData.getAvatarName());
+				String currentImageName = studentRegistration.getPhotoName();
 				studentRegistration.setPhotoName(null);
+				String imagesFolderPath = propertiesService.getProperty(module,
+						"student-image-config.imagesRootFolderPath");
+				if (currentImageName != null && !"".equals(currentImageName)) {
+					String size1OldFileName = imagesFolderPath
+							+ propertiesService.getProperty(module, "student-image-config.size1-folder-path")
+							+ currentImageName;
+					String size2OldFileName = imagesFolderPath
+							+ propertiesService.getProperty(module, "student-image-config.size2-folder-path")
+							+ currentImageName;
+					String size3OldFileName = imagesFolderPath
+							+ propertiesService.getProperty(module, "student-image-config.size3-folder-path")
+							+ currentImageName;
+					String size4OldFileName = imagesFolderPath
+							+ propertiesService.getProperty(module, "student-image-config.size4-folder-path")
+							+ currentImageName;
+					File oldFileJPG1 = new File(size1OldFileName);
+					oldFileJPG1.delete();
+					File oldFileJPG2 = new File(size2OldFileName);
+					oldFileJPG2.delete();
+					File oldFileJPG3 = new File(size3OldFileName);
+					oldFileJPG3.delete();
+					File oldFileJPG4 = new File(size4OldFileName);
+					oldFileJPG4.delete();
+				}
 			} else if (myPicturePageData.getPhotoBase64() != null && !"".equals(myPicturePageData.getPhotoBase64())) {
 				String newImageName = studentRegistration.getStudentId() + "_" + System.currentTimeMillis();
 				String imageType = "jpg";
 				if (myPicturePageData.getImageTypeExt() != null && !"".equals(myPicturePageData.getImageTypeExt())) {
 					imageType = myPicturePageData.getImageTypeExt();
 				}
-				boolean saveFlag = commonService.saveImages("student", imageType, myPicturePageData.getPhotoBase64(),
-						newImageName, studentRegistration.getPhotoName());
+				boolean saveFlag = commonService.saveImages(module, "student", imageType,
+						myPicturePageData.getPhotoBase64(), newImageName, studentRegistration.getPhotoName());
 				if (saveFlag) {
 					studentRegistration.setAvatarName(null);
 					studentRegistration.setPhotoName(newImageName + "." + imageType);

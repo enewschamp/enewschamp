@@ -56,6 +56,14 @@ public class MessageConstants {
 	public static final String PRICING_DETAIL_NOT_NULL ="Pricing detail must not be null";
 	public static final String PROMOTION_DETAIL_NOT_EMPTY ="Promotion detail must not be empty";
 	public static final String PROMOTION_DETAIL_NOT_NULL ="Promotion detail must not be null";
+	public static final String SCHOOL_NAME_NOT_NULL = "School name must not be null";
+	public static final String SCHOOL_NAME_NOT_EMPTY = "School name must not be empty";
+	public static final String COMMENTS_NOT_NULL = "Comments must not be null";
+	public static final String COMMENTS_NOT_EMPTY = "Comments must not be empty";
+	public static final String INSTITUTION_TYPE_NOT_NULL = "Institution type must not be null";
+	public static final String INSTITUTION_TYPE_NOT_EMPTY = "Institution type must not be empty";
+	public static final String ADDRESS_TYPE_NOT_NULL = "Address type must not be null";
+	public static final String ADDRESS_TYPE_NOT_EMPTY = "Address type must not be empty";
 
 
 }

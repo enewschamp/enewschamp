@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CommonFilterData {
 	private String city;
-	private String month;
+	private String yearMonth;
 	private String headline;
 	private String genre;
 	private String read;

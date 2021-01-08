@@ -23,7 +23,7 @@ import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.app.user.login.service.UserLoginService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.AppConstants;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -70,10 +70,10 @@ public class StudentRegistrationBusiness {
 	UserLoginBusiness userLoginBusiness;
 
 	@Autowired
-	PropertiesService propertiesService;
+	PropertiesBackendService propertiesService;
 
-	public boolean validatePassword(final String emailId, final String password, final String deviceId,
-			final String tokenId) {
+	public boolean validatePassword(final String appName, final String emailId, final String password,
+			final String deviceId, final String tokenId) {
 		StudentRegistration student = regService.getStudentReg(emailId);
 		if (student == null) {
 			// userActivityTracker.setActionStatus(UserAction.FAILURE);
@@ -106,7 +106,7 @@ public class StudentRegistrationBusiness {
 			student.setLastUnsuccessfulLoginAttempt(LocalDateTime.now());
 			student.setIncorrectLoginAttempts(student.getIncorrectLoginAttempts() + 1);
 			if (student.getIncorrectLoginAttempts() == Integer
-					.valueOf(propertiesService.getValue(PropertyConstants.PUBLISHER_LOGIN_MAX_ATTEMPTS))) {
+					.valueOf(propertiesService.getValue(appName, PropertyConstants.PUBLISHER_LOGIN_MAX_ATTEMPTS))) {
 				student.setIsAccountLocked("Y");
 				UserLogin userLogin = loginService.getDeviceLogin(emailId, deviceId, tokenId, UserType.S);
 				userLogin.setLoginFlag(AppConstants.NO);
@@ -150,6 +150,7 @@ public class StudentRegistrationBusiness {
 		}
 		student.setPassword2(student.getPassword1());
 		student.setPassword1(student.getPassword());
+		student.setForcePasswordChange("N");
 		student.setPassword(password);
 		regService.update(student);
 	}
@@ -171,10 +172,11 @@ public class StudentRegistrationBusiness {
 		student.setPassword(password);
 		student.setIncorrectLoginAttempts(0);
 		student.setIsAccountLocked("N");
+		student.setForcePasswordChange("N");
 		regService.update(student);
 	}
 
-	public void sendOtp(final String emailId) {
+	public void sendOtp(final String appName, final String emailId) {
 		StudentRegistration student = regService.getStudentReg(emailId);
 		if (student == null) {
 			throw new BusinessException(ErrorCodeConstants.STUD_REG_NOT_FOUND, emailId);
@@ -184,16 +186,16 @@ public class StudentRegistrationBusiness {
 		}
 		List<OTP> otpGenList = otpRepository.getOtpGenListForEmail(emailId, RecordInUseType.Y);
 		if (otpGenList != null && otpGenList.size() > Integer
-				.valueOf(propertiesService.getProperty(PropertyConstants.OTP_GEN_MAX_ATTEMPTS))) {
+				.valueOf(propertiesService.getValue(appName, PropertyConstants.OTP_GEN_MAX_ATTEMPTS))) {
 			throw new BusinessException(ErrorCodeConstants.OTP_GEN_MAX_ATTEMPTS_EXHAUSTED, emailId);
 		} else {
-			otpService.genOTP(emailId, null);
+			otpService.genOTP(appName, emailId, null);
 		}
 
 	}
 
-	public boolean validateOtp(final String otp, final String emailId) {
-		return otpService.validateOtp(otp, emailId, null);
+	public boolean validateOtp(final String appName, final String otp, final String emailId) {
+		return otpService.validateOtp(appName, otp, emailId, null);
 	}
 
 	public void checkAndUpdateIfSubscriptionExpired(String emailId, String editionId) {

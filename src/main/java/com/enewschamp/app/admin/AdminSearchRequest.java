@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AdminSearchRequest {
 	private String countryId;
+	private String cityId;
 	private String stateId;
 	private String name;
 	private String newsEventsApplicable;
@@ -21,4 +22,12 @@ public class AdminSearchRequest {
 	private String categoryId;
 	private String closeFlag;
 	private String supportUserId;
+	private String schoolChainId;
+	private String eduBoard;
+	private String ownership;
+	private String schoolProgram;
+	private String schoolProgramCode;
+	private String institutionId;
+	private String institutionType;
+	private String addressType;
 }

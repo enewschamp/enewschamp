@@ -18,7 +18,7 @@ import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginService;
 import com.enewschamp.article.domain.common.ArticleType;
 import com.enewschamp.article.domain.service.NewsArticleService;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.subscription.app.dto.StudentControlWorkDTO;
 import com.enewschamp.subscription.domain.business.PreferenceBusiness;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
@@ -65,10 +65,10 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 	StudentPaymentService studentPaymentService;
 
 	@Autowired
-	StudentRegistrationService studentRegistrationService;
+	StudentRegistrationService regService;
 
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 
 	@Autowired
 	PreferenceBusiness preferenceBusiness;
@@ -88,6 +88,9 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 		}
 		if (ruleStr.contains("isAccountInactive")) {
 			dataMap = isAccountInactive(pageRequest, pageResponse, dataMap);
+		}
+		if (ruleStr.contains("forcePasswordChange")) {
+			dataMap = forcePasswordChange(pageRequest, pageResponse, dataMap);
 		}
 		if (ruleStr.contains("subscriptionType")) {
 			dataMap = getSubscriptionType(pageRequest, pageResponse, dataMap);
@@ -116,6 +119,9 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 		if (ruleStr.contains("previousNewsArticleAvailable")) {
 			dataMap = previousNewsArticleAvailable(pageRequest, pageResponse, dataMap);
 		}
+		if (ruleStr.contains("quizAvailable")) {
+			dataMap = quizAvailable(pageRequest, pageResponse, dataMap);
+		}
 		return dataMap;
 
 	}
@@ -125,7 +131,7 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 		String validateLogin = "Fail";
 		String emailId = pageRequest.getHeader().getEmailId();
 		StudentControl studentEntity = studentControlService.getStudentByEmail(emailId);
-		if (studentEntity != null && "Y".equals(studentEntity.getEmailVerified())) {
+		if (studentEntity != null && "Y".equals(studentEntity.getEmailIdVerified())) {
 			String deviceId = pageRequest.getHeader().getDeviceId();
 			String tokenId = pageRequest.getHeader().getLoginCredentials();
 			UserLogin loggedIn = loginService.getUserLogin(emailId, deviceId, tokenId, UserType.S);
@@ -145,8 +151,8 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 		StudentControl studentEntity = studentControlService.getStudentByEmail(emailId);
 		if (studentEntity != null) {
 			registrationCompletionGraceDaysLapsed = (studentEntity != null && studentEntity.getOperationDateTime()
-					.plusDays(Integer
-							.valueOf(propertiesService.getValue(PropertyConstants.REGISTRATION_COMPLETION_GRACE_DAYS)))
+					.plusDays(Integer.valueOf(propertiesService.getValue(pageRequest.getHeader().getModule(),
+							PropertyConstants.REGISTRATION_COMPLETION_GRACE_DAYS)))
 					.toLocalDate().isBefore(LocalDate.now())) ? "Y" : "N";
 		}
 		dataMap.put("registrationCompletionGraceDaysLapsed", registrationCompletionGraceDaysLapsed);
@@ -233,7 +239,7 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 
 	public Map<String, String> isAccountLocked(PageRequestDTO pageRequest, PageDTO page, Map<String, String> dataMap) {
 		String emailId = pageRequest.getHeader().getEmailId();
-		StudentRegistration studentRegistration = studentRegistrationService.getStudentReg(emailId);
+		StudentRegistration studentRegistration = regService.getStudentReg(emailId);
 		String isAccountLocked = "N";
 		if (studentRegistration != null && "Y".equals(studentRegistration.getIsAccountLocked())) {
 			isAccountLocked = "Y";
@@ -245,12 +251,24 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 	public Map<String, String> isAccountInactive(PageRequestDTO pageRequest, PageDTO page,
 			Map<String, String> dataMap) {
 		String emailId = pageRequest.getHeader().getEmailId();
-		StudentRegistration studentRegistration = studentRegistrationService.getStudentReg(emailId);
+		StudentRegistration studentRegistration = regService.getStudentReg(emailId);
 		String isAccountInactive = "N";
 		if (studentRegistration != null && "N".equals(studentRegistration.getIsActive())) {
 			isAccountInactive = "Y";
 		}
 		dataMap.put("isAccountInactive", isAccountInactive);
+		return dataMap;
+	}
+
+	public Map<String, String> forcePasswordChange(PageRequestDTO pageRequest, PageDTO page,
+			Map<String, String> dataMap) {
+		String emailId = pageRequest.getHeader().getEmailId();
+		StudentRegistration studentRegistration = regService.getStudentReg(emailId);
+		String forcePasswordChange = "N";
+		if (studentRegistration != null && "Y".equals(studentRegistration.getForcePasswordChange())) {
+			forcePasswordChange = "Y";
+		}
+		dataMap.put("forcePasswordChange", forcePasswordChange);
 		return dataMap;
 	}
 
@@ -272,8 +290,14 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 			int readingLevel = article.getReadingLevel();
 			ArticleType articleType = ArticleType.NEWSARTICLE;
 			String editionId = pageRequest.getHeader().getEditionId();
-			LocalDate newDate = newsArticleService.getPreviousAvailablePublicationDate(publicationDate, editionId,
-					readingLevel, articleType);
+			String emailId = pageRequest.getHeader().getEmailId();
+			String isTestUser = "";
+			StudentRegistration studReg = regService.getStudentReg(emailId);
+			if (studReg != null) {
+				isTestUser = studReg.getIsTestUser();
+			}
+			LocalDate newDate = newsArticleService.getPreviousAvailablePublicationDate(publicationDate, isTestUser,
+					editionId, readingLevel, articleType);
 			if (newDate != null) {
 				previousDayPublicationAvailable = "True";
 			}
@@ -300,8 +324,14 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 			int readingLevel = article.getReadingLevel();
 			ArticleType articleType = ArticleType.NEWSARTICLE;
 			String editionId = pageRequest.getHeader().getEditionId();
-			LocalDate newDate = newsArticleService.getNextAvailablePublicationDate(publicationDate, editionId,
-					readingLevel, articleType);
+			String emailId = pageRequest.getHeader().getEmailId();
+			String isTestUser = "";
+			StudentRegistration studReg = regService.getStudentReg(emailId);
+			if (studReg != null) {
+				isTestUser = studReg.getIsTestUser();
+			}
+			LocalDate newDate = newsArticleService.getNextAvailablePublicationDate(publicationDate, isTestUser,
+					editionId, readingLevel, articleType);
 			if (newDate != null) {
 				nextDayPublicationAvailable = "True";
 			}
@@ -327,7 +357,13 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 		int readingLevel = pageData.getReadingLevel();
 		ArticleType articleType = ArticleType.NEWSARTICLE;
 		String editionId = pageRequest.getHeader().getEditionId();
-		Long nextNewsArticleId = newsArticleService.getNextNewsArticleAvailable(publicationDate, editionId,
+		String emailId = pageRequest.getHeader().getEmailId();
+		String isTestUser = "";
+		StudentRegistration studReg = regService.getStudentReg(emailId);
+		if (studReg != null) {
+			isTestUser = studReg.getIsTestUser();
+		}
+		Long nextNewsArticleId = newsArticleService.getNextNewsArticleAvailable(publicationDate, isTestUser, editionId,
 				readingLevel, articleType, newsArticleId);
 		if (nextNewsArticleId != null && nextNewsArticleId > 0) {
 			nextNewsArticleAvailable = "True";
@@ -353,12 +389,35 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 		int readingLevel = pageData.getReadingLevel();
 		ArticleType articleType = ArticleType.NEWSARTICLE;
 		String editionId = pageRequest.getHeader().getEditionId();
-		Long previousNewsArticleId = newsArticleService.getPreviousNewsArticleAvailable(publicationDate, editionId,
-				readingLevel, articleType, newsArticleId);
+		String emailId = pageRequest.getHeader().getEmailId();
+		String isTestUser = "";
+		StudentRegistration studReg = regService.getStudentReg(emailId);
+		if (studReg != null) {
+			isTestUser = studReg.getIsTestUser();
+		}
+		Long previousNewsArticleId = newsArticleService.getPreviousNewsArticleAvailable(publicationDate, isTestUser,
+				editionId, readingLevel, articleType, newsArticleId);
 		if (previousNewsArticleId != null && previousNewsArticleId > 0) {
 			prevNewsArticleAvailable = "True";
 		}
 		dataMap.put("previousNewsArticleAvailable", prevNewsArticleAvailable);
+		return dataMap;
+	}
+
+	public Map<String, String> quizAvailable(PageRequestDTO pageRequest, PageDTO pageResponse,
+			Map<String, String> dataMap) {
+		NewsArticlePageData pageData = new NewsArticlePageData();
+		try {
+			if (pageResponse.getData() != null) {
+				pageData = modelMapper.map(pageResponse.getData(), NewsArticlePageData.class);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Long newsArticleId = pageData.getNewsArticleId();
+		String quizAvailable = newsArticleService.isQuizAvailable(newsArticleId);
+		dataMap.put("quizAvailable", quizAvailable);
 		return dataMap;
 	}
 

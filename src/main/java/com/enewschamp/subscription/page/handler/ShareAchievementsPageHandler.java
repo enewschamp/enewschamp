@@ -108,11 +108,6 @@ public class ShareAchievementsPageHandler implements IPageHandler {
 		StudentShareAchievementsDTO studAch = mapPageToDTO(studentShareAchievementsPageData);
 		studAch.setStudentId(studentId);
 		studAch.setPersonalisedMessage(studentShareAchievementsPageData.getPersonalisedMessage());
-		List<StudentShareAchievementsDTO> studentShareAchievementsDTO = studentShareAchievementsBusiness
-				.getStudentDetailsFromMaster(studentId);
-		if (studentShareAchievementsDTO != null) {
-			studAch.setStudentShareAchievementsId(studentShareAchievementsDTO.get(0).getStudentShareAchievementsId());
-		}
 		try {
 			studentShareAchievementsBusiness.saveAsMaster(studAch);
 		} catch (Exception e) {

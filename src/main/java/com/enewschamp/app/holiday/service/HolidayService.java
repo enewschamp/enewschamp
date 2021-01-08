@@ -1,6 +1,7 @@
 package com.enewschamp.app.holiday.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -18,6 +19,7 @@ import com.enewschamp.app.holiday.repository.HolidayRepository;
 import com.enewschamp.app.holiday.repository.HolidayRepositoryCustom;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.publication.domain.common.HolidayList;
 
 @Service
 public class HolidayService {
@@ -123,4 +125,7 @@ public class HolidayService {
 		return genreList;
 	}
 
+	public List<HolidayList> getHolidayList() {
+		return holidayRepository.getHolidayList();
+	}
 }

@@ -24,8 +24,8 @@ public class UIControlsRules extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uicontrolsrules_id_generator")
-	@SequenceGenerator(name = "uicontrolsrules_id_generator", sequenceName = "uicontrolsrules_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uicontrols_rules_id_generator")
+	@SequenceGenerator(name = "uicontrols_rules_id_generator", sequenceName = "uicontrols_rules_id_seq", allocationSize = 1)
 	@Column(name = "ruleId", length = 10)
 	private Long ruleId = 0L;
 

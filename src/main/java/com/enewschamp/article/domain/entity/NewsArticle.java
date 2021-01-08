@@ -32,7 +32,6 @@ import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.domain.common.StatusTransitionHandler;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
-import com.enewschamp.user.domain.entity.User;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -51,8 +50,8 @@ public class NewsArticle extends BaseEntity {
 	private StatusTransitionHandler stateTransitionHandler;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "article_id_generator")
-	@SequenceGenerator(name = "article_id_generator", sequenceName = "art_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "news_article_id_generator")
+	@SequenceGenerator(name = "news_article_id_generator", sequenceName = "news_article_id_seq", allocationSize = 1)
 	@Column(name = "NewsArticleId", updatable = false, nullable = false)
 	private Long newsArticleId;
 
@@ -95,6 +94,9 @@ public class NewsArticle extends BaseEntity {
 
 	@Column(name = "LikeSCount")
 	private Integer likeSCount = 0;
+
+	@Column(name = "ReadyForTest", length = 1)
+	private String readyForTest = "N";
 
 	@Column(name = "PublicationDate")
 	private LocalDate publicationDate;

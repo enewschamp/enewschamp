@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -16,7 +17,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "School")
+@Table(name = "School", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "name", "countryId", "stateId", "cityId" }) })
 @EqualsAndHashCode(callSuper = false)
 public class School extends BaseEntity {
 
@@ -27,7 +29,7 @@ public class School extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "school_id_generator")
-	@SequenceGenerator(name = "school_id_generator", sequenceName = "school_seq", allocationSize = 1)
+	@SequenceGenerator(name = "school_id_generator", sequenceName = "school_id_seq", allocationSize = 1)
 	@Column(name = "schoolId", updatable = false, nullable = false)
 	private Long schoolId;
 

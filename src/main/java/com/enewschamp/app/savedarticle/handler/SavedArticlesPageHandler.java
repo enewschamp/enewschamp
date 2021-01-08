@@ -30,7 +30,7 @@ import com.enewschamp.app.savedarticle.dto.SavedNewsArticleSearchRequest;
 import com.enewschamp.app.savedarticle.service.SavedNewsArticleService;
 import com.enewschamp.app.student.business.StudentActivityBusiness;
 import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
@@ -65,7 +65,7 @@ public class SavedArticlesPageHandler implements IPageHandler {
 	CommonService commonService;
 
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 
 	@Autowired
 	private StudentActivityBusiness studentActivityBusiness;
@@ -115,16 +115,20 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		SavedArticlePageData pageData = new SavedArticlePageData();
 		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
 		int pageNo = 1;
-		int pageSize = Integer.valueOf(propertiesService.getProperty(PropertyConstants.PAGE_SIZE));
+		int pageSize = Integer.valueOf(propertiesService
+				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
 		if (pageData.getPagination() != null) {
 			pageNo = pageData.getPagination().getPageNumber() > 0 ? pageData.getPagination().getPageNumber() : 1;
 			pageSize = pageData.getPagination().getPageSize() > 0 ? pageData.getPagination().getPageSize()
-					: Integer.valueOf(propertiesService.getProperty(PropertyConstants.PAGE_SIZE));
+					: Integer.valueOf(
+							propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+									PropertyConstants.PAGE_SIZE));
 		} else {
 			PaginationData paginationData = new PaginationData();
 			paginationData.setPageNumber(pageNo);
@@ -137,15 +141,15 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		searchRequestData.setEditionId(editionId);
 		searchRequestData.setStudentId(studentId);
 		searchRequestData.setPublicationDateFrom(
-				commonService.getLimitDate(PropertyConstants.VIEW_SAVED_ARTICLES_LIMIT, emailId));
+				commonService.getLimitDate(module, PropertyConstants.VIEW_SAVED_ARTICLES_LIMIT, emailId));
 		if (filterData != null) {
 			searchRequestData.setGenre(filterData.getGenre());
 			searchRequestData.setHeadline(filterData.getHeadline());
-			String monthYear = filterData.getMonth();
-			if (monthYear != null && !"".equals(monthYear)) {
-				String monthStr = monthYear.substring(0, 3);
-				String year = monthYear.substring(4, 8);
-				SimpleDateFormat inputFormat = new SimpleDateFormat("MMM");
+			String yearMonth = filterData.getYearMonth();
+			if (yearMonth != null && !"".equals(yearMonth)) {
+				String monthStr = yearMonth.substring(4, 6);
+				String year = yearMonth.substring(0, 4);
+				SimpleDateFormat inputFormat = new SimpleDateFormat("MM");
 				Calendar cal = Calendar.getInstance();
 				try {
 					cal.setTime(inputFormat.parse(monthStr));
@@ -164,6 +168,11 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		}
 		Page<NewsArticleSummaryDTO> pageResult = savedNewsArticleService.findSavedArticles(searchRequestData, pageNo,
 				pageSize);
+		if (pageResult == null || pageResult.isLast()) {
+			pageData.getPagination().setIsLastPage("Y");
+		} else {
+			pageData.getPagination().setIsLastPage("N");
+		}
 		HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
 		pageDto.setHeader(header);
 		List<SavedArticleData> savedArticleList = mapData(pageResult);

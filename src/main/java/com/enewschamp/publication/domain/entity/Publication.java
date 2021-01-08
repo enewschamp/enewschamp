@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -18,15 +17,12 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OrderBy;
 import org.javers.core.metamodel.annotation.DiffIgnore;
-import org.javers.spring.annotation.JaversAuditable;
 
-import com.enewschamp.article.app.dto.NewsArticleDTO;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
@@ -48,7 +44,7 @@ public class Publication extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "publication_id_generator")
-	@SequenceGenerator(name = "publication_id_generator", sequenceName = "pub_id_seq", allocationSize = 1)
+	@SequenceGenerator(name = "publication_id_generator", sequenceName = "publication_id_seq", allocationSize = 1)
 	@Column(name = "PublicationId", updatable = false, nullable = false)
 	private Long publicationId;
 
@@ -94,10 +90,6 @@ public class Publication extends BaseEntity {
 	@OneToMany(cascade = CascadeType.DETACH, mappedBy = "publicationId", targetEntity = NewsArticle.class)
 	@OrderBy(clause = "sequence asc")
 	private List<NewsArticle> newsArticles;
-
-	/*
-	 * @Embedded private List<NewsArticleDTO> newsArticlesLinked;
-	 */
 
 	@PrePersist
 	@PreUpdate

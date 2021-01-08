@@ -104,19 +104,19 @@ public class StudentActivityBusiness {
 
 	public StudentActivityDTO likeArticle(Long studentId, Long newsArticleId, String likeFlag, int readingLevel,
 			String editionId) {
-		String currentLikeLevel = "";
+		String currentReaction = "";
 		StudentActivityDTO studentActivityDTO = getActivity(studentId, newsArticleId);
 		if (studentActivityDTO == null) {
 			StudentActivityDTO studentActivityDTONew = new StudentActivityDTO();
 			studentActivityDTONew.setStudentId(studentId);
 			studentActivityDTONew.setNewsArticleId(newsArticleId);
-			studentActivityDTONew.setLikeLevel(likeFlag);
+			studentActivityDTONew.setReaction(likeFlag);
 			studentActivityDTONew.setReadingLevel(Long.valueOf(readingLevel));
 			studentActivityDTONew.setEditionId(editionId);
 			studentActivityDTO = saveActivity(studentActivityDTONew);
 		} else {
-			currentLikeLevel = studentActivityDTO.getLikeLevel();
-			studentActivityDTO.setLikeLevel(likeFlag);
+			currentReaction = studentActivityDTO.getReaction();
+			studentActivityDTO.setReaction(likeFlag);
 			studentActivityDTO = saveActivity(studentActivityDTO);
 		}
 		NewsArticle article = newsArticleService.get(newsArticleId);
@@ -131,15 +131,15 @@ public class StudentActivityBusiness {
 		} else if ("W".equalsIgnoreCase(likeFlag)) {
 			article.setLikeWCount(article.getLikeWCount() == null ? 1 : (article.getLikeWCount() + 1));
 		}
-		if ("O".equalsIgnoreCase(currentLikeLevel)) {
+		if ("O".equalsIgnoreCase(currentReaction)) {
 			article.setLikeOCount(article.getLikeOCount() == 0 ? 0 : (article.getLikeOCount() - 1));
-		} else if ("H".equalsIgnoreCase(currentLikeLevel)) {
+		} else if ("H".equalsIgnoreCase(currentReaction)) {
 			article.setLikeHCount(article.getLikeHCount() == 0 ? 0 : (article.getLikeHCount() - 1));
-		} else if ("L".equalsIgnoreCase(currentLikeLevel)) {
+		} else if ("L".equalsIgnoreCase(currentReaction)) {
 			article.setLikeLCount(article.getLikeLCount() == 0 ? 0 : (article.getLikeLCount() - 1));
-		} else if ("S".equalsIgnoreCase(currentLikeLevel)) {
+		} else if ("S".equalsIgnoreCase(currentReaction)) {
 			article.setLikeSCount(article.getLikeSCount() == 0 ? 0 : (article.getLikeSCount() - 1));
-		} else if ("W".equalsIgnoreCase(currentLikeLevel)) {
+		} else if ("W".equalsIgnoreCase(currentReaction)) {
 			article.setLikeWCount(article.getLikeWCount() == 0 ? 0 : (article.getLikeWCount() - 1));
 		}
 		newsArticleService.updateLike(article);

@@ -14,7 +14,7 @@ import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.common.PageSaveTable;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.registration.business.StudentRegistrationBusiness;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
@@ -54,9 +54,6 @@ public class PreferencesPageHandler implements IPageHandler {
 
 	@Autowired
 	ModelMapper modelMapper;
-
-	@Autowired
-	private PropertiesService propertiesService;
 
 	@Autowired
 	StudentRegistrationBusiness studentRegBusiness;

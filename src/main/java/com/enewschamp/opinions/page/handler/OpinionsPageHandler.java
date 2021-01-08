@@ -25,9 +25,8 @@ import com.enewschamp.app.common.PaginationData;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.savedarticle.service.SavedNewsArticleService;
-import com.enewschamp.app.student.business.StudentActivityBusiness;
 import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.opinions.page.dto.OpinionsData;
@@ -63,13 +62,10 @@ public class OpinionsPageHandler implements IPageHandler {
 	SavedNewsArticleService savedNewsArticleService;
 
 	@Autowired
-	private StudentActivityBusiness studentActivityBusiness;
-
-	@Autowired
 	GenreService genreService;
 
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -112,14 +108,18 @@ public class OpinionsPageHandler implements IPageHandler {
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
+		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		OpinionsPageData pageData = new OpinionsPageData();
 		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
 		int pageNo = 1;
-		int pageSize = Integer.valueOf(propertiesService.getProperty(PropertyConstants.PAGE_SIZE));
+		int pageSize = Integer.valueOf(propertiesService
+				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
 		if (pageData.getPagination() != null) {
 			pageNo = pageData.getPagination().getPageNumber() > 0 ? pageData.getPagination().getPageNumber() : 1;
 			pageSize = pageData.getPagination().getPageSize() > 0 ? pageData.getPagination().getPageSize()
-					: Integer.valueOf(propertiesService.getProperty(PropertyConstants.PAGE_SIZE));
+					: Integer.valueOf(
+							propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+									PropertyConstants.PAGE_SIZE));
 		} else {
 			PaginationData paginationData = new PaginationData();
 			paginationData.setPageNumber(pageNo);
@@ -131,16 +131,16 @@ public class OpinionsPageHandler implements IPageHandler {
 		OpinionsSearchRequest searchRequestData = new OpinionsSearchRequest();
 		searchRequestData.setEditionId(editionId);
 		searchRequestData.setStudentId(studentId);
-		searchRequestData
-				.setPublicationDateFrom(commonService.getLimitDate(PropertyConstants.VIEW_OPINIONS_LIMIT, emailId));
+		searchRequestData.setPublicationDateFrom(
+				commonService.getLimitDate(module, PropertyConstants.VIEW_OPINIONS_LIMIT, emailId));
 		if (filterData != null) {
 			searchRequestData.setGenre(filterData.getGenre());
 			searchRequestData.setHeadline(filterData.getHeadline());
-			String monthYear = filterData.getMonth();
-			if (monthYear != null && !"".equals(monthYear)) {
-				String monthStr = monthYear.substring(0, 3);
-				String year = monthYear.substring(4, 8);
-				SimpleDateFormat inputFormat = new SimpleDateFormat("MMM");
+			String yearMonth = filterData.getYearMonth();
+			if (yearMonth != null && !"".equals(yearMonth)) {
+				String monthStr = yearMonth.substring(4, 6);
+				String year = yearMonth.substring(0, 4);
+				SimpleDateFormat inputFormat = new SimpleDateFormat("MM");
 				Calendar cal = Calendar.getInstance();
 				try {
 					cal.setTime(inputFormat.parse(monthStr));
@@ -160,6 +160,11 @@ public class OpinionsPageHandler implements IPageHandler {
 
 		Page<NewsArticleSummaryDTO> pageResult = savedNewsArticleService.findArticlesWithOpinions(searchRequestData,
 				pageNo, pageSize);
+		if (pageResult == null || pageResult.isLast()) {
+			pageData.getPagination().setIsLastPage("Y");
+		} else {
+			pageData.getPagination().setIsLastPage("N");
+		}
 		HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
 		pageDto.setHeader(header);
 		List<OpinionsData> opinionsArticleList = mapData(pageResult);
@@ -199,7 +204,7 @@ public class OpinionsPageHandler implements IPageHandler {
 		}
 		return opinionPageDataList;
 	}
-	
+
 	private ArticlePageData mapPageData(ArticlePageData pageData, PageRequestDTO pageRequest) {
 		try {
 			pageData = objectMapper.readValue(pageRequest.getData().toString(), ArticlePageData.class);

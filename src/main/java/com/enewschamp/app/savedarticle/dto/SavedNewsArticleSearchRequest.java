@@ -17,7 +17,7 @@ public class SavedNewsArticleSearchRequest {
 	private String genre;
 	private String headline;
 	private Long studentId;
-	private String month;
+	private String yearMonth;
 	private LocalDate publicationDate;
 	private LocalDate publicationDateFrom;
 	private LocalDate publicationDateTo;

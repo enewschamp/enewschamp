@@ -28,8 +28,8 @@ public class SchoolPricing extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schoolPricing_id_generator")
-	@SequenceGenerator(name = "schoolPricing_id_generator", sequenceName = "schoolPricing_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "school_pricing_id_generator")
+	@SequenceGenerator(name = "school_pricing_id_generator", sequenceName = "school_pricing_id_seq", allocationSize = 1)
 	@Column(name = "schoolPricingId", updatable = false, nullable = false)
 	private Long schoolPricingId;
 

@@ -146,8 +146,8 @@ public class PublicationHelper {
 				newsArticleDTO.setCredits(newsArticleGroup.getCredits());
 				newsArticleDTO.setGenreId(newsArticleGroup.getGenreId());
 				newsArticleDTO.setHashTags(newsArticleGroup.getHashTags());
-				newsArticleDTO.setNoQuiz(newsArticleGroup.isNoQuiz());
-				newsArticleDTO.setImageOnly(newsArticleGroup.isImageOnly());
+				newsArticleDTO.setNoQuiz(newsArticleGroup.getNoQuiz());
+				newsArticleDTO.setImageOnly(newsArticleGroup.getImageOnly());
 				newsArticleDTO.setHeadline(newsArticleGroup.getHeadline());
 				newsArticleDTO.setUrl(newsArticleGroup.getUrl());
 				newsArticleDTO.setSourceText(newsArticleGroup.getSourceText());

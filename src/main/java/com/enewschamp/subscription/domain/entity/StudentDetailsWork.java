@@ -46,12 +46,6 @@ public class StudentDetailsWork extends BaseEntity {
 	@Column(name = "DoB")
 	private LocalDate doB;
 
-	@Column(name = "MobileNumer", length = 15)
+	@Column(name = "MobileNumber", length = 15)
 	private String mobileNumber;
-
-	@Column(name = "AvatarId", length = 10)
-	private Long avatarId;
-
-	@Transient
-	private String photoBase64;
 }

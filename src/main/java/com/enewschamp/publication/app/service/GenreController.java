@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.app.common.CommonService;
-import com.enewschamp.common.domain.service.PropertiesService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.publication.app.dto.GenreDTO;
 import com.enewschamp.publication.domain.entity.Genre;
@@ -38,17 +37,14 @@ public class GenreController {
 	@Autowired
 	CommonService commonService;
 
-	@Autowired
-	private PropertiesService propertiesService;
-
 	@PostMapping(value = "/admin/genres")
 	public ResponseEntity<GenreDTO> create(@RequestBody @Valid GenreDTO genreDTO) {
 		Genre genre = modelMapper.map(genreDTO, Genre.class);
 		genre = genreService.create(genre);
 		String newImageName = genre.getGenreId() + "_" + System.currentTimeMillis();
-		String imageType = "jpg";
-		boolean saveFlag = commonService.saveImages("genre", imageType, genre.getBase64Image(), newImageName,
-				genre.getImageName());
+		String imageType = genreDTO.getImageTypeExt();
+		boolean saveFlag = commonService.saveImages("Admin", "genre", imageType, genreDTO.getBase64Image(),
+				newImageName, genre.getImageName());
 		if (saveFlag) {
 			genre.setImageName(newImageName + "." + imageType);
 			genre = genreService.update(genre);

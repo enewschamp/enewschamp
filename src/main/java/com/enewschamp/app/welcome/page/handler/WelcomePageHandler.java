@@ -19,27 +19,28 @@ import com.enewschamp.app.common.state.service.StateService;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.recognition.page.data.RecognitionData;
 import com.enewschamp.app.school.service.SchoolService;
+import com.enewschamp.app.scores.dto.StudentScoresMonthlyDTO;
+import com.enewschamp.app.scores.page.data.ScoresSearchData;
+import com.enewschamp.app.scores.service.ScoreService;
 import com.enewschamp.app.student.badges.business.StudentBadgesBusiness;
-import com.enewschamp.app.student.monthlytrends.business.TrendsMonthlyByGenreBusiness;
-import com.enewschamp.app.student.monthlytrends.business.TrendsMonthlyTotalBusiness;
-import com.enewschamp.app.student.monthlytrends.dto.TrendsMonthlyByGenreDTO;
-import com.enewschamp.app.student.monthlytrends.dto.TrendsMonthlyTotalDTO;
 import com.enewschamp.app.student.registration.business.StudentRegistrationBusiness;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.app.student.registration.service.StudentRegistrationService;
-import com.enewschamp.app.trends.service.TrendsService;
+import com.enewschamp.app.student.scores.business.ScoresMonthlyGenreBusiness;
+import com.enewschamp.app.student.scores.business.ScoresMonthlyTotalBusiness;
+import com.enewschamp.app.student.scores.dto.StudentScoresMonthlyGenreDTO;
+import com.enewschamp.app.student.scores.dto.StudentScoresMonthlyTotalDTO;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.app.user.login.service.UserLoginService;
-import com.enewschamp.app.welcome.page.data.BadgeDetailsDTO;
 import com.enewschamp.app.welcome.page.data.WelcomePageData;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.master.badge.service.BadgeService;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.publication.domain.entity.Badge;
 import com.enewschamp.publication.domain.entity.Edition;
 import com.enewschamp.publication.domain.service.EditionService;
+import com.enewschamp.subscription.app.dto.AppearancePageData;
 import com.enewschamp.subscription.app.dto.MyPicturePageData;
 import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.app.dto.StudentDetailsDTO;
@@ -76,8 +77,6 @@ public class WelcomePageHandler implements IPageHandler {
 	ObjectMapper objectMapper;
 
 	@Autowired
-	TrendsService trendsService;
-	@Autowired
 	StudentDetailsBusiness studentDetailsBusiness;
 
 	@Autowired
@@ -94,11 +93,12 @@ public class WelcomePageHandler implements IPageHandler {
 
 	@Autowired
 	BadgeService badgeService;
-	@Autowired
-	TrendsMonthlyTotalBusiness trendsMonthlyTotalBusiness;
 
 	@Autowired
-	TrendsMonthlyByGenreBusiness trendsMonthlyByGenreBusiness;
+	ScoresMonthlyTotalBusiness scoresMonthlyTotalBusiness;
+
+	@Autowired
+	ScoresMonthlyGenreBusiness scoresMonthlyGenreBusiness;
 
 	@Autowired
 	StudentRegistrationService regService;
@@ -123,6 +123,9 @@ public class WelcomePageHandler implements IPageHandler {
 
 	@Autowired
 	SchoolService schoolService;
+
+	@Autowired
+	ScoreService scoreService;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -169,11 +172,6 @@ public class WelcomePageHandler implements IPageHandler {
 		studentRegBusiness.checkAndUpdateIfSubscriptionExpired(emailId, editionId);
 		String editionName = "";
 		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
-		LocalDate todaysDate = LocalDate.now();
-		int year = todaysDate.getYear();
-		int month = todaysDate.getMonthValue();
-		Long monthYear = Long.valueOf(year + "" + (month > 9 ? month : "0" + month));
-		Long pointsToNextBadge = 0L;
 		WelcomePageData pageData = new WelcomePageData();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
@@ -205,9 +203,15 @@ public class WelcomePageHandler implements IPageHandler {
 		if (studentRegistration != null) {
 			myPicturePageData.setAvatarName(studentRegistration.getAvatarName());
 			myPicturePageData.setPhotoName(studentRegistration.getPhotoName());
+			if ("Y".equalsIgnoreCase(studentRegistration.getIsTestUser())) {
+				pageData.setTestUser("Y");
+			} else {
+				pageData.setTestUser("N");
+			}
 		} else {
 			myPicturePageData.setAvatarName("");
 			myPicturePageData.setPhotoName("");
+			pageData.setTestUser("N");
 		}
 		StudentSchoolPageData studentSchoolPageData = new StudentSchoolPageData();
 		StudentSchoolDTO studentSchoolDTO = schoolDetailsBusiness.getStudentFromMaster(studentId);
@@ -235,11 +239,12 @@ public class WelcomePageHandler implements IPageHandler {
 		if (studentPreferencesDTO != null) {
 			studentPreferencesPageData = modelMapper.map(studentPreferencesDTO, StudentPreferencesPageData.class);
 		}
-		pageData.setMyPicture(myPicturePageData);
-		pageData.setPreferences(studentPreferencesPageData);
-		pageData.setSchoolDetails(studentSchoolPageData);
-		pageData.setStudentDetails(studentDetailsPageData);
-		pageData.setSubscription(studentSubscriptionPageData);
+		AppearancePageData appearancePageData = new AppearancePageData();
+		StudentRegistration studReg = regService.getStudentReg(emailId);
+		if (studReg != null) {
+			appearancePageData.setTheme(studReg.getTheme());
+			appearancePageData.setFontHeight(studReg.getFontHeight());
+		}
 		Edition edition = editionService.getEdition(editionId);
 		editionName = edition.getEditionName();
 		pageData.setEditionName(editionName);
@@ -249,52 +254,47 @@ public class WelcomePageHandler implements IPageHandler {
 			readingLevel = Integer.valueOf(studentPreferencesDTO.getReadingLevel());
 		}
 		LocalDateTime lastLogin = loginService.getUserLastLoginDetails(emailId, deviceId, UserType.S);
-		pageData.setLastActivityDatetime(lastLogin);
+		LocalDate fromDate = LocalDate.now().minusMonths(1);
+		int year = fromDate.getYear();
+		int month = fromDate.getMonthValue();
+		Long yearMonth = Long.valueOf(year + "" + (month > 9 ? month : "0" + month));
 		List<RecognitionData> studentbadges = studentBadgesBusiness.getBadgeDetails(studentId, editionId, readingLevel,
-				monthYear);
-		List<BadgeDetailsDTO> badgeDetails = new ArrayList<BadgeDetailsDTO>();
-		if (studentbadges != null && studentbadges.size() > 0) {
-			for (RecognitionData studentBadge : studentbadges) {
-				String message = "";
-				if (studentBadge.getBadgeGenre().equalsIgnoreCase("MONTHLY")) {
-					TrendsMonthlyTotalDTO trendsMonthlyTotalDTO = trendsMonthlyTotalBusiness.getMonthlyTrend(studentId,
-							editionId, readingLevel, "" + monthYear);
-					if (trendsMonthlyTotalDTO != null) {
-						Long points = trendsMonthlyTotalDTO.getQuizCorrect();
-						Badge nextbadge = badgeService.getNextBadgeForGenre(editionId,
-								trendsMonthlyTotalDTO.getGenreId(), readingLevel, points);
-						if (nextbadge != null) {
-							Long monthlyPointsToScore = nextbadge.getMonthlyPointsToScore();
-							pointsToNextBadge = monthlyPointsToScore - points;
-							message = "Just " + pointsToNextBadge + " away from winning a " + nextbadge.getNameId();
-						}
-					}
-				} else {
-					TrendsMonthlyByGenreDTO trendsMonthlyByGenreDTO = trendsMonthlyByGenreBusiness.getMonthlyTrend(
-							studentId, editionId, readingLevel, "" + monthYear, studentBadge.getBadgeGenre());
-					if (trendsMonthlyByGenreDTO != null) {
-						Long points = trendsMonthlyByGenreDTO.getQuizCorrect();
-						Badge nextbadge = badgeService.getNextBadgeForGenre(editionId,
-								trendsMonthlyByGenreDTO.getGenreId(), readingLevel, points);
-						if (nextbadge != null) {
-							Long monthlyPointsToScore = nextbadge.getMonthlyPointsToScore();
-							pointsToNextBadge = monthlyPointsToScore - points;
-							message = "Just " + pointsToNextBadge + " away from winning a " + nextbadge.getNameId();
-						}
-					}
-				}
-				Badge badge = badgeService.get(studentBadge.getBadgeId());
-				BadgeDetailsDTO badgeDetailsDTO = new BadgeDetailsDTO();
-				badgeDetailsDTO.setBadgeId(badge.getBadgeId());
-				badgeDetailsDTO.setBadgeName(badge.getNameId());
-				badgeDetailsDTO.setImageName(badge.getImageName());
-				badgeDetailsDTO.setBadgeGenre(badge.getGenreId());
-				// modelMapper.map(badge, BadgeDetailsDTO.class);
-				badgeDetailsDTO.setBadgeAwayPointsMessage(message);
-				badgeDetails.add(badgeDetailsDTO);
-			}
-		}
-		pageData.setBadgeDetails(badgeDetails);
+				yearMonth);
+
+		List<StudentScoresMonthlyDTO> scoresMonthly = new ArrayList<StudentScoresMonthlyDTO>();
+		ScoresSearchData searchData = new ScoresSearchData();
+		searchData.setStudentId(studentId);
+		searchData.setReadingLevel(readingLevel);
+		searchData.setYearMonth("" + yearMonth);
+		List<StudentScoresMonthlyTotalDTO> monthlyTotalScoresDTO = scoreService.findMonthWiseTotalScores(searchData);
+		List<StudentScoresMonthlyGenreDTO> monthlyGenreScoresDTO = scoreService.findMonthWiseGenreScores(searchData);
+		StudentScoresMonthlyDTO prevMonth = new StudentScoresMonthlyDTO();
+		prevMonth.setMonth("" + yearMonth);
+		prevMonth.setTotal(monthlyTotalScoresDTO);
+		prevMonth.setByGenre(monthlyGenreScoresDTO);
+		scoresMonthly.add(prevMonth);
+		LocalDate todaysDate = LocalDate.now();
+		year = todaysDate.getYear();
+		month = todaysDate.getMonthValue();
+		yearMonth = Long.valueOf(year + "" + (month > 9 ? month : "0" + month));
+		searchData.setYearMonth("" + yearMonth);
+		monthlyTotalScoresDTO = scoreService.findMonthWiseTotalScores(searchData);
+		monthlyGenreScoresDTO = scoreService.findMonthWiseGenreScores(searchData);
+		StudentScoresMonthlyDTO currMonth = new StudentScoresMonthlyDTO();
+		currMonth.setMonth("" + yearMonth);
+		currMonth.setTotal(monthlyTotalScoresDTO);
+		currMonth.setByGenre(monthlyGenreScoresDTO);
+		scoresMonthly.add(currMonth);
+		pageData.setScoresMonthly(scoresMonthly);
+		pageData.setAppearance(appearancePageData);
+		pageData.setMyPicture(myPicturePageData);
+		pageData.setPreferences(studentPreferencesPageData);
+		pageData.setSchoolDetails(studentSchoolPageData);
+		pageData.setStudentDetails(studentDetailsPageData);
+		pageData.setSubscription(studentSubscriptionPageData);
+		pageData.setBadgeDetails(studentbadges);
+		pageData.setLastActivityDatetime(lastLogin);
+
 		pageDto.setData(pageData);
 		return pageDto;
 	}

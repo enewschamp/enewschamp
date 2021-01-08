@@ -15,7 +15,7 @@ import com.enewschamp.app.user.login.entity.UserActivityTracker;
 import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.repository.UserActivityTrackerRepository;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.AppConstants;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -35,7 +35,7 @@ public class UserLoginBusiness {
 	UserActivityTrackerRepository userActivityTrackerRepository;
 
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 
 	public UserLogin newDeviceLogin(final String userId, final String deviceId, UserType userType) {
 		UserLogin userLogin = getStudentLoginByDeviceId(deviceId);
@@ -46,8 +46,8 @@ public class UserLoginBusiness {
 		userLogin.setDeviceId(deviceId);
 		userLogin.setLoginFlag(AppConstants.NO);
 		userLogin.setLastLoginTime(LocalDateTime.now());
-		userLogin.setTokenExpirationTime(LocalDateTime.now().plusSeconds(
-				Integer.valueOf(propertiesService.getProperty(PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS))));
+		userLogin.setTokenExpirationTime(LocalDateTime.now().plusSeconds(Integer
+				.valueOf(propertiesService.getValue("Common", PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS))));
 		userLogin.setTokenId("" + System.currentTimeMillis());
 		userLogin.setOperatorId("SYSTEM");
 		userLogin.setUserType(userType);
@@ -69,8 +69,8 @@ public class UserLoginBusiness {
 			userLogin.setDeviceId(deviceId);
 			userLogin.setLoginFlag(AppConstants.NO);
 			userLogin.setLastLoginTime(LocalDateTime.now());
-			userLogin.setTokenExpirationTime(LocalDateTime.now().plusSeconds(
-					Integer.valueOf(propertiesService.getProperty(PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS))));
+			userLogin.setTokenExpirationTime(LocalDateTime.now().plusSeconds(Integer
+					.valueOf(propertiesService.getValue("Common", PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS))));
 			userLogin.setTokenId("" + System.currentTimeMillis());
 			userLogin.setOperatorId("SYSTEM");
 			userLogin.setUserType(userType);
@@ -78,8 +78,44 @@ public class UserLoginBusiness {
 			loggedIn = loginService.create(userLogin);
 		} else {
 			loggedIn.setLastLoginTime(LocalDateTime.now());
-			loggedIn.setTokenExpirationTime(LocalDateTime.now().plusSeconds(
-					Integer.valueOf(propertiesService.getProperty(PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS))));
+			loggedIn.setTokenExpirationTime(LocalDateTime.now().plusSeconds(Integer
+					.valueOf(propertiesService.getValue("Common", PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS))));
+			if (!userId.equalsIgnoreCase(loggedIn.getUserId())) {
+				loggedIn.setUserId("");
+				loggedIn.setLoginFlag(AppConstants.NO);
+			}
+			loggedIn.setTokenId("" + System.currentTimeMillis());
+			loginService.update(loggedIn);
+		}
+		return loggedIn;
+	}
+
+	public UserLogin publisherLogin(final String userId, final String deviceId, final String tokenId,
+			UserType userType) {
+		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, tokenId, userType);
+		if (loggedIn == null) {
+			loggedIn = loginService.getOperatorLogin(userId, userType);
+		}
+		if (UserType.S.equals(userType) && loggedIn == null) {
+			loggedIn = getStudentLoginByDeviceId(deviceId);
+		}
+		if (loggedIn == null) {
+			UserLogin userLogin = new UserLogin();
+			userLogin.setUserId(userId);
+			userLogin.setDeviceId(deviceId);
+			userLogin.setLoginFlag(AppConstants.YES);
+			userLogin.setLastLoginTime(LocalDateTime.now());
+			userLogin.setTokenExpirationTime(LocalDateTime.now().plusSeconds(Integer
+					.valueOf(propertiesService.getValue("Common", PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS))));
+			userLogin.setTokenId("" + System.currentTimeMillis());
+			userLogin.setOperatorId("SYSTEM");
+			userLogin.setUserType(userType);
+			userLogin.setRecordInUse(RecordInUseType.Y);
+			loggedIn = loginService.create(userLogin);
+		} else {
+			loggedIn.setLastLoginTime(LocalDateTime.now());
+			loggedIn.setTokenExpirationTime(LocalDateTime.now().plusSeconds(Integer
+					.valueOf(propertiesService.getValue("Common", PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS))));
 			if (!userId.equalsIgnoreCase(loggedIn.getUserId())) {
 				loggedIn.setUserId("");
 				loggedIn.setLoginFlag(AppConstants.NO);

@@ -132,8 +132,8 @@ public class AuditService {
 
 	public Diff findDifference(Object instance1, Object instance2) {
 		Diff diff = javers.compare(instance1, instance2);
-		System.out.println(diff.changesSummary());
-		System.out.println(diff.toString());
+		// System.out.println(diff.changesSummary());
+		// System.out.println(diff.toString());
 		return diff;
 	}
 

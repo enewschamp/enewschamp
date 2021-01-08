@@ -1,6 +1,7 @@
 package com.enewschamp.user.app.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
@@ -39,6 +40,8 @@ public class UserDTO extends MaintenanceDTO {
 	@NotNull
 	private Gender gender;
 
+	private LocalDate doB;
+
 	@NotNull
 	private LocalDate contractStartDate;
 
@@ -46,19 +49,19 @@ public class UserDTO extends MaintenanceDTO {
 	private LocalDate contractEndDate;
 
 	@NotNull
-	private long mobile1 = 0;
+	private String mobileNumber1;
 
-	private long mobile2 = 0;
+	private String mobileNumber2;
 
-	private long landLine1 = 0;
+	private String landline1;
 
-	private long landLine2 = 0;
+	private String landline2;
 
 	@NotNull
 	@Size(max = 99)
-	private String email1;
+	private String emailId1;
 
-	private String email2;
+	private String emailId2;
 
 	private String comments;
 
@@ -69,6 +72,13 @@ public class UserDTO extends MaintenanceDTO {
 
 	private String base64Image;
 
+	private String imageTypeExt = "jpg";
+
 	@JsonInclude
 	private String theme;
+	
+	@JsonInclude
+	private String fontHeight;
+	
+	private LocalDateTime creationDateTime;
 }

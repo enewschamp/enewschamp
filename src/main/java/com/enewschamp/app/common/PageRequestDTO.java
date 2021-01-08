@@ -22,6 +22,7 @@ public class PageRequestDTO implements Serializable {
 
 	@JsonInclude
 	private JsonNode data;
+	
 	private JsonNode filter;
 
 	public HeaderDTO getHeader() {

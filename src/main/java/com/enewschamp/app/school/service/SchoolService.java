@@ -7,12 +7,20 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.school.repository.SchoolRepositoryCustom;
 import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.app.common.country.entity.Country;
+import com.enewschamp.app.helpdesk.entity.Helpdesk;
 import com.enewschamp.app.school.entity.School;
 import com.enewschamp.app.school.repository.SchoolProgramRepository;
 import com.enewschamp.app.school.repository.SchoolRepository;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.SchoolData;
 import com.enewschamp.subscription.app.dto.SchoolProgramLOV;
@@ -21,17 +29,20 @@ import com.enewschamp.subscription.app.dto.SchoolProgramLOV;
 public class SchoolService {
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private SchoolRepository schoolRepository;
 
 	@Autowired
-	SchoolProgramService schoolProgramService;
+	private SchoolRepositoryCustom schoolRepositoryCustom;
+	
+	@Autowired
+	private SchoolProgramService schoolProgramService;
 
 	@Autowired
-	ModelMapper modelMapper;
+	private ModelMapper modelMapper;
 
 	@Autowired
 	@Qualifier("modelPatcher")
-	ModelMapper modelMapperForPatch;
+	private ModelMapper modelMapperForPatch;
 
 	public School create(School SchoolEntity) {
 		return schoolRepository.save(SchoolEntity);
@@ -87,5 +98,39 @@ public class SchoolService {
 
 	public List<School> getSchoolFromProgramCode(String schoolProgramCode) {
 		return schoolRepository.getSchoolFromProgramCode(schoolProgramCode);
+	}
+	
+	public School read(School schoolEntity) {
+		Long countryId = schoolEntity.getSchoolId();
+		School school = get(countryId);
+        return school;
+	}
+
+	public School close(School schoolEntity) {
+		Long schoolId = schoolEntity.getSchoolId();
+		School existingSchool = get(schoolId);
+		if(existingSchool.getRecordInUse().equals(RecordInUseType.N)) {
+			return existingSchool;
+		}
+		existingSchool.setRecordInUse(RecordInUseType.N);
+		existingSchool.setOperationDateTime(null);
+		return schoolRepository.save(existingSchool);
+	}
+	
+	public School reInstate(School schoolEntity) {
+		Long schoolId = schoolEntity.getSchoolId();
+		School existingSchool = get(schoolId);
+		if(existingSchool.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingSchool;
+		}
+		existingSchool.setRecordInUse(RecordInUseType.Y);
+		existingSchool.setOperationDateTime(null);
+		return schoolRepository.save(existingSchool);
+	}
+
+	public Page<School> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<School> schoolList = schoolRepositoryCustom.findSchools(pageable, searchRequest);
+		return schoolList;
 	}
 }

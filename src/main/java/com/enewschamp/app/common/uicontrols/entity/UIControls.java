@@ -99,6 +99,9 @@ public class UIControls extends BaseEntity {
 	@Column(name = "action", length = 50)
 	private String action;
 
+	@Column(name = "successMessage", length = 500)
+	private String successMessage;
+
 	@Column(name = "errorMessage", length = 500)
 	private String errorMessage;
 
@@ -107,4 +110,7 @@ public class UIControls extends BaseEntity {
 
 	@Column(name = "isPremiumFeature", length = 1)
 	private String isPremiumFeature;
+
+	@Column(name = "unavailableMessage", length = 500)
+	private String unavailableMessage;
 }

@@ -23,8 +23,8 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.recognition.page.data.RecognitionData;
 import com.enewschamp.app.recognition.page.data.RecognitionPageData;
 import com.enewschamp.app.student.badges.business.StudentBadgesBusiness;
-import com.enewschamp.app.student.badges.entity.StudentBadges;
-import com.enewschamp.common.domain.service.PropertiesService;
+import com.enewschamp.app.student.dto.ChampStudentDTO;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.master.badge.service.BadgeService;
@@ -63,7 +63,7 @@ public class RecognitionsPageHandler implements IPageHandler {
 	BadgeService badgeService;
 
 	@Autowired
-	private PropertiesService propertiesService;
+	private PropertiesBackendService propertiesService;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -103,28 +103,40 @@ public class RecognitionsPageHandler implements IPageHandler {
 	public PageDTO loadRecognitionsPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		RecognitionPageData pageData = new RecognitionPageData();
 		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
 		int pageNo = 1;
-		int pageSize = Integer.valueOf(propertiesService.getProperty(PropertyConstants.PAGE_SIZE));
+		int pageSize = Integer.valueOf(propertiesService
+				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
 		if (pageData.getPagination() != null) {
 			pageNo = pageData.getPagination().getPageNumber() > 0 ? pageData.getPagination().getPageNumber() : 1;
 			pageSize = pageData.getPagination().getPageSize() > 0 ? pageData.getPagination().getPageSize()
-					: Integer.valueOf(propertiesService.getProperty(PropertyConstants.PAGE_SIZE));
+					: Integer.valueOf(
+							propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+									PropertyConstants.PAGE_SIZE));
 		} else {
 			PaginationData paginationData = new PaginationData();
 			paginationData.setPageNumber(pageNo);
 			paginationData.setPageSize(pageSize);
 			pageData.setPagination(paginationData);
 		}
-		LocalDate limitDate = commonService.getLimitDate(PropertyConstants.VIEW_RECOGNITIONS_LIMIT, emailId);
-		Page<RecognitionData> studbadges = studentBadgesBusiness.getStudentBadges(studentId, editionId, limitDate,
+		LocalDate limitDate = commonService.getLimitDate(module, PropertyConstants.VIEW_RECOGNITIONS_LIMIT, emailId);
+		Page<RecognitionData> pageResult = studentBadgesBusiness.getStudentBadges(studentId, editionId, limitDate,
 				pageNo, pageSize);
+		if (pageResult == null || pageResult.isLast()) {
+			pageData.getPagination().setIsLastPage("Y");
+		} else {
+			pageData.getPagination().setIsLastPage("N");
+		}
 		HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
 		pageDto.setHeader(header);
-		List<RecognitionData> badgeList = studbadges.getContent();
+		List<RecognitionData> badgeList = new ArrayList<RecognitionData>();
+		if (!pageResult.isEmpty()) {
+			badgeList = pageResult.getContent();
+		}
 		if (badgeList == null || badgeList.size() == 0) {
 			pageData.getPagination().setPageNumber(-1);
 		}

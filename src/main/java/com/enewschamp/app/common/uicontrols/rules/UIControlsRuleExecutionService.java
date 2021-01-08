@@ -39,7 +39,7 @@ public class UIControlsRuleExecutionService {
 	public UIControlsDTO getControlParamsBasedOnRule(PageRequestDTO pageRequest, PageDTO pageResponse,
 			UIControlsDTO uiControlsDTO) {
 		Long uiControld = uiControlsDTO.getUiControlId();
-		System.out.println(">>>>>>>>>uiControld>>>>>>>>>>" + uiControld);
+		// System.out.println(">>>>>>>>>uiControld>>>>>>>>>>" + uiControld);
 		List<UIControlsRulesDTO> rules = getAdditionalRules(uiControld);
 		Map<String, String> dataMap = new HashMap<String, String>();
 		dataMap = enrichData(dataMap, pageRequest);
@@ -76,14 +76,15 @@ public class UIControlsRuleExecutionService {
 	}
 
 	private boolean execRule(String ruleStr, Map<String, String> dataMap) {
-		System.out.println("ruleStr :" + ruleStr);
+		// System.out.println("ruleStr :" + ruleStr);
 		boolean success = false;
 		Evaluator eval = new Evaluator();
 		eval.setVariables(dataMap);
-		System.out.println(eval.getVariables());
+		// System.out.println(eval.getVariables());
 		try {
 			String result = eval.evaluate(ruleStr);
-			System.out.println("String result " + result + "Boolean result : " + eval.getBooleanResult(ruleStr));
+			// System.out.println("String result " + result + "Boolean result : " +
+			// eval.getBooleanResult(ruleStr));
 			if (eval.getBooleanResult(ruleStr)) {
 				success = true;
 			}
