@@ -15,6 +15,7 @@ public class AdminSearchRequest {
 	private String cityId;
 	private String stateId;
 	private String name;
+	private String surname;
 	private String newsEventsApplicable;
 	private Long studentId;
 	private LocalDateTime createDateFrom;

@@ -60,10 +60,16 @@ public class MessageConstants {
 	public static final String SCHOOL_NAME_NOT_EMPTY = "School name must not be empty";
 	public static final String COMMENTS_NOT_NULL = "Comments must not be null";
 	public static final String COMMENTS_NOT_EMPTY = "Comments must not be empty";
+	public static final String INSTITUTION_ID_NOT_NULL = "Institution id must not be null";
+	public static final String INSTITUTION_ID_NOT_EMPTY = "Institution id must not be empty";
 	public static final String INSTITUTION_TYPE_NOT_NULL = "Institution type must not be null";
 	public static final String INSTITUTION_TYPE_NOT_EMPTY = "Institution type must not be empty";
 	public static final String ADDRESS_TYPE_NOT_NULL = "Address type must not be null";
 	public static final String ADDRESS_TYPE_NOT_EMPTY = "Address type must not be empty";
+	public static final String STAKE_HOLDER_NAME_NOT_NULL = "Stake holder name must not be null";
+	public static final String STAKE_HOLDER_NAME_NOT_EMPTY = "Stake holder name must not be empty";
+	public static final String STAKE_HOLDER_SURNAME_NOT_NULL ="Stake holder surname must not be null";
+	public static final String STAKE_HOLDER_SURNAME_NOT_EMPTY = "Stake holder surname must not be empty";
 
 
 }
