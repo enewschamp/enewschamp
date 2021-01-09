@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.publication.domain.entity.Edition;
 @Repository
@@ -28,9 +29,10 @@ public class EditionRepositoryCustomImpl extends RepositoryImpl implements Editi
 	public Page<Edition> findEditions(Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Edition> criteriaQuery = cb.createQuery(Edition.class);
-		Root<Edition> stateRoot = criteriaQuery.from(Edition.class);
+		Root<Edition> editionRoot = criteriaQuery.from(Edition.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		criteriaQuery.orderBy(cb.desc(editionRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<Edition> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -39,7 +41,7 @@ public class EditionRepositoryCustomImpl extends RepositoryImpl implements Editi
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<Edition> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, stateRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, editionRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

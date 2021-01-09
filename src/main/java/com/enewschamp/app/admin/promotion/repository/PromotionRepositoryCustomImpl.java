@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.domain.repository.RepositoryImpl;
 @Repository
 public class PromotionRepositoryCustomImpl extends RepositoryImpl implements PromotionRepositoryCustom{
@@ -27,9 +28,10 @@ public class PromotionRepositoryCustomImpl extends RepositoryImpl implements Pro
 	public Page<Promotion> findPromotions(Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Promotion> criteriaQuery = cb.createQuery(Promotion.class);
-		Root<Promotion> stateRoot = criteriaQuery.from(Promotion.class);
+		Root<Promotion> promotionRoot = criteriaQuery.from(Promotion.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		criteriaQuery.orderBy(cb.desc(promotionRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<Promotion> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -38,7 +40,7 @@ public class PromotionRepositoryCustomImpl extends RepositoryImpl implements Pro
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<Promotion> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, stateRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, promotionRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.publication.domain.entity.Avatar;
 @Repository
@@ -28,9 +29,10 @@ public class AvatarRepositoryCustomImpl extends RepositoryImpl implements Avatar
 	public Page<Avatar> findAvatars(Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Avatar> criteriaQuery = cb.createQuery(Avatar.class);
-		Root<Avatar> stateRoot = criteriaQuery.from(Avatar.class);
+		Root<Avatar> avatarRoot = criteriaQuery.from(Avatar.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		criteriaQuery.orderBy(cb.desc(avatarRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<Avatar> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -39,7 +41,7 @@ public class AvatarRepositoryCustomImpl extends RepositoryImpl implements Avatar
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<Avatar> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, stateRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, avatarRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

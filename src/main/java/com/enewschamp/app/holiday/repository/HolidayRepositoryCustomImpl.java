@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.holiday.entity.Holiday;
 import com.enewschamp.domain.repository.RepositoryImpl;
 @Repository
@@ -28,9 +29,10 @@ public class HolidayRepositoryCustomImpl extends RepositoryImpl implements Holid
 	public Page<Holiday> findHolidays(Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Holiday> criteriaQuery = cb.createQuery(Holiday.class);
-		Root<Holiday> stateRoot = criteriaQuery.from(Holiday.class);
+		Root<Holiday> holidayRoot = criteriaQuery.from(Holiday.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		criteriaQuery.orderBy(cb.desc(holidayRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<Holiday> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -39,7 +41,7 @@ public class HolidayRepositoryCustomImpl extends RepositoryImpl implements Holid
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<Holiday> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, stateRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, holidayRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

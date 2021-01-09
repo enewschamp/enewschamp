@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
@@ -31,18 +32,19 @@ public class CityRepositoryCustomImpl extends RepositoryImpl implements CityRepo
 	public Page<City> findCities(AdminSearchRequest searchRequest, Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<City> criteriaQuery = cb.createQuery(City.class);
-		Root<City> stateRoot = criteriaQuery.from(City.class);
+		Root<City> cityRoot = criteriaQuery.from(City.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		if (!StringUtils.isEmpty(searchRequest.getCountryId()))
-			filterPredicates.add(cb.equal(stateRoot.get("countryId"), searchRequest.getCountryId()));
+			filterPredicates.add(cb.equal(cityRoot.get("countryId"), searchRequest.getCountryId()));
 		if (!StringUtils.isEmpty(searchRequest.getStateId()))
-			filterPredicates.add(cb.equal(stateRoot.get("stateId"), searchRequest.getStateId()));
+			filterPredicates.add(cb.equal(cityRoot.get("stateId"), searchRequest.getStateId()));
 		if (!StringUtils.isEmpty(searchRequest.getName()))
-			filterPredicates.add(cb.like(stateRoot.get("nameId"), "%" + searchRequest.getName() + "%"));
+			filterPredicates.add(cb.like(cityRoot.get("nameId"), "%" + searchRequest.getName() + "%"));
 		if (!StringUtils.isEmpty(searchRequest.getNewsEventsApplicable()))
 			filterPredicates
-					.add(cb.equal(stateRoot.get("isApplicableForNewsEvents"), searchRequest.getNewsEventsApplicable()));
+					.add(cb.equal(cityRoot.get("isApplicableForNewsEvents"), searchRequest.getNewsEventsApplicable()));
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		criteriaQuery.orderBy(cb.desc(cityRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<City> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -51,7 +53,7 @@ public class CityRepositoryCustomImpl extends RepositoryImpl implements CityRepo
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<City> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, stateRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, cityRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

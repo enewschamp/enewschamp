@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.subscription.pricing.entity.IndividualPricing;
 @Repository
@@ -28,9 +29,10 @@ public class IndividualPricingRepositoryCustomImpl extends RepositoryImpl implem
 	public Page<IndividualPricing> findIndividualPricings(Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<IndividualPricing> criteriaQuery = cb.createQuery(IndividualPricing.class);
-		Root<IndividualPricing> stateRoot = criteriaQuery.from(IndividualPricing.class);
+		Root<IndividualPricing> individualPricingRoot = criteriaQuery.from(IndividualPricing.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		criteriaQuery.orderBy(cb.desc(individualPricingRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<IndividualPricing> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -39,7 +41,7 @@ public class IndividualPricingRepositoryCustomImpl extends RepositoryImpl implem
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<IndividualPricing> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, stateRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, individualPricingRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

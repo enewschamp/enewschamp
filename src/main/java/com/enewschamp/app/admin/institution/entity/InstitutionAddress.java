@@ -45,7 +45,7 @@ public class InstitutionAddress extends BaseEntity {
 	private String countryId;
 
 	@NotNull
-	@Column(name = "countryId")
+	@Column(name = "cityId")
 	private String cityId;
 
 	@Column(name = "address")

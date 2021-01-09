@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.enewschamp.app.admin.schoolchain.entity.SchoolChain;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
@@ -29,9 +30,10 @@ public class SchoolChainRepositoryCustomImpl extends RepositoryImpl implements S
 	public Page<SchoolChain> findSchoolChains(Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<SchoolChain> criteriaQuery = cb.createQuery(SchoolChain.class);
-		Root<SchoolChain> stateRoot = criteriaQuery.from(SchoolChain.class);
+		Root<SchoolChain> schoolChainRoot = criteriaQuery.from(SchoolChain.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		criteriaQuery.orderBy(cb.desc(schoolChainRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<SchoolChain> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -40,7 +42,7 @@ public class SchoolChainRepositoryCustomImpl extends RepositoryImpl implements S
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<SchoolChain> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, stateRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, schoolChainRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

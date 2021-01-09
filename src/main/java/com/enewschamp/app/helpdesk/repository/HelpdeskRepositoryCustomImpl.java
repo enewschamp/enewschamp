@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.helpdesk.entity.Helpdesk;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
@@ -31,25 +32,26 @@ public class HelpdeskRepositoryCustomImpl extends RepositoryImpl implements Help
 	public Page<Helpdesk> findHelpDesks(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Helpdesk> criteriaQuery = cb.createQuery(Helpdesk.class);
-		Root<Helpdesk> HelpdeskRoot = criteriaQuery.from(Helpdesk.class);
+		Root<Helpdesk> helpdeskRoot = criteriaQuery.from(Helpdesk.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(HelpdeskRoot.get("studentId"), searchRequest.getStudentId()));
+			filterPredicates.add(cb.equal(helpdeskRoot.get("studentId"), searchRequest.getStudentId()));
 		
 		if (!StringUtils.isEmpty(searchRequest.getCreateDateFrom()))
-			filterPredicates.add(cb.between(HelpdeskRoot.get("createDateTime"), searchRequest.getCreateDateFrom(),
+			filterPredicates.add(cb.between(helpdeskRoot.get("createDateTime"), searchRequest.getCreateDateFrom(),
 					searchRequest.getCreateDateTo()));
 		
 		if (!StringUtils.isEmpty(searchRequest.getCategoryId()))
-			filterPredicates.add(cb.equal(HelpdeskRoot.get("categoryId"), searchRequest.getCategoryId()));
+			filterPredicates.add(cb.equal(helpdeskRoot.get("categoryId"), searchRequest.getCategoryId()));
 		
 		if (!StringUtils.isEmpty(searchRequest.getCloseFlag()))
-			filterPredicates.add(cb.equal(HelpdeskRoot.get("closeFlag"), searchRequest.getCloseFlag()));
+			filterPredicates.add(cb.equal(helpdeskRoot.get("closeFlag"), searchRequest.getCloseFlag()));
 		
 		if (!StringUtils.isEmpty(searchRequest.getSupportUserId()))
-			filterPredicates.add(cb.equal(HelpdeskRoot.get("operatorId"), searchRequest.getSupportUserId()));
+			filterPredicates.add(cb.equal(helpdeskRoot.get("operatorId"), searchRequest.getSupportUserId()));
 		
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		criteriaQuery.orderBy(cb.desc(helpdeskRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<Helpdesk> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -58,7 +60,7 @@ public class HelpdeskRepositoryCustomImpl extends RepositoryImpl implements Help
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<Helpdesk> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, HelpdeskRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, helpdeskRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

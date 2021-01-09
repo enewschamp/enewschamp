@@ -11,5 +11,6 @@ public interface CommonConstants {
 	public static String PAGE_SIZE = "pageSize";
 	public static String COUNTRY_ID = "countryId";
 	public static String DATA = "data";
+	public static String OPERATION_DATE_TIME = "operationDateTime";
 
 }

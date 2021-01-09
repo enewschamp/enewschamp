@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.publication.domain.entity.Genre;
 @Repository
@@ -28,9 +29,10 @@ public class GenreRepositoryCustomImpl extends RepositoryImpl implements GenreRe
 	public Page<Genre> findGenres(Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Genre> criteriaQuery = cb.createQuery(Genre.class);
-		Root<Genre> stateRoot = criteriaQuery.from(Genre.class);
+		Root<Genre> genreRoot = criteriaQuery.from(Genre.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		criteriaQuery.orderBy(cb.desc(genreRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<Genre> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -39,7 +41,7 @@ public class GenreRepositoryCustomImpl extends RepositoryImpl implements GenreRe
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<Genre> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, stateRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, genreRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

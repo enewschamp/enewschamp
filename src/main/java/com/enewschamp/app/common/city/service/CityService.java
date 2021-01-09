@@ -24,7 +24,10 @@ import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.CityPageData;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class CityService extends AbstractDomainService {
 
 	@Autowired
@@ -45,6 +48,7 @@ public class CityService extends AbstractDomainService {
 		try {
 			city = cityRepository.save(cityEntity);
 		} catch (DataIntegrityViolationException e) {
+			log.error(e.getMessage());
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		return city;
@@ -112,13 +116,9 @@ public class CityService extends AbstractDomainService {
 
 	public City read(City cityEntity) {
 		Long cityId = cityEntity.getCityId();
-		City existingCity = get(cityId);
-		if (existingCity.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingCity;
-		}
-		existingCity.setRecordInUse(RecordInUseType.Y);
-		existingCity.setOperationDateTime(null);
-		return cityRepository.save(existingCity);
+		City city = get(cityId);
+		return city;
+
 	}
 
 	public City close(City cityEntity) {

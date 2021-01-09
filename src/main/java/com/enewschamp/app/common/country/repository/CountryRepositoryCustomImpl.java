@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.domain.repository.RepositoryImpl;
 @Repository
@@ -28,9 +29,10 @@ public class CountryRepositoryCustomImpl extends RepositoryImpl implements Count
 	public Page<Country> findCountries(Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Country> criteriaQuery = cb.createQuery(Country.class);
-		Root<Country> stateRoot = criteriaQuery.from(Country.class);
+		Root<Country> countryRoot = criteriaQuery.from(Country.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		criteriaQuery.orderBy(cb.desc(countryRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<Country> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -39,7 +41,7 @@ public class CountryRepositoryCustomImpl extends RepositoryImpl implements Count
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<Country> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, stateRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, countryRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

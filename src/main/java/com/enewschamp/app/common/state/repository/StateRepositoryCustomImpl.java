@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.domain.repository.RepositoryImpl;
 @Repository
@@ -35,6 +36,7 @@ public class StateRepositoryCustomImpl extends RepositoryImpl implements StateRe
 		if(StringUtils.isEmpty(searchRequest.getCountryId()))
 		filterPredicates.add(cb.equal(stateRoot.get("countryId"), searchRequest.getCountryId()));
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		criteriaQuery.orderBy(cb.desc(stateRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<State> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {

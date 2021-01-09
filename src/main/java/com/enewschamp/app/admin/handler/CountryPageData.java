@@ -29,5 +29,5 @@ public class CountryPageData extends PageData {
 	@JsonInclude
 	private String currencyId;
 	@JsonInclude
-	private String language;
+	private String languageId;
 }

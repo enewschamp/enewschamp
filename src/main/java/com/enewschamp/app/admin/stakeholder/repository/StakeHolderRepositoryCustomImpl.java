@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.stakeholder.entity.StakeHolder;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
@@ -43,6 +44,7 @@ public class StakeHolderRepositoryCustomImpl extends RepositoryImpl
 
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		criteriaQuery.orderBy(cb.desc(stakeHolderRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<StakeHolder> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
