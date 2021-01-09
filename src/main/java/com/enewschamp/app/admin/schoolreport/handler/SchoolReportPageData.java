@@ -1,4 +1,4 @@
-package com.enewschamp.app.admin.schoolsubscription.handler;
+package com.enewschamp.app.admin.schoolreport.handler;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -11,10 +11,14 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SchoolSubscriptionGradePageData extends PageData {
+public class SchoolReportPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	
-	private Long schoolSubscriptionId;
+	private Long schoolReportId;
+
+	@NotNull(message = MessageConstants.STAKE_HOLDER_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.STAKE_HOLDER_ID_NOT_EMPTY)
+	private Long stakeholderId;
 
 	@NotNull(message = MessageConstants.SCHOOL_ID_NOT_NULL)
 	@NotEmpty(message = MessageConstants.SCHOOL_ID_NOT_EMPTY)
@@ -33,5 +37,4 @@ public class SchoolSubscriptionGradePageData extends PageData {
 	private String section;
 	
 	private String comments;
-
 }
