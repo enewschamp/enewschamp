@@ -32,4 +32,6 @@ public class AdminSearchRequest {
 	private String institutionType;
 	private String addressType;
 	private String stakeholderId;
+	private String schoolId;
+	private String editionId;
 }
