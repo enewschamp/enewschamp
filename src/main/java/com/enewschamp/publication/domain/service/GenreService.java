@@ -89,15 +89,10 @@ public class GenreService extends AbstractDomainService {
 		return auditService.getEntityAudit(genre);
 	}
 
-	public Genre read(Genre genreEntity) {
-		Long genreId = genreEntity.getGenreId();
-		Genre existingGenre = get(genreId);
-		if (existingGenre.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingGenre;
-		}
-		existingGenre.setRecordInUse(RecordInUseType.Y);
-		existingGenre.setOperationDateTime(null);
-		return repository.save(existingGenre);
+	public Genre read(Genre genre) {
+		Long genreId = genre.getGenreId();
+		Genre genreEntity = get(genreId);
+		return genreEntity;
 	}
 
 	public Genre close(Genre genreEntity) {

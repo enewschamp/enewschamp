@@ -15,6 +15,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class HelpDeskPageData extends PageData {
 	private static final long serialVersionUID = 1L;
+	private Long helpdeskId;
 	private Long requestId;
 	@NotNull(message = MessageConstants.STUDENT_ID_NOT_NULL)
 	private Long studentId;

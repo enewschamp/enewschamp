@@ -39,7 +39,6 @@ public class AppSecurity {
 	@Column(name = "module", length = 20)
 	private String module;
 
-	@NotNull
 	@Column(name = "isAppAvailable", length = 1)
 	private String isAppAvailable;
 

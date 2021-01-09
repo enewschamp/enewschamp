@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "Genre", uniqueConstraints={@UniqueConstraint(columnNames={"nameId", "imageName"})})
+@Table(name = "Genre", uniqueConstraints={@UniqueConstraint(columnNames={"nameId"})})
 public class Genre extends BaseEntity {
 
 	private static final long serialVersionUID = 4864561970205860047L;
@@ -32,7 +32,7 @@ public class Genre extends BaseEntity {
 	private Long genreId = 0L;
 
 	@NotNull
-	@Column(name = "NameId")
+	@Column(name = "nameId")
 	private String nameId;
 
 	@Column(name = "ImageName", length = 100)

@@ -87,15 +87,10 @@ public class IndividualPricingService {
 		}
 	}
 
-	public IndividualPricing read(IndividualPricing individualPricingEntity) {
-		Long inPricingId = individualPricingEntity.getIndividualPricingId();
-		IndividualPricing existingndividualPricing = get(inPricingId);
-		if (existingndividualPricing.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingndividualPricing;
-		}
-		existingndividualPricing.setRecordInUse(RecordInUseType.Y);
-		existingndividualPricing.setOperationDateTime(null);
-		return individualPricingRepository.save(existingndividualPricing);
+	public IndividualPricing read(IndividualPricing individualPricing) {
+		Long inPricingId = individualPricing.getIndividualPricingId();
+		IndividualPricing individualPricingEntity = get(inPricingId);
+        return individualPricingEntity;
 	}
 
 	public IndividualPricing close(IndividualPricing individualPricingEntity) {

@@ -105,13 +105,8 @@ public class AvatarService extends AbstractDomainService {
 
 	public Avatar read(Avatar avatar) {
 		Long avatarId = avatar.getAvatarId();
-		Avatar existingAvatar = get(avatarId);
-		if (existingAvatar.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingAvatar;
-		}
-		existingAvatar.setRecordInUse(RecordInUseType.Y);
-		existingAvatar.setOperationDateTime(null);
-		return repository.save(existingAvatar);
+		Avatar avatarEntity = get(avatarId);
+		return avatarEntity;
 	}
 
 	public Avatar close(Avatar avatarEntity) {

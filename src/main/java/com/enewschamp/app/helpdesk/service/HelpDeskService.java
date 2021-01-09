@@ -53,7 +53,6 @@ public class HelpDeskService {
 		LocalDateTime createDateTime = existingHelpDesk.getCreateDateTime();
 		modelMapper.map(helpDeskEntity, existingHelpDesk);
 		existingHelpDesk.setCreateDateTime(createDateTime);
-		;
 		return helpdeskRespository.save(existingHelpDesk);
 	}
 
@@ -77,15 +76,10 @@ public class HelpDeskService {
 		}
 	}
 
-	public Helpdesk read(Helpdesk helpDeskEntity) {
-		Long helpDeskId = helpDeskEntity.getHelpdeskId();
-		Helpdesk existingHelpDesk = get(helpDeskId);
-		if (existingHelpDesk.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingHelpDesk;
-		}
-		existingHelpDesk.setRecordInUse(RecordInUseType.Y);
-		existingHelpDesk.setOperationDateTime(null);
-		return helpdeskRespository.save(existingHelpDesk);
+	public Helpdesk read(Helpdesk helpDesk) {
+		Long helpDeskId = helpDesk.getHelpdeskId();
+		Helpdesk helpDeskEntity = get(helpDeskId);
+        return helpDeskEntity;
 	}
 
 	public Helpdesk close(Helpdesk helpDeskEntity) {

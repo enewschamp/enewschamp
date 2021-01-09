@@ -137,15 +137,11 @@ public class BadgeService {
 		return auditService.getEntityAudit(badge);
 	}
 
-	public Badge read(Badge badgeEntity) {
-		Long badgeId = badgeEntity.getBadgeId();
-		Badge existingBadge = get(badgeId);
-		if (existingBadge.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingBadge;
-		}
-		existingBadge.setRecordInUse(RecordInUseType.Y);
-		existingBadge.setOperationDateTime(null);
-		return badgeRepository.save(existingBadge);
+	public Badge read(Badge badge) {
+		Long badgeId = badge.getBadgeId();
+		Badge badgeEntity = get(badgeId);
+		return badgeEntity;
+
 	}
 
 	public Badge close(Badge badgeEntity) {

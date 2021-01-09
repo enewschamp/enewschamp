@@ -86,15 +86,10 @@ public class HolidayService {
 			return false;
 	}
 
-	public Holiday read(Holiday holidayEntity) {
-		Long holidayId = holidayEntity.getHolidayId();
-		Holiday existingHoliday = get(holidayId);
-		if (existingHoliday.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingHoliday;
-		}
-		existingHoliday.setRecordInUse(RecordInUseType.Y);
-		existingHoliday.setOperationDateTime(null);
-		return holidayRepository.save(existingHoliday);
+	public Holiday read(Holiday holiday) {
+		Long holidayId = holiday.getHolidayId();
+		Holiday holidayEntity = get(holidayId);
+        return holidayEntity;
 	}
 
 	public Holiday close(Holiday holidayEntity) {

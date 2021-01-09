@@ -60,15 +60,11 @@ public class PromotionService {
 		}
 	}
 
-	public Promotion read(Promotion promotionEntity) {
-		Long promotionId = promotionEntity.getPromotionId();
-		Promotion existingPromotion = get(promotionId);
-		if (existingPromotion.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingPromotion;
-		}
-		existingPromotion.setRecordInUse(RecordInUseType.Y);
-		existingPromotion.setOperationDateTime(null);
-		return repository.save(existingPromotion);
+	public Promotion read(Promotion promotion) {
+		Long promotionId = promotion.getPromotionId();
+		Promotion promotionEntity = get(promotionId);
+		return promotionEntity;
+
 	}
 
 	public Promotion close(Promotion promotionEntity) {

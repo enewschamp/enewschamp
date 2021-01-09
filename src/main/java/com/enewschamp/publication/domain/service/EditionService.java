@@ -96,15 +96,10 @@ public class EditionService extends AbstractDomainService {
 		return toListOfValuesItems(repository.getEditionLOV());
 	}
 
-	public Edition read(Edition editionEntity) {
-		String editionId = editionEntity.getEditionId();
-		Edition existingEdition = get(editionId);
-		if(existingEdition.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingEdition;
-		}
-		existingEdition.setRecordInUse(RecordInUseType.Y);
-		existingEdition.setOperationDateTime(null);
-		return repository.save(existingEdition);
+	public Edition read(Edition edition) {
+		String editionId = edition.getEditionId();
+		Edition editionEntity = get(editionId);
+		return editionEntity;
 	}
 
 	public Edition close(Edition editionEntity) {
