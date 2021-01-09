@@ -1,5 +1,6 @@
 package com.enewschamp.app.admin;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -34,4 +35,6 @@ public class AdminSearchRequest {
 	private String stakeholderId;
 	private String schoolId;
 	private String editionId;
+	private LocalDate effectiveDateFrom;
+	private LocalDate effectiveDateTo;
 }

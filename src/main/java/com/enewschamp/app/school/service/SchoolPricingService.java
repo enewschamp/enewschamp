@@ -9,13 +9,20 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.schoolpricing.repository.SchoolPricingRepositoryCustom;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.school.entity.School;
 import com.enewschamp.app.school.entity.SchoolPricing;
 import com.enewschamp.app.school.repository.SchoolPricingRepository;
 import com.enewschamp.app.school.repository.SchoolRepository;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 
 @Service
@@ -23,6 +30,9 @@ public class SchoolPricingService {
 
 	@Autowired
 	SchoolPricingRepository schoolPricingRepository;
+	
+	@Autowired
+	SchoolPricingRepositoryCustom schoolPricingRepositoryCustom;
 
 	@Autowired
 	SchoolRepository schoolRepository;
@@ -34,8 +44,14 @@ public class SchoolPricingService {
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
 
-	public SchoolPricing create(SchoolPricing SchoolPricingEntity) {
-		return schoolPricingRepository.save(SchoolPricingEntity);
+	public SchoolPricing create(SchoolPricing schoolPricingEntity) {
+		SchoolPricing schoolPricing = null;
+		try {
+			schoolPricing = schoolPricingRepository.save(schoolPricingEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return schoolPricing;
 	}
 
 	public SchoolPricing update(SchoolPricing SchoolPricingEntity) {
@@ -88,5 +104,40 @@ public class SchoolPricingService {
 				throw new BusinessException(ErrorCodeConstants.SCHOOL_PRICING_NOT_FOUND);
 			}
 		}
+	}
+	
+	public SchoolPricing read(SchoolPricing schoolPricingEntity) {
+		Long stakeHolderId = schoolPricingEntity.getSchoolPricingId();
+		SchoolPricing stakeHolder = get(stakeHolderId);
+		return stakeHolder;
+	}
+
+	public SchoolPricing close(SchoolPricing schoolPricingEntity) {
+		Long stakeHolderId = schoolPricingEntity.getSchoolPricingId();
+		SchoolPricing existingSchoolPricing = get(stakeHolderId);
+		if (existingSchoolPricing.getRecordInUse().equals(RecordInUseType.N)) {
+			return existingSchoolPricing;
+		}
+		existingSchoolPricing.setRecordInUse(RecordInUseType.N);
+		existingSchoolPricing.setOperationDateTime(null);
+		return schoolPricingRepository.save(existingSchoolPricing);
+	}
+
+	public SchoolPricing reInstate(SchoolPricing schoolPricingEntity) {
+		Long stakeHolderId = schoolPricingEntity.getSchoolPricingId();
+		SchoolPricing existingSchoolPricing = get(stakeHolderId);
+		if (existingSchoolPricing.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingSchoolPricing;
+		}
+		existingSchoolPricing.setRecordInUse(RecordInUseType.Y);
+		existingSchoolPricing.setOperationDateTime(null);
+		return schoolPricingRepository.save(existingSchoolPricing);
+	}
+
+	public Page<SchoolPricing> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<SchoolPricing> stakeHolderList = schoolPricingRepositoryCustom.findSchoolPricings(pageable,
+				searchRequest);
+		return stakeHolderList;
 	}
 }
