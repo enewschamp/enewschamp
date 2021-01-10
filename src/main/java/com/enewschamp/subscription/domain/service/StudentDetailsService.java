@@ -5,11 +5,15 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.student.details.repository.StudentDetailsRepositoryCustom;
 import com.enewschamp.audit.domain.AuditService;
-import com.enewschamp.problem.BusinessException;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
 import com.enewschamp.subscription.domain.repository.StudentDetailsRepository;
 
@@ -18,6 +22,9 @@ public class StudentDetailsService {
 
 	@Autowired
 	StudentDetailsRepository repository;
+
+	@Autowired
+	StudentDetailsRepositoryCustom repositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -64,4 +71,37 @@ public class StudentDetailsService {
 		return auditService.getEntityAudit(studentDetails);
 	}
 
+	public StudentDetails read(StudentDetails studentDetailsEntity) {
+		Long studentDetailsId = studentDetailsEntity.getStudentId();
+		StudentDetails stakeHolder = get(studentDetailsId);
+		return stakeHolder;
+	}
+
+	public StudentDetails close(StudentDetails studentDetailsEntity) {
+		Long studentDetailsId = studentDetailsEntity.getStudentId();
+		StudentDetails existingStudentDetails = get(studentDetailsId);
+		if (existingStudentDetails.getRecordInUse().equals(RecordInUseType.N)) {
+			return existingStudentDetails;
+		}
+		existingStudentDetails.setRecordInUse(RecordInUseType.N);
+		existingStudentDetails.setOperationDateTime(null);
+		return repository.save(existingStudentDetails);
+	}
+
+	public StudentDetails reinstate(StudentDetails studentDetailsEntity) {
+		Long studentDetailsId = studentDetailsEntity.getStudentId();
+		StudentDetails existingStudentDetails = get(studentDetailsId);
+		if (existingStudentDetails.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingStudentDetails;
+		}
+		existingStudentDetails.setRecordInUse(RecordInUseType.Y);
+		existingStudentDetails.setOperationDateTime(null);
+		return repository.save(existingStudentDetails);
+	}
+
+	public Page<StudentDetails> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<StudentDetails> stakeHolderList = repositoryCustom.findStudentDetails(pageable, searchRequest);
+		return stakeHolderList;
+	}
 }

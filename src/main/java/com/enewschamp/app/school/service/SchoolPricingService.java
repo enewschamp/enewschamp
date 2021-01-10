@@ -29,20 +29,20 @@ import com.enewschamp.problem.BusinessException;
 public class SchoolPricingService {
 
 	@Autowired
-	SchoolPricingRepository schoolPricingRepository;
+	private SchoolPricingRepository schoolPricingRepository;
 	
 	@Autowired
-	SchoolPricingRepositoryCustom schoolPricingRepositoryCustom;
+	private SchoolPricingRepositoryCustom schoolPricingRepositoryCustom;
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private SchoolRepository schoolRepository;
 
 	@Autowired
-	ModelMapper modelMapper;
+	private ModelMapper modelMapper;
 
 	@Autowired
 	@Qualifier("modelPatcher")
-	ModelMapper modelMapperForPatch;
+	private ModelMapper modelMapperForPatch;
 
 	public SchoolPricing create(SchoolPricing schoolPricingEntity) {
 		SchoolPricing schoolPricing = null;

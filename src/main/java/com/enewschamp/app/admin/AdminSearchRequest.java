@@ -35,6 +35,13 @@ public class AdminSearchRequest {
 	private String stakeholderId;
 	private String schoolId;
 	private String editionId;
+	private String subscriptionType;
+	private String autoRenewal;
 	private LocalDate effectiveDateFrom;
 	private LocalDate effectiveDateTo;
+	private LocalDate startDateFrom;
+	private LocalDate startDateTo;
+	private LocalDate endDateFrom;
+	private LocalDate endDateTo;
+
 }

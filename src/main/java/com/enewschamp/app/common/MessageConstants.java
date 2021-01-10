@@ -78,6 +78,23 @@ public class MessageConstants {
 	public static final String GRADE_NOT_EMPTY = "Grade must not be empty";
 	public static final String SECTION_NOT_NULL = "Section must not be null";
 	public static final String SECTION_NOT_EMPTY = "Section must not be null";
+	public static final String EMAIL_ID_NOT_NULL = "Email id must not be null";
+	public static final String EMAIL_ID_NOT_EMPTY = "Email id must not be empty";
+	public static final String IS_DELETED_NOT_NULL = "Is deleted must not be null";
+	public static final String IS_DELETED_NOT_EMPTY = "Is deleted must not be empty";
+	public static final String IS_ACTIVE_NOT_NULL = "Is active must not be null";
+	public static final String IS_ACTIVE_NOT_EMPTY = "Is active must not be empty";
+	public static final String SUBSCRIPTION_SELECTED_NOT_NULL =  "Subscription selected must not be null";
+	public static final String SUBSCRIPTION_SELECTED_NOT_EMPTY =  "Subscription selected must not be empty";
+	public static final String START_DATE_NOT_NULL = "start date must not be null";
+	public static final String END_DATE_NOT_NULL = "end date must not be null";
+	public static final String AUTO_RENEWAL_NOT_NULL = "auto renewal must not be null";
+	public static final String AUTO_RENEWAL_NOT_EMPTY = "auto renewal must not be emtpy";
+	public static final String STUDENT_NAME_NOT_NULL = "student name must not be null";
+	public static final String STUDENT_NAME_NOT_EMPTY = "student name must not be empty";
+	public static final String SURNAME_NOT_NULL = "surname must not be null";
+	public static final String SURNAME_NOT_EMPTY = "surname must not be empty";
+	public static final String DOB_NOT_NULL = "date of birth must not be null";
 
 
 }
