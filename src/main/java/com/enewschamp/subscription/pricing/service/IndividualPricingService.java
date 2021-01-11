@@ -51,6 +51,9 @@ public class IndividualPricingService {
 	public IndividualPricing update(IndividualPricing IndividualPricingEntity) {
 		Long IndividualPricingId = IndividualPricingEntity.getIndividualPricingId();
 		IndividualPricing existingIndividualPricing = get(IndividualPricingId);
+		if(existingIndividualPricing.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(IndividualPricingEntity, existingIndividualPricing);
 		return individualPricingRepository.save(existingIndividualPricing);
 	}
@@ -97,7 +100,7 @@ public class IndividualPricingService {
 		Long inPricingId = individualPricingEntity.getIndividualPricingId();
 		IndividualPricing existingEntity = get(inPricingId);
 		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingEntity;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
 		existingEntity.setOperationDateTime(null);
@@ -108,7 +111,7 @@ public class IndividualPricingService {
 		Long pricingId = individualPricing.getIndividualPricingId();
 		IndividualPricing existingPricing = get(pricingId);
 		if (existingPricing.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingPricing;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingPricing.setRecordInUse(RecordInUseType.Y);
 		existingPricing.setOperationDateTime(null);

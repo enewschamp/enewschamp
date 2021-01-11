@@ -50,6 +50,9 @@ public class HelpDeskService {
 	public Helpdesk update(Helpdesk helpDeskEntity) {
 		Long HelpDeskId = helpDeskEntity.getHelpdeskId();
 		Helpdesk existingHelpDesk = get(HelpDeskId);
+		if(existingHelpDesk.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		LocalDateTime createDateTime = existingHelpDesk.getCreateDateTime();
 		modelMapper.map(helpDeskEntity, existingHelpDesk);
 		existingHelpDesk.setCreateDateTime(createDateTime);
@@ -86,7 +89,7 @@ public class HelpDeskService {
 		Long helpDeskId = helpDeskEntity.getHelpdeskId();
 		Helpdesk existingEntity = get(helpDeskId);
 		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingEntity;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
 		existingEntity.setOperationDateTime(null);
@@ -97,7 +100,7 @@ public class HelpDeskService {
 		Long helpdeskId = helpdeskEntity.getHelpdeskId();
 		Helpdesk existingHelpdesk = get(helpdeskId);
 		if (existingHelpdesk.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingHelpdesk;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingHelpdesk.setRecordInUse(RecordInUseType.Y);
 		existingHelpdesk.setOperationDateTime(null);

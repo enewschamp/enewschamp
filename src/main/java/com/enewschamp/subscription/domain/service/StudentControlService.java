@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentControl;
 import com.enewschamp.subscription.domain.repository.StudentControlRepository;
@@ -34,8 +35,10 @@ public class StudentControlService {
 
 	public StudentControl update(StudentControl StudentControl) {
 		Long studentId = StudentControl.getStudentId();
-
 		StudentControl existingEntity = get(studentId);
+		if(existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(StudentControl, existingEntity);
 		return repository.save(existingEntity);
 	}

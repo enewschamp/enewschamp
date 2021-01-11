@@ -41,6 +41,9 @@ public class StakeHolderService {
 	public StakeHolder update(StakeHolder stakeHolderEntity) {
 		Long stakeHolderId = stakeHolderEntity.getStakeHolderId();
 		StakeHolder existingStakeHolder = get(stakeHolderId);
+		if(existingStakeHolder.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(stakeHolderEntity, existingStakeHolder);
 		return repository.save(existingStakeHolder);
 	}
@@ -50,7 +53,7 @@ public class StakeHolderService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.SCHOOL_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.STAKE_HOLDER_NOT_FOUND);
 		}
 	}
 
@@ -64,7 +67,7 @@ public class StakeHolderService {
 		Long stakeHolderId = stakeHolderEntity.getStakeHolderId();
 		StakeHolder existingStakeHolder = get(stakeHolderId);
 		if (existingStakeHolder.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingStakeHolder;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingStakeHolder.setRecordInUse(RecordInUseType.N);
 		existingStakeHolder.setOperationDateTime(null);
@@ -75,7 +78,7 @@ public class StakeHolderService {
 		Long stakeHolderId = stakeHolderEntity.getStakeHolderId();
 		StakeHolder existingStakeHolder = get(stakeHolderId);
 		if (existingStakeHolder.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingStakeHolder;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingStakeHolder.setRecordInUse(RecordInUseType.Y);
 		existingStakeHolder.setOperationDateTime(null);

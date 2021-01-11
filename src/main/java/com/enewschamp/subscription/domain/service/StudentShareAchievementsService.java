@@ -6,10 +6,17 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.student.achievement.repository.StudentShareAchievementsRepositoryCustom;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentShareAchievements;
 import com.enewschamp.subscription.domain.repository.StudentShareAchievementsRepository;
@@ -29,8 +36,18 @@ public class StudentShareAchievementsService {
 	@Autowired
 	StudentShareAchievementsRepository repository;
 
-	public StudentShareAchievements create(StudentShareAchievements StudentShareAchievements) {
-		return repository.save(StudentShareAchievements);
+	@Autowired
+	StudentShareAchievementsRepositoryCustom repositoryCustom;
+
+	public StudentShareAchievements create(StudentShareAchievements studentShareAchievements) {
+		StudentShareAchievements studentShareAchievementsEntity = null;
+		try {
+			studentShareAchievementsEntity = repository.save(studentShareAchievements);
+		}
+		catch(DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return studentShareAchievementsEntity;
 	}
 
 	public StudentShareAchievements update(StudentShareAchievements StudentShareAchievements) {
@@ -64,5 +81,40 @@ public class StudentShareAchievementsService {
 		StudentShareAchievements StudentShareAchievements = new StudentShareAchievements();
 		StudentShareAchievements.setStudentId(studentId);
 		return auditService.getEntityAudit(StudentShareAchievements);
+	}
+
+	public StudentShareAchievements read(StudentShareAchievements achievementEntity) {
+		Long achievementId = achievementEntity.getStudentId();
+		StudentShareAchievements stakeHolder = get(achievementId);
+		return stakeHolder;
+	}
+
+	public StudentShareAchievements close(StudentShareAchievements achievementEntity) {
+		Long achievementId = achievementEntity.getStudentId();
+		StudentShareAchievements existingStudentShareAchievements = get(achievementId);
+		if (existingStudentShareAchievements.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingStudentShareAchievements.setRecordInUse(RecordInUseType.N);
+		existingStudentShareAchievements.setOperationDateTime(null);
+		return repository.save(existingStudentShareAchievements);
+	}
+
+	public StudentShareAchievements reInstate(StudentShareAchievements achievementEntity) {
+		Long achievementId = achievementEntity.getStudentId();
+		StudentShareAchievements existingStudentShareAchievements = get(achievementId);
+		if (existingStudentShareAchievements.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingStudentShareAchievements.setRecordInUse(RecordInUseType.Y);
+		existingStudentShareAchievements.setOperationDateTime(null);
+		return repository.save(existingStudentShareAchievements);
+	}
+
+	public Page<StudentShareAchievements> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<StudentShareAchievements> achievementList = repositoryCustom.findStudentShareAchievements(pageable,
+				searchRequest);
+		return achievementList;
 	}
 }

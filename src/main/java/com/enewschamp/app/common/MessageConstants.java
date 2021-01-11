@@ -95,6 +95,14 @@ public class MessageConstants {
 	public static final String SURNAME_NOT_NULL = "surname must not be null";
 	public static final String SURNAME_NOT_EMPTY = "surname must not be empty";
 	public static final String DOB_NOT_NULL = "date of birth must not be null";
+	public static final String PERSONALISED_MSG_NOT_NULL = "personlised message must not be null";;
+	public static final String PERSONALISED_MSG_NOT_EMPTY = "personlised message  must not be empty";
+	public static final String RECIPIENT_CONTACT1_NOT_NULL = "recipient contact1 must not be null";
+	public static final String RECIPIENT_CONTACT1_NOT_EMPTY = "recipient contact1 must not be empty";
+	public static final String RECIPIENT_GREETING1_NOT_NULL = "recipient greeting1 must not be null";
+	public static final String RECIPIENT_GREETING1_NOT_EMPTY = "recipient greeting1 must not be empty";
+	public static final String RECIPIENT_NAME1_NOT_NULL = "recipient name1 must not be null";
+	public static final String RECIPIENT_NAME1_NOT_EMPTY = "recipient name1 must not be empty";
 
 
 }

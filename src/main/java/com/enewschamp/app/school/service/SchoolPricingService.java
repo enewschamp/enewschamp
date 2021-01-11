@@ -57,6 +57,9 @@ public class SchoolPricingService {
 	public SchoolPricing update(SchoolPricing SchoolPricingEntity) {
 		Long SchoolPricingId = SchoolPricingEntity.getSchoolPricingId();
 		SchoolPricing existingSchoolPricing = get(SchoolPricingId);
+		if(existingSchoolPricing.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(SchoolPricingEntity, existingSchoolPricing);
 		return schoolPricingRepository.save(existingSchoolPricing);
 	}
@@ -116,7 +119,7 @@ public class SchoolPricingService {
 		Long stakeHolderId = schoolPricingEntity.getSchoolPricingId();
 		SchoolPricing existingSchoolPricing = get(stakeHolderId);
 		if (existingSchoolPricing.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingSchoolPricing;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingSchoolPricing.setRecordInUse(RecordInUseType.N);
 		existingSchoolPricing.setOperationDateTime(null);
@@ -127,7 +130,7 @@ public class SchoolPricingService {
 		Long stakeHolderId = schoolPricingEntity.getSchoolPricingId();
 		SchoolPricing existingSchoolPricing = get(stakeHolderId);
 		if (existingSchoolPricing.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingSchoolPricing;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingSchoolPricing.setRecordInUse(RecordInUseType.Y);
 		existingSchoolPricing.setOperationDateTime(null);

@@ -48,6 +48,9 @@ public class SchoolReportService {
 	public SchoolReport update(SchoolReport schoolReportEntity) {
 		Long schoolReportId = schoolReportEntity.getSchoolReportId();
 		SchoolReport existingSchoolReport = get(schoolReportId);
+		if(existingSchoolReport.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(schoolReportEntity, existingSchoolReport);
 		return repository.save(existingSchoolReport);
 	}
@@ -57,7 +60,7 @@ public class SchoolReportService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.SCHOOL_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.SCHOOL_REPORTS_NOT_FOUND);
 		}
 	}
 
@@ -71,7 +74,7 @@ public class SchoolReportService {
 		Long schoolReportId = schoolReportEntity.getSchoolReportId();
 		SchoolReport existingSchoolReport = get(schoolReportId);
 		if (existingSchoolReport.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingSchoolReport;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingSchoolReport.setRecordInUse(RecordInUseType.N);
 		existingSchoolReport.setOperationDateTime(null);
@@ -82,7 +85,7 @@ public class SchoolReportService {
 		Long schoolReportId = schoolReportEntity.getSchoolReportId();
 		SchoolReport existingSchoolReport = get(schoolReportId);
 		if (existingSchoolReport.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingSchoolReport;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingSchoolReport.setRecordInUse(RecordInUseType.Y);
 		existingSchoolReport.setOperationDateTime(null);

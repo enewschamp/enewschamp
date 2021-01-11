@@ -41,6 +41,9 @@ public class InstitutionStakeholderService {
 	public InstitutionStakeholder update(InstitutionStakeholder instStakeHolderEntity) {
 		Long stakeHolderId = instStakeHolderEntity.getInstStakeHolderId();
 		InstitutionStakeholder existingInstitutionStakeholder = get(stakeHolderId);
+		if(existingInstitutionStakeholder.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(instStakeHolderEntity, existingInstitutionStakeholder);
 		return repository.save(existingInstitutionStakeholder);
 	}
@@ -50,7 +53,7 @@ public class InstitutionStakeholderService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.SCHOOL_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.INSTITUTIONAL_STAKE_HOLDER_NOT_FOUND);
 		}
 	}
 
@@ -64,7 +67,7 @@ public class InstitutionStakeholderService {
 		Long stakeHolderId = instStakeHolderEntity.getInstStakeHolderId();
 		InstitutionStakeholder existingInstitutionStakeholder = get(stakeHolderId);
 		if (existingInstitutionStakeholder.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingInstitutionStakeholder;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingInstitutionStakeholder.setRecordInUse(RecordInUseType.N);
 		existingInstitutionStakeholder.setOperationDateTime(null);
@@ -75,7 +78,7 @@ public class InstitutionStakeholderService {
 		Long stakeHolderId = instStakeHolderEntity.getInstStakeHolderId();
 		InstitutionStakeholder existingInstitutionStakeholder = get(stakeHolderId);
 		if (existingInstitutionStakeholder.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingInstitutionStakeholder;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingInstitutionStakeholder.setRecordInUse(RecordInUseType.Y);
 		existingInstitutionStakeholder.setOperationDateTime(null);

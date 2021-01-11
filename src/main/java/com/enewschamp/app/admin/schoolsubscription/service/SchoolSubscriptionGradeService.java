@@ -49,6 +49,9 @@ public class SchoolSubscriptionGradeService {
 	public SchoolSubscriptionGrade update(SchoolSubscriptionGrade instStakeHolderEntity) {
 		Long stakeHolderId = instStakeHolderEntity.getSchoolSubscriptionId();
 		SchoolSubscriptionGrade existingSchoolSubscriptionGrade = get(stakeHolderId);
+		if(existingSchoolSubscriptionGrade.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(instStakeHolderEntity, existingSchoolSubscriptionGrade);
 		return repository.save(existingSchoolSubscriptionGrade);
 	}
@@ -58,7 +61,7 @@ public class SchoolSubscriptionGradeService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.SCHOOL_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.SCHOOL_SUBS_GRADE_NOT_FOUND);
 		}
 	}
 
@@ -72,7 +75,7 @@ public class SchoolSubscriptionGradeService {
 		Long stakeHolderId = instStakeHolderEntity.getSchoolSubscriptionId();
 		SchoolSubscriptionGrade existingSchoolSubscriptionGrade = get(stakeHolderId);
 		if (existingSchoolSubscriptionGrade.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingSchoolSubscriptionGrade;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingSchoolSubscriptionGrade.setRecordInUse(RecordInUseType.N);
 		existingSchoolSubscriptionGrade.setOperationDateTime(null);
@@ -83,7 +86,7 @@ public class SchoolSubscriptionGradeService {
 		Long stakeHolderId = instStakeHolderEntity.getSchoolSubscriptionId();
 		SchoolSubscriptionGrade existingSchoolSubscriptionGrade = get(stakeHolderId);
 		if (existingSchoolSubscriptionGrade.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingSchoolSubscriptionGrade;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingSchoolSubscriptionGrade.setRecordInUse(RecordInUseType.Y);
 		existingSchoolSubscriptionGrade.setOperationDateTime(null);

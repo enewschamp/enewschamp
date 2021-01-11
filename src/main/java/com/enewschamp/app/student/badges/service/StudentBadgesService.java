@@ -7,12 +7,14 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.app.recognition.page.data.RecognitionData;
 import com.enewschamp.app.student.badges.entity.StudentBadges;
 import com.enewschamp.app.student.badges.repository.StudentBadgesCustomRepository;
@@ -36,7 +38,14 @@ public class StudentBadgesService {
 	ModelMapper modelMapperForPatch;
 
 	public StudentBadges create(StudentBadges studentBadgesEntity) {
-		return studentBadgesRepository.save(studentBadgesEntity);
+		StudentBadges studentBadges= null;
+		try {
+			studentBadges = studentBadgesRepository.save(studentBadgesEntity);
+		}
+		catch(DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return studentBadges;
 	}
 
 	public StudentBadges update(StudentBadges studentBadgesEntity) {

@@ -47,6 +47,9 @@ public class StudentRegistrationService {
 	public StudentRegistrationDTO update(StudentRegistration studentRegistration) {
 		Long studentId = studentRegistration.getStudentId();
 		StudentRegistration existingStudentRegistration = get(studentId);
+		if(existingStudentRegistration.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(studentRegistration, existingStudentRegistration);
 		StudentRegistration student = repository.save(existingStudentRegistration);
 		StudentRegistrationDTO studentDto = modelMapper.map(student, StudentRegistrationDTO.class);
@@ -90,7 +93,7 @@ public class StudentRegistrationService {
 		Long stakeHolderId = studentRegistrationEntity.getStudentId();
 		StudentRegistration existingStudentRegistration = get(stakeHolderId);
 		if (existingStudentRegistration.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingStudentRegistration;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingStudentRegistration.setRecordInUse(RecordInUseType.N);
 		existingStudentRegistration.setOperationDateTime(null);
@@ -101,7 +104,7 @@ public class StudentRegistrationService {
 		Long stakeHolderId = studentRegistrationEntity.getStudentId();
 		StudentRegistration existingStudentRegistration = get(stakeHolderId);
 		if (existingStudentRegistration.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingStudentRegistration;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingStudentRegistration.setRecordInUse(RecordInUseType.Y);
 		existingStudentRegistration.setOperationDateTime(null);

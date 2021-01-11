@@ -53,6 +53,9 @@ public class StateService extends AbstractDomainService {
 	public State update(State stateEntity) {
 		Long StateId = stateEntity.getStateId();
 		State existingState = get(StateId);
+		if(existingState.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(stateEntity, existingState);
 		return stateRepository.save(existingState);
 	}
@@ -114,7 +117,7 @@ public class StateService extends AbstractDomainService {
 		Long StateId = stateEntity.getStateId();
 		State existingState = get(StateId);
 		if(existingState.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingState;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingState.setRecordInUse(RecordInUseType.N);
 		existingState.setOperationDateTime(null);
@@ -125,7 +128,7 @@ public class StateService extends AbstractDomainService {
 		Long StateId = stateEntity.getStateId();
 		State existingState = get(StateId);
 		if(existingState.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingState;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingState.setRecordInUse(RecordInUseType.Y);
 		existingState.setOperationDateTime(null);

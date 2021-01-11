@@ -53,6 +53,9 @@ public class BadgeService {
 	public Badge update(Badge badgeEntity) {
 		Long badgeId = badgeEntity.getBadgeId();
 		Badge existingBadge = get(badgeId);
+		if(existingBadge.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(badgeEntity, existingBadge);
 		return badgeRepository.save(existingBadge);
 	}
@@ -148,7 +151,7 @@ public class BadgeService {
 		Long badgeId = badgeEntity.getBadgeId();
 		Badge existingBadge = get(badgeId);
 		if (existingBadge.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingBadge;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingBadge.setRecordInUse(RecordInUseType.N);
 		existingBadge.setOperationDateTime(null);
@@ -159,7 +162,7 @@ public class BadgeService {
 		Long badgeId = badgeEntity.getBadgeId();
 		Badge existingCountry = get(badgeId);
 		if (existingCountry.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingCountry;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingCountry.setRecordInUse(RecordInUseType.Y);
 		existingCountry.setOperationDateTime(null);

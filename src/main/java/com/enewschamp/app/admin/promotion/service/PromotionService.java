@@ -46,9 +46,12 @@ public class PromotionService {
 
 	public Promotion update(Promotion promotionEntity) {
 		Long promotionId = promotionEntity.getPromotionId();
-		Promotion existingHoliday = get(promotionId);
-		modelMapper.map(promotionEntity, existingHoliday);
-		return repository.save(existingHoliday);
+		Promotion existingPromotion = get(promotionId);
+		if(existingPromotion.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		modelMapper.map(promotionEntity, existingPromotion);
+		return repository.save(existingPromotion);
 	}
 
 	public Promotion get(Long promotionId) {
@@ -56,7 +59,7 @@ public class PromotionService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.HOLIDAY_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.PROMOTION_NOT_FOUND);
 		}
 	}
 
@@ -71,7 +74,7 @@ public class PromotionService {
 		Long promotionId = promotionEntity.getPromotionId();
 		Promotion existingEntity = get(promotionId);
 		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingEntity;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
 		existingEntity.setOperationDateTime(null);
@@ -82,7 +85,7 @@ public class PromotionService {
 		Long promotionId = promtion.getPromotionId();
 		Promotion existingPromotion = get(promotionId);
 		if (existingPromotion.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingPromotion;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingPromotion.setRecordInUse(RecordInUseType.Y);
 		existingPromotion.setOperationDateTime(null);

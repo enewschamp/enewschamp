@@ -50,6 +50,9 @@ public class HolidayService {
 	public Holiday update(Holiday holidayEntity) {
 		Long holidayId = holidayEntity.getHolidayId();
 		Holiday existingHoliday = get(holidayId);
+		if(existingHoliday.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(holidayEntity, existingHoliday);
 		return holidayRepository.save(existingHoliday);
 	}
@@ -96,7 +99,7 @@ public class HolidayService {
 		Long holidayId = holidayEntity.getHolidayId();
 		Holiday existingEntity = get(holidayId);
 		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingEntity;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
 		existingEntity.setOperationDateTime(null);
@@ -107,7 +110,7 @@ public class HolidayService {
 		Long holidayId = holdayEntity.getHolidayId();
 		Holiday existingHoliday = get(holidayId);
 		if (existingHoliday.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingHoliday;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingHoliday.setRecordInUse(RecordInUseType.Y);
 		existingHoliday.setOperationDateTime(null);

@@ -18,7 +18,6 @@ import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.publication.domain.common.BadgeList;
 import com.enewschamp.publication.domain.common.GenreList;
 import com.enewschamp.publication.domain.entity.Genre;
 import com.enewschamp.publication.domain.repository.GenreRepositoryCustom;
@@ -55,6 +54,9 @@ public class GenreService extends AbstractDomainService {
 	public Genre update(Genre genre) {
 		Long genreId = genre.getGenreId();
 		Genre existingGenre = get(genreId);
+		if(existingGenre.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(genre, existingGenre);
 		return repository.save(existingGenre);
 	}
@@ -99,7 +101,7 @@ public class GenreService extends AbstractDomainService {
 		Long genreId = genreEntity.getGenreId();
 		Genre existingEntity = get(genreId);
 		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingEntity;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
 		existingEntity.setOperationDateTime(null);
@@ -110,7 +112,7 @@ public class GenreService extends AbstractDomainService {
 		Long genreId = genreEntity.getGenreId();
 		Genre existingGenre = get(genreId);
 		if (existingGenre.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingGenre;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingGenre.setRecordInUse(RecordInUseType.Y);
 		existingGenre.setOperationDateTime(null);

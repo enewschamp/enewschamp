@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
@@ -55,6 +54,9 @@ public class AvatarService extends AbstractDomainService {
 	public Avatar update(Avatar avatar) {
 		Long avatarId = avatar.getAvatarId();
 		Avatar existingAvatar = get(avatarId);
+		if(existingAvatar.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(avatar, existingAvatar);
 		return repository.save(existingAvatar);
 	}
@@ -113,7 +115,7 @@ public class AvatarService extends AbstractDomainService {
 		Long avatarId = avatarEntity.getAvatarId();
 		Avatar existingAvatar = get(avatarId);
 		if (existingAvatar.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingAvatar;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingAvatar.setRecordInUse(RecordInUseType.N);
 		existingAvatar.setOperationDateTime(null);
@@ -124,7 +126,7 @@ public class AvatarService extends AbstractDomainService {
 		Long avatarId = appSecurityEntity.getAvatarId();
 		Avatar existingAvatar = get(avatarId);
 		if (existingAvatar.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingAvatar;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingAvatar.setRecordInUse(RecordInUseType.Y);
 		existingAvatar.setOperationDateTime(null);

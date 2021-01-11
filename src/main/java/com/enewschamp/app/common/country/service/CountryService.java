@@ -54,6 +54,9 @@ public class CountryService extends AbstractDomainService {
 	public Country update(Country countryEntity) {
 		Long countryId = countryEntity.getCountryId();
 		Country existingCountry = get(countryId);
+		if (existingCountry.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(countryEntity, existingCountry);
 		return countryRepository.save(existingCountry);
 	}
@@ -124,7 +127,7 @@ public class CountryService extends AbstractDomainService {
 		Long countryId = countryEntity.getCountryId();
 		Country existingCountry = get(countryId);
 		if(existingCountry.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingCountry;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingCountry.setRecordInUse(RecordInUseType.N);
 		existingCountry.setOperationDateTime(null);
@@ -135,7 +138,7 @@ public class CountryService extends AbstractDomainService {
 		Long countryId = countryEntity.getCountryId();
 		Country existingCountry = get(countryId);
 		if(existingCountry.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingCountry;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingCountry.setRecordInUse(RecordInUseType.Y);
 		existingCountry.setOperationDateTime(null);

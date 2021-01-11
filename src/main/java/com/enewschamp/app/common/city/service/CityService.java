@@ -57,6 +57,9 @@ public class CityService extends AbstractDomainService {
 	public City update(City CityEntity) {
 		Long CityId = CityEntity.getCityId();
 		City existingCity = get(CityId);
+		if(existingCity.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(CityEntity, existingCity);
 		return cityRepository.save(existingCity);
 	}
@@ -125,7 +128,7 @@ public class CityService extends AbstractDomainService {
 		Long cityId = cityEntity.getCityId();
 		City existingCity = get(cityId);
 		if (existingCity.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingCity;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingCity.setRecordInUse(RecordInUseType.N);
 		existingCity.setOperationDateTime(null);
@@ -136,7 +139,7 @@ public class CityService extends AbstractDomainService {
 		Long cityId = cityEntity.getCityId();
 		City existingCity = get(cityId);
 		if (existingCity.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingCity;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingCity.setRecordInUse(RecordInUseType.Y);
 		existingCity.setOperationDateTime(null);

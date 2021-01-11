@@ -47,6 +47,9 @@ public class InstitutionAddressService {
 	public InstitutionAddress update(InstitutionAddress institutionAddressEntity) {
 		Long institutionAddressId = institutionAddressEntity.getInstitutionId();
 		InstitutionAddress existingInstitution = get(institutionAddressId);
+		if(existingInstitution.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(institutionAddressEntity, existingInstitution);
 		return repository.save(existingInstitution);
 	}
@@ -56,7 +59,7 @@ public class InstitutionAddressService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.HOLIDAY_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.INSTITUTION_ADDRESS_NOT_FOUND);
 		}
 	}
 
@@ -70,7 +73,7 @@ public class InstitutionAddressService {
 		Long institutionAddressId = institutionAddressEntity.getInstitutionId();
 		InstitutionAddress existingEntity = get(institutionAddressId);
 		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingEntity;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
 		existingEntity.setOperationDateTime(null);
@@ -81,7 +84,7 @@ public class InstitutionAddressService {
 		Long institutionAddressId = institutionAddress.getInstitutionId();
 		InstitutionAddress existingInstitutionAddress = get(institutionAddressId);
 		if (existingInstitutionAddress.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingInstitutionAddress;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingInstitutionAddress.setRecordInUse(RecordInUseType.Y);
 		existingInstitutionAddress.setOperationDateTime(null);

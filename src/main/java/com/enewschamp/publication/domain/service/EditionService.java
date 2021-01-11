@@ -53,6 +53,9 @@ public class EditionService extends AbstractDomainService {
 	public Edition update(Edition edition) {
 		String editionId = edition.getEditionId();
 		Edition existingEdition = get(editionId);
+		if(existingEdition.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(edition, existingEdition);
 		return repository.save(existingEdition);
 	}
@@ -106,7 +109,7 @@ public class EditionService extends AbstractDomainService {
 		String editionId = editionEntity.getEditionId();
 		Edition existingEntity = get(editionId);
 		if(existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingEntity;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
 		existingEntity.setOperationDateTime(null);
@@ -118,7 +121,7 @@ public class EditionService extends AbstractDomainService {
 		String editionId = editionEntity.getEditionId();
 		Edition existingEdition = get(editionId);
 		if(existingEdition.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingEdition;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingEdition.setRecordInUse(RecordInUseType.Y);
 		existingEdition.setOperationDateTime(null);

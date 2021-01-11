@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.school.repository.SchoolRepositoryCustom;
 import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.app.common.country.entity.Country;
-import com.enewschamp.app.helpdesk.entity.Helpdesk;
 import com.enewschamp.app.school.entity.School;
-import com.enewschamp.app.school.repository.SchoolProgramRepository;
 import com.enewschamp.app.school.repository.SchoolRepository;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -51,6 +48,9 @@ public class SchoolService {
 	public School update(School SchoolEntity) {
 		Long SchoolId = SchoolEntity.getSchoolId();
 		School existingSchool = get(SchoolId);
+		if(existingSchool.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(SchoolEntity, existingSchool);
 		return schoolRepository.save(existingSchool);
 	}
@@ -110,7 +110,7 @@ public class SchoolService {
 		Long schoolId = schoolEntity.getSchoolId();
 		School existingSchool = get(schoolId);
 		if(existingSchool.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingSchool;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingSchool.setRecordInUse(RecordInUseType.N);
 		existingSchool.setOperationDateTime(null);
@@ -121,7 +121,7 @@ public class SchoolService {
 		Long schoolId = schoolEntity.getSchoolId();
 		School existingSchool = get(schoolId);
 		if(existingSchool.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingSchool;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingSchool.setRecordInUse(RecordInUseType.Y);
 		existingSchool.setOperationDateTime(null);

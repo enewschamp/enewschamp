@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,8 +13,11 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.student.school.repository.StudentSchoolRepositoryCustom;
+import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentSchool;
 import com.enewschamp.subscription.domain.repository.StudentSchoolRepository;
 
@@ -35,14 +39,23 @@ public class StudentSchoolService {
 	@Autowired
 	AuditService auditService;
 
-	public StudentSchool create(StudentSchool StudentSchool) {
-		return repository.save(StudentSchool);
+	public StudentSchool create(StudentSchool studentSchool) {
+		StudentSchool studentSchoolEntity = null;
+		try {
+			studentSchoolEntity = repository.save(studentSchool);
+		}
+		catch(DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return studentSchoolEntity;
 	}
 
 	public StudentSchool update(StudentSchool StudentSchool) {
 		Long studentId = StudentSchool.getStudentId();
-
 		StudentSchool existingEntity = get(studentId);
+		if(existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(StudentSchool, existingEntity);
 		return repository.save(existingEntity);
 	}
@@ -80,7 +93,7 @@ public class StudentSchoolService {
 		Long studentDetailsId = studentSchoolEntity.getStudentId();
 		StudentSchool existingStudentSchool = get(studentDetailsId);
 		if (existingStudentSchool.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingStudentSchool;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingStudentSchool.setRecordInUse(RecordInUseType.N);
 		existingStudentSchool.setOperationDateTime(null);
@@ -91,7 +104,7 @@ public class StudentSchoolService {
 		Long studentDetailsId = studentSchoolEntity.getStudentId();
 		StudentSchool existingStudentSchool = get(studentDetailsId);
 		if (existingStudentSchool.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingStudentSchool;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingStudentSchool.setRecordInUse(RecordInUseType.Y);
 		existingStudentSchool.setOperationDateTime(null);

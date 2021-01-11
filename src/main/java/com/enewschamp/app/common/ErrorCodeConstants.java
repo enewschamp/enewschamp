@@ -124,5 +124,13 @@ public interface ErrorCodeConstants {
 	public static String UNAUTH_ACCESS = "REQ_003";
 	public static String USER_TOKEN_EXPIRED = "REQ_004";
 	public static String RECORD_ALREADY_EXIST = "REC_EXIST";
-
+	public static String RECORD_ALREADY_OPENED = "REC_OPENED";
+	public static String RECORD_ALREADY_CLOSED = "REC_CLOSED";
+	public static String PROMOTION_NOT_FOUND = "PROM_001";
+	public static String SCHOOL_CHAIN_NOT_FOUND = "SCH_CHN_001";
+	public static String INSTITUTION_ADDRESS_NOT_FOUND = "INST_ADDR_001";
+	public static String STAKE_HOLDER_NOT_FOUND = "STAKE_HOLD_001";
+	public static String INSTITUTIONAL_STAKE_HOLDER_NOT_FOUND = "INST_STAKE_HOLD_001";
+	public static String SCHOOL_SUBS_GRADE_NOT_FOUND = "SCH_SUB_GRADE_001";
+	public static String SCHOOL_REPORTS_NOT_FOUND = "SCH_REPORT_001";
 }

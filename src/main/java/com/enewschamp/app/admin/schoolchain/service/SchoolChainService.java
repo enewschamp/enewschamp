@@ -47,6 +47,9 @@ public class SchoolChainService {
 	public SchoolChain update(SchoolChain schoolChainEntity) {
 		Long schoolChainId = schoolChainEntity.getSchoolChainId();
 		SchoolChain existingSchoolChain = get(schoolChainId);
+		if(existingSchoolChain.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(schoolChainEntity, existingSchoolChain);
 		return repository.save(existingSchoolChain);
 	}
@@ -56,7 +59,7 @@ public class SchoolChainService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.HOLIDAY_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.SCHOOL_CHAIN_NOT_FOUND);
 		}
 	}
 
@@ -71,7 +74,7 @@ public class SchoolChainService {
 		Long schoolChainId = schoolChainEntity.getSchoolChainId();
 		SchoolChain existingEntity = get(schoolChainId);
 		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
-			return existingEntity;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
 		existingEntity.setOperationDateTime(null);
@@ -82,7 +85,7 @@ public class SchoolChainService {
 		Long schoolChainId = schoolChain.getSchoolChainId();
 		SchoolChain existingSchoolChain = get(schoolChainId);
 		if (existingSchoolChain.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingSchoolChain;
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingSchoolChain.setRecordInUse(RecordInUseType.Y);
 		existingSchoolChain.setOperationDateTime(null);
