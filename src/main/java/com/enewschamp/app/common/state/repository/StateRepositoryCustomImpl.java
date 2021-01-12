@@ -33,7 +33,7 @@ public class StateRepositoryCustomImpl extends RepositoryImpl implements StateRe
 		CriteriaQuery<State> criteriaQuery = cb.createQuery(State.class);
 		Root<State> stateRoot = criteriaQuery.from(State.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		if(StringUtils.isEmpty(searchRequest.getCountryId()))
+		if(!StringUtils.isEmpty(searchRequest.getCountryId()))
 		filterPredicates.add(cb.equal(stateRoot.get("countryId"), searchRequest.getCountryId()));
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(stateRoot.get(CommonConstants.OPERATION_DATE_TIME)));

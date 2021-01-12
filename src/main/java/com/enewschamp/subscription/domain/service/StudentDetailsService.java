@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.student.details.repository.StudentDetailsRepositoryCustom;
 import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -44,8 +43,7 @@ public class StudentDetailsService {
 		StudentDetails studentDetailsEntity = null;
 		try {
 			studentDetailsEntity = repository.save(studentDetails);
-		}
-		catch(DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		return studentDetailsEntity;
@@ -54,7 +52,7 @@ public class StudentDetailsService {
 	public StudentDetails update(StudentDetails StudentDetails) {
 		Long studentId = StudentDetails.getStudentId();
 		StudentDetails existingEntity = get(studentId);
-		if(existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(StudentDetails, existingEntity);
@@ -114,7 +112,10 @@ public class StudentDetailsService {
 
 	public Page<StudentDetails> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<StudentDetails> stakeHolderList = repositoryCustom.findStudentDetails(pageable, searchRequest);
-		return stakeHolderList;
+		Page<StudentDetails> studentDetailsList = repositoryCustom.findStudentDetails(pageable, searchRequest);
+		if (studentDetailsList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return studentDetailsList;
 	}
 }

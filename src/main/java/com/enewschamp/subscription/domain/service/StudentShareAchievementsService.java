@@ -53,6 +53,9 @@ public class StudentShareAchievementsService {
 	public StudentShareAchievements update(StudentShareAchievements StudentShareAchievements) {
 		Long studentId = StudentShareAchievements.getStudentId();
 		StudentShareAchievements existingEntity = get(studentId);
+		if(existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(StudentShareAchievements, existingEntity);
 		return repository.save(existingEntity);
 	}
@@ -115,6 +118,9 @@ public class StudentShareAchievementsService {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentShareAchievements> achievementList = repositoryCustom.findStudentShareAchievements(pageable,
 				searchRequest);
+		if(achievementList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
 		return achievementList;
 	}
 }

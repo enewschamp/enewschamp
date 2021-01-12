@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
@@ -30,7 +31,13 @@ public class StudentControlService {
 	StudentControlRepository repository;
 
 	public StudentControl create(StudentControl studentControl) {
-		return repository.save(studentControl);
+		StudentControl studentControlEntity = null;
+		try {
+			studentControlEntity = repository.save(studentControl);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return studentControlEntity;
 	}
 
 	public StudentControl update(StudentControl StudentControl) {

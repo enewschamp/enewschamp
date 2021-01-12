@@ -89,6 +89,9 @@ public class InstitutionStakeholderService {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<InstitutionStakeholder> stakeHolderList = repositoryCustom.findInstitutionalStakeHolders(pageable,
 				searchRequest);
+		if(stakeHolderList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
 		return stakeHolderList;
 	}
 

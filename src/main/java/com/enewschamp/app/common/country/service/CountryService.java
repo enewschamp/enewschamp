@@ -147,7 +147,10 @@ public class CountryService extends AbstractDomainService {
 
 	public Page<Country> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<Country> cityList = countryRepositoryCustom.findCountries(pageable);
-		return cityList;
+		Page<Country> countryList = countryRepositoryCustom.findCountries(pageable);
+		if(countryList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return countryList;
 	}
 }

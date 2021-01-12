@@ -120,7 +120,10 @@ public class IndividualPricingService {
 
 	public Page<IndividualPricing> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<IndividualPricing> genreList = individualPricingRepositoryCustom.findIndividualPricings(pageable);
-		return genreList;
+		Page<IndividualPricing> individualPricingList = individualPricingRepositoryCustom.findIndividualPricings(pageable);
+		if(individualPricingList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return individualPricingList;
 	}
 }

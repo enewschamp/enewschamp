@@ -40,6 +40,9 @@ public class EntitlementService {
 	public Entitlement update(Entitlement entitlementEntity) {
 		Long entitlementId = entitlementEntity.getEntitlementId();
 		Entitlement existingEntitlement = get(entitlementId);
+		if(existingEntitlement.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(entitlementEntity, existingEntitlement);
 		return repository.save(existingEntitlement);
 	}
@@ -49,27 +52,33 @@ public class EntitlementService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.HOLIDAY_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.ENTITLEMENT_NOT_FOUND);
 		}
 	}
 
 	public Entitlement read(Entitlement entitlementEntity) {
 		Long entitlementId = entitlementEntity.getEntitlementId();
 		Entitlement existingEntitlement = get(entitlementId);
-		existingEntitlement.setRecordInUse(RecordInUseType.Y);
-		return repository.save(existingEntitlement);
+        return existingEntitlement;
 	}
 
 	public Entitlement close(Entitlement entitlementEntity) {
 		Long entitlementId = entitlementEntity.getEntitlementId();
 		Entitlement existingEntity = get(entitlementId);
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
+		existingEntity.setOperationDateTime(null);
 		return repository.save(existingEntity);
 	}
 
 	public Page<Entitlement> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Entitlement> entitlementList = repositoryCustom.findEntitlements(pageable);
+		if(entitlementList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
 		return entitlementList;
 	}
 }

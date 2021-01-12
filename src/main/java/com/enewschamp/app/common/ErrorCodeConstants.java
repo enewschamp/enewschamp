@@ -133,4 +133,5 @@ public interface ErrorCodeConstants {
 	public static String INSTITUTIONAL_STAKE_HOLDER_NOT_FOUND = "INST_STAKE_HOLD_001";
 	public static String SCHOOL_SUBS_GRADE_NOT_FOUND = "SCH_SUB_GRADE_001";
 	public static String SCHOOL_REPORTS_NOT_FOUND = "SCH_REPORT_001";
+	public static String ENTITLEMENT_NOT_FOUND = "ENTL_001";
 }

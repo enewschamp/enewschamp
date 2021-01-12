@@ -131,6 +131,9 @@ public class EditionService extends AbstractDomainService {
 	public Page<Edition> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Edition> editionList = repositoryCustom.findEditions(pageable);
+		if(editionList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
 		return editionList;
 	}
 }

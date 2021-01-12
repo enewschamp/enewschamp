@@ -119,8 +119,11 @@ public class HolidayService {
 
 	public Page<Holiday> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<Holiday> genreList = holidayRepositoryCustom.findHolidays(pageable);
-		return genreList;
+		Page<Holiday> holidayList = holidayRepositoryCustom.findHolidays(pageable);
+		if(holidayList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return holidayList;
 	}
 
 	public List<HolidayList> getHolidayList() {

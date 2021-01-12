@@ -95,6 +95,9 @@ public class SchoolChainService {
 	public Page<SchoolChain> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<SchoolChain> schoolChainList = repositoryCustom.findSchoolChains(pageable);
+		if(schoolChainList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
 		return schoolChainList;
 	}
 

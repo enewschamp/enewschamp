@@ -138,6 +138,9 @@ public class StateService extends AbstractDomainService {
 	public Page<State> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<State> stateList = customRepository.findStates(searchRequest, pageable);
+		if(stateList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
 		return stateList;
 	}
 

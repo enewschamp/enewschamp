@@ -19,6 +19,7 @@ import com.enewschamp.app.recognition.page.data.RecognitionData;
 import com.enewschamp.app.student.badges.entity.StudentBadges;
 import com.enewschamp.app.student.badges.repository.StudentBadgesCustomRepository;
 import com.enewschamp.app.student.badges.repository.StudentBadgesRepository;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 
 @Service
@@ -51,6 +52,9 @@ public class StudentBadgesService {
 	public StudentBadges update(StudentBadges studentBadgesEntity) {
 		Long scoresDailyId = studentBadgesEntity.getStudentBadgesId();
 		StudentBadges existingStudentBadges = get(scoresDailyId);
+		if(existingStudentBadges.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(studentBadgesEntity, existingStudentBadges);
 		return studentBadgesRepository.save(existingStudentBadges);
 	}

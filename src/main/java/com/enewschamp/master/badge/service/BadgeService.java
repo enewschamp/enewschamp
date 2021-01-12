@@ -176,6 +176,9 @@ public class BadgeService {
 	public Page<Badge> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Badge> badgeList = badgeRepositoryCustom.findBadges(pageable);
+		if(badgeList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
 		return badgeList;
 	}
 }

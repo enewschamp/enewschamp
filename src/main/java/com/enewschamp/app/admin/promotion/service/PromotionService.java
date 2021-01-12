@@ -94,7 +94,10 @@ public class PromotionService {
 
 	public Page<Promotion> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<Promotion> genreList = repositoryCustom.findPromotions(pageable);
-		return genreList;
+		Page<Promotion> promotionList = repositoryCustom.findPromotions(pageable);
+		if(promotionList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return promotionList;
 	}
 }

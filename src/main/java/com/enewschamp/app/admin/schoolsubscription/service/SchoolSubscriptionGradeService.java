@@ -97,6 +97,9 @@ public class SchoolSubscriptionGradeService {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<SchoolSubscriptionGrade> stakeHolderList = repositoryCustom.findSchoolSubscriptionGrades(pageable,
 				searchRequest);
+		if(stakeHolderList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
 		return stakeHolderList;
 	}
 

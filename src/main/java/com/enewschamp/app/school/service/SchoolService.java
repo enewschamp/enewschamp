@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,8 +42,14 @@ public class SchoolService {
 	@Qualifier("modelPatcher")
 	private ModelMapper modelMapperForPatch;
 
-	public School create(School SchoolEntity) {
-		return schoolRepository.save(SchoolEntity);
+	public School create(School schoolEntity) {
+		School school = null;
+		try {
+			school = schoolRepository.save(schoolEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return school;
 	}
 
 	public School update(School SchoolEntity) {
@@ -131,6 +138,9 @@ public class SchoolService {
 	public Page<School> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<School> schoolList = schoolRepositoryCustom.findSchools(pageable, searchRequest);
+		if(schoolList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
 		return schoolList;
 	}
 }

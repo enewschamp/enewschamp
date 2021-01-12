@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.student.school.repository.StudentSchoolRepositoryCustom;
 import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -113,7 +112,10 @@ public class StudentSchoolService {
 
 	public Page<StudentSchool> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<StudentSchool> stakeHolderList = repositoryCustom.findStudentSchools(pageable, searchRequest);
-		return stakeHolderList;
+		Page<StudentSchool> studentSchoolList = repositoryCustom.findStudentSchools(pageable, searchRequest);
+		if(studentSchoolList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return studentSchoolList;
 	}
 }

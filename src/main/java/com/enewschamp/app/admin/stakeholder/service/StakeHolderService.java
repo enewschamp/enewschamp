@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,13 @@ public class StakeHolderService {
 	private ModelMapper modelMapperForPatch;
 
 	public StakeHolder create(StakeHolder stakeHolderEntity) {
-		return repository.save(stakeHolderEntity);
+		StakeHolder stakeHolder = null;
+		try {
+			stakeHolder = repository.save(stakeHolderEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return stakeHolder;
 	}
 
 	public StakeHolder update(StakeHolder stakeHolderEntity) {
@@ -88,6 +95,9 @@ public class StakeHolderService {
 	public Page<StakeHolder> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StakeHolder> stakeHolderList = repositoryCustom.findStakeHolders(pageable, searchRequest);
+		if(stakeHolderList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
 		return stakeHolderList;
 	}
 
