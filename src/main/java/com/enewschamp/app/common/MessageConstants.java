@@ -103,6 +103,17 @@ public class MessageConstants {
 	public static final String RECIPIENT_GREETING1_NOT_EMPTY = "recipient greeting1 must not be empty";
 	public static final String RECIPIENT_NAME1_NOT_NULL = "recipient name1 must not be null";
 	public static final String RECIPIENT_NAME1_NOT_EMPTY = "recipient name1 must not be empty";
+	public static final String BADGE_ID_NOT_NULL = "Badge id must not be null";
+	public static final String BADGE_ID_NOT_EMPTY= "Badge id must not be empty";
+	public static final String BADGE_YEAR_MONTH_NOT_NULL = "Badge year month must not be null";
+	public static final String STUDENT_BADGE_ID_NOT_NULL = "student Badge id must not be null";
+	public static final String STUDENT_BADGE_ID_NOT_EMPTY = "student Badge id must not be empty";
+	public static final String USER_ID_NOT_NULL = "User id must not be null";
+	public static final String USER_ID_NOT_EMPTY = "User id must not be empty";
+	public static final String USER_NAME_NOT_NULL = "User id must not be null";
+	public static final String USER_NAME_NOT_EMPTY = "User name must not be empty";
+	public static final String IS_ACCOUNT_LOCKED_NOT_NULL =  "Is account locked must not be null";
+	public static final String IS_ACCOUNT_LOCKED_NOT_EMPTY =  "Is account locked must not be empty";
 
 
 }

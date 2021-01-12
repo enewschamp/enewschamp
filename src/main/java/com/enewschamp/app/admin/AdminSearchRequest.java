@@ -43,5 +43,9 @@ public class AdminSearchRequest {
 	private LocalDate startDateTo;
 	private LocalDate endDateFrom;
 	private LocalDate endDateTo;
+	private String studentBadgesId;
+	private String yearMonth;
+	private String badgeId;
+	private String userId;
 
 }

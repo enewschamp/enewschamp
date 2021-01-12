@@ -8,10 +8,17 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.user.repository.UserRepositoryCustom;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.user.login.entity.UserAction;
@@ -32,6 +39,9 @@ public class UserService extends AbstractDomainService {
 	UserRepository repository;
 
 	@Autowired
+	UserRepositoryCustom customRepository;
+
+	@Autowired
 	ModelMapper modelMapper;
 
 	@Autowired
@@ -48,17 +58,36 @@ public class UserService extends AbstractDomainService {
 	PropertiesBackendService propertiesService;
 
 	public User create(User user) {
-		if (user.getCreationDateTime() == null) {
-			user.setCreationDateTime(LocalDateTime.now());
+		User userEntity = null;
+		try {
+			if (user.getCreationDateTime() == null) {
+				user.setCreationDateTime(LocalDateTime.now());
+			}
+			userEntity = repository.save(user);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
-		return repository.save(user);
+		return userEntity;
 	}
 
 	public User update(User user) {
 		String userId = user.getUserId();
 		User existingUser = load(userId);
-		modelMapper.map(user, existingUser);
+		if (existingUser.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		handlePasswords(user, existingUser);
 		return repository.save(existingUser);
+	}
+
+	private void handlePasswords(User user, User existingUser) {
+		if (StringUtils.isEmpty(user.getPassword()))
+			user.setPassword(existingUser.getPassword());
+		if (StringUtils.isEmpty(user.getPassword1()))
+			user.setPassword1(existingUser.getPassword1());
+		if (StringUtils.isEmpty(user.getPassword2()))
+			user.setPassword2(existingUser.getPassword2());
+		modelMapper.map(user, existingUser);
 	}
 
 	public User patch(User user) {
@@ -202,5 +231,42 @@ public class UserService extends AbstractDomainService {
 		}
 		user.setTheme(theme);
 		repository.save(user);
+	}
+
+	public User read(User userEntity) {
+		String userId = userEntity.getUserId();
+		User user = get(userId);
+		return user;
+	}
+
+	public User close(User userEntity) {
+		String userId = userEntity.getUserId();
+		User existingUser = get(userId);
+		if (existingUser.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingUser.setRecordInUse(RecordInUseType.N);
+		existingUser.setOperationDateTime(null);
+		return repository.save(existingUser);
+	}
+
+	public User reInstate(User userEntity) {
+		String UserId = userEntity.getUserId();
+		User existingUser = get(UserId);
+		if (existingUser.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingUser.setRecordInUse(RecordInUseType.Y);
+		existingUser.setOperationDateTime(null);
+		return repository.save(existingUser);
+	}
+
+	public Page<User> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<User> userList = customRepository.findUsers(pageable, searchRequest);
+		if (userList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return userList;
 	}
 }
