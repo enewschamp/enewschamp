@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -19,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "UserLeaves")
+@Table(name = "UserLeaves", uniqueConstraints={@UniqueConstraint(columnNames={"userId", "startDate"})})
 public class UserLeave extends BaseEntity {
 
 	private static final long serialVersionUID = -1254968870368475725L;
@@ -42,5 +43,14 @@ public class UserLeave extends BaseEntity {
 	@NotNull
 	@Column(name = "ApplicationDateTime")
 	private LocalDateTime applicationDateTime;
+	
+	@Column(name = "UpdateApplicationDateTime", length = 1)
+	private String updateApplicationDateTime;
+	
+	@Column(name = "Comments", length = 200)
+	private String comments;
+	
+	@Column(name = "ManagerComments", length = 200)
+	private String managerComments;
 
 }

@@ -47,5 +47,6 @@ public class AdminSearchRequest {
 	private String yearMonth;
 	private String badgeId;
 	private String userId;
+	private String approvalStatus;
 
 }
