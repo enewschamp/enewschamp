@@ -37,7 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-@Component("StudentDetailsPageHandler")
+@Component("StudentDetailPageHandler")
 @Slf4j
 public class StudentDetailsPageHandler implements IPageHandler {
 
