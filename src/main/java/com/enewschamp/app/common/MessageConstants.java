@@ -110,6 +110,8 @@ public class MessageConstants {
 	public static final String STUDENT_BADGE_ID_NOT_EMPTY = "student Badge id must not be empty";
 	public static final String USER_ID_NOT_NULL = "User id must not be null";
 	public static final String USER_ID_NOT_EMPTY = "User id must not be empty";
+	public static final String ROLE_ID_NOT_NULL = "Role id must not be null";
+	public static final String ROLE_ID_NOT_EMPTY = "Role id must not be empty";
 	public static final String USER_NAME_NOT_NULL = "User id must not be null";
 	public static final String USER_NAME_NOT_EMPTY = "User name must not be empty";
 	public static final String IS_ACCOUNT_LOCKED_NOT_NULL =  "Is account locked must not be null";

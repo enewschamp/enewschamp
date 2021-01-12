@@ -5,10 +5,17 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.user.role.repository.UserRoleRepositoryCustom;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.user.domain.entity.UserRole;
@@ -19,6 +26,9 @@ public class UserRoleService extends AbstractDomainService {
 
 	@Autowired
 	UserRoleRepository repository;
+	
+	@Autowired
+	UserRoleRepositoryCustom repositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -31,12 +41,21 @@ public class UserRoleService extends AbstractDomainService {
 	AuditService auditService;
 
 	public UserRole create(UserRole userRole) {
-		return repository.save(userRole);
+		UserRole userRoleEntity = null;
+		try {
+			userRoleEntity = repository.save(userRole);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return userRoleEntity;
 	}
 
 	public UserRole update(UserRole userRole) {
 		UserRoleKey userRoleKey = userRole.getUserRoleKey();
 		UserRole existingUserRole = load(userRoleKey);
+		if (existingUserRole.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(userRole, existingUserRole);
 		return repository.save(existingUserRole);
 	}
@@ -58,7 +77,7 @@ public class UserRoleService extends AbstractDomainService {
 			return existingEntity.get();
 		} else {
 			throw new BusinessException(ErrorCodeConstants.USER_ROLE_NOT_FOUND, userRoleKey.getRoleId(),
-					userRoleKey.getUserId(), userRoleKey.getDayOfTheWeek().toString());
+					userRoleKey.getUserId());
 		}
 	}
 
@@ -94,5 +113,41 @@ public class UserRoleService extends AbstractDomainService {
 		userRole.setUserRoleKey(userRoleKey);
 		return auditService.getEntityAudit(userRoleKey);
 	}
+	
+	public UserRole read(UserRole userRole) {
+		UserRoleKey userRoleKey = userRole.getUserRoleKey();
+		UserRole existingEntity = load(userRoleKey);
+		return existingEntity;
+	}
 
+	public UserRole close(UserRole userRole) {
+		UserRoleKey userRoleKey = userRole.getUserRoleKey();
+		UserRole existingEntity = load(userRoleKey);
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingEntity.setRecordInUse(RecordInUseType.N);
+		existingEntity.setOperationDateTime(null);
+		return repository.save(existingEntity);
+	}
+
+	public UserRole reInstate(UserRole userRole) {
+		UserRoleKey userRoleKey = userRole.getUserRoleKey();
+		UserRole existingEntity = load(userRoleKey);
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingEntity.setRecordInUse(RecordInUseType.Y);
+		existingEntity.setOperationDateTime(null);
+		return repository.save(existingEntity);
+	}
+
+	public Page<UserRole> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<UserRole> userList = repositoryCustom.findUserRoles(pageable, searchRequest);
+		if (userList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return userList;
+	}
 }

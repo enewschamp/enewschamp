@@ -48,5 +48,6 @@ public class AdminSearchRequest {
 	private String badgeId;
 	private String userId;
 	private String approvalStatus;
+	private String roleId;
 
 }
