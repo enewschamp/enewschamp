@@ -12,5 +12,6 @@ public interface CommonConstants {
 	public static String COUNTRY_ID = "countryId";
 	public static String DATA = "data";
 	public static String OPERATION_DATE_TIME = "operationDateTime";
+	public static String USER_ID = "countryId";
 
 }

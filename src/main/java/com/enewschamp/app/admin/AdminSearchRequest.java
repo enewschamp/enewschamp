@@ -49,5 +49,7 @@ public class AdminSearchRequest {
 	private String userId;
 	private String approvalStatus;
 	private String roleId;
+	private String role;
+	private String pageName;
 
 }

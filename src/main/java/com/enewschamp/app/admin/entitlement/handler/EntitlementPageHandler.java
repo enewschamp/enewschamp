@@ -13,18 +13,20 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.entitlement.repository.Entitlement;
 import com.enewschamp.app.admin.entitlement.service.EntitlementService;
 import com.enewschamp.app.admin.handler.ListPageData;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
@@ -42,9 +44,9 @@ public class EntitlementPageHandler implements IPageHandler {
 	@Autowired
 	private EntitlementService entitlementService;
 	@Autowired
-	private ModelMapper modelMapper;
+	ModelMapper modelMapper;
 	@Autowired
-	private ObjectMapper objectMapper;
+	ObjectMapper objectMapper;
 	private Validator validator;
 
 	@Override
@@ -62,6 +64,9 @@ public class EntitlementPageHandler implements IPageHandler {
 			break;
 		case "Close":
 			pageDto = closeEntitlement(pageRequest);
+			break;
+		case "Reinstate":
+			pageDto = reinstateEntitlement(pageRequest);
 			break;
 		case "List":
 			pageDto = listEntitlement(pageRequest);
@@ -94,27 +99,25 @@ public class EntitlementPageHandler implements IPageHandler {
 	private PageDTO createEntitlement(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EntitlementPageData.class);
-       // pageData.setUserId(pageDto);
-		validate(pageData);
+		validateData(pageData);
 		Entitlement entitlement = mapEntitlementData(pageRequest, pageData);
 		entitlement = entitlementService.create(entitlement);
-		mapHeaderData(pageRequest, pageDto, pageData, entitlement);
-		pageData.setLastUpdate(entitlement.getOperationDateTime());
-		pageData.setId(entitlement.getEntitlementId());
-		pageDto.setData(pageData);
+		mapEntitlement(pageRequest, pageDto, entitlement);
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto, EntitlementPageData pageData, Entitlement entitlement) {
+	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
 		pageDto.setHeader(pageRequest.getHeader());
 		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
 		pageDto.getHeader().setTodaysDate(LocalDate.now());
 		pageDto.getHeader().setLoginCredentials(null);
+		pageDto.getHeader().setUserId(null);
+		pageDto.getHeader().setDeviceId(null);
+
 	}
 
 	private Entitlement mapEntitlementData(PageRequestDTO pageRequest, EntitlementPageData pageData) {
 		Entitlement entitlement = modelMapper.map(pageData, Entitlement.class);
-		entitlement.setOperatorId(pageRequest.getData().get("operator").asText());
 		entitlement.setRecordInUse(RecordInUseType.Y);
 		return entitlement;
 	}
@@ -123,13 +126,18 @@ public class EntitlementPageHandler implements IPageHandler {
 	private PageDTO updateEntitlement(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EntitlementPageData.class);
-		validate(pageData);
+		validateData(pageData);
 		Entitlement entitlement = mapEntitlementData(pageRequest, pageData);
 		entitlement = entitlementService.update(entitlement);
-		mapHeaderData(pageRequest, pageDto, pageData, entitlement);
-		pageData.setLastUpdate(entitlement.getOperationDateTime());
-		pageDto.setData(pageData);
+		mapEntitlement(pageRequest, pageDto, entitlement);
 		return pageDto;
+	}
+
+	private void mapEntitlement(PageRequestDTO pageRequest, PageDTO pageDto, Entitlement entitlement) {
+		EntitlementPageData pageData;
+		mapHeaderData(pageRequest, pageDto);
+		pageData = mapPageData(entitlement);
+		pageDto.setData(pageData);
 	}
 
 	@SneakyThrows
@@ -138,19 +146,24 @@ public class EntitlementPageHandler implements IPageHandler {
 		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EntitlementPageData.class);
 		Entitlement entitlement = modelMapper.map(pageData, Entitlement.class);
 		entitlement = entitlementService.read(entitlement);
-		mapHeaderData(pageRequest, pageDto, pageData, entitlement);
-		mapPageData(pageData, entitlement);
-		pageDto.setData(pageData);
+		mapEntitlement(pageRequest, pageDto, entitlement);
 		return pageDto;
 	}
 
-	private void mapPageData(EntitlementPageData pageData, Entitlement entitlement) {
-		pageData.setId(entitlement.getEntitlementId());
-		pageData.setUserId(entitlement.getUserId());
-		pageData.setPageName(entitlement.getPageName());
-	//	pageData.setRecordInUse(entitlement.getRecordInUse().toString());
-	//	pageData.setOperator(entitlement.getOperatorId());
+	@SneakyThrows
+	private PageDTO reinstateEntitlement(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EntitlementPageData.class);
+		Entitlement entitlement = modelMapper.map(pageData, Entitlement.class);
+		entitlement = entitlementService.reinstate(entitlement);
+		mapEntitlement(pageRequest, pageDto, entitlement);
+		return pageDto;
+	}
+
+	private EntitlementPageData mapPageData(Entitlement entitlement) {
+		EntitlementPageData pageData = modelMapper.map(entitlement, EntitlementPageData.class);
 		pageData.setLastUpdate(entitlement.getOperationDateTime());
+		return pageData;
 	}
 
 	@SneakyThrows
@@ -158,27 +171,27 @@ public class EntitlementPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EntitlementPageData.class);
 		Entitlement entitlement = modelMapper.map(pageData, Entitlement.class);
-		entitlement.setEntitlementId(pageData.getId());
 		entitlement = entitlementService.close(entitlement);
-		mapHeaderData(pageRequest, pageDto, pageData, entitlement);
-		mapPageData(pageData, entitlement);
-		pageDto.setData(pageData);
+		mapEntitlement(pageRequest, pageDto, entitlement);
 		return pageDto;
 	}
 
 	@SneakyThrows
 	private PageDTO listEntitlement(PageRequestDTO pageRequest) {
-		Page<Entitlement> pricingList = entitlementService.list(
-				pageRequest.getData().get("pagination").get("pageNumber").asInt(),
-				pageRequest.getData().get("pagination").get("pageSize").asInt());
+		AdminSearchRequest searchRequest = objectMapper
+				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
+		Page<Entitlement> entitlementList = entitlementService.list(searchRequest,
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
+				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
-		List<EntitlementPageData> list = mapEntitlementData(pricingList);
+		List<EntitlementPageData> list = mapEntitlementData(entitlementList);
 		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
+		pageData.getPagination().setIsLastPage(PageStatus.N);
 		dto.setHeader(pageRequest.getHeader());
-		if ((pricingList.getNumber() + 1) == pricingList.getTotalPages()) {
-			//pageData.getPagination().setLastPage(true);
+		if ((entitlementList.getNumber() + 1) == entitlementList.getTotalPages()) {
+			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}
 		dto.setData(pageData);
 		dto.setRecords(variable);
@@ -190,10 +203,7 @@ public class EntitlementPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<Entitlement> pageDataList = page.getContent();
 			for (Entitlement entitlement : pageDataList) {
-				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				EntitlementPageData entitlementPageData = modelMapper.map(entitlement, EntitlementPageData.class);
-				entitlementPageData.setId(entitlement.getEntitlementId());
-			//	entitlementPageData.setOperator(entitlement.getOperatorId());
 				entitlementPageData.setLastUpdate(entitlement.getOperationDateTime());
 				entitlementPageDataList.add(entitlementPageData);
 			}
@@ -201,15 +211,15 @@ public class EntitlementPageHandler implements IPageHandler {
 		return entitlementPageDataList;
 	}
 
-	private void validate(EntitlementPageData pageData) {
+	private void validateData(EntitlementPageData pageData) {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
 		Set<ConstraintViolation<EntitlementPageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
+			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
 		}
 	}
 }

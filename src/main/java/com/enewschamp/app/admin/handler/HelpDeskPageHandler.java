@@ -151,7 +151,6 @@ public class HelpDeskPageHandler implements IPageHandler {
 	private PageDTO listHelpDesk(PageRequestDTO pageRequest) {
 		AdminSearchRequest searchRequest = objectMapper
 				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
-
 		Page<Helpdesk> editionList = helpDeskService.list(searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());

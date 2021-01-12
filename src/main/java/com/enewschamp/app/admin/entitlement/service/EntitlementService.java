@@ -5,11 +5,13 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.entitlement.repository.Entitlement;
 import com.enewschamp.app.admin.entitlement.repository.EntitlementRepository;
 import com.enewschamp.app.admin.entitlement.repository.EntitlementRepositoryCustom;
@@ -34,13 +36,19 @@ public class EntitlementService {
 	private ModelMapper modelMapperForPatch;
 
 	public Entitlement create(Entitlement entitlementEntity) {
-		return repository.save(entitlementEntity);
+		Entitlement entitlement = null;
+		try {
+			entitlement = repository.save(entitlementEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return entitlement;
 	}
 
 	public Entitlement update(Entitlement entitlementEntity) {
 		Long entitlementId = entitlementEntity.getEntitlementId();
 		Entitlement existingEntitlement = get(entitlementId);
-		if(existingEntitlement.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingEntitlement.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(entitlementEntity, existingEntitlement);
@@ -59,7 +67,7 @@ public class EntitlementService {
 	public Entitlement read(Entitlement entitlementEntity) {
 		Long entitlementId = entitlementEntity.getEntitlementId();
 		Entitlement existingEntitlement = get(entitlementId);
-        return existingEntitlement;
+		return existingEntitlement;
 	}
 
 	public Entitlement close(Entitlement entitlementEntity) {
@@ -73,10 +81,21 @@ public class EntitlementService {
 		return repository.save(existingEntity);
 	}
 
-	public Page<Entitlement> list(int pageNo, int pageSize) {
+	public Entitlement reinstate(Entitlement entitlement) {
+		Long entitlementId = entitlement.getEntitlementId();
+		Entitlement existingEntity = get(entitlementId);
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingEntity.setRecordInUse(RecordInUseType.Y);
+		existingEntity.setOperationDateTime(null);
+		return repository.save(existingEntity);
+	}
+
+	public Page<Entitlement> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<Entitlement> entitlementList = repositoryCustom.findEntitlements(pageable);
-		if(entitlementList.getContent().isEmpty()) {
+		Page<Entitlement> entitlementList = repositoryCustom.findEntitlements(pageable, searchRequest);
+		if (entitlementList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return entitlementList;
