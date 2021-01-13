@@ -60,6 +60,7 @@ public class AdminSearchRequest {
     private String phoneNumber;
     private String verified;
     private Long navId;
+    private Long ruleId;
     private String currentPage;
     private String operation;
     private String action;

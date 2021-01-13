@@ -142,4 +142,10 @@ public class MessageConstants {
 	public static final String NEXT_PAGE_NOT_EMPTY = "Next Page must not be empty";
 	public static final String NEXT_PAGE_OPERATION_NOT_NULL = "Next Page Operation must not be null";
 	public static final String NEXT_PAGE_OPERATION_NOT_EMPTY = "Next Page Operation must not be empty";
+	public static final String NAV_ID_NOT_NULL = "Navigation id must not be null";
+	public static final String EXEC_SEQUENCE_NOT_NULL = "Execution sequence must not be null";
+	public static final String RULE_NOT_NULL = "Rule must not be null";
+	public static final String RULE_NOT_EMPTY = "Rule must not be empty";
+	public static final String CONTROL_WORK_ENTRY_NOT_NULL = "Control work entry must not be null";
+	public static final String CONTROL_WORK_ENTRY_NOT_EMPTY = "Control work entry must not be empty";
 }

@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 public class PageNavigatorPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 
-	private Long navId = 0L;
+	private Long navId;
 
 	@NotNull(message = MessageConstants.CURRENT_PAGE_NOT_NULL)
 	@NotEmpty(message = MessageConstants.CURRENT_PAGE_NOT_EMPTY)
