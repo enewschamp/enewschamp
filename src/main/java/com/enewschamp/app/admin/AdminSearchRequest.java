@@ -56,4 +56,7 @@ public class AdminSearchRequest {
     private UserType userType;
     private String deviceId;
     private String loginFlag;
+    private String emailId;
+    private String phoneNumber;
+    private String verified;
 }

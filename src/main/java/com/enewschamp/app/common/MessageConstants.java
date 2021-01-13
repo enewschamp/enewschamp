@@ -127,5 +127,10 @@ public class MessageConstants {
 	public static final String DEVICE_ID_NOT_EMPTY = "Device id must not be empty";
 	public static final String LOGIN_FLAG_NOT_NULL = "Login flag must not be null";
 	public static final String LOGIN_FLAG_NOT_EMPTY = "Login flag must not be empty";
+	public static final String OTP_NOT_NULL = "OTP must not be null";
+	public static final String OTP_NOT_EMPTY = "OTP must not be empty";
+	public static final String VERIFIED_NOT_NULL = "Verified must not be null";
+	public static final String VERIFIED_NOT_EMPTY = "Verified must not be empty";
+	public static final String VERIFY_ATTEMPTS_NOT_NULL = "Verify attempts must not be null";
 
 }

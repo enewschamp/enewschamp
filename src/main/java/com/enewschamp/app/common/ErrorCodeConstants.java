@@ -105,6 +105,7 @@ public interface ErrorCodeConstants {
 	public static String OTP_EXPIRED = "OTP_001";
 	public static String OTP_GEN_MAX_ATTEMPTS_EXHAUSTED = "OTP_002";
 	public static String OTP_VERIFY_MAX_ATTEMPTS_EXHAUSTED = "OTP_003";
+	public static String OTP_NOT_FOUND = "OTP_004";
 	public static String STUD_REG_NOT_FOUND = "STUD_REG_01";
 	public static String INVALID_EMAILID_OR_PASSWORD = "LOGIN_001";
 	public static String STUD_ALREADY_REGISTERED = "STUD_REG_03";
