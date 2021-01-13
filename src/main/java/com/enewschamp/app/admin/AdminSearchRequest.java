@@ -59,4 +59,8 @@ public class AdminSearchRequest {
     private String emailId;
     private String phoneNumber;
     private String verified;
+    private Long navId;
+    private String currentPage;
+    private String operation;
+    private String action;
 }

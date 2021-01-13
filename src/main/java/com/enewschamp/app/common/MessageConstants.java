@@ -132,5 +132,14 @@ public class MessageConstants {
 	public static final String VERIFIED_NOT_NULL = "Verified must not be null";
 	public static final String VERIFIED_NOT_EMPTY = "Verified must not be empty";
 	public static final String VERIFY_ATTEMPTS_NOT_NULL = "Verify attempts must not be null";
-
+	public static final String CURRENT_PAGE_NOT_NULL = "Current page must not be null";
+	public static final String CURRENT_PAGE_NOT_EMPTY = "Current page must not be empty";
+	public static final String OPERATION_NOT_NULL = "Operation must not be null";
+	public static final String OPERATION_NOT_EMPTY = "Operation must not be empty";
+	public static final String ACTION_NOT_NULL = "Action must not be null";
+	public static final String ACTION_NOT_EMPTY = "Action must not be empty";
+	public static final String NEXT_PAGE_NOT_NULL = "Next Page must not be null";
+	public static final String NEXT_PAGE_NOT_EMPTY = "Next Page must not be empty";
+	public static final String NEXT_PAGE_OPERATION_NOT_NULL = "Next Page Operation must not be null";
+	public static final String NEXT_PAGE_OPERATION_NOT_EMPTY = "Next Page Operation must not be empty";
 }

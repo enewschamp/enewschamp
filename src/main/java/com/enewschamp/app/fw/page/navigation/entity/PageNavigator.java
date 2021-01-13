@@ -53,8 +53,8 @@ public class PageNavigator extends BaseEntity {
 	@Column(name = "nextPageLoadMethod")
 	private String nextPageLoadMethod;
 
-	@Column(name = "controlWorkEntryOrExit", length = 10)
-	private String controlWorkEntryOrExit;
+	@Column(name = "controlWorkEntryExit", length = 10)
+	private String controlWorkEntryExit;
 
 	@Column(name = "updationTable", length = 1)
 	private String updationTable;
