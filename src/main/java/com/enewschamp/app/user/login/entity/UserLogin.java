@@ -57,5 +57,7 @@ public class UserLogin extends BaseEntity {
 	@Column(name = "userType")
 	@Enumerated(EnumType.STRING)
 	private UserType userType;
+	@Column(name = "Status")
+	private String status;
 
 }

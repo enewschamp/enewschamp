@@ -121,5 +121,11 @@ public class MessageConstants {
 	public static final String USER_ROLE_NOT_EMPTY = "User role must not be empty";
 	public static final String PAGE_NAME_NOT_NULL ="page name must not be null";
 	public static final String PAGE_NAME_NOT_EMPTY ="page name must not be empty";
+	public static final String USER_TYPE_NOT_NULL = "User type must not be null";
+	public static final String USER_TYPE_NOT_EMPTY = "User type must not be empty";
+	public static final String DEVICE_ID_NOT_NULL = "Device id must not be null";
+	public static final String DEVICE_ID_NOT_EMPTY = "Device id must not be empty";
+	public static final String LOGIN_FLAG_NOT_NULL = "Login flag must not be null";
+	public static final String LOGIN_FLAG_NOT_EMPTY = "Login flag must not be empty";
 
 }

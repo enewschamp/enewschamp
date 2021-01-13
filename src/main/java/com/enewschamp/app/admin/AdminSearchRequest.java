@@ -3,6 +3,7 @@ package com.enewschamp.app.admin;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.enewschamp.app.user.login.entity.UserType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
@@ -51,5 +52,8 @@ public class AdminSearchRequest {
 	private String roleId;
 	private String role;
 	private String pageName;
-
+    private Long userLoginId;
+    private UserType userType;
+    private String deviceId;
+    private String loginFlag;
 }
