@@ -85,7 +85,7 @@ public class UIControlsGlobalService {
 		return repository.save(existingUIControls);
 	}
 
-	public UIControlsGlobal reInstateUIControls(UIControlsGlobal uiControlEntity) {
+	public UIControlsGlobal reinstate(UIControlsGlobal uiControlEntity) {
 		Long uiControlId = uiControlEntity.getUiControlGlobalId();
 		UIControlsGlobal existingUIControls = get(uiControlId);
 		if (existingUIControls.getRecordInUse().equals(RecordInUseType.Y)) {
