@@ -160,4 +160,9 @@ public class MessageConstants {
 	public static final String EXEC_SEQ_NOT_EMPTY = "Execution sequence must not be empty";
 	public static final String VISIBILITY_NOT_NULL = "Visibility must not be null";
 	public static final String VISIBILITY_NOT_EMPTY = "Visibility must not be empty";
+	public static final String PROPERTY_NAME_NOT_NULL = "Property name must not be null";
+	public static final String PROPERTY_NAME_NOT_EMPTY = "Property name must not be empty";
+	public static final String PROPERTY_VALUE_NOT_NULL = "Property value must not be null";
+	public static final String PROPERTY_VALUE_NOT_EMPTY = "Property value must not be empty";
+	
 }

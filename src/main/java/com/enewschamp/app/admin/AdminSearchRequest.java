@@ -72,5 +72,6 @@ public class AdminSearchRequest {
     private String executionSequence;
     private String rule;
     private String visibility;
+    private Long propertyId;
     
 }

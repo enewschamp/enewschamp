@@ -7,12 +7,19 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.properties.backend.repository.PropertiesBackendRepositoryCustom;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.common.app.dto.PropertiesBackendDTO;
 import com.enewschamp.common.domain.entity.PropertiesBackend;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
@@ -22,6 +29,9 @@ public class PropertiesBackendService extends AbstractDomainService {
 
 	@Autowired
 	PropertiesBackendRepository repository;
+
+	@Autowired
+	PropertiesBackendRepositoryCustom customRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -44,12 +54,21 @@ public class PropertiesBackendService extends AbstractDomainService {
 	}
 
 	public PropertiesBackend create(PropertiesBackend properties) {
-		return repository.save(properties);
+		PropertiesBackend propertiesEntity = null;
+		try {
+			propertiesEntity = repository.save(properties);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return propertiesEntity;
 	}
 
 	public PropertiesBackend update(PropertiesBackend properties) {
 		Long propertyId = properties.getPropertyId();
 		PropertiesBackend existingProperties = get(propertyId);
+		if (existingProperties.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(properties, existingProperties);
 		return repository.save(existingProperties);
 	}
@@ -99,6 +118,45 @@ public class PropertiesBackendService extends AbstractDomainService {
 		PropertiesBackend properties = new PropertiesBackend();
 		properties.setPropertyId(propertyId);
 		return auditService.getEntityAudit(properties);
+	}
+
+	public PropertiesBackend read(PropertiesBackend propertiesBackendEntity) {
+		Long propertiesId = propertiesBackendEntity.getPropertyId();
+		PropertiesBackend existingEntity = get(propertiesId);
+		return existingEntity;
+
+	}
+
+	public PropertiesBackend close(PropertiesBackend propertiesBackendEntity) {
+		Long propertiesId = propertiesBackendEntity.getPropertyId();
+		PropertiesBackend propertiesBackend = get(propertiesId);
+		if (propertiesBackend.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		propertiesBackend.setRecordInUse(RecordInUseType.N);
+		propertiesBackend.setOperationDateTime(null);
+		return repository.save(propertiesBackend);
+	}
+
+	public PropertiesBackend reinstate(PropertiesBackend propertiesBackendEntity) {
+		Long propertiesId = propertiesBackendEntity.getPropertyId();
+		PropertiesBackend propertiesBackend = get(propertiesId);
+		if (propertiesBackend.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		propertiesBackend.setRecordInUse(RecordInUseType.Y);
+		propertiesBackend.setOperationDateTime(null);
+		return repository.save(propertiesBackend);
+	}
+
+	public Page<PropertiesBackend> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<PropertiesBackend> propertiesBackendList = customRepository.findPropertiesBackends(pageable,
+				searchRequest);
+		if (propertiesBackendList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return propertiesBackendList;
 	}
 
 }
