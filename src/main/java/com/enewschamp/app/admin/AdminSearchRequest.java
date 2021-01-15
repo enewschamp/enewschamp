@@ -76,5 +76,6 @@ public class AdminSearchRequest {
     private String appName;
     private Long errorCodeId;
     private String errorCategory;
-    
+    private LocalDate publicationDate;
+    private String readingLevel;
 }

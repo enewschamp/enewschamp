@@ -170,5 +170,10 @@ public class MessageConstants {
 	public static final String ERROR_CODE_NOT_EMPTY = "Error code must not be empty";
 	public static final String ERROR_MESSAGE_NOT_NULL = "Error message must not be null";
 	public static final String ERROR_MESSAGE_NOT_EMPTY = "Error message must not be empty";
+	public static final String PUBLICATION_DATE_NOT_NULL = "Publication date must not be null";
+	public static final String PUBLICATION_DATE_NOT_EMPTY = "Publication date must not be empty";
+	public static final String ARTICLE_READ_NOT_NULL = "Article read must not be null";
+	public static final String QUIZ_ATTEMPTED_NOT_NULL = "Quiz attempted must not be null";
+	public static final String QUIZ_CORRECTED_NOT_NULL = "Quiz correctd must not be null";
 	
 }
