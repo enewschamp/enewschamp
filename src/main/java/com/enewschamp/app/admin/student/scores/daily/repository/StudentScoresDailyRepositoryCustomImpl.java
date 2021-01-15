@@ -1,4 +1,4 @@
-package com.enewschamp.app.admin.student.scores.repository;
+package com.enewschamp.app.admin.student.scores.daily.repository;
 
 import java.util.ArrayList;
 import java.util.List;

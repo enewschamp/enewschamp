@@ -1,4 +1,4 @@
-package com.enewschamp.app.admin.student.scores.service;
+package com.enewschamp.app.admin.student.scores.daily.service;
 
 import java.util.Optional;
 
@@ -12,9 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.student.scores.repository.StudentScoresDaily;
-import com.enewschamp.app.admin.student.scores.repository.StudentScoresDailyRepository;
-import com.enewschamp.app.admin.student.scores.repository.StudentScoresDailyRepositoryCustom;
+import com.enewschamp.app.admin.student.scores.daily.repository.StudentScoresDaily;
+import com.enewschamp.app.admin.student.scores.daily.repository.StudentScoresDailyRepository;
+import com.enewschamp.app.admin.student.scores.daily.repository.StudentScoresDailyRepositoryCustom;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;

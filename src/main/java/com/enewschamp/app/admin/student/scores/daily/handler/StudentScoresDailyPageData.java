@@ -1,4 +1,4 @@
-package com.enewschamp.app.admin.student.scores.handler;
+package com.enewschamp.app.admin.student.scores.daily.handler;
 
 import java.time.LocalDate;
 

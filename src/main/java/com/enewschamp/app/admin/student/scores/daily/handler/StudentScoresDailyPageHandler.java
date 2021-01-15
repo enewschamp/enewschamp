@@ -1,4 +1,4 @@
-package com.enewschamp.app.admin.student.scores.handler;
+package com.enewschamp.app.admin.student.scores.daily.handler;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
-import com.enewschamp.app.admin.student.scores.repository.StudentScoresDaily;
-import com.enewschamp.app.admin.student.scores.service.StudentScoresDailyService;
+import com.enewschamp.app.admin.student.scores.daily.repository.StudentScoresDaily;
+import com.enewschamp.app.admin.student.scores.daily.service.StudentScoresDailyService;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
