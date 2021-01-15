@@ -74,5 +74,7 @@ public class AdminSearchRequest {
     private String visibility;
     private Long propertyId;
     private String appName;
+    private Long errorCodeId;
+    private String errorCategory;
     
 }

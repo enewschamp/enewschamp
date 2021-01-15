@@ -164,5 +164,11 @@ public class MessageConstants {
 	public static final String PROPERTY_NAME_NOT_EMPTY = "Property name must not be empty";
 	public static final String PROPERTY_VALUE_NOT_NULL = "Property value must not be null";
 	public static final String PROPERTY_VALUE_NOT_EMPTY = "Property value must not be empty";
+	public static final String ERROR_CATEGORY_NOT_NULL = "Error category must not be null";
+	public static final String ERROR_CATEGORY_NOT_EMPTY = "Error category must not be empty";
+	public static final String ERROR_CODE_NOT_NULL = "Error code must not be null";
+	public static final String ERROR_CODE_NOT_EMPTY = "Error code must not be empty";
+	public static final String ERROR_MESSAGE_NOT_NULL = "Error message must not be null";
+	public static final String ERROR_MESSAGE_NOT_EMPTY = "Error message must not be empty";
 	
 }
