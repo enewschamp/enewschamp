@@ -73,5 +73,6 @@ public class AdminSearchRequest {
     private String rule;
     private String visibility;
     private Long propertyId;
+    private String appName;
     
 }
