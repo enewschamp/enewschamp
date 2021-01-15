@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.uicontrols.repository.UIControlsRepositoryCustom;
 import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.uicontrols.dto.UIControlsDTO;
 import com.enewschamp.app.common.uicontrols.entity.UIControls;
 import com.enewschamp.app.common.uicontrols.repository.UIControlsRepository;

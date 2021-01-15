@@ -68,4 +68,9 @@ public class AdminSearchRequest {
     private String globalControlRef;
     private String controlName;
     private Long uiControlGlobalId;
+    private Long uiControlId;
+    private String executionSequence;
+    private String rule;
+    private String visibility;
+    
 }

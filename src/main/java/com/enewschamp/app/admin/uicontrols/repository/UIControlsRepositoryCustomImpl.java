@@ -35,8 +35,8 @@ public class UIControlsRepositoryCustomImpl extends RepositoryImpl implements UI
 		Root<UIControls> uiControlsRoot = criteriaQuery.from(UIControls.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		
-		if (!StringUtils.isEmpty(searchRequest.getNavId()))
-			filterPredicates.add(cb.equal(uiControlsRoot.get("uiControlId"), searchRequest.getNavId()));
+		if (!StringUtils.isEmpty(searchRequest.getUiControlId()))
+			filterPredicates.add(cb.equal(uiControlsRoot.get("uiControlId"), searchRequest.getUiControlId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getPageName()))
 			filterPredicates.add(cb.equal(uiControlsRoot.get("pageName"), searchRequest.getPageName()));

@@ -154,4 +154,10 @@ public class MessageConstants {
 	public static final String CONTROL_LABEL_NOT_EMPTY = "Control label must not be empty";
 	public static final String GLOBAL_CONTROL_REF_NOT_NULL = "Global control reference must not be null";
 	public static final String GLOBAL_CONTROL_REF_NOT_EMPTY = "Global control reference must not be empty";
+	public static final String UI_CONTROL_ID_NOT_NULL = "UI Contrls id must not be null";
+	public static final String UI_CONTROL_ID_NOT_EMPTY = "UI Contrls id must not be emptyt";
+	public static final String EXEC_SEQ_NOT_NULL = "Execution sequence must not be null";
+	public static final String EXEC_SEQ_NOT_EMPTY = "Execution sequence must not be empty";
+	public static final String VISIBILITY_NOT_NULL = "Visibility must not be null";
+	public static final String VISIBILITY_NOT_EMPTY = "Visibility must not be empty";
 }
