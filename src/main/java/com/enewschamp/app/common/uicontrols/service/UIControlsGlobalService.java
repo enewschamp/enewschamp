@@ -1,14 +1,23 @@
 package com.enewschamp.app.common.uicontrols.service;
 
-import static org.hamcrest.CoreMatchers.nullValue;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.uicontrols.global.repository.UIControlsGlobalRepositoryCustom;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.uicontrols.dto.UIControlsGlobalDTO;
 import com.enewschamp.app.common.uicontrols.entity.UIControlsGlobal;
 import com.enewschamp.app.common.uicontrols.repository.UIControlsGlobalRepository;
+import com.enewschamp.domain.common.RecordInUseType;
+import com.enewschamp.problem.BusinessException;
 
 @Service
 public class UIControlsGlobalService {
@@ -16,6 +25,8 @@ public class UIControlsGlobalService {
 	@Autowired
 	UIControlsGlobalRepository repository;
 
+	@Autowired
+	UIControlsGlobalRepositoryCustom customRepository;
 	@Autowired
 	ModelMapper modelMapper;
 
@@ -36,4 +47,70 @@ public class UIControlsGlobalService {
 		return dto;
 	}
 
+	public UIControlsGlobal createOne(UIControlsGlobal entity) {
+		UIControlsGlobal uiControlosGlobal = null;
+		try {
+			uiControlosGlobal = repository.save(entity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return uiControlosGlobal;
+	}
+
+	public UIControlsGlobal update(UIControlsGlobal uiControlEntity) {
+		Long CityId = uiControlEntity.getUiControlGlobalId();
+		UIControlsGlobal existingEntity = get(CityId);
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		modelMapper.map(uiControlEntity, existingEntity);
+		return repository.save(existingEntity);
+	}
+
+	public UIControlsGlobal read(UIControlsGlobal uiControlEntity) {
+		Long uiControlId = uiControlEntity.getUiControlGlobalId();
+		UIControlsGlobal city = get(uiControlId);
+		return city;
+
+	}
+
+	public UIControlsGlobal close(UIControlsGlobal uiControlEntity) {
+		Long uiControlId = uiControlEntity.getUiControlGlobalId();
+		UIControlsGlobal existingUIControls = get(uiControlId);
+		if (existingUIControls.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingUIControls.setRecordInUse(RecordInUseType.N);
+		existingUIControls.setOperationDateTime(null);
+		return repository.save(existingUIControls);
+	}
+
+	public UIControlsGlobal reInstateUIControls(UIControlsGlobal uiControlEntity) {
+		Long uiControlId = uiControlEntity.getUiControlGlobalId();
+		UIControlsGlobal existingUIControls = get(uiControlId);
+		if (existingUIControls.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingUIControls.setRecordInUse(RecordInUseType.Y);
+		existingUIControls.setOperationDateTime(null);
+		return repository.save(existingUIControls);
+	}
+
+	public Page<UIControlsGlobal> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<UIControlsGlobal> cityList = customRepository.findUIControlsGlobals(pageable, searchRequest);
+		if (cityList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return cityList;
+	}
+
+	public UIControlsGlobal get(Long uiControlsId) {
+		Optional<UIControlsGlobal> existingEntity = repository.findById(uiControlsId);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
+		} else {
+			throw new BusinessException(ErrorCodeConstants.UICONTROLS_NOT_FOUND);
+		}
+	}
 }

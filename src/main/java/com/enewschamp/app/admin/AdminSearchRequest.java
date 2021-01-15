@@ -64,4 +64,8 @@ public class AdminSearchRequest {
     private String currentPage;
     private String operation;
     private String action;
+    private String isPremiumFeature;
+    private String globalControlRef;
+    private String controlName;
+    private Long uiControlGlobalId;
 }

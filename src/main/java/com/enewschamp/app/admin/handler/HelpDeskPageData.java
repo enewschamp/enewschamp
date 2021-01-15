@@ -2,6 +2,7 @@ package com.enewschamp.app.admin.handler;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -33,7 +34,9 @@ public class HelpDeskPageData extends PageData {
 	private String phoneNumber;
 	private String supportingComments;
 	private String closeFlag;
-	@NotNull(message = MessageConstants.CALLBACK_TIME_NOT_NULL)
-	private LocalDateTime callBackTime;
 	private LocalDateTime createDateTime;
+	private String supportUserId;
+	private String supportComments;
+	@NotNull(message = MessageConstants.CALLBACK_TIME_NOT_NULL)
+	private LocalDateTime callbackDateTime;
 }

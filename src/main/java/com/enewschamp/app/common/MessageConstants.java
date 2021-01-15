@@ -148,4 +148,10 @@ public class MessageConstants {
 	public static final String RULE_NOT_EMPTY = "Rule must not be empty";
 	public static final String CONTROL_WORK_ENTRY_NOT_NULL = "Control work entry must not be null";
 	public static final String CONTROL_WORK_ENTRY_NOT_EMPTY = "Control work entry must not be empty";
+	public static final String CONTROL_NAME_NOT_NULL = "Control name must not be null";
+	public static final String CONTROL_NAME_NOT_EMPTY = "Control name must not be empty";
+	public static final String CONTROL_LABEL_NOT_NULL = "Control label must not be null";
+	public static final String CONTROL_LABEL_NOT_EMPTY = "Control label must not be empty";
+	public static final String GLOBAL_CONTROL_REF_NOT_NULL = "Global control reference must not be null";
+	public static final String GLOBAL_CONTROL_REF_NOT_EMPTY = "Global control reference must not be empty";
 }

@@ -36,10 +36,7 @@ public class HelpdeskRepositoryCustomImpl extends RepositoryImpl implements Help
 		List<Predicate> filterPredicates = new ArrayList<>();
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
 			filterPredicates.add(cb.equal(helpdeskRoot.get("studentId"), searchRequest.getStudentId()));
-		
-		if (!StringUtils.isEmpty(searchRequest.getCreateDateFrom()))
-			filterPredicates.add(cb.between(helpdeskRoot.get("createDateTime"), searchRequest.getCreateDateFrom(),
-					searchRequest.getCreateDateTo()));
+
 		
 		if (!StringUtils.isEmpty(searchRequest.getCategoryId()))
 			filterPredicates.add(cb.equal(helpdeskRoot.get("categoryId"), searchRequest.getCategoryId()));
@@ -48,7 +45,12 @@ public class HelpdeskRepositoryCustomImpl extends RepositoryImpl implements Help
 			filterPredicates.add(cb.equal(helpdeskRoot.get("closeFlag"), searchRequest.getCloseFlag()));
 		
 		if (!StringUtils.isEmpty(searchRequest.getSupportUserId()))
-			filterPredicates.add(cb.equal(helpdeskRoot.get("operatorId"), searchRequest.getSupportUserId()));
+			filterPredicates.add(cb.equal(helpdeskRoot.get("supportUserId"), searchRequest.getSupportUserId()));
+		
+		
+		if (!StringUtils.isEmpty(searchRequest.getCreateDateFrom()) && !StringUtils.isEmpty(searchRequest.getCreateDateTo()))
+			filterPredicates.add(cb.between(helpdeskRoot.get("createDateTime"), searchRequest.getCreateDateFrom(),
+					searchRequest.getCreateDateTo()));
 		
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(helpdeskRoot.get(CommonConstants.OPERATION_DATE_TIME)));

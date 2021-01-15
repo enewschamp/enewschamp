@@ -136,4 +136,5 @@ public interface ErrorCodeConstants {
 	public static String SCHOOL_REPORTS_NOT_FOUND = "SCH_REPORT_001";
 	public static String ENTITLEMENT_NOT_FOUND = "ENTL_001";
 	public static String PAGE_NAVIGATOR_NOT_FOUND = "PAGE_NAV_001";
+	public static String UICONTROLS_NOT_FOUND = "UICON_001";
 }

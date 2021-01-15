@@ -92,4 +92,11 @@ public class StudentRegistration extends BaseEntity {
 
 	@Column(name = "creationDateTime")
 	private LocalDateTime creationDateTime;
+	
+	/*
+	 * last login time is not in entity but in the excel list
+	 * isTestUser is in the entity but not in the excel list
+	 * photoBase64 is not in the entity but in the excel list
+	 * forcePasswordChange
+	 * */
 }
