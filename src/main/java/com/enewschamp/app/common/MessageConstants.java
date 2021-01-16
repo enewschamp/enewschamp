@@ -175,5 +175,7 @@ public class MessageConstants {
 	public static final String ARTICLE_READ_NOT_NULL = "Article read must not be null";
 	public static final String QUIZ_ATTEMPTED_NOT_NULL = "Quiz attempted must not be null";
 	public static final String QUIZ_CORRECTED_NOT_NULL = "Quiz correctd must not be null";
+	public static final String SCORE_YEAR_MONTH_NOT_NULL = "Score year month must not be null";
+	public static final String SCORE_YEAR_MONTH_NOT_EMPTY = "Score year month must not be empty";
 	
 }

@@ -15,5 +15,7 @@ public interface CommonConstants {
 	public static String QUIZ_CORRECT = "quizCorrect";
 	public static String USER_ID = "countryId";
 	public static String PUBLICATION_DATE = "publicationDate";
+	public static String SCORE_YEAR_MONTH = "scoreYearMonth";
+	public static String GENRE_ID = "genreId";
 
 }

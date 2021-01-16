@@ -138,4 +138,5 @@ public interface ErrorCodeConstants {
 	public static String PAGE_NAVIGATOR_NOT_FOUND = "PAGE_NAV_001";
 	public static String UICONTROLS_NOT_FOUND = "UICON_001";
 	public static String STUDENT_SCORES_DAILY_NOT_FOUND = "STU_SC_DLY_001";
+	public static String STUDENT_SCORES_MONTHLY_NOT_FOUND = "STU_SC_MNTH_001";
 }
