@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.student.school.repository.StudentSchoolRepositoryCustom;
+import com.enewschamp.app.admin.student.school.repository.StudentSchoolRepositoryCustomImplNotInTheList;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -27,6 +28,9 @@ public class StudentSchoolService {
 	
 	@Autowired
 	private StudentSchoolRepositoryCustom repositoryCustom;
+	
+	@Autowired
+	private StudentSchoolRepositoryCustomImplNotInTheList nonListRepositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -113,6 +117,15 @@ public class StudentSchoolService {
 	public Page<StudentSchool> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentSchool> studentSchoolList = repositoryCustom.findStudentSchools(pageable, searchRequest);
+		if(studentSchoolList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return studentSchoolList;
+	}
+	
+	public Page<StudentSchool> notInThelist(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<StudentSchool> studentSchoolList = nonListRepositoryCustom.findStudentSchools(pageable, searchRequest);
 		if(studentSchoolList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

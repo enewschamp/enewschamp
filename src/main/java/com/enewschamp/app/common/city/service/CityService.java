@@ -18,6 +18,7 @@ import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.city.repository.CityRepository;
 import com.enewschamp.app.common.city.repository.CityRepositoryCustom;
+import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
@@ -57,7 +58,7 @@ public class CityService extends AbstractDomainService {
 	public City update(City CityEntity) {
 		Long CityId = CityEntity.getCityId();
 		City existingCity = get(CityId);
-		if(existingCity.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingCity.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(CityEntity, existingCity);
@@ -149,10 +150,18 @@ public class CityService extends AbstractDomainService {
 	public Page<City> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<City> cityList = customRepository.findCities(searchRequest, pageable);
-		if(cityList.getContent().isEmpty()) {
+		if (cityList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return cityList;
+	}
+
+	public City getByNameAndCountryId(String nameId, String stateId, String countryId) {
+		Optional<City> city = cityRepository.findByNameIdAndStateIdAndCountryId(nameId, stateId, countryId);
+		if (city.isPresent())
+			return city.get();
+		else
+			return null;
 	}
 
 }

@@ -31,7 +31,7 @@ public class SchoolService {
 
 	@Autowired
 	private SchoolRepositoryCustom schoolRepositoryCustom;
-	
+
 	@Autowired
 	private SchoolProgramService schoolProgramService;
 
@@ -55,7 +55,7 @@ public class SchoolService {
 	public School update(School SchoolEntity) {
 		Long SchoolId = SchoolEntity.getSchoolId();
 		School existingSchool = get(SchoolId);
-		if(existingSchool.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingSchool.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(SchoolEntity, existingSchool);
@@ -106,28 +106,28 @@ public class SchoolService {
 	public List<School> getSchoolFromProgramCode(String schoolProgramCode) {
 		return schoolRepository.getSchoolFromProgramCode(schoolProgramCode);
 	}
-	
+
 	public School read(School schoolEntity) {
 		Long countryId = schoolEntity.getSchoolId();
 		School school = get(countryId);
-        return school;
+		return school;
 	}
 
 	public School close(School schoolEntity) {
 		Long schoolId = schoolEntity.getSchoolId();
 		School existingSchool = get(schoolId);
-		if(existingSchool.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingSchool.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingSchool.setRecordInUse(RecordInUseType.N);
 		existingSchool.setOperationDateTime(null);
 		return schoolRepository.save(existingSchool);
 	}
-	
+
 	public School reInstate(School schoolEntity) {
 		Long schoolId = schoolEntity.getSchoolId();
 		School existingSchool = get(schoolId);
-		if(existingSchool.getRecordInUse().equals(RecordInUseType.Y)) {
+		if (existingSchool.getRecordInUse().equals(RecordInUseType.Y)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingSchool.setRecordInUse(RecordInUseType.Y);
@@ -138,9 +138,18 @@ public class SchoolService {
 	public Page<School> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<School> schoolList = schoolRepositoryCustom.findSchools(pageable, searchRequest);
-		if(schoolList.getContent().isEmpty()) {
+		if (schoolList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return schoolList;
+	}
+
+	public School getByNameAndCityAndStateAndCountryId(String nameId, String cityId, String stateId, String countryId) {
+		Optional<School> school = schoolRepository.findByNameAndCityIdAndStateIdAndCountryId(nameId, cityId, stateId,
+				countryId);
+		if (school.isPresent()) {
+			return school.get();
+		}
+		return null;
 	}
 }

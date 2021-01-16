@@ -80,4 +80,8 @@ public class AdminSearchRequest {
     private String readingLevel;
     private Long genreId;
     private String scoreYearMonth;
+    private String schoolNotInTheList;
+    private String cityNotInTheList;
+    private String stateNotInTheList;
+    private String countryNotInTheList;
 }

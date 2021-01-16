@@ -31,5 +31,7 @@ public interface CityRepository extends JpaRepository<City, Long> {
 
 	@Query("Select c from City c where c.nameId= :nameId and c.recordInUse ='Y' ")
 	public Optional<City> getCity(@Param("nameId") String nameId);
+	
+	public  Optional<City> findByNameIdAndStateIdAndCountryId(String nameId, String stateId, String countryId);
 
 }

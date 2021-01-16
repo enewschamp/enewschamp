@@ -43,8 +43,7 @@ public class StateService extends AbstractDomainService {
 		State state = null;
 		try {
 			state = stateRepository.save(stateEntity);
-		}
-		catch(DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		return state;
@@ -53,7 +52,7 @@ public class StateService extends AbstractDomainService {
 	public State update(State stateEntity) {
 		Long StateId = stateEntity.getStateId();
 		State existingState = get(StateId);
-		if(existingState.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingState.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(stateEntity, existingState);
@@ -107,27 +106,35 @@ public class StateService extends AbstractDomainService {
 		return statePageData;
 	}
 
+	public State getByNameAndCountryId(String nameId, String countryId) {
+		Optional<State> state = stateRepository.findByNameIdAndCountryId(nameId, countryId);
+		if (state.isPresent())
+			return state.get();
+		else
+			return null;
+	}
+
 	public State read(State stateEntity) {
 		Long StateId = stateEntity.getStateId();
 		State state = get(StateId);
-        return state;
+		return state;
 	}
 
 	public State close(State stateEntity) {
 		Long StateId = stateEntity.getStateId();
 		State existingState = get(StateId);
-		if(existingState.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingState.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingState.setRecordInUse(RecordInUseType.N);
 		existingState.setOperationDateTime(null);
 		return stateRepository.save(existingState);
 	}
-	
+
 	public State reInstate(State stateEntity) {
 		Long StateId = stateEntity.getStateId();
 		State existingState = get(StateId);
-		if(existingState.getRecordInUse().equals(RecordInUseType.Y)) {
+		if (existingState.getRecordInUse().equals(RecordInUseType.Y)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingState.setRecordInUse(RecordInUseType.Y);
@@ -138,7 +145,7 @@ public class StateService extends AbstractDomainService {
 	public Page<State> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<State> stateList = customRepository.findStates(searchRequest, pageable);
-		if(stateList.getContent().isEmpty()) {
+		if (stateList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return stateList;
