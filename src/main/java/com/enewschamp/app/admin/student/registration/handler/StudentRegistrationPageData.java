@@ -41,4 +41,5 @@ public class StudentRegistrationPageData extends PageData {
 	private String isTestUser;
 	private String forcePasswordChange;
 	private LocalDateTime creationDateTime;
+	
 }
