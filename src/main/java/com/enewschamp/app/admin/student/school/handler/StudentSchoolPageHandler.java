@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
@@ -39,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component("StudentSchoolPageHandler")
 @Slf4j
+@EnableTransactionManagement
 public class StudentSchoolPageHandler implements IPageHandler {
 
 	@Autowired
@@ -153,7 +155,7 @@ public class StudentSchoolPageHandler implements IPageHandler {
 	}
 
 	@SneakyThrows
-	private PageDTO listStudentSchool(PageRequestDTO pageRequest) {
+	public PageDTO listStudentSchool(PageRequestDTO pageRequest) {
 		AdminSearchRequest searchRequest = objectMapper
 				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
 

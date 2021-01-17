@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.student.school.repository.StudentSchoolRepositoryCustom;
+import com.enewschamp.app.admin.student.school.repository.StudentSchoolRepositoryCustomImpl;
 import com.enewschamp.app.admin.student.school.repository.StudentSchoolRepositoryCustomImplNotInTheList;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
@@ -27,7 +27,7 @@ public class StudentSchoolService {
 	private StudentSchoolRepository repository;
 	
 	@Autowired
-	private StudentSchoolRepositoryCustom repositoryCustom;
+	private StudentSchoolRepositoryCustomImpl repositoryCustom;
 	
 	@Autowired
 	private StudentSchoolRepositoryCustomImplNotInTheList nonListRepositoryCustom;
@@ -53,13 +53,13 @@ public class StudentSchoolService {
 		return studentSchoolEntity;
 	}
 
-	public StudentSchool update(StudentSchool StudentSchool) {
-		Long studentId = StudentSchool.getStudentId();
+	public StudentSchool update(StudentSchool studentSchool) {
+		Long studentId = studentSchool.getStudentId();
 		StudentSchool existingEntity = get(studentId);
 		if(existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
-		modelMapper.map(StudentSchool, existingEntity);
+		modelMapper.map(studentSchool, existingEntity);
 		return repository.save(existingEntity);
 	}
 

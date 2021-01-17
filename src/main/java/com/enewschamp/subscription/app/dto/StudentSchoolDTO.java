@@ -1,10 +1,13 @@
 package com.enewschamp.subscription.app.dto;
 
+import java.time.LocalDateTime;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.AbstractDTO;
 import com.enewschamp.app.common.MessageConstants;
+import com.enewschamp.domain.common.RecordInUseType;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,4 +39,7 @@ public class StudentSchoolDTO extends AbstractDTO {
 	private String schoolNotInTheList;
 	private String section;
 	private String grade;
+	private String operatorId;
+	private LocalDateTime operationDateTime;
+	private RecordInUseType recordInUse;
 }
