@@ -6,8 +6,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.student.control.repository.StudentControlRepositoryCustom;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -18,17 +22,20 @@ import com.enewschamp.subscription.domain.repository.StudentControlRepository;
 @Service
 public class StudentControlService {
 	@Autowired
-	ModelMapper modelMapper;
+	private ModelMapper modelMapper;
 
 	@Autowired
 	@Qualifier("modelPatcher")
-	ModelMapper modelMapperForPatch;
+	private ModelMapper modelMapperForPatch;
 
 	@Autowired
-	AuditService auditService;
+	private AuditService auditService;
 
 	@Autowired
-	StudentControlRepository repository;
+	private StudentControlRepository repository;
+	
+	@Autowired
+	private StudentControlRepositoryCustom repositoryCustom;
 
 	public StudentControl create(StudentControl studentControl) {
 		StudentControl studentControlEntity = null;
@@ -91,5 +98,14 @@ public class StudentControlService {
 		StudentControl StudentControl = new StudentControl();
 		StudentControl.setStudentId(studentId);
 		return auditService.getEntityAudit(StudentControl);
+	}
+	
+	public Page<StudentControl> list(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<StudentControl> studentControlList = repositoryCustom.findStudentControls(pageable);
+		if(studentControlList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return studentControlList;
 	}
 }

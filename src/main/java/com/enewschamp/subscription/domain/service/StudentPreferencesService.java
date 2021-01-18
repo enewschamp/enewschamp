@@ -28,6 +28,7 @@ public class StudentPreferencesService {
 
 	@Autowired
 	StudentPreferencesRepositoryCustom repositoryCustom;
+	
 	@Autowired
 	ModelMapper modelMapper;
 
