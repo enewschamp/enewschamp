@@ -86,3 +86,66 @@ CREATE TABLE `institution_stakeholder` (
   PRIMARY KEY (`inst_stake_holder_id`),
   UNIQUE KEY `UC_inst_stake_holder_01` (`stake_holder_id`,`institution_id`,`institution_type`)
 );
+
+drop table `school_subscription_grades`;
+CREATE TABLE `school_subscription_grades` (
+  `school_subs_grade_id` bigint(20) NOT NULL,
+  `school_id` bigint(20) NOT NULL,
+  `edition_id` varchar(6) NOT NULL,
+  `grade` varchar(20) NOT NULL,
+  `section` varchar(20) NOT NULL,
+  `capacity` int(20) DEFAULT NULL,
+  `operator_id` varchar(20) NOT NULL,
+  `operation_date_time` datetime NOT NULL,
+  `record_in_use` varchar(1) NOT NULL,  
+  PRIMARY KEY (`school_subs_grade_id`),
+  UNIQUE KEY `UC_inst_stake_holder_01` (`school_id`, `edition_id`, `grade`, `section`)
+);
+
+drop table `school_reports`;
+CREATE TABLE `school_reports` (
+  `school_reports_id` bigint(20) NOT NULL,
+  `stakeholder_id` bigint(20) NOT NULL,
+  `school_id` bigint(20) NOT NULL,
+  `edition_id` varchar(6) NOT NULL,
+  `grade` varchar(20) NOT NULL,
+  `section` varchar(20) DEFAULT NULL,
+  `operation_date_time` datetime NOT NULL,
+  `operator_id` varchar(20) NOT NULL,
+  `record_in_use` varchar(1) NOT NULL,
+  PRIMARY KEY (`school_reports_id`),
+  UNIQUE KEY `UC_school_reports_01` (`stakeholder_id`,`school_id`,`edition_id`,`grade`)
+);
+
+drop table `promotions`;
+CREATE TABLE `promotions` (
+  `promotion_id` bigint(20) NOT NULL,
+  `operation_date_time` datetime NOT NULL,
+  `operator_id` varchar(10) NOT NULL,
+  `record_in_use` varchar(1) NOT NULL,
+  `coupon_code` varchar(10) NOT NULL,
+  `edition_id` varchar(6) NOT NULL,
+  `date_from` date NOT NULL,
+  `date_to` date NOT NULL,
+  `country_id` varchar(2) NOT NULL,
+  `state_id` varchar(50) NOT NULL,
+  `city_id` varchar(50) NOT NULL,
+  `promotion_details` varchar(2000) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`promotion_id`),
+  UNIQUE KEY `UC_promotions_01` (`edition_id`,`date_From`,`country_id`,`state_id`, `city_id`)
+);
+
+drop table `entitlements`;
+CREATE TABLE `entitlements` (
+  `entitlement_id` bigint(20) NOT NULL,
+  `operation_date_time` datetime NOT NULL,
+  `operator_id` varchar(20) NOT NULL,
+  `record_in_use` varchar(1) NOT NULL,
+  `page_name` varchar(50) NOT NULL,
+  `role` varchar(20) NOT NULL,
+  `user_id` varchar(20) NOT NULL,
+  PRIMARY KEY (`entitlement_id`),
+  UNIQUE KEY `UC_entitlements_01` (`user_id`,`role`,`page_name`)
+);
+
