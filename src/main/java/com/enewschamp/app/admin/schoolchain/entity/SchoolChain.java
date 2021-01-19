@@ -78,9 +78,4 @@ public class SchoolChain extends BaseEntity {
 	@Column(name = "comments", length = 999)
 	private String comments;
 
-	@Column(name = "operator")
-	private String operator;
-
-	@Column(name = "lastUpdate")
-	private LocalDateTime lastUpdate;
 }

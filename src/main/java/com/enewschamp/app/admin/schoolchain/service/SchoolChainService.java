@@ -1,5 +1,6 @@
 package com.enewschamp.app.admin.schoolchain.service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -20,7 +21,7 @@ import com.enewschamp.problem.BusinessException;
 
 @Service
 public class SchoolChainService {
-	
+
 	@Autowired
 	private SchoolChainRepository repository;
 
@@ -39,7 +40,11 @@ public class SchoolChainService {
 		try {
 			schoolChain = repository.save(schoolChainEntity);
 		} catch (DataIntegrityViolationException e) {
-			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+			Throwable thr = e.getCause().getCause();
+			if (thr instanceof SQLIntegrityConstraintViolationException) {
+				throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+			} else
+				throw e;
 		}
 		return schoolChain;
 	}
@@ -47,7 +52,7 @@ public class SchoolChainService {
 	public SchoolChain update(SchoolChain schoolChainEntity) {
 		Long schoolChainId = schoolChainEntity.getSchoolChainId();
 		SchoolChain existingSchoolChain = get(schoolChainId);
-		if(existingSchoolChain.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingSchoolChain.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(schoolChainEntity, existingSchoolChain);
@@ -95,7 +100,7 @@ public class SchoolChainService {
 	public Page<SchoolChain> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<SchoolChain> schoolChainList = repositoryCustom.findSchoolChains(pageable);
-		if(schoolChainList.getContent().isEmpty()) {
+		if (schoolChainList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return schoolChainList;
