@@ -29,11 +29,11 @@ public class InstitutionAddress extends BaseEntity {
 	private Long institutionId;
 
 	@NotNull
-	@Column(name = "institutionType")
+	@Column(name = "institutionType", length = 1)
 	private String institutionType;
 
 	@NotNull
-	@Column(name = "addressType")
+	@Column(name = "addressType", length = 3)
 	private String addressType;
 
 	@NotNull
@@ -45,32 +45,42 @@ public class InstitutionAddress extends BaseEntity {
 	private String countryId;
 
 	@NotNull
-	@Column(name = "cityId")
+	@Column(name = "cityId", length = 50)
 	private String cityId;
 
-	@Column(name = "address")
+	@Column(name = "address", length = 399)
 	private String address;
 
-	@Column(name = "pinCode")
+	@Column(name = "pinCode", length = 10)
 	private String pinCode;
-	@Column(name = "landLine1")
+	
+	@Column(name = "landLine1", length = 20)
 	private String landLine1;
-	@Column(name = "landLine2")
+	
+	@Column(name = "landLine2", length = 20)
 	private String landLine2;
-	@Column(name = "landLine3")
+	
+	@Column(name = "landLine3", length = 20)
 	private String landLine3;
-	@Column(name = "mobile1")
+	
+	@Column(name = "mobile1", length = 20)
 	private String mobile1;
-	@Column(name = "mobile2")
+	
+	@Column(name = "mobile2", length = 20)
 	private String mobile2;
-	@Column(name = "mobile3")
+	
+	@Column(name = "mobile3", length = 20)
 	private String mobile3;
-	@Column(name = "email1")
+	
+	@Column(name = "email1", length = 99)
 	private String email1;
-	@Column(name = "email2")
+	
+	@Column(name = "email2", length = 99)
 	private String email2;
-	@Column(name = "email3")
+	
+	@Column(name = "email3", length = 99)
 	private String email3;
-	@Column(name = "comments")
+	
+	@Column(name = "comments", length = 999)
 	private String comments;
 }

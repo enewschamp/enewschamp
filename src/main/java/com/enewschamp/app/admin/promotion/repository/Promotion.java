@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -19,7 +18,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "Promotions", uniqueConstraints={@UniqueConstraint(columnNames={"editionId", "dateFrom", "countryId", "stateId", "cityId"})})
+@Table(name = "Promotions")
 @EqualsAndHashCode(callSuper = false)
 public class Promotion extends BaseEntity {
 	/**
@@ -35,36 +34,36 @@ public class Promotion extends BaseEntity {
 	@NotNull
 	@Column(name = "editionId", length = 6)
 	private String editionId;
-	
+
 	@NotNull
-	@Column(name= "couponCode")
+	@Column(name = "couponCode", length = 10)
 	private String couponCode;
-	
+
 	@NotNull
-	@Column(name= "dateFrom")
+	@Column(name = "dateFrom")
 	private LocalDate dateFrom;
-	
+
 	@NotNull
-	@Column(name= "dateTo")
+	@Column(name = "dateTo")
 	private LocalDate dateTo;
-	
+
 	@NotNull
-	@Column(name = "countryId")
+	@Column(name = "countryId", length = 2)
 	private String countryId;
-	
+
 	@NotNull
-	@Column(name = "stateId")
+	@Column(name = "stateId", length = 50)
 	private String stateId;
-	
+
 	@NotNull
-	@Column(name = "cityId")
+	@Column(name = "cityId", length = 50)
 	private String cityId;
-	
+
 	@NotNull
 	@Column(name = "promotionDetails", length = 2000)
 	private String promotionDetails;
-	
+
 	@NotNull
-	@Column(name ="description")
+	@Column(name = "description", length = 200)
 	private String description;
 }

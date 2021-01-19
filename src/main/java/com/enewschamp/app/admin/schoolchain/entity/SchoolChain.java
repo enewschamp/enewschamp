@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -19,7 +18,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "SchoolChain", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "countryId" }) })
+@Table(name = "SchoolChain")
 @EqualsAndHashCode(callSuper = false)
 public class SchoolChain extends BaseEntity {
 
@@ -35,52 +34,53 @@ public class SchoolChain extends BaseEntity {
 	private String name;
 
 	@NotNull
-	@Column(name = "countryId")
+	@Column(name = "countryId", length = 50)
 	private String countryId;
 
-	@Column(name = "stateId")
+	@Column(name = "stateId", length = 50)
 	private String stateId;
 
-	@Column(name = "cityId")
+	@Column(name = "cityId", length = 50)
 	private String cityId;
+
 	@NotNull
-	@Column(name = "presence")
+	@Column(name = "presence", length = 1)
 	private String presence;
-	
-	@Column(name = "eduBoard")
+
+	@Column(name = "eduBoard", length = 3)
 	private String eduBoard;
-	
-	@Column(name = "eduMedium")
+
+	@Column(name = "eduMedium", length = 3)
 	private String eduMedium;
 
-	@Column(name = "genderDiversity")
+	@Column(name = "genderDiversity", length = 3)
 	private String genderDiversity;
 
-	@Column(name = "feeStructure")
+	@Column(name = "feeStructure", length = 999)
 	private String feeStructure;
 
-	@Column(name = "ownership")
+	@Column(name = "ownership", length = 3)
 	private String ownership;
 
-	@Column(name = "schoolProgram")
+	@Column(name = "schoolProgram", length = 1)
 	private String schoolProgram;
 
-	@Column(name = "shiftDetails")
+	@Column(name = "shiftDetails", length = 999)
 	private String shiftDetails;
 
-	@Column(name = "studentResidences")
+	@Column(name = "studentResidences", length = 3)
 	private String studentResidences;
 
-	@Column(name = "website")
+	@Column(name = "website", length = 99)
 	private String website;
-	
+
 	@NotNull
-	@Column(name = "comments")
+	@Column(name = "comments", length = 999)
 	private String comments;
 
 	@Column(name = "operator")
 	private String operator;
-	
+
 	@Column(name = "lastUpdate")
 	private LocalDateTime lastUpdate;
 }

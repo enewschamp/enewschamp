@@ -28,48 +28,52 @@ public class StakeHolder extends BaseEntity {
 	@Column(name = "stakeHolderId", updatable = false, nullable = false)
 	private Long stakeHolderId;
 
-	@Column(name = "title")
+	@Column(name = "title", length = 3)
 	private String title;
 
-	@NotNull
-	@Column(name = "institutionId")
-	private String institutionId;
+//	@NotNull
+//	@Column(name = "institutionId")
+//	private String institutionId;
+//
+//	@NotNull
+//	@Column(name = "institutionType")
+//	private String institutionType;
 
 	@NotNull
-	@Column(name = "institutionType")
-	private String institutionType;
-
-	@NotNull
-	@Column(name = "name")
+	@Column(name = "name", length = 50)
 	private String name;
 
 	@NotNull
-	@Column(name = "surname")
+	@Column(name = "surname", length = 50)
 	private String surname;
 
-	@Column(name = "otherNames")
+	@Column(name = "otherNames", length = 99)
 	private String otherNames;
 
-	@Column(name = "designation")
+	@Column(name = "designation", length = 50)
 	private String designation;
 
-	@Column(name = "pinCode")
-	private String pinCode;
-
-	@Column(name = "isATeacher")
+	@Column(name = "isATeacher", length = 1)
 	private String isATeacher;
-	@Column(name = "landLine1")
+
+	@Column(name = "landLine1", length = 20)
 	private String landLine1;
-	@Column(name = "landLine2")
+
+	@Column(name = "landLine2", length = 20)
 	private String landLine2;
-	@Column(name = "mobile1")
+
+	@Column(name = "mobile1", length = 20)
 	private String mobile1;
-	@Column(name = "mobile2")
+
+	@Column(name = "mobile2", length = 20)
 	private String mobile2;
-	@Column(name = "email1")
+
+	@Column(name = "email1", length = 99)
 	private String email1;
-	@Column(name = "email2")
+
+	@Column(name = "email2", length = 99)
 	private String email2;
-	@Column(name = "comments")
+
+	@Column(name = "comments", length = 999)
 	private String comments;
 }

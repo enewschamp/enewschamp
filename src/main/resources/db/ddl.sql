@@ -16,7 +16,7 @@ CREATE TABLE `school_chain` (
   `presence` varchar(1) NOT NULL,
   `school_program` varchar(1) DEFAULT NULL,
   `shift_details` varchar(999) DEFAULT NULL,
-  `state_id` varchar(255) DEFAULT NULL,
+  `state_id` varchar(50) DEFAULT NULL,
   `student_residences` varchar(3) DEFAULT NULL,
   `website` varchar(99) DEFAULT NULL,
   PRIMARY KEY (`school_chain_id`),

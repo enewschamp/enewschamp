@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -18,7 +17,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "SchoolSubscriptionGrades", uniqueConstraints={@UniqueConstraint(columnNames={"schoolId", "editionId", "grade", "section"})})
+@Table(name = "SchoolSubscriptionGrades")
 public class SchoolSubscriptionGrade extends BaseEntity {
 
 	private static final long serialVersionUID = -6268188630471167106L;
@@ -30,21 +29,22 @@ public class SchoolSubscriptionGrade extends BaseEntity {
 	private Long schoolSubscriptionId;
 
 	@NotNull
-	@Column(name = "schoolId")
+	@Column(name = "schoolId", length = 20)
 	private String schoolId;
 
 	@NotNull
-	@Column(name = "editionId")
+	@Column(name = "editionId", length = 6)
 	private String editionId;
 
 	@NotNull
-	@Column(name = "grade")
+	@Column(name = "grade", length = 20)
 	private String grade;
-	
+
 	@NotNull
-	@Column(name = "section")
+	@Column(name = "section", length = 20)
 	private String section;
-	
-	@Column(name = "comments")
-	private String comments;
+
+	@NotNull
+	@Column(name = "capacity", length = 20)
+	private Long capacity;
 }
