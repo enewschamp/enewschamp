@@ -34,31 +34,31 @@ public class SchoolRepositoryCustomImpl extends RepositoryImpl implements School
 		CriteriaQuery<School> criteriaQuery = cb.createQuery(School.class);
 		Root<School> schoolRoot = criteriaQuery.from(School.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
+		if (!StringUtils.isEmpty(searchRequest.getSchoolChainId()))
 			filterPredicates.add(cb.equal(schoolRoot.get("schoolChainId"), searchRequest.getSchoolChainId()));
 
-		if (!StringUtils.isEmpty(searchRequest.getCategoryId()))
+		if (!StringUtils.isEmpty(searchRequest.getName()))
 			filterPredicates.add(cb.like(schoolRoot.get("name"), "%" + searchRequest.getName() + "%"));
 
-		if (!StringUtils.isEmpty(searchRequest.getCloseFlag()))
+		if (!StringUtils.isEmpty(searchRequest.getCountryId()))
 			filterPredicates.add(cb.equal(schoolRoot.get("countryId"), searchRequest.getCountryId()));
 
-		if (!StringUtils.isEmpty(searchRequest.getSupportUserId()))
+		if (!StringUtils.isEmpty(searchRequest.getStateId()))
 			filterPredicates.add(cb.equal(schoolRoot.get("stateId"), searchRequest.getStateId()));
 
-		if (!StringUtils.isEmpty(searchRequest.getSupportUserId()))
+		if (!StringUtils.isEmpty(searchRequest.getCityId()))
 			filterPredicates.add(cb.equal(schoolRoot.get("cityId"), searchRequest.getCityId()));
 
-		if (!StringUtils.isEmpty(searchRequest.getSupportUserId()))
+		if (!StringUtils.isEmpty(searchRequest.getEduBoard()))
 			filterPredicates.add(cb.equal(schoolRoot.get("eduBoard"), searchRequest.getEduBoard()));
 
-		if (!StringUtils.isEmpty(searchRequest.getSupportUserId()))
+		if (!StringUtils.isEmpty(searchRequest.getOwnership()))
 			filterPredicates.add(cb.equal(schoolRoot.get("ownership"), searchRequest.getOwnership()));
 
-		if (!StringUtils.isEmpty(searchRequest.getSupportUserId()))
+		if (!StringUtils.isEmpty(searchRequest.getSchoolProgram()))
 			filterPredicates.add(cb.equal(schoolRoot.get("schoolProgram"), searchRequest.getSchoolProgram()));
 
-		if (!StringUtils.isEmpty(searchRequest.getSupportUserId()))
+		if (!StringUtils.isEmpty(searchRequest.getSchoolProgramCode()))
 			filterPredicates.add(cb.equal(schoolRoot.get("schoolProgramCode"), searchRequest.getSchoolProgramCode()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
