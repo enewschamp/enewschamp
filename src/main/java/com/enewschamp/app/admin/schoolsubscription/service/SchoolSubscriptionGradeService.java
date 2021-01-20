@@ -46,7 +46,7 @@ public class SchoolSubscriptionGradeService {
 	}
 
 	public SchoolSubscriptionGrade update(SchoolSubscriptionGrade instStakeHolderEntity) {
-		Long stakeHolderId = instStakeHolderEntity.getSchoolSubscriptionId();
+		Long stakeHolderId = instStakeHolderEntity.getSchoolSubsGradeId();
 		SchoolSubscriptionGrade existingSchoolSubscriptionGrade = get(stakeHolderId);
 		if (existingSchoolSubscriptionGrade.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
@@ -65,13 +65,13 @@ public class SchoolSubscriptionGradeService {
 	}
 
 	public SchoolSubscriptionGrade read(SchoolSubscriptionGrade instStakeHolderEntity) {
-		Long stakeHolderId = instStakeHolderEntity.getSchoolSubscriptionId();
+		Long stakeHolderId = instStakeHolderEntity.getSchoolSubsGradeId();
 		SchoolSubscriptionGrade stakeHolder = get(stakeHolderId);
 		return stakeHolder;
 	}
 
 	public SchoolSubscriptionGrade close(SchoolSubscriptionGrade instStakeHolderEntity) {
-		Long stakeHolderId = instStakeHolderEntity.getSchoolSubscriptionId();
+		Long stakeHolderId = instStakeHolderEntity.getSchoolSubsGradeId();
 		SchoolSubscriptionGrade existingSchoolSubscriptionGrade = get(stakeHolderId);
 		if (existingSchoolSubscriptionGrade.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
@@ -82,7 +82,7 @@ public class SchoolSubscriptionGradeService {
 	}
 
 	public SchoolSubscriptionGrade reInstate(SchoolSubscriptionGrade instStakeHolderEntity) {
-		Long stakeHolderId = instStakeHolderEntity.getSchoolSubscriptionId();
+		Long stakeHolderId = instStakeHolderEntity.getSchoolSubsGradeId();
 		SchoolSubscriptionGrade existingSchoolSubscriptionGrade = get(stakeHolderId);
 		if (existingSchoolSubscriptionGrade.getRecordInUse().equals(RecordInUseType.Y)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);

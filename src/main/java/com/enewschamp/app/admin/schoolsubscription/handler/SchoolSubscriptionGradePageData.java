@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 public class SchoolSubscriptionGradePageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	
-	private Long schoolSubscriptionId;
+	private Long schoolSubsGradeId;
 
 	@NotNull(message = MessageConstants.SCHOOL_ID_NOT_NULL)
 	@NotEmpty(message = MessageConstants.SCHOOL_ID_NOT_EMPTY)
