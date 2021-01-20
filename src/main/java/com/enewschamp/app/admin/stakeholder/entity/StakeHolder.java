@@ -31,14 +31,6 @@ public class StakeHolder extends BaseEntity {
 	@Column(name = "title", length = 3)
 	private String title;
 
-//	@NotNull
-//	@Column(name = "institutionId")
-//	private String institutionId;
-//
-//	@NotNull
-//	@Column(name = "institutionType")
-//	private String institutionType;
-
 	@NotNull
 	@Column(name = "name", length = 50)
 	private String name;

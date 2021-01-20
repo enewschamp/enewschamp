@@ -36,10 +36,10 @@ public class StakeHolderRepositoryCustomImpl extends RepositoryImpl
 		Root<StakeHolder> stakeHolderRoot = criteriaQuery.from(StakeHolder.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		
-		if (!StringUtils.isEmpty(searchRequest.getCategoryId()))
+		if (!StringUtils.isEmpty(searchRequest.getName()))
 			filterPredicates.add(cb.like(stakeHolderRoot.get("name"), "%" + searchRequest.getName() + "%"));
 
-		if (!StringUtils.isEmpty(searchRequest.getCategoryId()))
+		if (!StringUtils.isEmpty(searchRequest.getSurname()))
 			filterPredicates.add(cb.like(stakeHolderRoot.get("surname"), "%" + searchRequest.getSurname() + "%"));
 
 
