@@ -19,7 +19,6 @@ public class SchoolPricingPageData extends PageData {
 	private Long schoolPricingId;
 
 	@NotNull(message = MessageConstants.INSTITUTION_ID_NOT_NULL)
-	@NotEmpty(message = MessageConstants.INSTITUTION_ID_NOT_EMPTY)
 	private Long institutionId;
 
 	@NotNull(message = MessageConstants.INSTITUTION_TYPE_NOT_NULL)
@@ -31,7 +30,6 @@ public class SchoolPricingPageData extends PageData {
 	private String editionId;
 
 	@NotNull(message = MessageConstants.EFFECTIVE_DATE_NOT_NULL)
-	@NotEmpty(message = MessageConstants.EFFECTIVE_DATE_NOT_EMPTY)
 	private LocalDate effectiveDate;
 
 	@NotNull(message = MessageConstants.PRICING_DETAIL_NOT_NULL)

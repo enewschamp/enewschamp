@@ -38,8 +38,8 @@ public class AdminSearchRequest {
 	private String editionId;
 	private String subscriptionType;
 	private String autoRenewal;
-	private LocalDate effectiveDateFrom;
-	private LocalDate effectiveDateTo;
+	private String effectiveDateFrom;
+	private String effectiveDateTo;
 	private LocalDate startDateFrom;
 	private LocalDate startDateTo;
 	private LocalDate endDateFrom;
