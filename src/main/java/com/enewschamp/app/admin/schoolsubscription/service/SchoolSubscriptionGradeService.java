@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.schoolsubscription.entity.SchoolSubscriptionGrade;
 import com.enewschamp.app.admin.schoolsubscription.repository.SchoolSubscriptionGradeRepository;
-import com.enewschamp.app.admin.schoolsubscription.repository.SchoolSubscriptionGradeRepositoryCustom;
+import com.enewschamp.app.admin.schoolsubscription.repository.SchoolSubscriptionGradeRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -26,7 +26,7 @@ public class SchoolSubscriptionGradeService {
 	private SchoolSubscriptionGradeRepository repository;
 
 	@Autowired
-	private SchoolSubscriptionGradeRepositoryCustom repositoryCustom;
+	private SchoolSubscriptionGradeRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -39,8 +39,7 @@ public class SchoolSubscriptionGradeService {
 		SchoolSubscriptionGrade schoolSubscriptionGradeEntity = null;
 		try {
 			schoolSubscriptionGradeEntity = repository.save(schoolSubscriptionGrade);
-		}
-		catch(DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		return schoolSubscriptionGradeEntity;
@@ -49,7 +48,7 @@ public class SchoolSubscriptionGradeService {
 	public SchoolSubscriptionGrade update(SchoolSubscriptionGrade instStakeHolderEntity) {
 		Long stakeHolderId = instStakeHolderEntity.getSchoolSubscriptionId();
 		SchoolSubscriptionGrade existingSchoolSubscriptionGrade = get(stakeHolderId);
-		if(existingSchoolSubscriptionGrade.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingSchoolSubscriptionGrade.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(instStakeHolderEntity, existingSchoolSubscriptionGrade);
@@ -95,9 +94,8 @@ public class SchoolSubscriptionGradeService {
 
 	public Page<SchoolSubscriptionGrade> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<SchoolSubscriptionGrade> stakeHolderList = repositoryCustom.findSchoolSubscriptionGrades(pageable,
-				searchRequest);
-		if(stakeHolderList.getContent().isEmpty()) {
+		Page<SchoolSubscriptionGrade> stakeHolderList = repositoryCustom.findAll(pageable, searchRequest);
+		if (stakeHolderList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return stakeHolderList;

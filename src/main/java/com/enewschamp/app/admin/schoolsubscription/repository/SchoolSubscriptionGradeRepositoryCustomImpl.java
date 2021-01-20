@@ -20,22 +20,23 @@ import org.springframework.util.StringUtils;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.schoolsubscription.entity.SchoolSubscriptionGrade;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class SchoolSubscriptionGradeRepositoryCustomImpl extends RepositoryImpl
-		implements SchoolSubscriptionGradeRepositoryCustom {
+		implements GenericListRepository<SchoolSubscriptionGrade> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<SchoolSubscriptionGrade> findSchoolSubscriptionGrades(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<SchoolSubscriptionGrade> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<SchoolSubscriptionGrade> criteriaQuery = cb.createQuery(SchoolSubscriptionGrade.class);
 		Root<SchoolSubscriptionGrade> schoolSubscriptionGradeRoot = criteriaQuery.from(SchoolSubscriptionGrade.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		
+
 		if (!StringUtils.isEmpty(searchRequest.getSchoolId()))
 			filterPredicates.add(cb.equal(schoolSubscriptionGradeRoot.get("schoolId"), searchRequest.getSchoolId()));
 

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.institutionstakeholder.entity.InstitutionStakeholder;
 import com.enewschamp.app.admin.institutionstakeholder.repository.InstitutionStakeholderRepository;
-import com.enewschamp.app.admin.institutionstakeholder.repository.InstitutionStakeholderRepositoryCustom;
+import com.enewschamp.app.admin.institutionstakeholder.repository.InstitutionStakeholderRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -25,7 +25,7 @@ public class InstitutionStakeholderService {
 	private InstitutionStakeholderRepository repository;
 
 	@Autowired
-	private InstitutionStakeholderRepositoryCustom repositoryCustom;
+	private InstitutionStakeholderRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -41,7 +41,7 @@ public class InstitutionStakeholderService {
 	public InstitutionStakeholder update(InstitutionStakeholder instStakeHolderEntity) {
 		Long stakeHolderId = instStakeHolderEntity.getInstStakeHolderId();
 		InstitutionStakeholder existingInstitutionStakeholder = get(stakeHolderId);
-		if(existingInstitutionStakeholder.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingInstitutionStakeholder.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(instStakeHolderEntity, existingInstitutionStakeholder);
@@ -87,9 +87,8 @@ public class InstitutionStakeholderService {
 
 	public Page<InstitutionStakeholder> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<InstitutionStakeholder> stakeHolderList = repositoryCustom.findInstitutionalStakeHolders(pageable,
-				searchRequest);
-		if(stakeHolderList.getContent().isEmpty()) {
+		Page<InstitutionStakeholder> stakeHolderList = repositoryCustom.findAll(pageable, searchRequest);
+		if (stakeHolderList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return stakeHolderList;

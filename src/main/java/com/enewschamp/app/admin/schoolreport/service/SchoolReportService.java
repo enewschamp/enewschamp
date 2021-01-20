@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.schoolreport.entity.SchoolReport;
 import com.enewschamp.app.admin.schoolreport.repository.SchoolReportRepository;
-import com.enewschamp.app.admin.schoolreport.repository.SchoolReportRepositoryCustom;
+import com.enewschamp.app.admin.schoolreport.repository.SchoolReportRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -26,7 +26,7 @@ public class SchoolReportService {
 	private SchoolReportRepository repository;
 
 	@Autowired
-	private SchoolReportRepositoryCustom repositoryCustom;
+	private SchoolReportRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -48,7 +48,7 @@ public class SchoolReportService {
 	public SchoolReport update(SchoolReport schoolReportEntity) {
 		Long schoolReportId = schoolReportEntity.getSchoolReportId();
 		SchoolReport existingSchoolReport = get(schoolReportId);
-		if(existingSchoolReport.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingSchoolReport.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(schoolReportEntity, existingSchoolReport);
@@ -94,8 +94,8 @@ public class SchoolReportService {
 
 	public Page<SchoolReport> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<SchoolReport> schoolReportList = repositoryCustom.findSchoolReports(pageable, searchRequest);
-		if(schoolReportList.getContent().isEmpty()) {
+		Page<SchoolReport> schoolReportList = repositoryCustom.findAll(pageable, searchRequest);
+		if (schoolReportList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return schoolReportList;

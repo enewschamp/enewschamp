@@ -20,17 +20,18 @@ import org.springframework.util.StringUtils;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.institutionstakeholder.entity.InstitutionStakeholder;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class InstitutionStakeholderRepositoryCustomImpl extends RepositoryImpl
-		implements InstitutionStakeholderRepositoryCustom {
+		implements GenericListRepository<InstitutionStakeholder> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<InstitutionStakeholder> findInstitutionalStakeHolders(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<InstitutionStakeholder> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<InstitutionStakeholder> criteriaQuery = cb.createQuery(InstitutionStakeholder.class);
 		Root<InstitutionStakeholder> inststakeHolderRoot = criteriaQuery.from(InstitutionStakeholder.class);
