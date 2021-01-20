@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.student.achievement.repository.StudentShareAchievementsRepositoryCustom;
+import com.enewschamp.app.admin.student.achievement.repository.StudentShareAchievementsRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -37,14 +37,13 @@ public class StudentShareAchievementsService {
 	StudentShareAchievementsRepository repository;
 
 	@Autowired
-	StudentShareAchievementsRepositoryCustom repositoryCustom;
+	StudentShareAchievementsRepositoryCustomImpl repositoryCustom;
 
 	public StudentShareAchievements create(StudentShareAchievements studentShareAchievements) {
 		StudentShareAchievements studentShareAchievementsEntity = null;
 		try {
 			studentShareAchievementsEntity = repository.save(studentShareAchievements);
-		}
-		catch(DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		return studentShareAchievementsEntity;
@@ -53,7 +52,7 @@ public class StudentShareAchievementsService {
 	public StudentShareAchievements update(StudentShareAchievements StudentShareAchievements) {
 		Long studentId = StudentShareAchievements.getStudentId();
 		StudentShareAchievements existingEntity = get(studentId);
-		if(existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(StudentShareAchievements, existingEntity);
@@ -116,9 +115,8 @@ public class StudentShareAchievementsService {
 
 	public Page<StudentShareAchievements> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<StudentShareAchievements> achievementList = repositoryCustom.findStudentShareAchievements(pageable,
-				searchRequest);
-		if(achievementList.getContent().isEmpty()) {
+		Page<StudentShareAchievements> achievementList = repositoryCustom.findAll(pageable, searchRequest);
+		if (achievementList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return achievementList;

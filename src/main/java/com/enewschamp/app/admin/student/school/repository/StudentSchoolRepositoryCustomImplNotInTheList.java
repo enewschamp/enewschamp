@@ -19,18 +19,19 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.subscription.domain.entity.StudentSchool;
 
 @Repository
 public class StudentSchoolRepositoryCustomImplNotInTheList extends RepositoryImpl
-		implements StudentSchoolRepositoryCustom {
+		implements GenericListRepository<StudentSchool> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<StudentSchool> findStudentSchools(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<StudentSchool> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<StudentSchool> criteriaQuery = cb.createQuery(StudentSchool.class);
 		Root<StudentSchool> studentSchoolsRoot = criteriaQuery.from(StudentSchool.class);

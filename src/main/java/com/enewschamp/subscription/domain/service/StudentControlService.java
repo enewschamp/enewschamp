@@ -11,7 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.admin.student.control.repository.StudentControlRepositoryCustom;
+import com.enewschamp.app.admin.student.control.repository.StudentControlRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -33,9 +33,9 @@ public class StudentControlService {
 
 	@Autowired
 	private StudentControlRepository repository;
-	
+
 	@Autowired
-	private StudentControlRepositoryCustom repositoryCustom;
+	private StudentControlRepositoryCustomImpl repositoryCustom;
 
 	public StudentControl create(StudentControl studentControl) {
 		StudentControl studentControlEntity = null;
@@ -50,7 +50,7 @@ public class StudentControlService {
 	public StudentControl update(StudentControl StudentControl) {
 		Long studentId = StudentControl.getStudentId();
 		StudentControl existingEntity = get(studentId);
-		if(existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(StudentControl, existingEntity);
@@ -99,11 +99,11 @@ public class StudentControlService {
 		StudentControl.setStudentId(studentId);
 		return auditService.getEntityAudit(StudentControl);
 	}
-	
+
 	public Page<StudentControl> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<StudentControl> studentControlList = repositoryCustom.findStudentControls(pageable);
-		if(studentControlList.getContent().isEmpty()) {
+		Page<StudentControl> studentControlList = repositoryCustom.findAll(pageable, null);
+		if (studentControlList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return studentControlList;

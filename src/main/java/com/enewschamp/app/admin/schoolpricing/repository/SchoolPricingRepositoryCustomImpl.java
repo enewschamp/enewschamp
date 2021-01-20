@@ -19,29 +19,29 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.app.school.entity.SchoolPricing;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class SchoolPricingRepositoryCustomImpl extends RepositoryImpl implements SchoolPricingRepositoryCustom {
+public class SchoolPricingRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<SchoolPricing> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<SchoolPricing> findSchoolPricings(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<SchoolPricing> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<SchoolPricing> criteriaQuery = cb.createQuery(SchoolPricing.class);
 		Root<SchoolPricing> schoolPricingRoot = criteriaQuery.from(SchoolPricing.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getInstitutionId()))
-			filterPredicates
-					.add(cb.equal(schoolPricingRoot.get("institutionId"), searchRequest.getInstitutionId()));
+			filterPredicates.add(cb.equal(schoolPricingRoot.get("institutionId"), searchRequest.getInstitutionId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getInstitutionType()))
-			filterPredicates.add(
-					cb.equal(schoolPricingRoot.get("institutionType"), searchRequest.getInstitutionType()));
+			filterPredicates
+					.add(cb.equal(schoolPricingRoot.get("institutionType"), searchRequest.getInstitutionType()));
 
 		if (!StringUtils.isEmpty(searchRequest.getEffectiveDateFrom())
 				&& !StringUtils.isEmpty(searchRequest.getEffectiveDateTo()))

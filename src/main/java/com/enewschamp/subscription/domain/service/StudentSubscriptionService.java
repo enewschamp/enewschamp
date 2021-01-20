@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.student.subscription.repository.StudentSubscriptionRepositoryCustom;
+import com.enewschamp.app.admin.student.subscription.repository.StudentSubscriptionRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -26,7 +26,7 @@ public class StudentSubscriptionService {
 	StudentSubscriptionRepository repository;
 
 	@Autowired
-	StudentSubscriptionRepositoryCustom repositoryCustom;
+	StudentSubscriptionRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -42,8 +42,7 @@ public class StudentSubscriptionService {
 		StudentSubscription studentSubscriptionEntity = null;
 		try {
 			studentSubscriptionEntity = repository.save(studentSubscription);
-		}
-		catch(DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		return studentSubscriptionEntity;
@@ -54,7 +53,7 @@ public class StudentSubscriptionService {
 		Long studentId = studentSubscription.getStudentId();
 		String editionId = studentSubscription.getEditionId();
 		StudentSubscription existingEntity = get(studentId, editionId);
-		if(existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(studentSubscription, existingEntity);
@@ -75,7 +74,7 @@ public class StudentSubscriptionService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-		   // throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
+			// throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
 			return null;
 		}
 	}
@@ -116,9 +115,8 @@ public class StudentSubscriptionService {
 
 	public Page<StudentSubscription> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<StudentSubscription> studentSubscriptionList = repositoryCustom.findStudentSubscriptions(pageable,
-				searchRequest);
-		if(studentSubscriptionList.getContent().isEmpty()) {
+		Page<StudentSubscription> studentSubscriptionList = repositoryCustom.findAll(pageable, searchRequest);
+		if (studentSubscriptionList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return studentSubscriptionList;

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.student.registration.repository.StudentRegistrationRepositoryCustom;
+import com.enewschamp.app.admin.student.registration.repository.StudentRegistrationRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.student.registration.dto.StudentRegistrationDTO;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
@@ -29,7 +29,7 @@ public class StudentRegistrationService {
 	StudentRegistrationRepository repository;
 
 	@Autowired
-	StudentRegistrationRepositoryCustom repositoryCustom;
+	StudentRegistrationRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -142,7 +142,7 @@ public class StudentRegistrationService {
 
 	public Page<StudentRegistration> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<StudentRegistration> stakeHolderList = repositoryCustom.findStudentRegistrations(pageable, searchRequest);
+		Page<StudentRegistration> stakeHolderList = repositoryCustom.findAll(pageable, searchRequest);
 		return stakeHolderList;
 	}
 }

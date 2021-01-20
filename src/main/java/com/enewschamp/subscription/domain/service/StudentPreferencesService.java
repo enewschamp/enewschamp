@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.student.preference.repository.StudentPreferencesRepositoryCustom;
+import com.enewschamp.app.admin.student.preference.repository.StudentPreferencesRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -27,8 +27,8 @@ public class StudentPreferencesService {
 	StudentPreferencesRepository repository;
 
 	@Autowired
-	StudentPreferencesRepositoryCustom repositoryCustom;
-	
+	StudentPreferencesRepositoryCustomImpl repositoryCustom;
+
 	@Autowired
 	ModelMapper modelMapper;
 
@@ -112,8 +112,7 @@ public class StudentPreferencesService {
 
 	public Page<StudentPreferences> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<StudentPreferences> studentPreferencesList = repositoryCustom.findStudentPreferences(searchRequest,
-				pageable);
+		Page<StudentPreferences> studentPreferencesList = repositoryCustom.findAll(pageable, searchRequest);
 		if (studentPreferencesList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

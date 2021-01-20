@@ -19,19 +19,18 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.app.student.badges.entity.StudentBadges;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class StudentBadgesRepositoryCustomImpl extends RepositoryImpl
-		implements StudentBadgesRepositoryCustom {
+public class StudentBadgesRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<StudentBadges> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<StudentBadges> findStudentBadges(Pageable pageable,
-			AdminSearchRequest searchRequest) {
+	public Page<StudentBadges> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<StudentBadges> criteriaQuery = cb.createQuery(StudentBadges.class);
 		Root<StudentBadges> studentachievementRoot = criteriaQuery.from(StudentBadges.class);
@@ -41,7 +40,8 @@ public class StudentBadgesRepositoryCustomImpl extends RepositoryImpl
 			filterPredicates.add(cb.equal(studentachievementRoot.get("studentId"), searchRequest.getStudentId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getStudentBadgesId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("studentBadgesId"), searchRequest.getStudentBadgesId()));
+			filterPredicates
+					.add(cb.equal(studentachievementRoot.get("studentBadgesId"), searchRequest.getStudentBadgesId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getYearMonth()))
 			filterPredicates.add(cb.equal(studentachievementRoot.get("yearMonth"), searchRequest.getYearMonth()));

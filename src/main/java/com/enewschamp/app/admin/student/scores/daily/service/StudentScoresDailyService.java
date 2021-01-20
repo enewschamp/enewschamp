@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.student.scores.daily.repository.StudentScoresDaily;
 import com.enewschamp.app.admin.student.scores.daily.repository.StudentScoresDailyRepository;
-import com.enewschamp.app.admin.student.scores.daily.repository.StudentScoresDailyRepositoryCustom;
+import com.enewschamp.app.admin.student.scores.daily.repository.StudentScoresDailyRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -24,8 +24,8 @@ import com.enewschamp.problem.BusinessException;
 public class StudentScoresDailyService {
 
 	@Autowired
-	private StudentScoresDailyRepositoryCustom repositoryCustom;
-	
+	private StudentScoresDailyRepositoryCustomImpl repositoryCustom;
+
 	private StudentScoresDailyRepository repository;
 
 	@Autowired
@@ -51,7 +51,7 @@ public class StudentScoresDailyService {
 	public StudentScoresDaily update(StudentScoresDaily studentScoreDaily) {
 		Long studentScoreDailyId = studentScoreDaily.getScoresDailyId();
 		StudentScoresDaily existingStudentScoresDaily = get(studentScoreDailyId);
-		if(existingStudentScoresDaily.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingStudentScoresDaily.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(studentScoreDaily, existingStudentScoresDaily);
@@ -74,10 +74,10 @@ public class StudentScoresDailyService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.STUDENT_SCORES_DAILY_NOT_FOUND, String.valueOf(studentScoreDailyId));
+			throw new BusinessException(ErrorCodeConstants.STUDENT_SCORES_DAILY_NOT_FOUND,
+					String.valueOf(studentScoreDailyId));
 		}
 	}
-
 
 	public StudentScoresDaily read(StudentScoresDaily studentScoreDaily) {
 		Long studentScoreDailyId = studentScoreDaily.getScoresDailyId();
@@ -106,11 +106,10 @@ public class StudentScoresDailyService {
 		existingStudentScoresDaily.setOperationDateTime(null);
 		return repository.save(existingStudentScoresDaily);
 	}
-	
 
 	public Page<StudentScoresDaily> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<StudentScoresDaily> studentScoresDailyList = repositoryCustom.findStudentDailyScores(pageable, searchRequest);
+		Page<StudentScoresDaily> studentScoresDailyList = repositoryCustom.findAll(pageable, searchRequest);
 		if (studentScoresDailyList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

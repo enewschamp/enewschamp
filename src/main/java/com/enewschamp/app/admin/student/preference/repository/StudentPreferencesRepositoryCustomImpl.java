@@ -19,18 +19,19 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.subscription.domain.entity.StudentPreferences;
 
 @Repository
 public class StudentPreferencesRepositoryCustomImpl extends RepositoryImpl
-		implements StudentPreferencesRepositoryCustom {
+		implements GenericListRepository<StudentPreferences> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<StudentPreferences> findStudentPreferences(AdminSearchRequest searchRequest, Pageable pageable) {
+	public Page<StudentPreferences> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<StudentPreferences> criteriaQuery = cb.createQuery(StudentPreferences.class);
 		Root<StudentPreferences> StudentPreferencesRoot = criteriaQuery.from(StudentPreferences.class);

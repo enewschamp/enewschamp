@@ -19,19 +19,19 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.subscription.domain.entity.StudentShareAchievements;
 
 @Repository
 public class StudentShareAchievementsRepositoryCustomImpl extends RepositoryImpl
-		implements StudentShareAchievementsRepositoryCustom {
+		implements GenericListRepository<StudentShareAchievements> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<StudentShareAchievements> findStudentShareAchievements(Pageable pageable,
-			AdminSearchRequest searchRequest) {
+	public Page<StudentShareAchievements> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<StudentShareAchievements> criteriaQuery = cb.createQuery(StudentShareAchievements.class);
 		Root<StudentShareAchievements> studentachievementRoot = criteriaQuery.from(StudentShareAchievements.class);

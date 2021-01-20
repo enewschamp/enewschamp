@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.schoolpricing.repository.SchoolPricingRepositoryCustom;
+import com.enewschamp.app.admin.schoolpricing.repository.SchoolPricingRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.school.entity.School;
 import com.enewschamp.app.school.entity.SchoolPricing;
@@ -30,9 +30,9 @@ public class SchoolPricingService {
 
 	@Autowired
 	private SchoolPricingRepository schoolPricingRepository;
-	
+
 	@Autowired
-	private SchoolPricingRepositoryCustom schoolPricingRepositoryCustom;
+	private SchoolPricingRepositoryCustomImpl schoolPricingRepositoryCustom;
 
 	@Autowired
 	private SchoolRepository schoolRepository;
@@ -57,7 +57,7 @@ public class SchoolPricingService {
 	public SchoolPricing update(SchoolPricing SchoolPricingEntity) {
 		Long SchoolPricingId = SchoolPricingEntity.getSchoolPricingId();
 		SchoolPricing existingSchoolPricing = get(SchoolPricingId);
-		if(existingSchoolPricing.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingSchoolPricing.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(SchoolPricingEntity, existingSchoolPricing);
@@ -108,7 +108,7 @@ public class SchoolPricingService {
 			}
 		}
 	}
-	
+
 	public SchoolPricing read(SchoolPricing schoolPricingEntity) {
 		Long stakeHolderId = schoolPricingEntity.getSchoolPricingId();
 		SchoolPricing stakeHolder = get(stakeHolderId);
@@ -139,9 +139,8 @@ public class SchoolPricingService {
 
 	public Page<SchoolPricing> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<SchoolPricing> schoolPricingList = schoolPricingRepositoryCustom.findSchoolPricings(pageable,
-				searchRequest);
-		if(schoolPricingList.getContent().isEmpty()) {
+		Page<SchoolPricing> schoolPricingList = schoolPricingRepositoryCustom.findAll(pageable, searchRequest);
+		if (schoolPricingList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return schoolPricingList;

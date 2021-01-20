@@ -25,12 +25,8 @@ public class InstitutionStakeholder extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "inst_stake_holder_id_generator")
 	@SequenceGenerator(name = "inst_stake_holder_id_generator", sequenceName = "inst_stake_holder_id_seq", allocationSize = 1)
-	@Column(name = "instStakeHolderId", updatable = false, nullable = false)
-	private Long instStakeHolderId;
-
-	@NotNull
-	@Column(name = "stakeholderId")
-	private Long stakeholderId;
+	@Column(name = "stakeHolderId", updatable = false, nullable = false)
+	private Long stakeHolderId;
 
 	@NotNull
 	@Column(name = "institutionId", length = 20)

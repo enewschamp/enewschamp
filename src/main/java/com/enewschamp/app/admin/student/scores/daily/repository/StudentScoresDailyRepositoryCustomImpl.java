@@ -19,16 +19,18 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class StudentScoresDailyRepositoryCustomImpl extends RepositoryImpl implements StudentScoresDailyRepositoryCustom {
+public class StudentScoresDailyRepositoryCustomImpl extends RepositoryImpl
+		implements GenericListRepository<StudentScoresDaily> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<StudentScoresDaily> findStudentDailyScores(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<StudentScoresDaily> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<StudentScoresDaily> criteriaQuery = cb.createQuery(StudentScoresDaily.class);
 		Root<StudentScoresDaily> studentScoresDailyRoot = criteriaQuery.from(StudentScoresDaily.class);
@@ -44,11 +46,13 @@ public class StudentScoresDailyRepositoryCustomImpl extends RepositoryImpl imple
 			filterPredicates.add(cb.equal(studentScoresDailyRoot.get("readingLevel"), searchRequest.getReadingLevel()));
 
 		if (!StringUtils.isEmpty(searchRequest.getPublicationDate()))
-			filterPredicates.add(cb.equal(studentScoresDailyRoot.get("publicationDate"), searchRequest.getPublicationDate()));
+			filterPredicates
+					.add(cb.equal(studentScoresDailyRoot.get("publicationDate"), searchRequest.getPublicationDate()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
-		criteriaQuery.orderBy(cb.desc(studentScoresDailyRoot.get(CommonConstants.PUBLICATION_DATE)), cb.desc(studentScoresDailyRoot.get(CommonConstants.QUIZ_CORRECT)));
-		
+		criteriaQuery.orderBy(cb.desc(studentScoresDailyRoot.get(CommonConstants.PUBLICATION_DATE)),
+				cb.desc(studentScoresDailyRoot.get(CommonConstants.QUIZ_CORRECT)));
+
 		// Build query
 		TypedQuery<StudentScoresDaily> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
