@@ -19,13 +19,13 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;
 
 @Repository
 public class StudentSubscriptionRepositoryCustomImpl extends RepositoryImpl
-		implements GenericListRepository<StudentSubscription> {
+		implements IGenericListRepository<StudentSubscription> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

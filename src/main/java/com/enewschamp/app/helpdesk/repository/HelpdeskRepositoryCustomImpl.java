@@ -19,12 +19,12 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.app.helpdesk.entity.Helpdesk;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class HelpdeskRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<Helpdesk> {
+public class HelpdeskRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Helpdesk> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

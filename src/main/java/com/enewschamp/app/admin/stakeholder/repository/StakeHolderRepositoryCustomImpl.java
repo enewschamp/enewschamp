@@ -20,12 +20,12 @@ import org.springframework.util.StringUtils;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.stakeholder.entity.StakeHolder;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class StakeHolderRepositoryCustomImpl extends RepositoryImpl
-		implements GenericListRepository<StakeHolder> {
+		implements IGenericListRepository<StakeHolder> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

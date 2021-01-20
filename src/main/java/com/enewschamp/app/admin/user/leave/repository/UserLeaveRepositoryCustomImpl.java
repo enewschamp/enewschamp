@@ -19,12 +19,12 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.user.domain.entity.UserLeave;
 
 @Repository
-public class UserLeaveRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<UserLeave> {
+public class UserLeaveRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<UserLeave> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

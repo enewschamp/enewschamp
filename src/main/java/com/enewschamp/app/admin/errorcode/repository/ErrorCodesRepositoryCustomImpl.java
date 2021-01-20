@@ -19,12 +19,12 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.common.domain.entity.ErrorCodes;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class ErrorCodesRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<ErrorCodes> {
+public class ErrorCodesRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<ErrorCodes> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

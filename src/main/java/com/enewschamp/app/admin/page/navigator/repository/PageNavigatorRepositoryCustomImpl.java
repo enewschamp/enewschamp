@@ -19,12 +19,12 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.app.fw.page.navigation.entity.PageNavigator;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class PageNavigatorRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<PageNavigator> {
+public class PageNavigatorRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<PageNavigator> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

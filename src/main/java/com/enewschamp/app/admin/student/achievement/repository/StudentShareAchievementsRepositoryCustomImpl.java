@@ -19,13 +19,13 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.subscription.domain.entity.StudentShareAchievements;
 
 @Repository
 public class StudentShareAchievementsRepositoryCustomImpl extends RepositoryImpl
-		implements GenericListRepository<StudentShareAchievements> {
+		implements IGenericListRepository<StudentShareAchievements> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

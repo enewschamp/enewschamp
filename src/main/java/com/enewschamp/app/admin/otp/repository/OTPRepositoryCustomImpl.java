@@ -19,12 +19,12 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.app.otp.entity.OTP;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class OTPRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<OTP> {
+public class OTPRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<OTP> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

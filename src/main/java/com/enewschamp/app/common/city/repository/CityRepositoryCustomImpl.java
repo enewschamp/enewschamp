@@ -20,11 +20,11 @@ import org.springframework.util.StringUtils;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.city.entity.City;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class CityRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<City> {
+public class CityRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<City> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

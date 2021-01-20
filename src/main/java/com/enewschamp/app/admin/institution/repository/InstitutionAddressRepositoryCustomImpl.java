@@ -20,12 +20,12 @@ import org.springframework.util.StringUtils;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.institution.entity.InstitutionAddress;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class InstitutionAddressRepositoryCustomImpl extends RepositoryImpl
-		implements GenericListRepository<InstitutionAddress> {
+		implements IGenericListRepository<InstitutionAddress> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

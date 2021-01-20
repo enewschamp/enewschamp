@@ -19,11 +19,11 @@ import org.springframework.stereotype.Repository;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.schoolchain.entity.SchoolChain;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class SchoolChainRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<SchoolChain>{
+public class SchoolChainRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<SchoolChain>{
 	
 	@PersistenceContext
 	private EntityManager entityManager;

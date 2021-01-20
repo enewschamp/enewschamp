@@ -17,12 +17,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.security.entity.AppSecurity;
 
 @Repository
-public class AppSecurityRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<AppSecurity> {
+public class AppSecurityRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<AppSecurity> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

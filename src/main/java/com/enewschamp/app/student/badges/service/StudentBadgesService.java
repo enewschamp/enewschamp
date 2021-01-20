@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.student.badges.repository.StudentBadgesRepositoryCustom;
+import com.enewschamp.app.admin.student.badges.repository.StudentBadgesRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.recognition.page.data.RecognitionData;
 import com.enewschamp.app.student.badges.entity.StudentBadges;
@@ -30,7 +30,7 @@ public class StudentBadgesService {
 	StudentBadgesRepository studentBadgesRepository;
 
 	@Autowired
-	StudentBadgesRepositoryCustom studentBadgesRepositoryCustom;
+	StudentBadgesRepositoryCustomImpl studentBadgesRepositoryCustom;
 
 	@Autowired
 	StudentBadgesCustomRepository studentBadgesCustomRepository;
@@ -162,7 +162,7 @@ public class StudentBadgesService {
 
 	public Page<StudentBadges> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<StudentBadges> studentBadgesList = studentBadgesRepositoryCustom.findStudentBadges(pageable,
+		Page<StudentBadges> studentBadgesList = studentBadgesRepositoryCustom.findAll(pageable,
 				searchRequest);
 		if (studentBadgesList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);

@@ -19,10 +19,10 @@ import org.springframework.stereotype.Repository;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.country.entity.Country;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 @Repository
-public class CountryRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<Country>{
+public class CountryRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Country>{
 	
 	@PersistenceContext
 	private EntityManager entityManager;

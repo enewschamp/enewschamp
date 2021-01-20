@@ -19,13 +19,13 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.app.common.uicontrols.entity.UIControlsRules;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class UIControlsRulesRepositoryCustomImpl extends RepositoryImpl
-		implements GenericListRepository<UIControlsRules> {
+		implements IGenericListRepository<UIControlsRules> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

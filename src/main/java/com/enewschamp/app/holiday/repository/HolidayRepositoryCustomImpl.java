@@ -18,11 +18,11 @@ import org.springframework.stereotype.Repository;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.app.holiday.entity.Holiday;
 import com.enewschamp.domain.repository.RepositoryImpl;
 @Repository
-public class HolidayRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<Holiday>{
+public class HolidayRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Holiday>{
 	
 	@PersistenceContext
 	private EntityManager entityManager;

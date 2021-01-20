@@ -19,13 +19,13 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.common.domain.entity.PropertiesBackend;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class PropertiesBackendRepositoryCustomImpl extends RepositoryImpl
-		implements GenericListRepository<PropertiesBackend> {
+		implements IGenericListRepository<PropertiesBackend> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

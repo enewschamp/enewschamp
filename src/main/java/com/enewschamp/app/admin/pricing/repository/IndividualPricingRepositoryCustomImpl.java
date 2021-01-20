@@ -18,11 +18,11 @@ import org.springframework.stereotype.Repository;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.repository.GenericListRepository;
+import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.subscription.pricing.entity.IndividualPricing;
 @Repository
-public class IndividualPricingRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<IndividualPricing>{
+public class IndividualPricingRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<IndividualPricing>{
 	
 	@PersistenceContext
 	private EntityManager entityManager;
