@@ -17,12 +17,10 @@ public class SchoolReportPageData extends PageData {
 	private Long schoolReportId;
 
 	@NotNull(message = MessageConstants.STAKE_HOLDER_ID_NOT_NULL)
-	@NotEmpty(message = MessageConstants.STAKE_HOLDER_ID_NOT_EMPTY)
 	private Long stakeholderId;
 
 	@NotNull(message = MessageConstants.SCHOOL_ID_NOT_NULL)
-	@NotEmpty(message = MessageConstants.SCHOOL_ID_NOT_EMPTY)
-	private String schoolId;
+	private Long schoolId;
 
 	@NotNull(message = MessageConstants.EDITION_ID_NOT_NULL)
 	@NotEmpty(message = MessageConstants.EDITION_ID_NOT_EMPTY)
@@ -36,5 +34,5 @@ public class SchoolReportPageData extends PageData {
 	@NotEmpty(message = MessageConstants.SECTION_NOT_EMPTY)
 	private String section;
 	
-	private String comments;
+	//private String comments;
 }
