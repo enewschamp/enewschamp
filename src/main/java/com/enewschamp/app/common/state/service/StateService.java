@@ -17,7 +17,7 @@ import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.app.common.state.repository.StateRepository;
-import com.enewschamp.app.common.state.repository.StateRepositoryCustom;
+import com.enewschamp.app.common.state.repository.StateRepositoryCustomImpl;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
@@ -30,7 +30,7 @@ public class StateService extends AbstractDomainService {
 	private StateRepository stateRepository;
 
 	@Autowired
-	private StateRepositoryCustom customRepository;
+	private StateRepositoryCustomImpl customRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -144,7 +144,7 @@ public class StateService extends AbstractDomainService {
 
 	public Page<State> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<State> stateList = customRepository.findStates(searchRequest, pageable);
+		Page<State> stateList = customRepository.findAll(pageable, searchRequest);
 		if (stateList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

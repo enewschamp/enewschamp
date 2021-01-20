@@ -16,17 +16,19 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.security.entity.AppSecurity;
 
 @Repository
-public class AppSecurityRepositoryCustomImpl extends RepositoryImpl implements AppSecurityRepositoryCustom {
+public class AppSecurityRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<AppSecurity> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<AppSecurity> findAppSecurities(Pageable pageable) {
+	public Page<AppSecurity> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<AppSecurity> criteriaQuery = cb.createQuery(AppSecurity.class);
 		Root<AppSecurity> stateRoot = criteriaQuery.from(AppSecurity.class);

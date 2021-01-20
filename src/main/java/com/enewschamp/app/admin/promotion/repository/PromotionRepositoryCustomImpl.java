@@ -16,16 +16,18 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 @Repository
-public class PromotionRepositoryCustomImpl extends RepositoryImpl implements PromotionRepositoryCustom{
+public class PromotionRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<Promotion>{
 	
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<Promotion> findPromotions(Pageable pageable) {
+	public Page<Promotion> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Promotion> criteriaQuery = cb.createQuery(Promotion.class);
 		Root<Promotion> promotionRoot = criteriaQuery.from(Promotion.class);

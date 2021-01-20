@@ -59,6 +59,7 @@ public class AccountInactivePageHandler implements IPageHandler {
 	public PageDTO handleAppAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		String methodName = pageNavigatorDTO.getSubmissionMethod();
 		if (methodName != null && !"".equals(methodName)) {
+			@SuppressWarnings("rawtypes")
 			Class[] params = new Class[2];
 			params[0] = PageRequestDTO.class;
 			params[1] = PageNavigatorDTO.class;

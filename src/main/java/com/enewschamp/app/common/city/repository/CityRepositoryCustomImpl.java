@@ -20,16 +20,17 @@ import org.springframework.util.StringUtils;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.city.entity.City;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class CityRepositoryCustomImpl extends RepositoryImpl implements CityRepositoryCustom {
+public class CityRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<City> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<City> findCities(AdminSearchRequest searchRequest, Pageable pageable) {
+	public Page<City> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<City> criteriaQuery = cb.createQuery(City.class);
 		Root<City> cityRoot = criteriaQuery.from(City.class);

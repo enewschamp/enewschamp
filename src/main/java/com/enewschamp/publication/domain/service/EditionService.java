@@ -19,7 +19,7 @@ import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.entity.Edition;
-import com.enewschamp.publication.domain.repository.EditionRepositoryCustom;
+import com.enewschamp.publication.domain.repository.EditionRepositoryCustomImpl;
 
 @Service
 public class EditionService extends AbstractDomainService {
@@ -28,7 +28,7 @@ public class EditionService extends AbstractDomainService {
 	EditionRepository repository;
 
 	@Autowired
-	EditionRepositoryCustom repositoryCustom;
+	EditionRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -130,7 +130,7 @@ public class EditionService extends AbstractDomainService {
 	
 	public Page<Edition> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<Edition> editionList = repositoryCustom.findEditions(pageable);
+		Page<Edition> editionList = repositoryCustom.findAll(pageable, null);
 		if(editionList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

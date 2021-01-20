@@ -16,17 +16,19 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.app.holiday.entity.Holiday;
 import com.enewschamp.domain.repository.RepositoryImpl;
 @Repository
-public class HolidayRepositoryCustomImpl extends RepositoryImpl implements HolidayRepositoryCustom{
+public class HolidayRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<Holiday>{
 	
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<Holiday> findHolidays(Pageable pageable) {
+	public Page<Holiday> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Holiday> criteriaQuery = cb.createQuery(Holiday.class);
 		Root<Holiday> holidayRoot = criteriaQuery.from(Holiday.class);

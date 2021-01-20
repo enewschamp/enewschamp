@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.school.repository.SchoolRepositoryCustom;
+import com.enewschamp.app.admin.school.repository.SchoolRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.school.entity.School;
 import com.enewschamp.app.school.repository.SchoolRepository;
@@ -30,7 +30,7 @@ public class SchoolService {
 	private SchoolRepository schoolRepository;
 
 	@Autowired
-	private SchoolRepositoryCustom schoolRepositoryCustom;
+	private SchoolRepositoryCustomImpl schoolRepositoryCustom;
 
 	@Autowired
 	private SchoolProgramService schoolProgramService;
@@ -137,7 +137,7 @@ public class SchoolService {
 
 	public Page<School> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<School> schoolList = schoolRepositoryCustom.findSchools(pageable, searchRequest);
+		Page<School> schoolList = schoolRepositoryCustom.findAll(pageable, searchRequest);
 		if (schoolList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

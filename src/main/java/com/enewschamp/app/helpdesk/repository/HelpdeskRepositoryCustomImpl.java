@@ -19,17 +19,18 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.app.helpdesk.entity.Helpdesk;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class HelpdeskRepositoryCustomImpl extends RepositoryImpl implements HelpdeskRepositoryCustom {
+public class HelpdeskRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<Helpdesk> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<Helpdesk> findHelpDesks(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<Helpdesk> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Helpdesk> criteriaQuery = cb.createQuery(Helpdesk.class);
 		Root<Helpdesk> helpdeskRoot = criteriaQuery.from(Helpdesk.class);

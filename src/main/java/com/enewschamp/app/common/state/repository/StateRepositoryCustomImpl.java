@@ -19,16 +19,17 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.domain.repository.RepositoryImpl;
 @Repository
-public class StateRepositoryCustomImpl extends RepositoryImpl implements StateRepositoryCustom{
+public class StateRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<State>{
 	
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<State> findStates(AdminSearchRequest searchRequest, Pageable pageable) {
+	public Page<State> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<State> criteriaQuery = cb.createQuery(State.class);
 		Root<State> stateRoot = criteriaQuery.from(State.class);

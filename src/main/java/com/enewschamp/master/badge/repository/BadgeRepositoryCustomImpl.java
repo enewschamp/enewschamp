@@ -16,17 +16,19 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.publication.domain.entity.Badge;
 @Repository
-public class BadgeRepositoryCustomImpl extends RepositoryImpl implements BadgeRepositoryCustom{
+public class BadgeRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<Badge>{
 	
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<Badge> findBadges(Pageable pageable) {
+	public Page<Badge> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Badge> criteriaQuery = cb.createQuery(Badge.class);
 		Root<Badge> badgeRoot = criteriaQuery.from(Badge.class);

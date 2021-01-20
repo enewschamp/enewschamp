@@ -17,7 +17,7 @@ import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.city.repository.CityRepository;
-import com.enewschamp.app.common.city.repository.CityRepositoryCustom;
+import com.enewschamp.app.common.city.repository.CityRepositoryCustomImpl;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
@@ -34,7 +34,7 @@ public class CityService extends AbstractDomainService {
 	CityRepository cityRepository;
 
 	@Autowired
-	private CityRepositoryCustom customRepository;
+	private CityRepositoryCustomImpl customRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -148,7 +148,7 @@ public class CityService extends AbstractDomainService {
 
 	public Page<City> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<City> cityList = customRepository.findCities(searchRequest, pageable);
+		Page<City> cityList = customRepository.findAll(pageable, searchRequest);
 		if (cityList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

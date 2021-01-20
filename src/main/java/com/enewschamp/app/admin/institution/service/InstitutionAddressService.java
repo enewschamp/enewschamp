@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.institution.entity.InstitutionAddress;
 import com.enewschamp.app.admin.institution.repository.InstitutionAddressRepository;
-import com.enewschamp.app.admin.institution.repository.InstitutionAddressRepositoryCustom;
+import com.enewschamp.app.admin.institution.repository.InstitutionAddressRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -25,7 +25,7 @@ public class InstitutionAddressService {
 	private InstitutionAddressRepository repository;
 
 	@Autowired
-	private InstitutionAddressRepositoryCustom repositoryCustom;
+	private InstitutionAddressRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -93,7 +93,7 @@ public class InstitutionAddressService {
 
 	public Page<InstitutionAddress> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<InstitutionAddress> institutionList = repositoryCustom.findInstitutionAddresses(pageable, searchRequest);
+		Page<InstitutionAddress> institutionList = repositoryCustom.findAll(pageable, searchRequest);
 		if(institutionList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

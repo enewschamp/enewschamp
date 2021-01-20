@@ -16,17 +16,19 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.subscription.pricing.entity.IndividualPricing;
 @Repository
-public class IndividualPricingRepositoryCustomImpl extends RepositoryImpl implements IndividualPricingRepositoryCustom{
+public class IndividualPricingRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<IndividualPricing>{
 	
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<IndividualPricing> findIndividualPricings(Pageable pageable) {
+	public Page<IndividualPricing> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<IndividualPricing> criteriaQuery = cb.createQuery(IndividualPricing.class);
 		Root<IndividualPricing> individualPricingRoot = criteriaQuery.from(IndividualPricing.class);

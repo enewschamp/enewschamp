@@ -17,7 +17,7 @@ import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.country.dto.CountryDTO;
 import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.app.common.country.repository.CountryRepository;
-import com.enewschamp.app.common.country.repository.CountryRepositoryCustom;
+import com.enewschamp.app.common.country.repository.CountryRepositoryCustomImpl;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
@@ -31,7 +31,7 @@ public class CountryService extends AbstractDomainService {
 	private CountryRepository countryRepository;
 	
 	@Autowired
-	private CountryRepositoryCustom countryRepositoryCustom;
+	private CountryRepositoryCustomImpl countryRepositoryCustom;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -147,7 +147,7 @@ public class CountryService extends AbstractDomainService {
 
 	public Page<Country> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<Country> countryList = countryRepositoryCustom.findCountries(pageable);
+		Page<Country> countryList = countryRepositoryCustom.findAll(pageable, null);
 		if(countryList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

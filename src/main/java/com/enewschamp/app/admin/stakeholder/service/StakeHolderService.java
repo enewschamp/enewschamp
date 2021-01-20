@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.stakeholder.entity.StakeHolder;
 import com.enewschamp.app.admin.stakeholder.repository.StakeHolderRepository;
-import com.enewschamp.app.admin.stakeholder.repository.StakeHolderRepositoryCustom;
+import com.enewschamp.app.admin.stakeholder.repository.StakeHolderRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -26,7 +26,7 @@ public class StakeHolderService {
 	private StakeHolderRepository repository;
 
 	@Autowired
-	private StakeHolderRepositoryCustom repositoryCustom;
+	private StakeHolderRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -94,7 +94,7 @@ public class StakeHolderService {
 
 	public Page<StakeHolder> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<StakeHolder> stakeHolderList = repositoryCustom.findStakeHolders(pageable, searchRequest);
+		Page<StakeHolder> stakeHolderList = repositoryCustom.findAll(pageable, searchRequest);
 		if(stakeHolderList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

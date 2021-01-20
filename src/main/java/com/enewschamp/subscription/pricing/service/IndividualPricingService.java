@@ -15,7 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.admin.pricing.repository.IndividualPricingRepositoryCustom;
+import com.enewschamp.app.admin.pricing.repository.IndividualPricingRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -29,7 +29,7 @@ public class IndividualPricingService {
 	private IndividualPricingRepository individualPricingRepository;
 
 	@Autowired
-	private IndividualPricingRepositoryCustom individualPricingRepositoryCustom;
+	private IndividualPricingRepositoryCustomImpl individualPricingRepositoryCustom;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -120,7 +120,7 @@ public class IndividualPricingService {
 
 	public Page<IndividualPricing> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<IndividualPricing> individualPricingList = individualPricingRepositoryCustom.findIndividualPricings(pageable);
+		Page<IndividualPricing> individualPricingList = individualPricingRepositoryCustom.findAll(pageable, null);
 		if(individualPricingList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

@@ -16,17 +16,19 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.country.entity.Country;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 @Repository
-public class CountryRepositoryCustomImpl extends RepositoryImpl implements CountryRepositoryCustom{
+public class CountryRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<Country>{
 	
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<Country> findCountries(Pageable pageable) {
+	public Page<Country> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Country> criteriaQuery = cb.createQuery(Country.class);
 		Root<Country> countryRoot = criteriaQuery.from(Country.class);

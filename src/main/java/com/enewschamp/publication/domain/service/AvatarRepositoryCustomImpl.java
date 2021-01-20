@@ -16,17 +16,19 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.publication.domain.entity.Avatar;
 @Repository
-public class AvatarRepositoryCustomImpl extends RepositoryImpl implements AvatarRepositoryCustom{
+public class AvatarRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<Avatar>{
 	
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<Avatar> findAvatars(Pageable pageable) {
+	public Page<Avatar> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Avatar> criteriaQuery = cb.createQuery(Avatar.class);
 		Root<Avatar> avatarRoot = criteriaQuery.from(Avatar.class);

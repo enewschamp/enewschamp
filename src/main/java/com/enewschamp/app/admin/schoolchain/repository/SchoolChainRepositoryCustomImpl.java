@@ -16,18 +16,20 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.schoolchain.entity.SchoolChain;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class SchoolChainRepositoryCustomImpl extends RepositoryImpl implements SchoolChainRepositoryCustom{
+public class SchoolChainRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<SchoolChain>{
 	
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<SchoolChain> findSchoolChains(Pageable pageable) {
+	public Page<SchoolChain> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<SchoolChain> criteriaQuery = cb.createQuery(SchoolChain.class);
 		Root<SchoolChain> schoolChainRoot = criteriaQuery.from(SchoolChain.class);

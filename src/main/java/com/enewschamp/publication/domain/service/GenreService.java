@@ -20,7 +20,7 @@ import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.common.GenreList;
 import com.enewschamp.publication.domain.entity.Genre;
-import com.enewschamp.publication.domain.repository.GenreRepositoryCustom;
+import com.enewschamp.publication.domain.repository.GenreRepositoryCustomImpl;
 
 @Service
 public class GenreService extends AbstractDomainService {
@@ -29,7 +29,7 @@ public class GenreService extends AbstractDomainService {
 	GenreRepository repository;
 
 	@Autowired
-	GenreRepositoryCustom repositoryCustom;
+	GenreRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -125,7 +125,7 @@ public class GenreService extends AbstractDomainService {
 
 	public Page<Genre> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<Genre> genreList = repositoryCustom.findGenres(pageable);
+		Page<Genre> genreList = repositoryCustom.findAll(pageable, null);
 		if(genreList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

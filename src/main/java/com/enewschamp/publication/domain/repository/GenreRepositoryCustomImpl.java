@@ -16,17 +16,19 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.publication.domain.entity.Genre;
 @Repository
-public class GenreRepositoryCustomImpl extends RepositoryImpl implements GenreRepositoryCustom{
+public class GenreRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<Genre>{
 	
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<Genre> findGenres(Pageable pageable) {
+	public Page<Genre> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Genre> criteriaQuery = cb.createQuery(Genre.class);
 		Root<Genre> genreRoot = criteriaQuery.from(Genre.class);

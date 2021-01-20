@@ -20,17 +20,18 @@ import org.springframework.util.StringUtils;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.stakeholder.entity.StakeHolder;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class StakeHolderRepositoryCustomImpl extends RepositoryImpl
-		implements StakeHolderRepositoryCustom {
+		implements GenericListRepository<StakeHolder> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<StakeHolder> findStakeHolders(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<StakeHolder> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<StakeHolder> criteriaQuery = cb.createQuery(StakeHolder.class);
 		Root<StakeHolder> stakeHolderRoot = criteriaQuery.from(StakeHolder.class);

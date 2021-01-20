@@ -16,7 +16,7 @@ import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.security.entity.AppSecurity;
 import com.enewschamp.security.repository.AppSecurityRepository;
-import com.enewschamp.security.repository.AppSecurityRepositoryCustom;
+import com.enewschamp.security.repository.AppSecurityRepositoryCustomImpl;
 
 @Service
 public class AppSecurityService {
@@ -25,7 +25,7 @@ public class AppSecurityService {
 	private AppSecurityRepository appSecurityRepository;
 
 	@Autowired
-	private AppSecurityRepositoryCustom appSecurityRepositoryCustom;
+	private AppSecurityRepositoryCustomImpl appSecurityRepositoryCustom;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -125,7 +125,7 @@ public class AppSecurityService {
 
 	public Page<AppSecurity> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<AppSecurity> appSecList = appSecurityRepositoryCustom.findAppSecurities(pageable);
+		Page<AppSecurity> appSecList = appSecurityRepositoryCustom.findAll(pageable, null);
 		if(appSecList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

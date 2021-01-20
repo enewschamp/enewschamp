@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.schoolchain.entity.SchoolChain;
 import com.enewschamp.app.admin.schoolchain.repository.SchoolChainRepository;
-import com.enewschamp.app.admin.schoolchain.repository.SchoolChainRepositoryCustom;
+import com.enewschamp.app.admin.schoolchain.repository.SchoolChainRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -26,7 +26,7 @@ public class SchoolChainService {
 	private SchoolChainRepository repository;
 
 	@Autowired
-	private SchoolChainRepositoryCustom repositoryCustom;
+	private SchoolChainRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -99,7 +99,7 @@ public class SchoolChainService {
 
 	public Page<SchoolChain> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<SchoolChain> schoolChainList = repositoryCustom.findSchoolChains(pageable);
+		Page<SchoolChain> schoolChainList = repositoryCustom.findAll(pageable, null);
 		if (schoolChainList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

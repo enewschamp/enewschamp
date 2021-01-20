@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.holiday.entity.Holiday;
 import com.enewschamp.app.holiday.repository.HolidayRepository;
-import com.enewschamp.app.holiday.repository.HolidayRepositoryCustom;
+import com.enewschamp.app.holiday.repository.HolidayRepositoryCustomImpl;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.common.HolidayList;
@@ -28,7 +28,7 @@ public class HolidayService {
 	HolidayRepository holidayRepository;
 
 	@Autowired
-	HolidayRepositoryCustom holidayRepositoryCustom;
+	HolidayRepositoryCustomImpl holidayRepositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -119,7 +119,7 @@ public class HolidayService {
 
 	public Page<Holiday> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<Holiday> holidayList = holidayRepositoryCustom.findHolidays(pageable);
+		Page<Holiday> holidayList = holidayRepositoryCustom.findAll	(pageable, null);
 		if(holidayList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

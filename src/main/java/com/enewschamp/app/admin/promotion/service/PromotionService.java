@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.promotion.repository.Promotion;
 import com.enewschamp.app.admin.promotion.repository.PromotionRepository;
-import com.enewschamp.app.admin.promotion.repository.PromotionRepositoryCustom;
+import com.enewschamp.app.admin.promotion.repository.PromotionRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -25,7 +25,7 @@ public class PromotionService {
 	private PromotionRepository repository;
 
 	@Autowired
-	private PromotionRepositoryCustom repositoryCustom;
+	private PromotionRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -94,7 +94,7 @@ public class PromotionService {
 
 	public Page<Promotion> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<Promotion> promotionList = repositoryCustom.findPromotions(pageable);
+		Page<Promotion> promotionList = repositoryCustom.findAll(pageable, null);
 		if(promotionList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

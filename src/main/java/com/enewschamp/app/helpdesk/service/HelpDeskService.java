@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.helpdesk.entity.Helpdesk;
-import com.enewschamp.app.helpdesk.repository.HelpdeskRepositoryCustom;
 import com.enewschamp.app.helpdesk.repository.HelpdeskRepository;
+import com.enewschamp.app.helpdesk.repository.HelpdeskRepositoryCustomImpl;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 
@@ -28,7 +28,7 @@ public class HelpDeskService {
 	private HelpdeskRepository helpdeskRespository;
 
 	@Autowired
-	private HelpdeskRepositoryCustom helpDeskRespositoryCustom;
+	private HelpdeskRepositoryCustomImpl helpDeskRespositoryCustom;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -118,7 +118,7 @@ public class HelpDeskService {
 
 	public Page<Helpdesk> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<Helpdesk> helpDeskList = helpDeskRespositoryCustom.findHelpDesks(pageable, searchRequest);
+		Page<Helpdesk> helpDeskList = helpDeskRespositoryCustom.findAll(pageable, searchRequest);
 		if(helpDeskList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

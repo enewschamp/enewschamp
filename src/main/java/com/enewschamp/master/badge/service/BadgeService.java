@@ -16,7 +16,7 @@ import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.master.badge.repository.BadgeRepository;
-import com.enewschamp.master.badge.repository.BadgeRepositoryCustom;
+import com.enewschamp.master.badge.repository.BadgeRepositoryCustomImpl;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.common.BadgeList;
 import com.enewschamp.publication.domain.entity.Badge;
@@ -28,7 +28,7 @@ public class BadgeService {
 	BadgeRepository badgeRepository;
 
 	@Autowired
-	BadgeRepositoryCustom badgeRepositoryCustom;
+	BadgeRepositoryCustomImpl badgeRepositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -175,7 +175,7 @@ public class BadgeService {
 
 	public Page<Badge> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<Badge> badgeList = badgeRepositoryCustom.findBadges(pageable);
+		Page<Badge> badgeList = badgeRepositoryCustom.findAll(pageable, null);
 		if(badgeList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
