@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.page.navigator.rule.repository.PageNavigatorRulesRepositoryCustom;
+import com.enewschamp.app.admin.page.navigator.rule.repository.PageNavigatorRulesRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorRulesDTO;
 import com.enewschamp.app.fw.page.navigation.entity.PageNavigatorRules;
@@ -28,9 +28,9 @@ public class PageNavigationRulesService {
 
 	@Autowired
 	PageNavigatorRulesRepository pageNavigatorRulesRepository;
-	
+
 	@Autowired
-	PageNavigatorRulesRepositoryCustom repositoryCustom;
+	PageNavigatorRulesRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -82,7 +82,7 @@ public class PageNavigationRulesService {
 
 		}
 	}
-	
+
 	public List<PageNavigatorRulesDTO> getNavRuleList(Long navId) {
 		List<PageNavigatorRules> existingEntity = pageNavigatorRulesRepository.getNavRules(navId);
 		java.lang.reflect.Type listType = new TypeToken<List<PageNavigatorRulesDTO>>() {
@@ -97,7 +97,7 @@ public class PageNavigationRulesService {
 		PageNavigatorRules.setNavId(navId);
 		return auditService.getEntityAudit(PageNavigatorRules);
 	}
-	
+
 	public PageNavigatorRules read(PageNavigatorRules pageNavigator) {
 		Long pageNavigatorId = pageNavigator.getNavId();
 		PageNavigatorRules existingPageNavigator = get(pageNavigatorId);
@@ -128,7 +128,7 @@ public class PageNavigationRulesService {
 
 	public Page<PageNavigatorRules> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<PageNavigatorRules> pageList = repositoryCustom.findPageNavigatorRules(pageable, searchRequest);
+		Page<PageNavigatorRules> pageList = repositoryCustom.findAll(pageable, searchRequest);
 		if (pageList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

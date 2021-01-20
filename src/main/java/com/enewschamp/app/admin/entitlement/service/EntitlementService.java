@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.entitlement.repository.Entitlement;
 import com.enewschamp.app.admin.entitlement.repository.EntitlementRepository;
-import com.enewschamp.app.admin.entitlement.repository.EntitlementRepositoryCustom;
+import com.enewschamp.app.admin.entitlement.repository.EntitlementRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -26,7 +26,7 @@ public class EntitlementService {
 	private EntitlementRepository repository;
 
 	@Autowired
-	private EntitlementRepositoryCustom repositoryCustom;
+	private EntitlementRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -94,7 +94,7 @@ public class EntitlementService {
 
 	public Page<Entitlement> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<Entitlement> entitlementList = repositoryCustom.findEntitlements(pageable, searchRequest);
+		Page<Entitlement> entitlementList = repositoryCustom.findAll(pageable, searchRequest);
 		if (entitlementList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

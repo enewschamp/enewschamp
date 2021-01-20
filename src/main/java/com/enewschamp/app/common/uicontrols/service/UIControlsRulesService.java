@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.uicontrols.rule.repository.UIControlsRulesRepositoryCustom;
+import com.enewschamp.app.admin.uicontrols.rule.repository.UIControlsRulesRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.uicontrols.dto.UIControlsRulesDTO;
 import com.enewschamp.app.common.uicontrols.entity.UIControlsRules;
@@ -30,7 +30,7 @@ public class UIControlsRulesService {
 	UIControlsRulesRepository uiControlsRulesRepository;
 	
 	@Autowired
-	UIControlsRulesRepositoryCustom uiControlsRulesRepositoryCustom;
+	UIControlsRulesRepositoryCustomImpl uiControlsRulesRepositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -128,7 +128,7 @@ public class UIControlsRulesService {
 
 	public Page<UIControlsRules> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<UIControlsRules> uiControlRuleList = uiControlsRulesRepositoryCustom.findUIControlsRules(pageable, searchRequest);
+		Page<UIControlsRules> uiControlRuleList = uiControlsRulesRepositoryCustom.findAll(pageable, searchRequest);
 		if (uiControlRuleList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

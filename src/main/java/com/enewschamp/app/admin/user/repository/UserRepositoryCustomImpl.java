@@ -19,17 +19,18 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.user.domain.entity.User;
 
 @Repository
-public class UserRepositoryCustomImpl extends RepositoryImpl implements UserRepositoryCustom {
+public class UserRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<User> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<User> findUsers(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<User> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<User> criteriaQuery = cb.createQuery(User.class);
 		Root<User> studentachievementRoot = criteriaQuery.from(User.class);

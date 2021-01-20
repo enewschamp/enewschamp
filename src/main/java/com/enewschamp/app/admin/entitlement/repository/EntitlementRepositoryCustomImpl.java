@@ -19,16 +19,17 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class EntitlementRepositoryCustomImpl extends RepositoryImpl implements EntitlementRepositoryCustom {
+public class EntitlementRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<Entitlement> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<Entitlement> findEntitlements(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<Entitlement> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Entitlement> criteriaQuery = cb.createQuery(Entitlement.class);
 		Root<Entitlement> entitlementRoot = criteriaQuery.from(Entitlement.class);

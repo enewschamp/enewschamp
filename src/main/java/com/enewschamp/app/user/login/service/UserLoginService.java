@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.user.login.repository.UserLoginRepositoryCustom;
+import com.enewschamp.app.admin.user.login.repository.UserLoginRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
@@ -28,7 +28,7 @@ public class UserLoginService {
 	UserLoginRepository repository;
 
 	@Autowired
-	UserLoginRepositoryCustom repositoryCustom;
+	UserLoginRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -161,7 +161,7 @@ public class UserLoginService {
 
 	public Page<UserLogin> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<UserLogin> userList = repositoryCustom.findUserLogins(pageable, searchRequest);
+		Page<UserLogin> userList = repositoryCustom.findAll(pageable, searchRequest);
 		if (userList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

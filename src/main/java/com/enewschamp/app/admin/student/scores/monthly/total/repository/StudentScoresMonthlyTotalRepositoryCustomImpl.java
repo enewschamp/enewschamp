@@ -19,16 +19,18 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class StudentScoresMonthlyTotalRepositoryCustomImpl extends RepositoryImpl implements StudentScoresMonthlyTotalRepositoryCustom {
+public class StudentScoresMonthlyTotalRepositoryCustomImpl extends RepositoryImpl
+		implements GenericListRepository<StudentScoresMonthlyTotal> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<StudentScoresMonthlyTotal> findStudentMonthlyScoresTotals(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<StudentScoresMonthlyTotal> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<StudentScoresMonthlyTotal> criteriaQuery = cb.createQuery(StudentScoresMonthlyTotal.class);
 		Root<StudentScoresMonthlyTotal> studentScoresDailyRoot = criteriaQuery.from(StudentScoresMonthlyTotal.class);
@@ -44,11 +46,13 @@ public class StudentScoresMonthlyTotalRepositoryCustomImpl extends RepositoryImp
 			filterPredicates.add(cb.equal(studentScoresDailyRoot.get("readingLevel"), searchRequest.getReadingLevel()));
 
 		if (!StringUtils.isEmpty(searchRequest.getScoreYearMonth()))
-			filterPredicates.add(cb.equal(studentScoresDailyRoot.get("scoreYearMonth"), searchRequest.getScoreYearMonth()));
+			filterPredicates
+					.add(cb.equal(studentScoresDailyRoot.get("scoreYearMonth"), searchRequest.getScoreYearMonth()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
-		criteriaQuery.orderBy(cb.desc(studentScoresDailyRoot.get(CommonConstants.SCORE_YEAR_MONTH)), cb.desc(studentScoresDailyRoot.get(CommonConstants.QUIZ_CORRECT)));
-		
+		criteriaQuery.orderBy(cb.desc(studentScoresDailyRoot.get(CommonConstants.SCORE_YEAR_MONTH)),
+				cb.desc(studentScoresDailyRoot.get(CommonConstants.QUIZ_CORRECT)));
+
 		// Build query
 		TypedQuery<StudentScoresMonthlyTotal> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {

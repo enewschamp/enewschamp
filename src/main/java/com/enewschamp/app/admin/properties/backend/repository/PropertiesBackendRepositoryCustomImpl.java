@@ -19,17 +19,19 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.common.domain.entity.PropertiesBackend;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class PropertiesBackendRepositoryCustomImpl extends RepositoryImpl implements PropertiesBackendRepositoryCustom {
+public class PropertiesBackendRepositoryCustomImpl extends RepositoryImpl
+		implements GenericListRepository<PropertiesBackend> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<PropertiesBackend> findPropertiesBackends(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<PropertiesBackend> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<PropertiesBackend> criteriaQuery = cb.createQuery(PropertiesBackend.class);
 		Root<PropertiesBackend> propertiesBackendRoot = criteriaQuery.from(PropertiesBackend.class);
@@ -53,4 +55,3 @@ public class PropertiesBackendRepositoryCustomImpl extends RepositoryImpl implem
 	}
 
 }
-

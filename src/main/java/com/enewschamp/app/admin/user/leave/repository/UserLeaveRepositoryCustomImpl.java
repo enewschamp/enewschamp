@@ -19,17 +19,18 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.user.domain.entity.UserLeave;
 
 @Repository
-public class UserLeaveRepositoryCustomImpl extends RepositoryImpl implements UserLeaveRepositoryCustom {
+public class UserLeaveRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<UserLeave> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<UserLeave> findUserLeaves(AdminSearchRequest searchRequest, Pageable pageable) {
+	public Page<UserLeave> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<UserLeave> criteriaQuery = cb.createQuery(UserLeave.class);
 		Root<UserLeave> userLeaveRoot = criteriaQuery.from(UserLeave.class);

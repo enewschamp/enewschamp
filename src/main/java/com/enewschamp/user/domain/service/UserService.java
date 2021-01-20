@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.user.repository.UserRepositoryCustom;
+import com.enewschamp.app.admin.user.repository.UserRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.user.login.entity.UserAction;
@@ -39,7 +39,7 @@ public class UserService extends AbstractDomainService {
 	UserRepository repository;
 
 	@Autowired
-	UserRepositoryCustom customRepository;
+	UserRepositoryCustomImpl customRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -263,7 +263,7 @@ public class UserService extends AbstractDomainService {
 
 	public Page<User> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<User> userList = customRepository.findUsers(pageable, searchRequest);
+		Page<User> userList = customRepository.findAll(pageable, searchRequest);
 		if (userList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

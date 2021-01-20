@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.otp.repository.OTPRepositoryCustom;
+import com.enewschamp.app.admin.otp.repository.OTPRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.otp.dto.OTPDTO;
@@ -38,7 +38,7 @@ public class OTPService {
 	OTPRepository repository;
 
 	@Autowired
-	OTPRepositoryCustom repositoryCustom;
+	OTPRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -189,7 +189,7 @@ public class OTPService {
 
 	public Page<OTP> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<OTP> userList = repositoryCustom.findOTPs(pageable, searchRequest);
+		Page<OTP> userList = repositoryCustom.findAll(pageable, searchRequest);
 		if (userList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.properties.frontend.repository.PropertiesFrontendRepositoryCustom;
+import com.enewschamp.app.admin.properties.frontend.repository.PropertiesFrontendRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.common.app.dto.PropertiesFrontendDTO;
@@ -29,9 +29,9 @@ public class PropertiesFrontendService extends AbstractDomainService {
 
 	@Autowired
 	PropertiesFrontendRepository repository;
-	
+
 	@Autowired
-	PropertiesFrontendRepositoryCustom customRepository;
+	PropertiesFrontendRepositoryCustomImpl customRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -119,7 +119,7 @@ public class PropertiesFrontendService extends AbstractDomainService {
 		properties.setPropertyId(propertyId);
 		return auditService.getEntityAudit(properties);
 	}
-	
+
 	public PropertiesFrontend read(PropertiesFrontend propertiesFrontendEntity) {
 		Long propertiesId = propertiesFrontendEntity.getPropertyId();
 		PropertiesFrontend existingEntity = get(propertiesId);
@@ -151,8 +151,7 @@ public class PropertiesFrontendService extends AbstractDomainService {
 
 	public Page<PropertiesFrontend> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<PropertiesFrontend> propertiesFrontendList = customRepository.findPropertiesFrontends(pageable,
-				searchRequest);
+		Page<PropertiesFrontend> propertiesFrontendList = customRepository.findAll(pageable, searchRequest);
 		if (propertiesFrontendList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

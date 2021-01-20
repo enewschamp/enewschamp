@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.student.scores.monthly.repository.StudentScoresMonthlyGenre;
 import com.enewschamp.app.admin.student.scores.monthly.repository.StudentScoresMonthlyGenreRepository;
-import com.enewschamp.app.admin.student.scores.monthly.repository.StudentScoresMonthlyGenreRepositoryCustom;
+import com.enewschamp.app.admin.student.scores.monthly.repository.StudentScoresMonthlyGenreRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -24,8 +24,9 @@ import com.enewschamp.problem.BusinessException;
 public class StudentScoresMonthlyGenreService {
 
 	@Autowired
-	private StudentScoresMonthlyGenreRepositoryCustom repositoryCustom;
+	private StudentScoresMonthlyGenreRepositoryCustomImpl repositoryCustom;
 	
+	@Autowired
 	private StudentScoresMonthlyGenreRepository repository;
 
 	@Autowired
@@ -110,7 +111,7 @@ public class StudentScoresMonthlyGenreService {
 
 	public Page<StudentScoresMonthlyGenre> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<StudentScoresMonthlyGenre> studentScoresMonthlyList = repositoryCustom.findStudentMonthlyScoresGenres(pageable, searchRequest);
+		Page<StudentScoresMonthlyGenre> studentScoresMonthlyList = repositoryCustom.findAll(pageable, searchRequest);
 		if (studentScoresMonthlyList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

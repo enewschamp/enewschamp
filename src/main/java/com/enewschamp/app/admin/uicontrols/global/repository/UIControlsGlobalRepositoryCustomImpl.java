@@ -19,17 +19,18 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.app.common.uicontrols.entity.UIControlsGlobal;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class UIControlsGlobalRepositoryCustomImpl extends RepositoryImpl implements UIControlsGlobalRepositoryCustom {
+public class UIControlsGlobalRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<UIControlsGlobal> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<UIControlsGlobal> findUIControlsGlobals(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<UIControlsGlobal> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<UIControlsGlobal> criteriaQuery = cb.createQuery(UIControlsGlobal.class);
 		Root<UIControlsGlobal> uiControlsGlobalRoot = criteriaQuery.from(UIControlsGlobal.class);

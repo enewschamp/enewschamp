@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.page.navigator.repository.PageNavigatorRepositoryCustom;
+import com.enewschamp.app.admin.page.navigator.repository.PageNavigatorRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.fw.page.navigation.entity.PageNavigator;
 import com.enewschamp.app.fw.page.navigation.repository.PageNavigatorRepository;
@@ -23,7 +23,7 @@ public class PageNavigatorService {
 	@Autowired
 	private PageNavigatorRepository repository;
 	@Autowired
-	private PageNavigatorRepositoryCustom repositoryCustom;
+	private PageNavigatorRepositoryCustomImpl repositoryCustom;
 	@Autowired
 	private ModelMapper modelMapper;
 
@@ -86,7 +86,7 @@ public class PageNavigatorService {
 
 	public Page<PageNavigator> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<PageNavigator> pageList = repositoryCustom.findPageNavigators(pageable, searchRequest);
+		Page<PageNavigator> pageList = repositoryCustom.findAll(pageable, searchRequest);
 		if (pageList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

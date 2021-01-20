@@ -19,22 +19,23 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.app.fw.page.navigation.entity.PageNavigator;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class PageNavigatorRepositoryCustomImpl extends RepositoryImpl implements PageNavigatorRepositoryCustom{
+public class PageNavigatorRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<PageNavigator> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<PageNavigator> findPageNavigators(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<PageNavigator> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<PageNavigator> criteriaQuery = cb.createQuery(PageNavigator.class);
 		Root<PageNavigator> pageNavigatorRoot = criteriaQuery.from(PageNavigator.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		
+
 		if (!StringUtils.isEmpty(searchRequest.getNavId()))
 			filterPredicates.add(cb.equal(pageNavigatorRoot.get("navId"), searchRequest.getNavId()));
 

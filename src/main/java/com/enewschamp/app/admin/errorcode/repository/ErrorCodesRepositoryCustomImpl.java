@@ -19,17 +19,18 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.common.domain.entity.ErrorCodes;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class ErrorCodesRepositoryCustomImpl extends RepositoryImpl implements ErrorCodesRepositoryCustom {
+public class ErrorCodesRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<ErrorCodes> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<ErrorCodes> findErrorCodes(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<ErrorCodes> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<ErrorCodes> criteriaQuery = cb.createQuery(ErrorCodes.class);
 		Root<ErrorCodes> errorCodesRoot = criteriaQuery.from(ErrorCodes.class);

@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.user.leave.repository.UserLeaveRepositoryCustom;
+import com.enewschamp.app.admin.user.leave.repository.UserLeaveRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -28,7 +28,7 @@ public class UserLeaveService extends AbstractDomainService {
 	UserLeaveRepository repository;
 
 	@Autowired
-	UserLeaveRepositoryCustom customRepository;
+	UserLeaveRepositoryCustomImpl customRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -116,7 +116,7 @@ public class UserLeaveService extends AbstractDomainService {
 
 	public Page<UserLeave> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<UserLeave> userLeaveList = customRepository.findUserLeaves(searchRequest, pageable);
+		Page<UserLeave> userLeaveList = customRepository.findAll(pageable, searchRequest);
 		if (userLeaveList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

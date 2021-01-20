@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.uicontrols.global.repository.UIControlsGlobalRepositoryCustom;
+import com.enewschamp.app.admin.uicontrols.global.repository.UIControlsGlobalRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.uicontrols.dto.UIControlsGlobalDTO;
 import com.enewschamp.app.common.uicontrols.entity.UIControlsGlobal;
@@ -26,7 +26,7 @@ public class UIControlsGlobalService {
 	UIControlsGlobalRepository repository;
 
 	@Autowired
-	UIControlsGlobalRepositoryCustom customRepository;
+	UIControlsGlobalRepositoryCustomImpl customRepository;
 	@Autowired
 	ModelMapper modelMapper;
 
@@ -98,7 +98,7 @@ public class UIControlsGlobalService {
 
 	public Page<UIControlsGlobal> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<UIControlsGlobal> cityList = customRepository.findUIControlsGlobals(pageable, searchRequest);
+		Page<UIControlsGlobal> cityList = customRepository.findAll(pageable, searchRequest);
 		if (cityList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

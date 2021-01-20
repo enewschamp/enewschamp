@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.errorcode.repository.ErrorCodesRepositoryCustom;
+import com.enewschamp.app.admin.errorcode.repository.ErrorCodesRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.common.domain.entity.ErrorCodes;
@@ -29,7 +29,7 @@ public class ErrorCodesService extends AbstractDomainService {
 	ErrorCodesRepository repository;
 
 	@Autowired
-	ErrorCodesRepositoryCustom customRepository;
+	ErrorCodesRepositoryCustomImpl customRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -141,7 +141,7 @@ public class ErrorCodesService extends AbstractDomainService {
 
 	public Page<ErrorCodes> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<ErrorCodes> errorCodesList = customRepository.findErrorCodes(pageable, searchRequest);
+		Page<ErrorCodes> errorCodesList = customRepository.findAll(pageable, searchRequest);
 		if (errorCodesList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}

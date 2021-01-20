@@ -19,17 +19,18 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.repository.GenericListRepository;
 import com.enewschamp.app.otp.entity.OTP;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class OTPRepositoryCustomImpl extends RepositoryImpl implements OTPRepositoryCustom {
+public class OTPRepositoryCustomImpl extends RepositoryImpl implements GenericListRepository<OTP> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<OTP> findOTPs(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<OTP> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<OTP> criteriaQuery = cb.createQuery(OTP.class);
 		Root<OTP> otpRoot = criteriaQuery.from(OTP.class);
