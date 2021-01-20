@@ -45,8 +45,8 @@ public class InstitutionAddressService {
 	}
 
 	public InstitutionAddress update(InstitutionAddress institutionAddressEntity) {
-		Long institutionAddressId = institutionAddressEntity.getInstitutionId();
-		InstitutionAddress existingInstitution = get(institutionAddressId);
+		Long addressId = institutionAddressEntity.getAddressId();
+		InstitutionAddress existingInstitution = get(addressId);
 		if(existingInstitution.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
@@ -54,8 +54,8 @@ public class InstitutionAddressService {
 		return repository.save(existingInstitution);
 	}
 
-	public InstitutionAddress get(Long institutionAddressId) {
-		Optional<InstitutionAddress> existingEntity = repository.findById(institutionAddressId);
+	public InstitutionAddress get(Long addressId) {
+		Optional<InstitutionAddress> existingEntity = repository.findById(addressId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
@@ -64,14 +64,14 @@ public class InstitutionAddressService {
 	}
 
 	public InstitutionAddress read(InstitutionAddress institutionAddressEntity) {
-		Long institutionAddressId = institutionAddressEntity.getInstitutionId();
-		InstitutionAddress institutionAddress = get(institutionAddressId);
+		Long addressId = institutionAddressEntity.getAddressId();
+		InstitutionAddress institutionAddress = get(addressId);
         return institutionAddress;
 	}
 
 	public InstitutionAddress close(InstitutionAddress institutionAddressEntity) {
-		Long institutionAddressId = institutionAddressEntity.getInstitutionId();
-		InstitutionAddress existingEntity = get(institutionAddressId);
+		Long addressId = institutionAddressEntity.getAddressId();
+		InstitutionAddress existingEntity = get(addressId);
 		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
@@ -81,8 +81,8 @@ public class InstitutionAddressService {
 	}
 
 	public InstitutionAddress reinstate(InstitutionAddress institutionAddress) {
-		Long institutionAddressId = institutionAddress.getInstitutionId();
-		InstitutionAddress existingInstitutionAddress = get(institutionAddressId);
+		Long addressId = institutionAddress.getAddressId();
+		InstitutionAddress existingInstitutionAddress = get(addressId);
 		if (existingInstitutionAddress.getRecordInUse().equals(RecordInUseType.Y)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}

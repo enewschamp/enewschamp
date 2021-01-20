@@ -1,4 +1,4 @@
-package com.enewschamp.app.admin.institution.entity;
+	package com.enewschamp.app.admin.institution.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,9 +23,13 @@ public class InstitutionAddress extends BaseEntity {
 	private static final long serialVersionUID = -6268188630471167106L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "institution_id_generator")
-	@SequenceGenerator(name = "institution_id_generator", sequenceName = "institution_id_seq", allocationSize = 1)
-	@Column(name = "institutionId", updatable = false, nullable = false)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "institution_address_id_generator")
+	@SequenceGenerator(name = "institution_address_id_generator", sequenceName = "institution_address_id_seq", allocationSize = 1)
+	@Column(name = "addressId", updatable = false, nullable = false)
+	private Long addressId;
+	
+	@NotNull
+	@Column(name = "institutionId", length = 20)
 	private Long institutionId;
 
 	@NotNull

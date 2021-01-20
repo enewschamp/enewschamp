@@ -35,20 +35,20 @@ public class InstitutionAddressRepositoryCustomImpl extends RepositoryImpl
 		CriteriaQuery<InstitutionAddress> criteriaQuery = cb.createQuery(InstitutionAddress.class);
 		Root<InstitutionAddress> instAddressRoot = criteriaQuery.from(InstitutionAddress.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		
-		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
+
+		if (!StringUtils.isEmpty(searchRequest.getInstitutionId()))
 			filterPredicates.add(cb.equal(instAddressRoot.get("institutionId"), searchRequest.getInstitutionId()));
 
-		if (!StringUtils.isEmpty(searchRequest.getCloseFlag()))
+		if (!StringUtils.isEmpty(searchRequest.getInstitutionType()))
 			filterPredicates.add(cb.equal(instAddressRoot.get("institutionType"), searchRequest.getInstitutionType()));
 
-		if (!StringUtils.isEmpty(searchRequest.getCloseFlag()))
+		if (!StringUtils.isEmpty(searchRequest.getCountryId()))
 			filterPredicates.add(cb.equal(instAddressRoot.get("countryId"), searchRequest.getCountryId()));
 
-		if (!StringUtils.isEmpty(searchRequest.getSupportUserId()))
+		if (!StringUtils.isEmpty(searchRequest.getStateId()))
 			filterPredicates.add(cb.equal(instAddressRoot.get("stateId"), searchRequest.getStateId()));
 
-		if (!StringUtils.isEmpty(searchRequest.getSupportUserId()))
+		if (!StringUtils.isEmpty(searchRequest.getCityId()))
 			filterPredicates.add(cb.equal(instAddressRoot.get("cityId"), searchRequest.getCityId()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
