@@ -79,7 +79,7 @@ public class StudentRegistrationService {
 		if(existingStudentRegistration.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
-		modelMapper.map(studentRegistration, existingStudentRegistration);
+	//	modelMapper.map(studentRegistration, existingStudentRegistration);
 		handlePasswords(studentRegistration, existingStudentRegistration);
 		StudentRegistration student = repository.save(existingStudentRegistration);
 		return student;
