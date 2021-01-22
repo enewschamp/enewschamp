@@ -40,10 +40,10 @@ public class AdminSearchRequest {
 	private String autoRenewal;
 	private String effectiveDateFrom;
 	private String effectiveDateTo;
-	private String startDateFrom;
-	private String startDateTo;
-	private String endDateFrom;
-	private String endDateTo;
+	private LocalDate startDateFrom;
+	private LocalDate startDateTo;
+	private LocalDate endDateFrom;
+	private LocalDate endDateTo;
 	private String studentBadgesId;
 	private String yearMonth;
 	private String badgeId;
