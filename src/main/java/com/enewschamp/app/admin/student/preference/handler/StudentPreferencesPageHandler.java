@@ -30,6 +30,7 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.subscription.domain.entity.StudentPreferenceComm;
 import com.enewschamp.subscription.domain.entity.StudentPreferences;
 import com.enewschamp.subscription.domain.service.StudentPreferencesService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -117,6 +118,12 @@ public class StudentPreferencesPageHandler implements IPageHandler {
 
 	private StudentPreferences mapStudentPreferencesPageData(PageRequestDTO pageRequest, StudentPreferencesPageData pageData) {
 		StudentPreferences studentPreferences = modelMapper.map(pageData, StudentPreferences.class);
+		StudentPreferenceComm commsOverEmail = new StudentPreferenceComm();
+		commsOverEmail.setAlertsNotifications(pageData.getAlertsNotifications());
+		commsOverEmail.setCommsEmailId(pageData.getCommsEmailId());
+		commsOverEmail.setDailyPublication(pageData.getDailyPublication());
+		commsOverEmail.setScoresProgressReports(pageData.getScoresProgressReports());
+		studentPreferences.setCommsOverEmail(commsOverEmail);
 		studentPreferences.setRecordInUse(RecordInUseType.Y);
 		return studentPreferences;
 	}
@@ -159,9 +166,13 @@ public class StudentPreferencesPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private StudentPreferencesPageData mapPageData(StudentPreferences StudentPreferences) {
-		StudentPreferencesPageData pageData = modelMapper.map(StudentPreferences, StudentPreferencesPageData.class);
-		pageData.setLastUpdate(StudentPreferences.getOperationDateTime());
+	private StudentPreferencesPageData mapPageData(StudentPreferences studentPreferences) {
+		StudentPreferencesPageData pageData = modelMapper.map(studentPreferences, StudentPreferencesPageData.class);
+		pageData.setAlertsNotifications(studentPreferences.getCommsOverEmail().getAlertsNotifications());
+		pageData.setCommsEmailId(studentPreferences.getCommsOverEmail().getCommsEmailId());
+		pageData.setDailyPublication(studentPreferences.getCommsOverEmail().getDailyPublication());
+		pageData.setScoresProgressReports(studentPreferences.getCommsOverEmail().getScoresProgressReports());
+		pageData.setLastUpdate(studentPreferences.getOperationDateTime());
 		return pageData;
 	}
 
@@ -177,9 +188,8 @@ public class StudentPreferencesPageHandler implements IPageHandler {
 
 	@SneakyThrows
 	private PageDTO listStudentPreferences(PageRequestDTO pageRequest) {
-		AdminSearchRequest searchRequest = new AdminSearchRequest();
-		searchRequest.setCountryId(
-				pageRequest.getData().get(CommonConstants.FILTER).get(CommonConstants.COUNTRY_ID).asText());
+		AdminSearchRequest searchRequest = objectMapper
+				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
 		Page<StudentPreferences> studentPreferencesList = StudentPreferencesService.list(searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
