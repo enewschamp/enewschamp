@@ -64,8 +64,8 @@ public class StudentBadgesPageHandler implements IPageHandler {
 		case "Close":
 			pageDto = closeStudentBadge(pageRequest);
 			break;
-		case "ReinstudentBadges":
-			pageDto = reInstudentBadgesStudentBadge(pageRequest);
+		case "Reinstate":
+			pageDto = reInstateStudentBadge(pageRequest);
 			break;
 		case "List":
 			pageDto = listStudentBadge(pageRequest);
@@ -150,7 +150,7 @@ public class StudentBadgesPageHandler implements IPageHandler {
 	}
 
 	@SneakyThrows
-	private PageDTO reInstudentBadgesStudentBadge(PageRequestDTO pageRequest) {
+	private PageDTO reInstateStudentBadge(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		StudentBadgesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentBadgesPageData.class);
 		StudentBadges studentBadges = modelMapper.map(pageData, StudentBadges.class);
@@ -177,9 +177,8 @@ public class StudentBadgesPageHandler implements IPageHandler {
 
 	@SneakyThrows
 	private PageDTO listStudentBadge(PageRequestDTO pageRequest) {
-		AdminSearchRequest searchRequest = new AdminSearchRequest();
-		searchRequest.setCountryId(
-				pageRequest.getData().get(CommonConstants.FILTER).get(CommonConstants.COUNTRY_ID).asText());
+		AdminSearchRequest searchRequest = objectMapper
+				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
 		Page<StudentBadges> studentBadgesList = studentBadgesService.list(searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());

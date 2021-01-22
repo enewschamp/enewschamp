@@ -139,7 +139,7 @@ public class StudentBadgesService {
 	}
 
 	public StudentBadges close(StudentBadges badgesEntity) {
-		Long badgesId = badgesEntity.getStudentId();
+		Long badgesId = badgesEntity.getStudentBadgesId();
 		StudentBadges existingBadges = get(badgesId);
 		if (existingBadges.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
@@ -150,7 +150,7 @@ public class StudentBadgesService {
 	}
 
 	public StudentBadges reInstate(StudentBadges badgesEntity) {
-		Long badgesId = badgesEntity.getStudentId();
+		Long badgesId = badgesEntity.getStudentBadgesId();
 		StudentBadges existingStudentBadges = get(badgesId);
 		if (existingStudentBadges.getRecordInUse().equals(RecordInUseType.Y)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
