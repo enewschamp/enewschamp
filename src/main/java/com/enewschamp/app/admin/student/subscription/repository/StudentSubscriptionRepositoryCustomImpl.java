@@ -40,9 +40,9 @@ public class StudentSubscriptionRepositoryCustomImpl extends RepositoryImpl
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
 			filterPredicates.add(cb.equal(studentSubscriptionRoot.get("studentId"), searchRequest.getStudentId()));
 
-		if (!StringUtils.isEmpty(searchRequest.getSubscriptionType()))
-			filterPredicates.add(
-					cb.equal(studentSubscriptionRoot.get("subscriptionType"), searchRequest.getSubscriptionType()));
+		if (!StringUtils.isEmpty(searchRequest.getSubscriptionSelected()))
+			filterPredicates.add(cb.equal(studentSubscriptionRoot.get("subscriptionSelected"),
+					searchRequest.getSubscriptionSelected()));
 
 		if (!StringUtils.isEmpty(searchRequest.getAutoRenewal()))
 			filterPredicates.add(cb.equal(studentSubscriptionRoot.get("autoRenewal"), searchRequest.getAutoRenewal()));
