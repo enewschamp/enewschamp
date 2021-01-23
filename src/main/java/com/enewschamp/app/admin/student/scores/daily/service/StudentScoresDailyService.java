@@ -26,6 +26,7 @@ public class StudentScoresDailyService {
 	@Autowired
 	private StudentScoresDailyRepositoryCustomImpl repositoryCustom;
 
+	@Autowired
 	private StudentScoresDailyRepository repository;
 
 	@Autowired
