@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class PageNavigationRulesPageData extends PageData {
+public class PageNavigatorRulesPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	private Long ruleId;
 

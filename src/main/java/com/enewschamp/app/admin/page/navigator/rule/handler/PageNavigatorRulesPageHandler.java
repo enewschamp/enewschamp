@@ -37,9 +37,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-@Component("PageNavigationRulesPageHandler")
+@Component("PageNavigatorRulesPageHandler")
 @Slf4j
-public class PageNavigationRulesPageHandler implements IPageHandler {
+public class PageNavigatorRulesPageHandler implements IPageHandler {
 	@Autowired
 	private PageNavigationRulesService pageNavigationRulesService;
 	@Autowired
@@ -97,8 +97,8 @@ public class PageNavigationRulesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createPageNavigatorRules(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PageNavigationRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
-				PageNavigationRulesPageData.class);
+		PageNavigatorRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PageNavigatorRulesPageData.class);
 		validateData(pageData);
 		PageNavigatorRules pageNavigator = mapPageNavigatorRulesData(pageRequest, pageData);
 		pageNavigator = pageNavigationRulesService.create(pageNavigator);
@@ -117,7 +117,7 @@ public class PageNavigationRulesPageHandler implements IPageHandler {
 	}
 
 	private PageNavigatorRules mapPageNavigatorRulesData(PageRequestDTO pageRequest,
-			PageNavigationRulesPageData pageData) {
+			PageNavigatorRulesPageData pageData) {
 		PageNavigatorRules pageNavigator = modelMapper.map(pageData, PageNavigatorRules.class);
 		pageNavigator.setRecordInUse(RecordInUseType.Y);
 		return pageNavigator;
@@ -126,8 +126,8 @@ public class PageNavigationRulesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updatePageNavigatorRules(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PageNavigationRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
-				PageNavigationRulesPageData.class);
+		PageNavigatorRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PageNavigatorRulesPageData.class);
 		validateData(pageData);
 		PageNavigatorRules pageNavigator = mapPageNavigatorRulesData(pageRequest, pageData);
 		pageNavigator = pageNavigationRulesService.update(pageNavigator);
@@ -136,7 +136,7 @@ public class PageNavigationRulesPageHandler implements IPageHandler {
 	}
 
 	private void mapPageNavigatorRules(PageRequestDTO pageRequest, PageDTO pageDto, PageNavigatorRules pageNavigator) {
-		PageNavigationRulesPageData pageData;
+		PageNavigatorRulesPageData pageData;
 		mapHeaderData(pageRequest, pageDto);
 		pageData = mapPageData(pageNavigator);
 		pageDto.setData(pageData);
@@ -145,8 +145,8 @@ public class PageNavigationRulesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readPageNavigatorRules(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PageNavigationRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
-				PageNavigationRulesPageData.class);
+		PageNavigatorRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PageNavigatorRulesPageData.class);
 		PageNavigatorRules pageNavigator = modelMapper.map(pageData, PageNavigatorRules.class);
 		pageNavigator = pageNavigationRulesService.read(pageNavigator);
 		mapPageNavigatorRules(pageRequest, pageDto, pageNavigator);
@@ -156,16 +156,16 @@ public class PageNavigationRulesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reinstatePageNavigatorRules(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PageNavigationRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
-				PageNavigationRulesPageData.class);
+		PageNavigatorRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PageNavigatorRulesPageData.class);
 		PageNavigatorRules pageNavigator = modelMapper.map(pageData, PageNavigatorRules.class);
 		pageNavigator = pageNavigationRulesService.reInstate(pageNavigator);
 		mapPageNavigatorRules(pageRequest, pageDto, pageNavigator);
 		return pageDto;
 	}
 
-	private PageNavigationRulesPageData mapPageData(PageNavigatorRules pageNavigator) {
-		PageNavigationRulesPageData pageData = modelMapper.map(pageNavigator, PageNavigationRulesPageData.class);
+	private PageNavigatorRulesPageData mapPageData(PageNavigatorRules pageNavigator) {
+		PageNavigatorRulesPageData pageData = modelMapper.map(pageNavigator, PageNavigatorRulesPageData.class);
 		pageData.setLastUpdate(pageNavigator.getOperationDateTime());
 		return pageData;
 	}
@@ -173,8 +173,8 @@ public class PageNavigationRulesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closePageNavigatorRules(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PageNavigationRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
-				PageNavigationRulesPageData.class);
+		PageNavigatorRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PageNavigatorRulesPageData.class);
 		PageNavigatorRules pageNavigator = modelMapper.map(pageData, PageNavigatorRules.class);
 		pageNavigator = pageNavigationRulesService.close(pageNavigator);
 		mapPageNavigatorRules(pageRequest, pageDto, pageNavigator);
@@ -183,14 +183,13 @@ public class PageNavigationRulesPageHandler implements IPageHandler {
 
 	@SneakyThrows
 	private PageDTO listPageNavigatorRules(PageRequestDTO pageRequest) {
-		AdminSearchRequest searchRequest = new AdminSearchRequest();
-		searchRequest.setCountryId(
-				pageRequest.getData().get(CommonConstants.FILTER).get(CommonConstants.COUNTRY_ID).asText());
+		AdminSearchRequest searchRequest = objectMapper
+				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
 		Page<PageNavigatorRules> pageNavigatorList = pageNavigationRulesService.list(searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
-		List<PageNavigationRulesPageData> list = mapPageNavigatorRulesData(pageNavigatorList);
+		List<PageNavigatorRulesPageData> list = mapPageNavigatorRulesData(pageNavigatorList);
 		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
@@ -204,13 +203,13 @@ public class PageNavigationRulesPageHandler implements IPageHandler {
 		return dto;
 	}
 
-	public List<PageNavigationRulesPageData> mapPageNavigatorRulesData(Page<PageNavigatorRules> page) {
-		List<PageNavigationRulesPageData> pageNavigatorPageDataList = new ArrayList<PageNavigationRulesPageData>();
+	public List<PageNavigatorRulesPageData> mapPageNavigatorRulesData(Page<PageNavigatorRules> page) {
+		List<PageNavigatorRulesPageData> pageNavigatorPageDataList = new ArrayList<PageNavigatorRulesPageData>();
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<PageNavigatorRules> pageDataList = page.getContent();
 			for (PageNavigatorRules pageNavigator : pageDataList) {
-				PageNavigationRulesPageData pageNavigatorPageData = modelMapper.map(pageNavigator,
-						PageNavigationRulesPageData.class);
+				PageNavigatorRulesPageData pageNavigatorPageData = modelMapper.map(pageNavigator,
+						PageNavigatorRulesPageData.class);
 				pageNavigatorPageData.setLastUpdate(pageNavigator.getOperationDateTime());
 				pageNavigatorPageDataList.add(pageNavigatorPageData);
 			}
@@ -218,10 +217,10 @@ public class PageNavigationRulesPageHandler implements IPageHandler {
 		return pageNavigatorPageDataList;
 	}
 
-	private void validateData(PageNavigationRulesPageData pageData) {
+	private void validateData(PageNavigatorRulesPageData pageData) {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
-		Set<ConstraintViolation<PageNavigationRulesPageData>> violations = validator.validate(pageData);
+		Set<ConstraintViolation<PageNavigatorRulesPageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
 				log.error(e.getMessage());

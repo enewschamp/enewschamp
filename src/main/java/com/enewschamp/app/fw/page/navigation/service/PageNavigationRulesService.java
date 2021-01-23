@@ -53,8 +53,8 @@ public class PageNavigationRulesService {
 	}
 
 	public PageNavigatorRules update(PageNavigatorRules PageNavigatorRules) {
-		Long navId = PageNavigatorRules.getNavId();
-		PageNavigatorRules existingPageNavigatorRules = get(navId);
+		Long ruleId = PageNavigatorRules.getRuleId();
+		PageNavigatorRules existingPageNavigatorRules = get(ruleId);
 		if (existingPageNavigatorRules.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
@@ -63,8 +63,8 @@ public class PageNavigationRulesService {
 	}
 
 	public PageNavigatorRules patch(PageNavigatorRules PageNavigatorRules) {
-		Long navId = PageNavigatorRules.getNavId();
-		PageNavigatorRules existingEntity = get(navId);
+		Long ruleId = PageNavigatorRules.getRuleId();
+		PageNavigatorRules existingEntity = get(ruleId);
 		modelMapperForPatch.map(PageNavigatorRules, existingEntity);
 		return pageNavigatorRulesRepository.save(existingEntity);
 	}
@@ -73,8 +73,8 @@ public class PageNavigationRulesService {
 		pageNavigatorRulesRepository.deleteById(PageNavigatorRulesId);
 	}
 
-	public PageNavigatorRules get(Long navId) {
-		Optional<PageNavigatorRules> existingEntity = pageNavigatorRulesRepository.findById(navId);
+	public PageNavigatorRules get(Long ruleId) {
+		Optional<PageNavigatorRules> existingEntity = pageNavigatorRulesRepository.findById(ruleId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
@@ -83,8 +83,8 @@ public class PageNavigationRulesService {
 		}
 	}
 
-	public List<PageNavigatorRulesDTO> getNavRuleList(Long navId) {
-		List<PageNavigatorRules> existingEntity = pageNavigatorRulesRepository.getNavRules(navId);
+	public List<PageNavigatorRulesDTO> getNavRuleList(Long ruleId) {
+		List<PageNavigatorRules> existingEntity = pageNavigatorRulesRepository.getNavRules(ruleId);
 		java.lang.reflect.Type listType = new TypeToken<List<PageNavigatorRulesDTO>>() {
 		}.getType();
 		List<PageNavigatorRulesDTO> pageNavList = modelMapper.map(existingEntity, listType);
@@ -92,20 +92,20 @@ public class PageNavigationRulesService {
 		return pageNavList;
 	}
 
-	public String getAudit(Long navId) {
+	public String getAudit(Long ruleId) {
 		PageNavigatorRules PageNavigatorRules = new PageNavigatorRules();
-		PageNavigatorRules.setNavId(navId);
+		PageNavigatorRules.setNavId(ruleId);
 		return auditService.getEntityAudit(PageNavigatorRules);
 	}
 
 	public PageNavigatorRules read(PageNavigatorRules pageNavigator) {
-		Long pageNavigatorId = pageNavigator.getNavId();
+		Long pageNavigatorId = pageNavigator.getRuleId();
 		PageNavigatorRules existingPageNavigator = get(pageNavigatorId);
 		return existingPageNavigator;
 	}
 
 	public PageNavigatorRules close(PageNavigatorRules pageNavigator) {
-		Long pageNavigatorId = pageNavigator.getNavId();
+		Long pageNavigatorId = pageNavigator.getRuleId();
 		PageNavigatorRules existingPageNavigator = get(pageNavigatorId);
 		if (existingPageNavigator.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
@@ -116,7 +116,7 @@ public class PageNavigationRulesService {
 	}
 
 	public PageNavigatorRules reInstate(PageNavigatorRules pageNavigator) {
-		Long pageNavigatorId = pageNavigator.getNavId();
+		Long pageNavigatorId = pageNavigator.getRuleId();
 		PageNavigatorRules existingPageNavigator = get(pageNavigatorId);
 		if (existingPageNavigator.getRecordInUse().equals(RecordInUseType.Y)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
