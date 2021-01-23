@@ -37,7 +37,7 @@ public class UserLeaveRepositoryCustomImpl extends RepositoryImpl implements IGe
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getUserId()))
-			filterPredicates.add(cb.equal(userLeaveRoot.get("userId"), searchRequest.getUserId()));
+			filterPredicates.add(cb.equal(userLeaveRoot.get("userLeaveKey").get("userId"), searchRequest.getUserId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getApprovalStatus()))
 			filterPredicates.add(cb.equal(userLeaveRoot.get("approvalStatus"), searchRequest.getApprovalStatus()));

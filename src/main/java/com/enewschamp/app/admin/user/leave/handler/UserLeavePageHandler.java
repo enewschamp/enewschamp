@@ -1,6 +1,7 @@
 package com.enewschamp.app.admin.user.leave.handler;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +32,7 @@ import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.user.domain.entity.UserLeave;
+import com.enewschamp.user.domain.entity.UserLeaveKey;
 import com.enewschamp.user.domain.service.UserLeaveService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -64,8 +66,8 @@ public class UserLeavePageHandler implements IPageHandler {
 		case "Close":
 			pageDto = closeUserLeave(pageRequest);
 			break;
-		case "ReinuserLeave":
-			pageDto = reInuserLeave(pageRequest);
+		case "Reinstate":
+			pageDto = reInstateuserLeave(pageRequest);
 			break;
 		case "List":
 			pageDto = listUserLeave(pageRequest);
@@ -100,6 +102,8 @@ public class UserLeavePageHandler implements IPageHandler {
 		UserLeavePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserLeavePageData.class);
 		validateData(pageData);
 		UserLeave userLeave = mapUserLeaveData(pageRequest, pageData);
+		if (pageData.getUpdateApplicationDateTime() != null && pageData.getUpdateApplicationDateTime().equals("Y"))
+			userLeave.setApplicationDateTime(LocalDateTime.now());
 		userLeave = userLeaveService.create(userLeave);
 		mapUserLeave(pageRequest, pageDto, userLeave);
 		return pageDto;
@@ -117,6 +121,7 @@ public class UserLeavePageHandler implements IPageHandler {
 
 	private UserLeave mapUserLeaveData(PageRequestDTO pageRequest, UserLeavePageData pageData) {
 		UserLeave userLeave = modelMapper.map(pageData, UserLeave.class);
+		mapLeaveKeys(pageData, userLeave);
 		userLeave.setRecordInUse(RecordInUseType.Y);
 		return userLeave;
 	}
@@ -127,6 +132,8 @@ public class UserLeavePageHandler implements IPageHandler {
 		UserLeavePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserLeavePageData.class);
 		validateData(pageData);
 		UserLeave userLeave = mapUserLeaveData(pageRequest, pageData);
+		if (pageData.getUpdateApplicationDateTime() != null && pageData.getUpdateApplicationDateTime().equals("Y"))
+			userLeave.setApplicationDateTime(LocalDateTime.now());
 		userLeave = userLeaveService.update(userLeave);
 		mapUserLeave(pageRequest, pageDto, userLeave);
 		return pageDto;
@@ -144,23 +151,36 @@ public class UserLeavePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		UserLeavePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserLeavePageData.class);
 		UserLeave userLeave = modelMapper.map(pageData, UserLeave.class);
+		mapLeaveKeys(pageData, userLeave);
 		userLeave = userLeaveService.read(userLeave);
 		mapUserLeave(pageRequest, pageDto, userLeave);
 		return pageDto;
 	}
 
 	@SneakyThrows
-	private PageDTO reInuserLeave(PageRequestDTO pageRequest) {
+	private PageDTO reInstateuserLeave(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserLeavePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserLeavePageData.class);
 		UserLeave userLeave = modelMapper.map(pageData, UserLeave.class);
+		if (pageData.getUpdateApplicationDateTime() != null && pageData.getUpdateApplicationDateTime().equals("Y"))
+			userLeave.setApplicationDateTime(LocalDateTime.now());
+		mapLeaveKeys(pageData, userLeave);
 		userLeave = userLeaveService.reInstate(userLeave);
 		mapUserLeave(pageRequest, pageDto, userLeave);
 		return pageDto;
 	}
 
+	private void mapLeaveKeys(UserLeavePageData pageData, UserLeave userLeave) {
+		UserLeaveKey userLeaveKey = new UserLeaveKey();
+		userLeaveKey.setStartDate(pageData.getStartDate());
+		userLeaveKey.setUserId(pageData.getUserId());
+		userLeave.setUserLeaveKey(userLeaveKey);
+	}
+
 	private UserLeavePageData mapPageData(UserLeave userLeave) {
 		UserLeavePageData pageData = modelMapper.map(userLeave, UserLeavePageData.class);
+		pageData.setUserId(userLeave.getUserLeaveKey().getUserId());
+		pageData.setStartDate(userLeave.getUserLeaveKey().getStartDate());
 		pageData.setLastUpdate(userLeave.getOperationDateTime());
 		return pageData;
 	}
@@ -170,6 +190,9 @@ public class UserLeavePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		UserLeavePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserLeavePageData.class);
 		UserLeave userLeave = modelMapper.map(pageData, UserLeave.class);
+		if (pageData.getUpdateApplicationDateTime() != null && pageData.getUpdateApplicationDateTime().equals("Y"))
+			userLeave.setApplicationDateTime(LocalDateTime.now());
+		mapLeaveKeys(pageData, userLeave);
 		userLeave = userLeaveService.close(userLeave);
 		mapUserLeave(pageRequest, pageDto, userLeave);
 		return pageDto;
@@ -177,9 +200,8 @@ public class UserLeavePageHandler implements IPageHandler {
 
 	@SneakyThrows
 	private PageDTO listUserLeave(PageRequestDTO pageRequest) {
-		AdminSearchRequest searchRequest = new AdminSearchRequest();
-		searchRequest.setCountryId(
-				pageRequest.getData().get(CommonConstants.FILTER).get(CommonConstants.COUNTRY_ID).asText());
+		AdminSearchRequest searchRequest = objectMapper
+				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
 		Page<UserLeave> userLeaveList = userLeaveService.list(searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
