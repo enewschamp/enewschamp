@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "StudentScoresMonthlyTotal")
+@Table(name = "ScoresMonthlyTotal")
 @EqualsAndHashCode(callSuper = false)
 public class StudentScoresMonthlyTotal extends BaseEntity {
 	private static final long serialVersionUID = 1L;
@@ -44,10 +44,10 @@ public class StudentScoresMonthlyTotal extends BaseEntity {
 	private Long studentId;
 	
 	@Column(name = "editionId")
-	private Long editionId;
+	private String editionId;
 	
 	@Column(name = "genreId")
-	private Long genreId;
+	private String genreId;
 	
 	@Column(name = "readingLevel")
 	private String readingLevel;
