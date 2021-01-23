@@ -63,5 +63,8 @@ public class OTP extends BaseEntity {
 		if (verified == null) {
 			verified = "N";
 		}
+		if (operationDateTime == null) {
+			operationDateTime = LocalDateTime.now();
+		}
 	}
 }

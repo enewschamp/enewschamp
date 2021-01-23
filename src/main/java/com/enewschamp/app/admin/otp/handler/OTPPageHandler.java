@@ -1,6 +1,7 @@
 package com.enewschamp.app.admin.otp.handler;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
@@ -37,9 +39,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-@Component("OTPPageDataHandler")
+@Component("OTPPageHandler")
 @Slf4j
-public class OTPPageDataHandler implements IPageHandler {
+public class OTPPageHandler implements IPageHandler {
 	@Autowired
 	private OTPService otpService;
 	@Autowired
@@ -100,6 +102,8 @@ public class OTPPageDataHandler implements IPageHandler {
 		OTPPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), OTPPageData.class);
 		validateData(pageData);
 		OTP otp = mapOTPData(pageRequest, pageData);
+		if (StringUtils.isEmpty(otp.getOtpGenTime()))
+			otp.setOtpGenTime(LocalDateTime.now());
 		otp = otpService.create(otp);
 		mapOTP(pageRequest, pageDto, otp);
 		return pageDto;
@@ -177,9 +181,8 @@ public class OTPPageDataHandler implements IPageHandler {
 
 	@SneakyThrows
 	private PageDTO listOTP(PageRequestDTO pageRequest) {
-		AdminSearchRequest searchRequest = new AdminSearchRequest();
-		searchRequest.setCountryId(
-				pageRequest.getData().get(CommonConstants.FILTER).get(CommonConstants.COUNTRY_ID).asText());
+		AdminSearchRequest searchRequest = objectMapper
+				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
 		Page<OTP> otpList = otpService.list(searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());

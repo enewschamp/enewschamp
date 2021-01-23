@@ -2,7 +2,6 @@ package com.enewschamp.app.admin.otp.handler;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -29,8 +28,6 @@ public class OTPPageData extends PageData {
 	@NotEmpty(message = MessageConstants.OTP_NOT_EMPTY)
 	private String otp;
 
-	@NotNull
-	@Column(name = "otpGenTime")
 	private LocalDateTime otpGenTime;
 
 	@NotNull(message = MessageConstants.VERIFIED_NOT_NULL)
