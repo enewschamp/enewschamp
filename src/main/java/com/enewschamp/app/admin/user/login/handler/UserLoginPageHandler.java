@@ -52,9 +52,6 @@ public class UserLoginPageHandler implements IPageHandler {
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
 		PageDTO pageDto = null;
 		switch (pageRequest.getHeader().getAction()) {
-		case "Create":
-			pageDto = createUserLogin(pageRequest);
-			break;
 		case "Update":
 			pageDto = updateUserLogin(pageRequest);
 			break;
@@ -177,9 +174,8 @@ public class UserLoginPageHandler implements IPageHandler {
 
 	@SneakyThrows
 	private PageDTO listUserLogin(PageRequestDTO pageRequest) {
-		AdminSearchRequest searchRequest = new AdminSearchRequest();
-		searchRequest.setCountryId(
-				pageRequest.getData().get(CommonConstants.FILTER).get(CommonConstants.COUNTRY_ID).asText());
+		AdminSearchRequest searchRequest = objectMapper
+				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
 		Page<UserLogin> userLoginList = userLoginService.list(searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
