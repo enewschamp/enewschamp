@@ -43,8 +43,8 @@ public class InstitutionStakeholderRepositoryCustomImpl extends RepositoryImpl
 		if (!StringUtils.isEmpty(searchRequest.getInstitutionId()))
 			filterPredicates.add(cb.equal(inststakeHolderRoot.get("institutionId"), searchRequest.getInstitutionId()));
 
-		if (!StringUtils.isEmpty(searchRequest.getStakeholderId()))
-			filterPredicates.add(cb.equal(inststakeHolderRoot.get("stakeholderId"), searchRequest.getStakeholderId()));
+		if (!StringUtils.isEmpty(searchRequest.getStakeHolderId()))
+			filterPredicates.add(cb.equal(inststakeHolderRoot.get("stakeHolderId"), searchRequest.getStakeHolderId()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(inststakeHolderRoot.get(CommonConstants.OPERATION_DATE_TIME)));

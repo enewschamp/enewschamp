@@ -226,6 +226,8 @@ public class UserLeavePageHandler implements IPageHandler {
 			List<UserLeave> pageDataList = page.getContent();
 			for (UserLeave userLeave : pageDataList) {
 				UserLeavePageData userLeavePageData = modelMapper.map(userLeave, UserLeavePageData.class);
+				userLeavePageData.setUserId(userLeave.getUserLeaveKey().getUserId());
+				userLeavePageData.setStartDate(userLeave.getUserLeaveKey().getStartDate());
 				userLeavePageData.setLastUpdate(userLeave.getOperationDateTime());
 				userLeavePageDataList.add(userLeavePageData);
 			}

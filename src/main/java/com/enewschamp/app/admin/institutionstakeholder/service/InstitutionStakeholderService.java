@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,13 @@ public class InstitutionStakeholderService {
 	private ModelMapper modelMapperForPatch;
 
 	public InstitutionStakeholder create(InstitutionStakeholder instStakeHolderEntity) {
-		return repository.save(instStakeHolderEntity);
+		InstitutionStakeholder stakeHolder = null;
+		try {
+			stakeHolder = repository.save(instStakeHolderEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return stakeHolder;
 	}
 
 	public InstitutionStakeholder update(InstitutionStakeholder instStakeHolderEntity) {

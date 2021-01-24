@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
 
@@ -21,14 +20,10 @@ public class UserRole extends BaseEntity {
 
 	@EmbeddedId
 	private UserRoleKey userRoleKey;
-
-	@NotNull
-	@Column(name = "Contribution")
-	private int contribution = 0;
 	
 	@Column(name = "Comments", length = 300)
 	private String comments;
 
-	@Column(name = "Contributions", length = 300)
-	private String contributions;
+	@Column(name = "Contribution", length = 300)
+	private String contribution;
 }

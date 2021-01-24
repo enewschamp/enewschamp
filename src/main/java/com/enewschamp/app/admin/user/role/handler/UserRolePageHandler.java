@@ -12,6 +12,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,7 @@ import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.user.domain.entity.UserRole;
+import com.enewschamp.user.domain.entity.UserRoleKey;
 import com.enewschamp.user.domain.service.UserRoleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -117,7 +119,9 @@ public class UserRolePageHandler implements IPageHandler {
 
 	private UserRole mapUserRoleData(PageRequestDTO pageRequest, UserRolePageData pageData) {
 		UserRole userRole = modelMapper.map(pageData, UserRole.class);
+		mapRoleKey(pageData, userRole);
 		userRole.setRecordInUse(RecordInUseType.Y);
+
 		return userRole;
 	}
 
@@ -144,9 +148,17 @@ public class UserRolePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		UserRolePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserRolePageData.class);
 		UserRole userRole = modelMapper.map(pageData, UserRole.class);
+		mapRoleKey(pageData, userRole);
 		userRole = userRoleService.read(userRole);
 		mapUserRole(pageRequest, pageDto, userRole);
 		return pageDto;
+	}
+
+	private void mapRoleKey(UserRolePageData pageData, UserRole userRole) {
+		UserRoleKey roleKey = new UserRoleKey();
+		roleKey.setRoleId(pageData.getRoleId());
+		roleKey.setUserId(pageData.getUserId());
+		userRole.setUserRoleKey(roleKey);
 	}
 
 	@SneakyThrows
@@ -154,13 +166,17 @@ public class UserRolePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		UserRolePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserRolePageData.class);
 		UserRole userRole = modelMapper.map(pageData, UserRole.class);
+		mapRoleKey(pageData, userRole);
 		userRole = userRoleService.reInstate(userRole);
 		mapUserRole(pageRequest, pageDto, userRole);
 		return pageDto;
 	}
 
 	private UserRolePageData mapPageData(UserRole userRole) {
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		UserRolePageData pageData = modelMapper.map(userRole, UserRolePageData.class);
+		pageData.setRoleId(userRole.getUserRoleKey().getRoleId());
+		pageData.setUserId(userRole.getUserRoleKey().getUserId());
 		pageData.setLastUpdate(userRole.getOperationDateTime());
 		return pageData;
 	}
@@ -170,6 +186,7 @@ public class UserRolePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		UserRolePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserRolePageData.class);
 		UserRole userRole = modelMapper.map(pageData, UserRole.class);
+		mapRoleKey(pageData, userRole);
 		userRole = userRoleService.close(userRole);
 		mapUserRole(pageRequest, pageDto, userRole);
 		return pageDto;
@@ -177,9 +194,8 @@ public class UserRolePageHandler implements IPageHandler {
 
 	@SneakyThrows
 	private PageDTO listUserRole(PageRequestDTO pageRequest) {
-		AdminSearchRequest searchRequest = new AdminSearchRequest();
-		searchRequest.setCountryId(
-				pageRequest.getData().get(CommonConstants.FILTER).get(CommonConstants.COUNTRY_ID).asText());
+		AdminSearchRequest searchRequest = objectMapper
+				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
 		Page<UserRole> userRoleList = userRoleService.list(searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
@@ -203,7 +219,10 @@ public class UserRolePageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<UserRole> pageDataList = page.getContent();
 			for (UserRole userRole : pageDataList) {
+				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				UserRolePageData userRolePageData = modelMapper.map(userRole, UserRolePageData.class);
+				userRolePageData.setRoleId(userRole.getUserRoleKey().getRoleId());
+				userRolePageData.setUserId(userRole.getUserRoleKey().getUserId());
 				userRolePageData.setLastUpdate(userRole.getOperationDateTime());
 				userRolePageDataList.add(userRolePageData);
 			}

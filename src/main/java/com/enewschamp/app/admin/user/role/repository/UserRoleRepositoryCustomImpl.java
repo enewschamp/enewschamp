@@ -37,10 +37,10 @@ public class UserRoleRepositoryCustomImpl extends RepositoryImpl implements IGen
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getUserId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("userId"), searchRequest.getUserId()));
+			filterPredicates.add(cb.equal(studentachievementRoot.get("userRoleKey").get("userId"), searchRequest.getUserId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getRoleId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("roleId"), searchRequest.getRoleId()));
+			filterPredicates.add(cb.equal(studentachievementRoot.get("userRoleKey").get("roleId"), searchRequest.getRoleId()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentachievementRoot.get(CommonConstants.OPERATION_DATE_TIME)));

@@ -33,7 +33,7 @@ public class AdminSearchRequest {
 	private String institutionId;
 	private String institutionType;
 	private String addressType;
-	private String stakeholderId;
+	private String stakeHolderId;
 	private String schoolId;
 	private String editionId;
 	private String subscriptionSelected;

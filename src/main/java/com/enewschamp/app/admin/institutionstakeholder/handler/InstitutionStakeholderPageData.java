@@ -14,14 +14,13 @@ import lombok.EqualsAndHashCode;
 public class InstitutionStakeholderPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 
-	private Long stakeholderId;
+	private Long stakeHolderId;
 
-    @NotNull(message = MessageConstants.INSTITUTION_ID_NOT_NULL)
-    @NotEmpty(message = MessageConstants.INSTITUTION_ID_NOT_EMPTY)
-	private String institutionId;
+	@NotNull(message = MessageConstants.INSTITUTION_ID_NOT_NULL)
+	private Long institutionId;
 
-    @NotNull(message = MessageConstants.INSTITUTION_TYPE_NOT_NULL)
-    @NotEmpty(message = MessageConstants.INSTITUTION_TYPE_NOT_EMPTY)
+	@NotNull(message = MessageConstants.INSTITUTION_TYPE_NOT_NULL)
+	@NotEmpty(message = MessageConstants.INSTITUTION_TYPE_NOT_EMPTY)
 	private String institutionType;
 
 	private String comments;

@@ -1,10 +1,10 @@
 package com.enewschamp.app.admin.user.role.handler;
 
-import javax.persistence.Column;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
-import com.enewschamp.user.app.dto.UserRoleKeyDTO;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,16 +14,17 @@ import lombok.EqualsAndHashCode;
 public class UserRolePageData extends PageData {
 	private static final long serialVersionUID = 1L;
 
-	private UserRoleKeyDTO userRoleKey;
+	@NotNull(message = MessageConstants.USER_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.USER_ID_NOT_EMPTY)
+	private String userId;
 
-	@NotNull
-	@Column(name = "Contribution")
-	private int contribution = 0;
+	@NotNull(message = MessageConstants.ROLE_ID_NOT_NULL)
+	@NotEmpty(message = MessageConstants.USER_ID_NOT_EMPTY)
+	private String roleId;
+
+	private String contribution;
 	
-	@Column(name = "Comments", length = 300)
 	private String comments;
 
-	@Column(name = "Contributions", length = 300)
-	private String contributions;
 
 }
