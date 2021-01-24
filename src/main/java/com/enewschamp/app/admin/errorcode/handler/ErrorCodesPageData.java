@@ -6,9 +6,11 @@ import javax.validation.constraints.NotNull;
 import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = false)
+@Data
 public class ErrorCodesPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 
