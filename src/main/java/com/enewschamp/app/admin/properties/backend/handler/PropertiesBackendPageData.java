@@ -6,8 +6,10 @@ import javax.validation.constraints.NotNull;
 import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+@Data
 @EqualsAndHashCode(callSuper = false)
 public class PropertiesBackendPageData extends PageData {
 	private static final long serialVersionUID = 1L;
