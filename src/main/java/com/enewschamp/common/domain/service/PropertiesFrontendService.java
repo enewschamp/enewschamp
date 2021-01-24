@@ -66,6 +66,9 @@ public class PropertiesFrontendService extends AbstractDomainService {
 	public PropertiesFrontend update(PropertiesFrontend properties) {
 		Long propertyId = properties.getPropertyId();
 		PropertiesFrontend existingProperties = get(propertyId);
+		if (existingProperties.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(properties, existingProperties);
 		return repository.save(existingProperties);
 	}
