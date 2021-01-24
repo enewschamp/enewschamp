@@ -53,7 +53,7 @@ public class UIControlsRulesService {
 	}
 
 	public UIControlsRules update(UIControlsRules UIControlsRules) {
-		Long uiControlId = UIControlsRules.getUiControlId();
+		Long uiControlId = UIControlsRules.getRuleId();
 		UIControlsRules existingUIControlsRules = get(uiControlId);
 		if (existingUIControlsRules.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
@@ -63,7 +63,7 @@ public class UIControlsRulesService {
 	}
 
 	public UIControlsRules patch(UIControlsRules UIControlsRules) {
-		Long uiControlId = UIControlsRules.getUiControlId();
+		Long uiControlId = UIControlsRules.getRuleId();
 		UIControlsRules existingEntity = get(uiControlId);
 		modelMapperForPatch.map(UIControlsRules, existingEntity);
 		return uiControlsRulesRepository.save(existingEntity);
