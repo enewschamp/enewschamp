@@ -123,6 +123,10 @@ public class CommonModuleService {
 	}
 	
 	public void validateHeaders(HeaderDTO pageData, String module) {
+//		// For an Admin login we don't to validate the login credential as this will be generated in the login flow
+//		if(pageData.getPageName() != null && pageData.getPageName().equals("Admin")) {
+//			pageData.setLoginCredentials("abc123");
+//		}
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
 		Set<ConstraintViolation<HeaderDTO>> violations = validator.validate(pageData);

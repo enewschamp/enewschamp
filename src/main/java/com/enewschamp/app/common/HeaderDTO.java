@@ -20,7 +20,6 @@ public class HeaderDTO implements Serializable {
 	@NotEmpty(message = "Module must not be empty")
 	private String module;
 	@NotNull(message = "LoginCredential must not be null")
-	@NotEmpty(message = "LoginCredential must not be empty")
 	private String loginCredentials;
 	@NotNull(message = "PageName must not be null")
 	@NotEmpty(message = "PageName must not be empty")
