@@ -2,12 +2,14 @@ package com.enewschamp.app.fw.page.navigation.repository;
 
 import java.util.List;
 
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.enewschamp.app.fw.page.navigation.entity.PageNavigator;
 
+@JaversSpringDataAuditable
 public interface PageNavigatorRepository extends JpaRepository<PageNavigator, Long> {
 
 	// @Query("select n from PageNavigator n where n. action=:action and
