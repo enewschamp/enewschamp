@@ -149,3 +149,19 @@ CREATE TABLE `entitlements` (
   UNIQUE KEY `UC_entitlements_01` (`user_id`,`role`,`page_name`)
 );
 
+drop table `celebration`;
+CREATE TABLE `celebration` (
+  `celebration_id` bigint NOT NULL,
+  `operation_date_time` datetime NOT NULL,
+  `operator_id` varchar(20) NOT NULL,
+  `record_in_use` varchar(1) NOT NULL,
+  `audio_file_name` varchar(100) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `edition_id` varchar(6) NOT NULL,
+  `image_name` varchar(100) DEFAULT NULL,
+  `name_id` varchar(10) NOT NULL,
+  `occasion` varchar(255) DEFAULT NULL,
+  `reading_level` int NOT NULL,
+  PRIMARY KEY (`celebration_id`),
+  UNIQUE KEY `UC_celebration_01` (`edition_id`,`date`,`occasion`,`reading_level`)
+);
