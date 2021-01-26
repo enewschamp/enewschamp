@@ -181,5 +181,7 @@ public class MessageConstants {
 	public static final String SCHOOL_CHAIN_NAME_NOT_EMPTY = "School Chain name must not be empty";
 	public static final String PRESENCE_NOT_NULL = "Presence must not be null";
 	public static final String PRESENCE_NOT_EMPTY = "Presence must not be empty";
+	public static final String OCCASION_NOT_NULL = "Occasion must not be null";
+	public static final String OCCASION_NOT_EMPTY = "Occasion must not be empty";
 	
 }

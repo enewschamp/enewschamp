@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.CommonService;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
@@ -40,10 +41,16 @@ import lombok.extern.slf4j.Slf4j;
 public class AvatarPageHandler implements IPageHandler {
 	@Autowired
 	private AvatarService avatarService;
+	
 	@Autowired
-	ModelMapper modelMapper;
+	private ModelMapper modelMapper;
+	
 	@Autowired
-	ObjectMapper objectMapper;
+	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private CommonService commonService;
+	
 	private Validator validator;
 
 	@Override
@@ -99,6 +106,14 @@ public class AvatarPageHandler implements IPageHandler {
 		validate(pageData);
 		Avatar avatar = mapAvatarData(pageRequest, pageData);
 		avatar = avatarService.create(avatar);
+		String newImageName = avatar.getAvatarId() + "_" + System.currentTimeMillis();
+		String imageType = pageData.getImageTypeExt();
+		boolean saveFlag = commonService.saveImages("Admin", "avatar", imageType, pageData.getBase64Image(),
+				newImageName, avatar.getImageName());
+		if (saveFlag) {
+			avatar.setImageName(newImageName + "." + imageType);
+			avatar = avatarService.update(avatar);
+		}
         mapAvatar(pageRequest, pageDto, avatar);
 		return pageDto;
 	}
