@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class AvatarPageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	private Long avatarId = 0L;
+	private Long avatarId;
 	@NotNull(message = MessageConstants.AVATAR_NAME_NOT_NULL)
 	@NotEmpty(message = MessageConstants.AVATAR_NAME_NOT_EMPTY)
 	private String nameId;

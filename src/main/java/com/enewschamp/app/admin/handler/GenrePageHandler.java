@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.CommonService;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
@@ -41,6 +42,9 @@ public class GenrePageHandler implements IPageHandler {
 	@Autowired
 	private GenreService genreService;
 	@Autowired
+	private CommonService commonService;
+	
+	@Autowired
 	ModelMapper modelMapper;
 	@Autowired
 	ObjectMapper objectMapper;
@@ -51,7 +55,7 @@ public class GenrePageHandler implements IPageHandler {
 		PageDTO pageDto = null;
 		switch (pageRequest.getHeader().getAction()) {
 		case "Create":
-			pageDto = createEdition(pageRequest);
+			pageDto = createGenre(pageRequest);
 			break;
 		case "Update":
 			pageDto = updateGenre(pageRequest);
@@ -93,12 +97,20 @@ public class GenrePageHandler implements IPageHandler {
 	}
 
 	@SneakyThrows
-	private PageDTO createEdition(PageRequestDTO pageRequest) {
+	private PageDTO createGenre(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		GenrePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), GenrePageData.class);
 		validate(pageData);
 		Genre genre = mapGenreData(pageRequest, pageData);
 		genre = genreService.create(genre);
+		String newImageName = genre.getGenreId() + "_" + System.currentTimeMillis();
+		String imageType = pageData.getImageTypeExt();
+		boolean saveFlag = commonService.saveImages("Admin", "genre", imageType, pageData.getBase64Image(),
+				newImageName, genre.getImageName());
+		if (saveFlag) {
+			genre.setImageName(newImageName + "." + imageType);
+			genre = genreService.update(genre);
+		}
 		mapGenre(pageRequest, pageDto, genre);
 		return pageDto;
 	}
@@ -202,6 +214,7 @@ public class GenrePageHandler implements IPageHandler {
 	private GenrePageData mapPageData(Genre genre) {
 		GenrePageData pageData = modelMapper.map(genre, GenrePageData.class);
 		pageData.setLastUpdate(genre.getOperationDateTime());
+		pageData.setBase64Image(null);
 		return pageData;
 	}
 

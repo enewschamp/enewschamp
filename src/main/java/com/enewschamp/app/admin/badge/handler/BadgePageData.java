@@ -33,3 +33,4 @@ public class BadgePageData extends PageData {
 	private String base64Image;
 	private String imageTypeExt;
 }
+  

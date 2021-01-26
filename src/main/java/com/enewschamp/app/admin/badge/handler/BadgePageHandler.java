@@ -200,6 +200,7 @@ public class BadgePageHandler implements IPageHandler {
 	private BadgePageData mapPageData(Badge badge) {
 		BadgePageData pageData = modelMapper.map(badge, BadgePageData.class);
 		pageData.setLastUpdate(badge.getOperationDateTime());
+		pageData.setBase64Image(null);
 		return pageData;
 	}
 
