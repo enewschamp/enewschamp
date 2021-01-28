@@ -100,4 +100,13 @@ public class EntitlementService {
 		}
 		return entitlementList;
 	}
+
+	public Boolean isValidUser(String userId, String role) {
+		Optional<Entitlement> entitlement = repository.findByUserIdAndRole(userId, role);
+		if (entitlement.isPresent())
+			return true;
+		else
+			throw new BusinessException(ErrorCodeConstants.ENTITLEMENT_NOT_FOUND);
+
+	}
 }

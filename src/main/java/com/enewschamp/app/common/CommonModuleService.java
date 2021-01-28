@@ -9,11 +9,13 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import org.hibernate.validator.internal.constraintvalidators.hv.ISBNValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.entitlement.service.EntitlementService;
 import com.enewschamp.app.signin.page.handler.LoginPageData;
 import com.enewschamp.app.user.login.entity.UserAction;
 import com.enewschamp.app.user.login.entity.UserActivityTracker;
@@ -26,6 +28,8 @@ import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.service.EditionService;
 import com.enewschamp.user.domain.entity.User;
+import com.enewschamp.user.domain.entity.UserRole;
+import com.enewschamp.user.domain.service.UserRoleService;
 import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -40,6 +44,12 @@ public class CommonModuleService {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	UserRoleService userRoleService;
+	
+	@Autowired
+	EntitlementService entitlementService;
 
 	@Autowired
 	EditionService editionService;
@@ -120,6 +130,13 @@ public class CommonModuleService {
 			loginPageData.setTokenValidity(
 					propertiesService.getValue(module, PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));		}
 		return loginPageData;
+	}
+	
+	public void doEntitlementCheck(HeaderDTO pageData) {
+		Boolean validEntitlement = entitlementService.isValidUser(pageData.getUserId(), pageData.getModule());
+		if(validEntitlement) {
+			userRoleService.isValidRole(pageData.getUserId(), pageData.getModule());
+		}
 	}
 	
 	public void validateHeaders(HeaderDTO pageData, String module) {

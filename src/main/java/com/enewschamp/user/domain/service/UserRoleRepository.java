@@ -19,4 +19,5 @@ interface UserRoleRepository extends JpaRepository<UserRole, UserRoleKey> {
 	@Query("Select c from UserRole c where c.userRoleKey.userId= :userId ")
 	public Optional<UserRole> getByUserId(@Param("userId") String userId);
 
+
 }
