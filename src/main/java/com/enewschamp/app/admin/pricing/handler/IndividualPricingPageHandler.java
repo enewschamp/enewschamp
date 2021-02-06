@@ -218,7 +218,7 @@ public class IndividualPricingPageHandler implements IPageHandler {
 		Set<ConstraintViolation<IndividualPricingPageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.error(e.getMessage());
+				log.error("Validation failed: " + e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}

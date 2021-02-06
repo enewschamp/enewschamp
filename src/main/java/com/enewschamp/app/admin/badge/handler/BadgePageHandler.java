@@ -230,7 +230,7 @@ public class BadgePageHandler implements IPageHandler {
 		Set<ConstraintViolation<BadgePageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.info(e.getMessage());
+				log.error("Validation failed: " + e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}

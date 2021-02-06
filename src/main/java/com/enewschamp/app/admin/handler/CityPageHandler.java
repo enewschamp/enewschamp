@@ -214,7 +214,7 @@ public class CityPageHandler implements IPageHandler {
 		Set<ConstraintViolation<CityPageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.info(e.getMessage());
+				log.error("Validation failed: " + e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}

@@ -26,7 +26,6 @@ import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
-import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.security.entity.AppSecurity;
 import com.enewschamp.security.service.AppSecurityService;
@@ -215,7 +214,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 		Set<ConstraintViolation<AppSecurityPageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.error(e.getMessage());
+				log.error("Validation failed: " + e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}

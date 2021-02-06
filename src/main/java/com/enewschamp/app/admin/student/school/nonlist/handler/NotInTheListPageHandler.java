@@ -207,7 +207,7 @@ public class NotInTheListPageHandler implements IPageHandler {
 		Set<ConstraintViolation<StudentSchoolNotInTheListPageData>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				log.error(e.getMessage());
+				log.error("Validation failed: " + e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
 		}
