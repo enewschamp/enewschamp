@@ -134,4 +134,12 @@ public class PageNavigationRulesService {
 		}
 		return pageList;
 	}
+	
+	public void createAll(List<PageNavigatorRules> pageNavigatorRulesEntities) {
+		try {
+		 pageNavigatorRulesRepository.saveAll(pageNavigatorRulesEntities);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+	}
 }

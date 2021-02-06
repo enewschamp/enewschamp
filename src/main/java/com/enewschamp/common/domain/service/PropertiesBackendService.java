@@ -158,4 +158,12 @@ public class PropertiesBackendService extends AbstractDomainService {
 		return propertiesBackendList;
 	}
 
+	public void createAll(List<PropertiesBackend> properties) {
+		try {
+			repository.saveAll(properties);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+	}
+
 }

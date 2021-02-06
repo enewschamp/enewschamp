@@ -1,5 +1,6 @@
 package com.enewschamp.app.common.uicontrols.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -111,6 +112,14 @@ public class UIControlsGlobalService {
 			return existingEntity.get();
 		} else {
 			throw new BusinessException(ErrorCodeConstants.UICONTROLS_NOT_FOUND);
+		}
+	}
+	
+	public void createAll(List<UIControlsGlobal> uiControlsGlobals) {
+		try {
+			repository.saveAll(uiControlsGlobals);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 	}
 }

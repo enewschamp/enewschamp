@@ -147,5 +147,13 @@ public class ErrorCodesService extends AbstractDomainService {
 		}
 		return errorCodesList;
 	}
+	
+	public void createAll(List<ErrorCodes> errorCodes) {
+		try {
+			 repository.saveAll(errorCodes);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+	}
 
 }

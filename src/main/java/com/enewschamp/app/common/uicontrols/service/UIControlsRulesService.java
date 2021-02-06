@@ -143,5 +143,13 @@ public class UIControlsRulesService {
 			throw new BusinessException(ErrorCodeConstants.UICONTROLS_NOT_FOUND);
 		}
 	}
+	
+	public void createAll(List<UIControlsRules> uiControlsRules) {
+		try {
+			uiControlsRulesRepository.saveAll(uiControlsRules);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+	}
 
 }

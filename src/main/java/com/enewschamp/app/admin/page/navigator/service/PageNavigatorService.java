@@ -1,5 +1,6 @@
 package com.enewschamp.app.admin.page.navigator.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -91,6 +92,14 @@ public class PageNavigatorService {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return pageList;
+	}
+	
+	public void createAll(List<PageNavigator> pageNavigators) {
+		try {
+			repository.saveAll(pageNavigators);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
 	}
 
 }
