@@ -2,8 +2,6 @@ package com.enewschamp.app.admin.user.login.handler;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 

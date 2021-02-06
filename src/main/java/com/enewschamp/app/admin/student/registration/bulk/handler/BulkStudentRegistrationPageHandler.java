@@ -8,12 +8,12 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.student.school.nonlist.handler.StudentSchoolNilDTO;
-import com.enewschamp.app.admin.student.school.nonlist.handler.StudentSchoolNotInTheListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
@@ -179,6 +179,7 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 
 	private StudentRegistration createStudentRegistration(BulkStudentRegistrationPageData pageData,
 			PageRequestDTO pageRequest) {
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		StudentRegistration studentRegistration = modelMapper.map(pageData.getStudentRegistration(),
 				StudentRegistration.class);
 		studentRegistration.setOperatorId(pageRequest.getHeader().getUserId());

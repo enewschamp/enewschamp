@@ -84,4 +84,15 @@ public class AdminSearchRequest {
     private String cityNotInTheList;
     private String stateNotInTheList;
     private String countryNotInTheList;
+    private String actionPerformed;
+    private String actionStatus;
+    private String subscriptionType;
+    private String subscriptionPeriod;
+    private String newsArticleId;
+    private String reaction;
+    private String saved;
+    private String opinionPresent;
+    private String quizScore;
+	private LocalDateTime dateFrom;
+	private LocalDateTime dateTo;
 }

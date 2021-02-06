@@ -2,8 +2,6 @@ package com.enewschamp.app.student.registration.dto;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-
 import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
