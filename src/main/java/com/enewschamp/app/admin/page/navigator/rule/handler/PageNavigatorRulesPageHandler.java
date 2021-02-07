@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.bulk.handler.BulkInsertResponsePageData;
 import com.enewschamp.app.admin.handler.ListPageData;
-import com.enewschamp.app.admin.page.navigator.handler.PageNavigatorPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
@@ -42,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component("PageNavigatorRulesPageHandler")
 @Slf4j
+@Transactional
 public class PageNavigatorRulesPageHandler implements IPageHandler {
 	@Autowired
 	private PageNavigationRulesService pageNavigationRulesService;
@@ -212,13 +213,17 @@ public class PageNavigatorRulesPageHandler implements IPageHandler {
 	@SneakyThrows
 	@Transactional
 	private PageDTO insertAll(PageRequestDTO pageRequest) {
-		// PageDTO pageDto = new PageDTO();
+	    PageDTO pageDto = new PageDTO();
 		List<PageNavigatorRulesPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
-				new TypeReference<List<PageNavigatorPageData>>() {
+				new TypeReference<List<PageNavigatorRulesPageData>>() {
 				});
 		List<PageNavigatorRules> pageNavigators = mapPageNavigatorRules(pageRequest, pageData);
-		pageNavigationRulesService.createAll(pageNavigators);
-		return null;
+		int totalRecords = pageNavigationRulesService.createAll(pageNavigators);
+		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
+		responseData.setNumberOfRecords(totalRecords);
+		pageDto.setHeader(pageRequest.getHeader());
+		pageDto.setData(responseData);
+		return pageDto;
 	}
 
 

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.bulk.handler.BulkInsertResponsePageData;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
@@ -192,13 +193,17 @@ public class ErrorCodesPageHandler implements IPageHandler {
 	@SneakyThrows
 	@Transactional
 	private PageDTO insertAll(PageRequestDTO pageRequest) {
-		// PageDTO pageDto = new PageDTO();
+	    PageDTO pageDto = new PageDTO();
 		List<ErrorCodesPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				new TypeReference<List<ErrorCodesPageData>>() {
 				});
 		List<ErrorCodes> pageNavigators = mapErrorCodes(pageRequest, pageData);
-		errorCodesService.createAll(pageNavigators);
-		return null;
+		int totalRecords= errorCodesService.createAll(pageNavigators);
+		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
+		responseData.setNumberOfRecords(totalRecords);
+		pageDto.setHeader(pageRequest.getHeader());
+		pageDto.setData(responseData);
+		return pageDto;
 	}
 
 	private ErrorCodesPageData mapPageData(ErrorCodes errorCodes) {

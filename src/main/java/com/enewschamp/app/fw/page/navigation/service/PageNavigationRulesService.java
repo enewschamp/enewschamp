@@ -135,11 +135,13 @@ public class PageNavigationRulesService {
 		return pageList;
 	}
 	
-	public void createAll(List<PageNavigatorRules> pageNavigatorRulesEntities) {
+	public int createAll(List<PageNavigatorRules> pageNavigatorRulesEntities) {
+		int noOfRecords = 0;
 		try {
-		 pageNavigatorRulesRepository.saveAll(pageNavigatorRulesEntities);
+		 noOfRecords = pageNavigatorRulesRepository.saveAll(pageNavigatorRulesEntities).size();
 		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
+		return noOfRecords;
 	}
 }

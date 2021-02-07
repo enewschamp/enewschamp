@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.bulk.handler.BulkInsertResponsePageData;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
@@ -41,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component("UIControlsGlobalPageHandler")
 @Slf4j
+@Transactional
 public class UIControlsGlobalPageHandler implements IPageHandler {
 	@Autowired
 	private UIControlsGlobalService uiControlsGlobalGlobalsService;
@@ -191,13 +193,17 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 	@SneakyThrows
 	@Transactional
 	private PageDTO insertAll(PageRequestDTO pageRequest) {
-		// PageDTO pageDto = new PageDTO();
+	    PageDTO pageDto = new PageDTO();
 		List<UIControlsGlobalPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				new TypeReference<List<UIControlsGlobalPageData>>() {
 				});
 		List<UIControlsGlobal> uiControlsGlobals = mapUIControlsGlobals(pageRequest, pageData);
-		uiControlsGlobalGlobalsService.createAll(uiControlsGlobals);
-		return null;
+		int totalRecords = uiControlsGlobalGlobalsService.createAll(uiControlsGlobals);
+		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
+		responseData.setNumberOfRecords(totalRecords);
+		pageDto.setHeader(pageRequest.getHeader());
+		pageDto.setData(responseData);
+		return pageDto;
 	}
 
 	private UIControlsGlobalPageData mapPageData(UIControlsGlobal uiControlsGlobal) {

@@ -114,12 +114,14 @@ public class UIControlsGlobalService {
 			throw new BusinessException(ErrorCodeConstants.UICONTROLS_NOT_FOUND);
 		}
 	}
-	
-	public void createAll(List<UIControlsGlobal> uiControlsGlobals) {
+
+	public int createAll(List<UIControlsGlobal> uiControlsGlobals) {
+		int noOfRecords = 0;
 		try {
-			repository.saveAll(uiControlsGlobals);
+			noOfRecords = repository.saveAll(uiControlsGlobals).size();
 		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
+		return noOfRecords;
 	}
 }

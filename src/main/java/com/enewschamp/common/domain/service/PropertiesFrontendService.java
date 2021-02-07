@@ -161,11 +161,13 @@ public class PropertiesFrontendService extends AbstractDomainService {
 		return propertiesFrontendList;
 	}
 
-	public void createAll(List<PropertiesFrontend> properties) {
+	public int createAll(List<PropertiesFrontend> properties) {
+		int noOfRecords = 0;
 		try {
-			repository.saveAll(properties);
+			noOfRecords = repository.saveAll(properties).size();
 		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
+		return noOfRecords;
 	}
 }

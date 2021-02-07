@@ -28,7 +28,7 @@ public class UIControlsRulesService {
 
 	@Autowired
 	UIControlsRulesRepository uiControlsRulesRepository;
-	
+
 	@Autowired
 	UIControlsRulesRepositoryCustomImpl uiControlsRulesRepositoryCustom;
 
@@ -96,7 +96,7 @@ public class UIControlsRulesService {
 		UIControlsRules.setUiControlId(uiControlId);
 		return auditService.getEntityAudit(UIControlsRules);
 	}
-	
+
 	public UIControlsRules read(UIControlsRules uiControlEntity) {
 		Long ruleId = uiControlEntity.getRuleId();
 		UIControlsRules existingEntity = get(ruleId);
@@ -143,13 +143,15 @@ public class UIControlsRulesService {
 			throw new BusinessException(ErrorCodeConstants.UICONTROLS_NOT_FOUND);
 		}
 	}
-	
-	public void createAll(List<UIControlsRules> uiControlsRules) {
+
+	public int createAll(List<UIControlsRules> uiControlsRules) {
+		int noOfRecords = 0;
 		try {
-			uiControlsRulesRepository.saveAll(uiControlsRules);
+			noOfRecords = uiControlsRulesRepository.saveAll(uiControlsRules).size();
 		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
+		return noOfRecords;
 	}
 
 }

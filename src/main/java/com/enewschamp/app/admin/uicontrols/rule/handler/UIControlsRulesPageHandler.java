@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.bulk.handler.BulkInsertResponsePageData;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
@@ -103,7 +104,8 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createUIControlsRules(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsRulesPageData.class);
+		UIControlsRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsRulesPageData.class);
 		validate(pageData);
 		UIControlsRules uiControlesRulesGlobal = mapUIControlsRulesData(pageRequest, pageData);
 		uiControlesRulesGlobal = uiControlsRuleService.create(uiControlesRulesGlobal);
@@ -129,7 +131,8 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updateUIControlsRules(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsRulesPageData.class);
+		UIControlsRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsRulesPageData.class);
 		validate(pageData);
 		UIControlsRules uiControlesRules = mapUIControlsRulesData(pageRequest, pageData);
 		uiControlesRules = uiControlsRuleService.update(uiControlesRules);
@@ -140,7 +143,8 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readUIControlsRules(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsRulesPageData.class);
+		UIControlsRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsRulesPageData.class);
 		UIControlsRules uiControlesRules = modelMapper.map(pageData, UIControlsRules.class);
 		uiControlesRules = uiControlsRuleService.read(uiControlesRules);
 		mapUIControlsRules(pageRequest, pageDto, uiControlesRules);
@@ -150,7 +154,8 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closeUIControlsRules(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsRulesPageData.class);
+		UIControlsRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsRulesPageData.class);
 		UIControlsRules uiControlesRules = modelMapper.map(pageData, UIControlsRules.class);
 		uiControlesRules = uiControlsRuleService.close(uiControlesRules);
 		mapUIControlsRules(pageRequest, pageDto, uiControlesRules);
@@ -160,7 +165,8 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reinstateUIControlsRules(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsRulesPageData.class);
+		UIControlsRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsRulesPageData.class);
 		UIControlsRules uiControlesRules = modelMapper.map(pageData, UIControlsRules.class);
 		uiControlesRules = uiControlsRuleService.reinstate(uiControlesRules);
 		mapUIControlsRules(pageRequest, pageDto, uiControlesRules);
@@ -188,17 +194,21 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 		dto.setRecords(variable);
 		return dto;
 	}
-	
+
 	@SneakyThrows
 	@Transactional
 	private PageDTO insertAll(PageRequestDTO pageRequest) {
-		// PageDTO pageDto = new PageDTO();
+		PageDTO pageDto = new PageDTO();
 		List<UIControlsRulesPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				new TypeReference<List<UIControlsRulesPageData>>() {
 				});
 		List<UIControlsRules> uiControlsRules = mapPageUIControlsRules(pageRequest, pageData);
-		uiControlsRuleService.createAll(uiControlsRules);
-		return null;
+		int totalRecords = uiControlsRuleService.createAll(uiControlsRules);
+		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
+		responseData.setNumberOfRecords(totalRecords);
+		pageDto.setHeader(pageRequest.getHeader());
+		pageDto.setData(responseData);
+		return pageDto;
 	}
 
 	private UIControlsRulesPageData mapPageData(UIControlsRules uiControlesRules) {
@@ -219,7 +229,8 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<UIControlsRules> pageDataList = page.getContent();
 			for (UIControlsRules uiControlesRules : pageDataList) {
-				UIControlsRulesPageData uiControlesRulesPageData = modelMapper.map(uiControlesRules, UIControlsRulesPageData.class);
+				UIControlsRulesPageData uiControlesRulesPageData = modelMapper.map(uiControlesRules,
+						UIControlsRulesPageData.class);
 				uiControlesRulesPageData.setLastUpdate(uiControlesRules.getOperationDateTime());
 				uiControlesRulesPageDataList.add(uiControlesRulesPageData);
 			}
@@ -238,11 +249,12 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
 	}
-	
 
-	private List<UIControlsRules> mapPageUIControlsRules(PageRequestDTO pageRequest, List<UIControlsRulesPageData> pageData) {
+	private List<UIControlsRules> mapPageUIControlsRules(PageRequestDTO pageRequest,
+			List<UIControlsRulesPageData> pageData) {
 		List<UIControlsRules> pageNavigators = pageData.stream()
-				.map(uiControlsRule -> modelMapper.map(uiControlsRule, UIControlsRules.class)).collect(Collectors.toList());
+				.map(uiControlsRule -> modelMapper.map(uiControlsRule, UIControlsRules.class))
+				.collect(Collectors.toList());
 		return pageNavigators;
 	}
 

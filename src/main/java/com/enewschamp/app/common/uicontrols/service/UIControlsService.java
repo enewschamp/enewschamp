@@ -117,12 +117,14 @@ public class UIControlsService implements IUIControlsService {
 		}
 	}
 
-	public void createAll(List<UIControls> uiControls) {
+	public int createAll(List<UIControls> uiControls) {
+		int noOfRecords = 0;
 		try {
-			repository.saveAll(uiControls);
+			noOfRecords = repository.saveAll(uiControls).size();
 		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
+		return noOfRecords;
 	}
 
 }
