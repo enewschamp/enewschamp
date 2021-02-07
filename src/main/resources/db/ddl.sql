@@ -166,4 +166,10 @@ CREATE TABLE `celebration` (
   UNIQUE KEY `UC_celebration_01` (`edition_id`,`date`,`occasion`,`reading_level`)
 );
 
-ALTER TABLE page_navigator ADD UNIQUE (current_page, operation, action);
+ALTER TABLE page_navigator ADD UNIQUE UC_page_navigator_01 (current_page, operation, action);
+ALTER TABLE page_navigator_rules ADD UNIQUE UC_page_navigator_rules_01 (nav_id, exec_seq);
+ALTER TABLE uicontrols_global ADD UNIQUE UC_uicontrols_global_01 (control_name);
+ALTER TABLE uicontrols ADD UNIQUE UC_uicontrols_01 (page_name, operation, control_name);
+ALTER TABLE uicontrols_rules ADD UNIQUE UC_uicontrols_rules_01 (ui_control_id, exec_seq);
+ALTER TABLE properties_backend ADD UNIQUE UC_properties_backend_01 (name);
+ALTER TABLE properties_frontend ADD UNIQUE UC_properties_backend_01 (name, app_name);
