@@ -3,6 +3,7 @@ package com.enewschamp.app.admin;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.enewschamp.app.user.login.entity.UserAction;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -85,7 +86,7 @@ public class AdminSearchRequest {
     private String stateNotInTheList;
     private String countryNotInTheList;
     private String actionPerformed;
-    private String actionStatus;
+    private UserAction actionStatus;
     private String subscriptionType;
     private String subscriptionPeriod;
     private String newsArticleId;
