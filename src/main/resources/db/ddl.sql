@@ -173,3 +173,4 @@ ALTER TABLE uicontrols ADD UNIQUE UC_uicontrols_01 (page_name, operation, contro
 ALTER TABLE uicontrols_rules ADD UNIQUE UC_uicontrols_rules_01 (ui_control_id, exec_seq);
 ALTER TABLE properties_backend ADD UNIQUE UC_properties_backend_01 (name);
 ALTER TABLE properties_frontend ADD UNIQUE UC_properties_backend_01 (name, app_name);
+ALTER TABLE error_codes ADD UNIQUE UC_error_codes_01 (error_code);
