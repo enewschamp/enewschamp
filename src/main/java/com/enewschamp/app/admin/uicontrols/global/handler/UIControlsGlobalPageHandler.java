@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
@@ -32,6 +33,7 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
@@ -69,6 +71,9 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 			break;
 		case "List":
 			pageDto = listUIControlsGlobal(pageRequest);
+			break;
+		case "Insert":
+			pageDto = insertAll(pageRequest);
 			break;
 		default:
 			break;
@@ -182,6 +187,18 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 		dto.setRecords(variable);
 		return dto;
 	}
+	
+	@SneakyThrows
+	@Transactional
+	private PageDTO insertAll(PageRequestDTO pageRequest) {
+		// PageDTO pageDto = new PageDTO();
+		List<UIControlsGlobalPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				new TypeReference<List<UIControlsGlobalPageData>>() {
+				});
+		List<UIControlsGlobal> uiControlsGlobals = mapUIControlsGlobals(pageRequest, pageData);
+		uiControlsGlobalGlobalsService.createAll(uiControlsGlobals);
+		return null;
+	}
 
 	private UIControlsGlobalPageData mapPageData(UIControlsGlobal uiControlsGlobal) {
 		UIControlsGlobalPageData pageData = modelMapper.map(uiControlsGlobal, UIControlsGlobalPageData.class);
@@ -219,5 +236,11 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
+	}
+	
+	private List<UIControlsGlobal> mapUIControlsGlobals(PageRequestDTO pageRequest, List<UIControlsGlobalPageData> pageData) {
+		List<UIControlsGlobal> pageNavigators = pageData.stream()
+				.map(uicontrolglobal -> modelMapper.map(uicontrolglobal, UIControlsGlobal.class)).collect(Collectors.toList());
+		return pageNavigators;
 	}
 }

@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
@@ -32,12 +33,14 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Component("PropertiesBackendPageHandler")
+@Transactional
 @Slf4j
 public class PropertiesBackendPageHandler implements IPageHandler {
 	@Autowired
@@ -69,6 +72,9 @@ public class PropertiesBackendPageHandler implements IPageHandler {
 			break;
 		case "List":
 			pageDto = listPropertiesBackend(pageRequest);
+			break;
+		case "Insert":
+			pageDto = insertAll(pageRequest);
 			break;
 		default:
 			break;
@@ -183,6 +189,17 @@ public class PropertiesBackendPageHandler implements IPageHandler {
 		return dto;
 	}
 
+	@SneakyThrows
+	@Transactional
+	private PageDTO insertAll(PageRequestDTO pageRequest) {
+		// PageDTO pageDto = new PageDTO();
+		List<PropertiesBackendPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				new TypeReference<List<PropertiesBackendPageData>>() {
+				});
+		List<PropertiesBackend> pageNavigators = mapPropertiesBackend(pageRequest, pageData);
+		propertiesBackendService.createAll(pageNavigators);
+		return null;
+	}
 	private PropertiesBackendPageData mapPageData(PropertiesBackend propertiesBackend) {
 		PropertiesBackendPageData pageData = modelMapper.map(propertiesBackend, PropertiesBackendPageData.class);
 		pageData.setLastUpdate(propertiesBackend.getOperationDateTime());
@@ -219,5 +236,11 @@ public class PropertiesBackendPageHandler implements IPageHandler {
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
+	}
+	
+	private List<PropertiesBackend> mapPropertiesBackend(PageRequestDTO pageRequest, List<PropertiesBackendPageData> pageData) {
+		List<PropertiesBackend> propertiesBackends = pageData.stream()
+				.map(backend -> modelMapper.map(backend, PropertiesBackend.class)).collect(Collectors.toList());
+		return propertiesBackends;
 	}
 }

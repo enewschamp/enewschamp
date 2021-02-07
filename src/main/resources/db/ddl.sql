@@ -165,3 +165,5 @@ CREATE TABLE `celebration` (
   PRIMARY KEY (`celebration_id`),
   UNIQUE KEY `UC_celebration_01` (`edition_id`,`date`,`occasion`,`reading_level`)
 );
+
+ALTER TABLE page_navigator ADD UNIQUE (current_page, operation, action);

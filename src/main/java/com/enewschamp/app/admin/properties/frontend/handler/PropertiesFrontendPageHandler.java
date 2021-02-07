@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
@@ -32,6 +33,7 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
@@ -39,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component("PropertiesFrontendPageHandler")
 @Slf4j
+@Transactional
 public class PropertiesFrontendPageHandler implements IPageHandler {
 	@Autowired
 	private PropertiesFrontendService propertiesFrontendService;
@@ -70,6 +73,9 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 		case "List":
 			pageDto = listPropertiesFrontend(pageRequest);
 			break;
+		case "Insert":
+			pageDto = insertAll(pageRequest);
+			break;
 		default:
 			break;
 		}
@@ -97,7 +103,8 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createPropertiesFrontend(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PropertiesFrontendPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PropertiesFrontendPageData.class);
+		PropertiesFrontendPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PropertiesFrontendPageData.class);
 		validate(pageData);
 		PropertiesFrontend propertiesFrontend = mapPropertiesFrontendData(pageRequest, pageData);
 		propertiesFrontend = propertiesFrontendService.create(propertiesFrontend);
@@ -114,7 +121,8 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 		pageDto.getHeader().setDeviceId(null);
 	}
 
-	private PropertiesFrontend mapPropertiesFrontendData(PageRequestDTO pageRequest, PropertiesFrontendPageData pageData) {
+	private PropertiesFrontend mapPropertiesFrontendData(PageRequestDTO pageRequest,
+			PropertiesFrontendPageData pageData) {
 		PropertiesFrontend propertiesFrontend = modelMapper.map(pageData, PropertiesFrontend.class);
 		propertiesFrontend.setRecordInUse(RecordInUseType.Y);
 		return propertiesFrontend;
@@ -123,7 +131,8 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updatePropertiesFrontend(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PropertiesFrontendPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PropertiesFrontendPageData.class);
+		PropertiesFrontendPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PropertiesFrontendPageData.class);
 		validate(pageData);
 		PropertiesFrontend propertiesFrontend = mapPropertiesFrontendData(pageRequest, pageData);
 		propertiesFrontend = propertiesFrontendService.update(propertiesFrontend);
@@ -134,7 +143,8 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readPropertiesFrontend(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PropertiesFrontendPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PropertiesFrontendPageData.class);
+		PropertiesFrontendPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PropertiesFrontendPageData.class);
 		PropertiesFrontend propertiesFrontend = modelMapper.map(pageData, PropertiesFrontend.class);
 		propertiesFrontend = propertiesFrontendService.read(propertiesFrontend);
 		mapPropertiesFrontend(pageRequest, pageDto, propertiesFrontend);
@@ -144,7 +154,8 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closePropertiesFrontend(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PropertiesFrontendPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PropertiesFrontendPageData.class);
+		PropertiesFrontendPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PropertiesFrontendPageData.class);
 		PropertiesFrontend propertiesFrontend = modelMapper.map(pageData, PropertiesFrontend.class);
 		propertiesFrontend = propertiesFrontendService.close(propertiesFrontend);
 		mapPropertiesFrontend(pageRequest, pageDto, propertiesFrontend);
@@ -154,7 +165,8 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reinstatePropertiesFrontend(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PropertiesFrontendPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PropertiesFrontendPageData.class);
+		PropertiesFrontendPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PropertiesFrontendPageData.class);
 		PropertiesFrontend propertiesFrontend = modelMapper.map(pageData, PropertiesFrontend.class);
 		propertiesFrontend = propertiesFrontendService.reinstate(propertiesFrontend);
 		mapPropertiesFrontend(pageRequest, pageDto, propertiesFrontend);
@@ -183,13 +195,26 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 		return dto;
 	}
 
+	@SneakyThrows
+	@Transactional
+	private PageDTO insertAll(PageRequestDTO pageRequest) {
+		// PageDTO pageDto = new PageDTO();
+		List<PropertiesFrontendPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				new TypeReference<List<PropertiesFrontendPageData>>() {
+				});
+		List<PropertiesFrontend> pageNavigators = mapPropertiesFrontends(pageRequest, pageData);
+		propertiesFrontendService.createAll(pageNavigators);
+		return null;
+	}
+
 	private PropertiesFrontendPageData mapPageData(PropertiesFrontend propertiesFrontend) {
 		PropertiesFrontendPageData pageData = modelMapper.map(propertiesFrontend, PropertiesFrontendPageData.class);
 		pageData.setLastUpdate(propertiesFrontend.getOperationDateTime());
 		return pageData;
 	}
 
-	private void mapPropertiesFrontend(PageRequestDTO pageRequest, PageDTO pageDto, PropertiesFrontend propertiesFrontend) {
+	private void mapPropertiesFrontend(PageRequestDTO pageRequest, PageDTO pageDto,
+			PropertiesFrontend propertiesFrontend) {
 		PropertiesFrontendPageData pageData;
 		mapHeaderData(pageRequest, pageDto);
 		pageData = mapPageData(propertiesFrontend);
@@ -201,7 +226,8 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<PropertiesFrontend> pageDataList = page.getContent();
 			for (PropertiesFrontend propertiesFrontend : pageDataList) {
-				PropertiesFrontendPageData propertiesFrontendPageData = modelMapper.map(propertiesFrontend, PropertiesFrontendPageData.class);
+				PropertiesFrontendPageData propertiesFrontendPageData = modelMapper.map(propertiesFrontend,
+						PropertiesFrontendPageData.class);
 				propertiesFrontendPageData.setLastUpdate(propertiesFrontend.getOperationDateTime());
 				propertiesFrontendPageDataList.add(propertiesFrontendPageData);
 			}
@@ -219,5 +245,12 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
+	}
+
+	private List<PropertiesFrontend> mapPropertiesFrontends(PageRequestDTO pageRequest,
+			List<PropertiesFrontendPageData> pageData) {
+		List<PropertiesFrontend> pageNavigators = pageData.stream()
+				.map(frontend -> modelMapper.map(frontend, PropertiesFrontend.class)).collect(Collectors.toList());
+		return pageNavigators;
 	}
 }

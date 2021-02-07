@@ -94,12 +94,14 @@ public class PageNavigatorService {
 		return pageList;
 	}
 	
-	public void createAll(List<PageNavigator> pageNavigators) {
+	public int createAll(List<PageNavigator> pageNavigators) {
+		int noOfRecords = 0;
 		try {
-			repository.saveAll(pageNavigators);
+			noOfRecords = repository.saveAll(pageNavigators).size();
 		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
+		return noOfRecords;
 	}
 
 }

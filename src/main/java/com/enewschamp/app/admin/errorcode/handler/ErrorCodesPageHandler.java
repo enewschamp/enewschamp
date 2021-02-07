@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
@@ -32,6 +33,7 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
@@ -39,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component("ErrorCodesPageHandler")
 @Slf4j
+@Transactional
 public class ErrorCodesPageHandler implements IPageHandler {
 	@Autowired
 	private ErrorCodesService errorCodesService;
@@ -69,6 +72,9 @@ public class ErrorCodesPageHandler implements IPageHandler {
 			break;
 		case "List":
 			pageDto = listErrorCodes(pageRequest);
+			break;
+		case "Insert":
+			pageDto = insertAll(pageRequest);
 			break;
 		default:
 			break;
@@ -182,6 +188,18 @@ public class ErrorCodesPageHandler implements IPageHandler {
 		dto.setRecords(variable);
 		return dto;
 	}
+	
+	@SneakyThrows
+	@Transactional
+	private PageDTO insertAll(PageRequestDTO pageRequest) {
+		// PageDTO pageDto = new PageDTO();
+		List<ErrorCodesPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				new TypeReference<List<ErrorCodesPageData>>() {
+				});
+		List<ErrorCodes> pageNavigators = mapErrorCodes(pageRequest, pageData);
+		errorCodesService.createAll(pageNavigators);
+		return null;
+	}
 
 	private ErrorCodesPageData mapPageData(ErrorCodes errorCodes) {
 		ErrorCodesPageData pageData = modelMapper.map(errorCodes, ErrorCodesPageData.class);
@@ -220,4 +238,11 @@ public class ErrorCodesPageHandler implements IPageHandler {
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
 	}
+	
+	private List<ErrorCodes> mapErrorCodes(PageRequestDTO pageRequest, List<ErrorCodesPageData> pageData) {
+		List<ErrorCodes> errorCodes = pageData.stream()
+				.map(errorcode -> modelMapper.map(errorcode, ErrorCodes.class)).collect(Collectors.toList());
+		return errorCodes;
+	}
+
 }

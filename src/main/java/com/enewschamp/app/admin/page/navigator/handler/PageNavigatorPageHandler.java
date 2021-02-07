@@ -15,8 +15,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.bulk.handler.BulkInsertResponsePageData;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.admin.page.navigator.service.PageNavigatorService;
 import com.enewschamp.app.common.CommonConstants;
@@ -32,12 +34,14 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Component("PageNavigatorPageHandler")
+@Transactional
 @Slf4j
 public class PageNavigatorPageHandler implements IPageHandler {
 	@Autowired
@@ -70,6 +74,9 @@ public class PageNavigatorPageHandler implements IPageHandler {
 		case "List":
 			pageDto = listPageNavigator(pageRequest);
 			break;
+		case "Insert":
+			pageDto = insertAll(pageRequest);
+			break;
 		default:
 			break;
 		}
@@ -97,7 +104,8 @@ public class PageNavigatorPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createPageNavigator(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PageNavigatorPageData.class);
+		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PageNavigatorPageData.class);
 		validateData(pageData);
 		PageNavigator pageNavigator = mapPageNavigatorData(pageRequest, pageData);
 		pageNavigator = pageNavigatorService.create(pageNavigator);
@@ -124,7 +132,8 @@ public class PageNavigatorPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updatePageNavigator(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PageNavigatorPageData.class);
+		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PageNavigatorPageData.class);
 		validateData(pageData);
 		PageNavigator pageNavigator = mapPageNavigatorData(pageRequest, pageData);
 		pageNavigator = pageNavigatorService.update(pageNavigator);
@@ -142,7 +151,8 @@ public class PageNavigatorPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readPageNavigator(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PageNavigatorPageData.class);
+		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PageNavigatorPageData.class);
 		PageNavigator pageNavigator = modelMapper.map(pageData, PageNavigator.class);
 		pageNavigator = pageNavigatorService.read(pageNavigator);
 		mapPageNavigator(pageRequest, pageDto, pageNavigator);
@@ -152,7 +162,8 @@ public class PageNavigatorPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reinstatePageNavigator(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PageNavigatorPageData.class);
+		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PageNavigatorPageData.class);
 		PageNavigator pageNavigator = modelMapper.map(pageData, PageNavigator.class);
 		pageNavigator = pageNavigatorService.reInstate(pageNavigator);
 		mapPageNavigator(pageRequest, pageDto, pageNavigator);
@@ -168,10 +179,27 @@ public class PageNavigatorPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closePageNavigator(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PageNavigatorPageData.class);
+		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				PageNavigatorPageData.class);
 		PageNavigator pageNavigator = modelMapper.map(pageData, PageNavigator.class);
 		pageNavigator = pageNavigatorService.close(pageNavigator);
 		mapPageNavigator(pageRequest, pageDto, pageNavigator);
+		return pageDto;
+	}
+
+	@SneakyThrows
+	@Transactional
+	private PageDTO insertAll(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		List<PageNavigatorPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				new TypeReference<List<PageNavigatorPageData>>() {
+				});
+		List<PageNavigator> pageNavigators = mapPageNavigators(pageRequest, pageData);
+		int totalRecords = pageNavigatorService.createAll(pageNavigators);
+		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
+		responseData.setNumberOfRecords(totalRecords);
+		pageDto.setHeader(pageRequest.getHeader());
+		pageDto.setData(responseData);
 		return pageDto;
 	}
 
@@ -197,12 +225,13 @@ public class PageNavigatorPageHandler implements IPageHandler {
 		return dto;
 	}
 
-	public List<PageNavigatorPageData> mapPageNavigatorData(Page<PageNavigator> page) {
+	private List<PageNavigatorPageData> mapPageNavigatorData(Page<PageNavigator> page) {
 		List<PageNavigatorPageData> pageNavigatorPageDataList = new ArrayList<PageNavigatorPageData>();
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<PageNavigator> pageDataList = page.getContent();
 			for (PageNavigator pageNavigator : pageDataList) {
-				PageNavigatorPageData pageNavigatorPageData = modelMapper.map(pageNavigator, PageNavigatorPageData.class);
+				PageNavigatorPageData pageNavigatorPageData = modelMapper.map(pageNavigator,
+						PageNavigatorPageData.class);
 				pageNavigatorPageData.setLastUpdate(pageNavigator.getOperationDateTime());
 				pageNavigatorPageDataList.add(pageNavigatorPageData);
 			}
@@ -220,5 +249,11 @@ public class PageNavigatorPageHandler implements IPageHandler {
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
 		}
+	}
+
+	private List<PageNavigator> mapPageNavigators(PageRequestDTO pageRequest, List<PageNavigatorPageData> pageData) {
+		List<PageNavigator> pageNavigators = pageData.stream()
+				.map(navigator -> modelMapper.map(navigator, PageNavigator.class)).collect(Collectors.toList());
+		return pageNavigators;
 	}
 }

@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
@@ -32,6 +33,7 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
@@ -39,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component("UIControlsRulesPageHandler")
 @Slf4j
+@Transactional
 public class UIControlsRulesPageHandler implements IPageHandler {
 	@Autowired
 	private UIControlsRulesService uiControlsRuleService;
@@ -69,6 +72,9 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 			break;
 		case "List":
 			pageDto = listUIControlsRules(pageRequest);
+			break;
+		case "Insert":
+			pageDto = insertAll(pageRequest);
 			break;
 		default:
 			break;
@@ -182,6 +188,18 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 		dto.setRecords(variable);
 		return dto;
 	}
+	
+	@SneakyThrows
+	@Transactional
+	private PageDTO insertAll(PageRequestDTO pageRequest) {
+		// PageDTO pageDto = new PageDTO();
+		List<UIControlsRulesPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				new TypeReference<List<UIControlsRulesPageData>>() {
+				});
+		List<UIControlsRules> uiControlsRules = mapPageUIControlsRules(pageRequest, pageData);
+		uiControlsRuleService.createAll(uiControlsRules);
+		return null;
+	}
 
 	private UIControlsRulesPageData mapPageData(UIControlsRules uiControlesRules) {
 		UIControlsRulesPageData pageData = modelMapper.map(uiControlesRules, UIControlsRulesPageData.class);
@@ -220,4 +238,12 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
 	}
+	
+
+	private List<UIControlsRules> mapPageUIControlsRules(PageRequestDTO pageRequest, List<UIControlsRulesPageData> pageData) {
+		List<UIControlsRules> pageNavigators = pageData.stream()
+				.map(uiControlsRule -> modelMapper.map(uiControlsRule, UIControlsRules.class)).collect(Collectors.toList());
+		return pageNavigators;
+	}
+
 }

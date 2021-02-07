@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
@@ -32,12 +33,14 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Component("UIControlsPageHandler")
+@Transactional
 @Slf4j
 public class UIControlsPageHandler implements IPageHandler {
 	@Autowired
@@ -69,6 +72,9 @@ public class UIControlsPageHandler implements IPageHandler {
 			break;
 		case "List":
 			pageDto = listUIControls(pageRequest);
+			break;
+		case "Insert":
+			pageDto = insertAll(pageRequest);
 			break;
 		default:
 			break;
@@ -183,6 +189,18 @@ public class UIControlsPageHandler implements IPageHandler {
 		return dto;
 	}
 
+	@SneakyThrows
+	@Transactional
+	private PageDTO insertAll(PageRequestDTO pageRequest) {
+		// PageDTO pageDto = new PageDTO();
+		List<UIControlsPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				new TypeReference<List<UIControlsPageData>>() {
+				});
+		List<UIControls> pageNavigators = mapUIControls(pageRequest, pageData);
+		uiControlsService.createAll(pageNavigators);
+		return null;
+	}
+
 	private UIControlsPageData mapPageData(UIControls uiControls) {
 		UIControlsPageData pageData = modelMapper.map(uiControls, UIControlsPageData.class);
 		pageData.setLastUpdate(uiControls.getOperationDateTime());
@@ -219,5 +237,10 @@ public class UIControlsPageHandler implements IPageHandler {
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
+	}
+	private List<UIControls> mapUIControls(PageRequestDTO pageRequest, List<UIControlsPageData> pageData) {
+		List<UIControls> pageNavigators = pageData.stream()
+				.map(uiControls -> modelMapper.map(uiControls, UIControls.class)).collect(Collectors.toList());
+		return pageNavigators;
 	}
 }
