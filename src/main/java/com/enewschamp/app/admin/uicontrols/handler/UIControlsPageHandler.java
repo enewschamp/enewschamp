@@ -198,6 +198,7 @@ public class UIControlsPageHandler implements IPageHandler {
 				new TypeReference<List<UIControlsPageData>>() {
 				});
 		List<UIControls> pageNavigators = mapUIControls(pageRequest, pageData);
+		uiControlsService.clean();
 		int totalRecords = uiControlsService.createAll(pageNavigators);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
 		responseData.setNumberOfRecords(totalRecords);

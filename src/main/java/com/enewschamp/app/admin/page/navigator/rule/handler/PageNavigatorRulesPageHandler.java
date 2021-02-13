@@ -218,6 +218,7 @@ public class PageNavigatorRulesPageHandler implements IPageHandler {
 				new TypeReference<List<PageNavigatorRulesPageData>>() {
 				});
 		List<PageNavigatorRules> pageNavigators = mapPageNavigatorRules(pageRequest, pageData);
+		pageNavigationRulesService.clean();
 		int totalRecords = pageNavigationRulesService.createAll(pageNavigators);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
 		responseData.setNumberOfRecords(totalRecords);

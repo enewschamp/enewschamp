@@ -203,6 +203,7 @@ public class PropertiesBackendPageHandler implements IPageHandler {
 				new TypeReference<List<PropertiesBackendPageData>>() {
 				});
 		List<PropertiesBackend> pageNavigators = mapPropertiesBackend(pageRequest, pageData);
+		propertiesBackendService.clean(); 
 		int totalRecords = propertiesBackendService.createAll(pageNavigators);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
 		responseData.setNumberOfRecords(totalRecords);

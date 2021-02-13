@@ -204,6 +204,7 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 				new TypeReference<List<PropertiesFrontendPageData>>() {
 				});
 		List<PropertiesFrontend> pageNavigators = mapPropertiesFrontends(pageRequest, pageData);
+		propertiesFrontendService.clean(); 
 		int totalRecords = propertiesFrontendService.createAll(pageNavigators);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
 		responseData.setNumberOfRecords(totalRecords);

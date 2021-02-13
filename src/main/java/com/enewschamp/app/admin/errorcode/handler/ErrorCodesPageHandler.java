@@ -198,6 +198,7 @@ public class ErrorCodesPageHandler implements IPageHandler {
 				new TypeReference<List<ErrorCodesPageData>>() {
 				});
 		List<ErrorCodes> pageNavigators = mapErrorCodes(pageRequest, pageData);
+		errorCodesService.clean();
 		int totalRecords= errorCodesService.createAll(pageNavigators);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
 		responseData.setNumberOfRecords(totalRecords);

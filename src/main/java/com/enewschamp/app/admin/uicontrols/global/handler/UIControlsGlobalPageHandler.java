@@ -198,6 +198,7 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 				new TypeReference<List<UIControlsGlobalPageData>>() {
 				});
 		List<UIControlsGlobal> uiControlsGlobals = mapUIControlsGlobals(pageRequest, pageData);
+		uiControlsGlobalGlobalsService.clean();
 		int totalRecords = uiControlsGlobalGlobalsService.createAll(uiControlsGlobals);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
 		responseData.setNumberOfRecords(totalRecords);

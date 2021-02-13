@@ -26,7 +26,8 @@ public class ErrorCodes extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "error_code_id_generator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "error_code_id_generator")
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@SequenceGenerator(name = "error_code_id_generator", sequenceName = "error_code_id_seq", allocationSize = 1)
 	@Column(name = "errorCodeId", length = 3)
 	private Long errorCodeId = 0L;

@@ -203,6 +203,7 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 				new TypeReference<List<UIControlsRulesPageData>>() {
 				});
 		List<UIControlsRules> uiControlsRules = mapPageUIControlsRules(pageRequest, pageData);
+		uiControlsRuleService.clean();
 		int totalRecords = uiControlsRuleService.createAll(uiControlsRules);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
 		responseData.setNumberOfRecords(totalRecords);

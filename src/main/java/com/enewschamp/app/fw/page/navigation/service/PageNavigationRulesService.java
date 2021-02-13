@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.page.navigator.rule.repository.PageNavigatorRulesRepositoryCustomImpl;
@@ -134,14 +136,21 @@ public class PageNavigationRulesService {
 		}
 		return pageList;
 	}
-	
+
 	public int createAll(List<PageNavigatorRules> pageNavigatorRulesEntities) {
 		int noOfRecords = 0;
 		try {
-		 noOfRecords = pageNavigatorRulesRepository.saveAll(pageNavigatorRulesEntities).size();
+			noOfRecords = pageNavigatorRulesRepository.saveAll(pageNavigatorRulesEntities).size();
 		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		return noOfRecords;
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void clean() {
+		pageNavigatorRulesRepository.truncate();
+		pageNavigatorRulesRepository.deleteSequences();
+		pageNavigatorRulesRepository.initializeSequence();
 	}
 }
