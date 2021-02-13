@@ -55,10 +55,14 @@ public class StudentActivityRepositoryCustomImpl extends RepositoryImpl
 		if (!StringUtils.isEmpty(searchRequest.getSaved()))
 			filterPredicates.add(cb.equal(studentActivityRoot.get("saved"), searchRequest.getSaved()));
 
-		if (!StringUtils.isEmpty(searchRequest.getOpinionPresent()))
-			filterPredicates.add(cb.equal(studentActivityRoot.get("opinionPresent"), "Y"));
-		else
-			filterPredicates.add(cb.equal(studentActivityRoot.get("opinionPresent"), "N"));
+		if (!StringUtils.isEmpty(searchRequest.getOpinionPresent()) && searchRequest.getOpinionPresent().equals("Y")) {
+			filterPredicates.add(cb.and(cb.isNotNull(studentActivityRoot.get("opinion")),
+					cb.notEqual(cb.trim(studentActivityRoot.get("opinion")), "")));
+		}
+		if (!StringUtils.isEmpty(searchRequest.getOpinionPresent()) && searchRequest.getOpinionPresent().equals("N")) {
+			filterPredicates.add(cb.or(cb.isNull(studentActivityRoot.get("opinion")),
+					cb.equal(cb.trim(studentActivityRoot.get("opinion")), "")));
+		}
 
 		if (!StringUtils.isEmpty(searchRequest.getQuizScore()))
 			filterPredicates.add(cb.equal(studentActivityRoot.get("quizScore"), searchRequest.getQuizScore()));

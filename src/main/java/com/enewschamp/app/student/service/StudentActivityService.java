@@ -23,7 +23,7 @@ public class StudentActivityService {
 
 	@Autowired
 	StudentActivityRepository studentActivityRepository;
-
+	@Autowired
 	private StudentActivityRepositoryCustomImpl studentActivityRepositoryCustom;
 	
 	@Autowired

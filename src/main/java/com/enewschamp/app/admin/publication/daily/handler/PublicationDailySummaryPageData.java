@@ -12,9 +12,9 @@ import lombok.EqualsAndHashCode;
 public class PublicationDailySummaryPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	private LocalDate publicationDate;
-	private Integer newsArticleCount = 0;
-	private Integer quizCount = 0;
-	private int month = 0;
-	private int year = 0;
+	private Integer newsArticleCount;
+	private Integer quizCount;
+	private int month;
+	private int year;
 
 }

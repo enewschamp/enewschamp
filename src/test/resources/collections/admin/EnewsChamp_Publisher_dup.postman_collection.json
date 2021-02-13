@@ -22329,6 +22329,426 @@
 							}
 						}
 					]
+				},
+				{
+					"name": "UserActivityTracker",
+					"item": [
+						{
+							"name": "listUserActivityTracker",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "appKey",
+										"type": "text",
+										"value": "{{appKey}}"
+									},
+									{
+										"key": "appName",
+										"type": "text",
+										"value": "{{appName}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"UserActivityTracker\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"userId\": \"mesmayus\",\n            \"deviceId\": \"postman\",\n            \"userType\": \"P\",\n            \"actionPerformed\": \"logout\",\n            \"actionStatus\": \"SUCCESS\"\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"enewschamp-api",
+										"v1",
+										"admin"
+									],
+									"query": [
+										{
+											"key": "appKey",
+											"value": "GODISALMIGHTY",
+											"disabled": true
+										},
+										{
+											"key": "appName",
+											"value": "ENEWSCHAMPADMIN",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "SudentPayment",
+					"item": [
+						{
+							"name": "listStudentPayment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "appKey",
+										"type": "text",
+										"value": "{{appKey}}"
+									},
+									{
+										"key": "appName",
+										"type": "text",
+										"value": "{{appName}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StudentPayment\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"studentId\": 109,\n            \"editionId\": \"INDIAN\",\n            \"subscriptionType\": \"P\",\n            \"subscriptionPeriod\": \"1Y\"\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"enewschamp-api",
+										"v1",
+										"admin"
+									],
+									"query": [
+										{
+											"key": "appKey",
+											"value": "GODISALMIGHTY",
+											"disabled": true
+										},
+										{
+											"key": "appName",
+											"value": "ENEWSCHAMPADMIN",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "SudentActivity",
+					"item": [
+						{
+							"name": "listStudentActivity",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "appKey",
+										"type": "text",
+										"value": "{{appKey}}"
+									},
+									{
+										"key": "appName",
+										"type": "text",
+										"value": "{{appName}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StudentActivity\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"studentId\": \"109\",\n            \"editionId\": \"\",\n            \"newsArticleId\": \"\",\n            \"readingLevel\": \"\",\n            \"reaction\": \"\",\n            \"saved\": \"\",\n            \"opinionPresent\": \"N\",\n            \"quizScore\": \"\",\n            \"dateFrom\": \"2021-01-02T21:35:30\",\n            \"dateTo\": \"2021-01-04T07:44:40\"\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"enewschamp-api",
+										"v1",
+										"admin"
+									],
+									"query": [
+										{
+											"key": "appKey",
+											"value": "GODISALMIGHTY",
+											"disabled": true
+										},
+										{
+											"key": "appName",
+											"value": "ENEWSCHAMPADMIN",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "PublicationDailySummary",
+					"item": [
+						{
+							"name": "listPublicationDailySummary",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "appKey",
+										"type": "text",
+										"value": "{{appKey}}"
+									},
+									{
+										"key": "appName",
+										"type": "text",
+										"value": "{{appName}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"PublicationDailySummary\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"publicationDate\": \"2020-05-27\"\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"enewschamp-api",
+										"v1",
+										"admin"
+									],
+									"query": [
+										{
+											"key": "appKey",
+											"value": "GODISALMIGHTY",
+											"disabled": true
+										},
+										{
+											"key": "appName",
+											"value": "ENEWSCHAMPADMIN",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "PublicationMonthlySummary",
+					"item": [
+						{
+							"name": "listPublicationMonthySummary",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "appKey",
+										"type": "text",
+										"value": "{{appKey}}"
+									},
+									{
+										"key": "appName",
+										"type": "text",
+										"value": "{{appName}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"PublicationMonthlySummary\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"readingLevel\": 2,\n            \"yearMonth\": 5\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"enewschamp-api",
+										"v1",
+										"admin"
+									],
+									"query": [
+										{
+											"key": "appKey",
+											"value": "GODISALMIGHTY",
+											"disabled": true
+										},
+										{
+											"key": "appName",
+											"value": "ENEWSCHAMPADMIN",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
 				}
 			]
 		}
