@@ -194,10 +194,9 @@ public class ErrorCodesPageHandler implements IPageHandler {
 	@Transactional
 	private PageDTO insertAll(PageRequestDTO pageRequest) {
 	    PageDTO pageDto = new PageDTO();
-		List<ErrorCodesPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
-				new TypeReference<List<ErrorCodesPageData>>() {
-				});
-		List<ErrorCodes> pageNavigators = mapErrorCodes(pageRequest, pageData);
+	    ErrorCodesPageRoot pageRoot = objectMapper.readValue(pageRequest.getData().toString(), ErrorCodesPageRoot.class);
+		List<ErrorCodes> pageNavigators = mapErrorCodes(pageRequest, pageRoot.getErrorCodes());
+		if(pageRoot.isCleanRequired())
 		errorCodesService.clean();
 		int totalRecords= errorCodesService.createAll(pageNavigators);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
