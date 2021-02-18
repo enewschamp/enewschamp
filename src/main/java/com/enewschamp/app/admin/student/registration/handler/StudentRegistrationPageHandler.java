@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
+import com.enewschamp.app.admin.student.registration.bulk.handler.BulkStudentCustomImpl;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
@@ -42,6 +43,9 @@ import lombok.extern.slf4j.Slf4j;
 public class StudentRegistrationPageHandler implements IPageHandler {
 	@Autowired
 	private StudentRegistrationService studentRegistrationService;
+	
+	@Autowired
+	private BulkStudentCustomImpl bulkStudent;
 	@Autowired
 	ModelMapper modelMapper;
 	@Autowired
@@ -69,6 +73,9 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 			break;
 		case "List":
 			pageDto = listStudentRegistration(pageRequest);
+			break;
+		case "ListAll":
+			 listAll();
 			break;
 		default:
 			break;
@@ -187,6 +194,13 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 		dto.setData(pageData);
 		dto.setRecords(variable);
 		return dto;
+	}
+	
+	private PageDTO listAll() {
+		bulkStudent.findArticles();
+		System.out.println("inside all");
+		return null;
+		
 	}
 
 	private StudentRegistrationPageData mapPageData(StudentRegistration studentRegistration) {

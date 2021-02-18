@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.article.daily.ArticlePublicationDaily;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.PageDTO;
@@ -19,7 +20,6 @@ import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
-import com.enewschamp.publication.domain.entity.PublicationDailySummary;
 import com.enewschamp.publication.domain.service.PublicationDailySummaryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -69,7 +69,7 @@ public class PublicationDailySummaryPageHandler implements IPageHandler {
 	private PageDTO listPublicationDailySummary(PageRequestDTO pageRequest) {
 		AdminSearchRequest searchRequest = objectMapper
 				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
-		Page<PublicationDailySummary> dailySummaryList = dailySummaryService.listPublicationDailySummary(searchRequest,
+		Page<ArticlePublicationDaily> dailySummaryList = dailySummaryService.listPublicationDailySummary(searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
@@ -87,14 +87,14 @@ public class PublicationDailySummaryPageHandler implements IPageHandler {
 		return dto;
 	}
 
-	public List<PublicationDailySummaryPageData> mapPublicationDailySummaryData(Page<PublicationDailySummary> page) {
+	public List<PublicationDailySummaryPageData> mapPublicationDailySummaryData(Page<ArticlePublicationDaily> page) {
 		List<PublicationDailySummaryPageData> dailySummaryPageDataList = new ArrayList<PublicationDailySummaryPageData>();
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
-			List<PublicationDailySummary> pageDataList = page.getContent();
-			for (PublicationDailySummary userLogin : pageDataList) {
+			List<ArticlePublicationDaily> pageDataList = page.getContent();
+			for (ArticlePublicationDaily userLogin : pageDataList) {
 				PublicationDailySummaryPageData userLoginPageData = modelMapper.map(userLogin,
 						PublicationDailySummaryPageData.class);
-				userLoginPageData.setLastUpdate(userLogin.getOperationDateTime());
+				//userLoginPageData.setLastUpdate(userLogin.getOperationDateTime());
 				dailySummaryPageDataList.add(userLoginPageData);
 			}
 		}

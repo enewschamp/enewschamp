@@ -1,5 +1,6 @@
 package com.enewschamp.app.admin.student.registration.bulk.handler;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -69,6 +70,10 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	@Autowired
+	private BulkStudentCustomImpl bulkStudentRepository;
+	
 	@Autowired
 	private ObjectMapper objectMapper;
 	private Validator validator;
@@ -98,6 +103,9 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 		case "Create":
 			pageDto = insertBulkStudentRegistration(pageRequest);
 			break;
+		case "List":
+			pageDto = listAll(pageRequest);
+			break;
 		default:
 			break;
 		}
@@ -114,6 +122,17 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 		return dto;
 	}
 
+	private PageDTO listAll(PageRequestDTO pageRequest) {
+		PageDTO dto = new PageDTO();
+		RecordRoot root = new RecordRoot();
+		List<BulkStudentRegistrationPageData2> data = bulkStudentRepository.findArticles();
+		System.out.println("inside all");
+		root.setRecords(data);
+		dto.setHeader(pageRequest.getHeader());
+		dto.setData(root);
+		return dto;
+		
+	}
 	public PageDTO performInsertion(BulkStudentRegistrationPageData pageData, PageRequestDTO pageRequest) {
 		PageDTO dto = new PageDTO();
 		try {
