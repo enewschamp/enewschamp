@@ -32,24 +32,17 @@ public class BulkStudentCustomImpl extends RepositoryImpl {
 	public List<BulkStudentRegistrationPageData2> findArticles(AdminSearchRequest searchRequest) {
 
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Tuple> q = cb.createQuery(Tuple.class);
-		Root<StudentControl> studentControlRoot = q.from(StudentControl.class);
-		Root<StudentDetails> studentDetailsRoot = q.from(StudentDetails.class);
-		Root<StudentSchool> studentSchoolRoot = q.from(StudentSchool.class);
-		Root<StudentPreferences> studentPreferencesRoot = q.from(StudentPreferences.class);
-		Root<StudentSubscription> studentSubscriptionRoot = q.from(StudentSubscription.class);
-		Root<StudentRegistration> studentRegistrationRoot = q.from(StudentRegistration.class);
-		Root<StudentActivity> studentActivityRoot = q.from(StudentActivity.class);
+		CriteriaQuery<Tuple> criteriaQuery = cb.createQuery(Tuple.class);
+		Root<StudentControl> studentControlRoot = criteriaQuery.from(StudentControl.class);
+		Root<StudentDetails> studentDetailsRoot = criteriaQuery.from(StudentDetails.class);
+		Root<StudentSchool> studentSchoolRoot = criteriaQuery.from(StudentSchool.class);
+		Root<StudentPreferences> studentPreferencesRoot = criteriaQuery.from(StudentPreferences.class);
+		Root<StudentSubscription> studentSubscriptionRoot = criteriaQuery.from(StudentSubscription.class);
+		Root<StudentRegistration> studentRegistrationRoot = criteriaQuery.from(StudentRegistration.class);
+		Root<StudentActivity> studentActivityRoot = criteriaQuery.from(StudentActivity.class);
+		
 		List<Predicate> filterPredicates = new ArrayList<>();
-		// Join<StudentRegistration,StudentActivity> j1 = sRoot.join("studentId");
-//		q.select(cb.tuple(studentRegistrationRoot, studentActivityRoot, studentSubscriptionRoot, studentPreferencesRoot,
-//				studentSchoolRoot, studentDetailsRoot, studentControlRoot))
-//				.where(cb.equal(studentRegistrationRoot.get("studentId"), studentActivityRoot.get("studentId")),
-//						cb.equal(studentRegistrationRoot.get("studentId"), studentSubscriptionRoot.get("studentId")),
-//						cb.equal(studentRegistrationRoot.get("studentId"), studentPreferencesRoot.get("studentId")),
-//						cb.equal(studentRegistrationRoot.get("studentId"), studentSchoolRoot.get("studentId")),
-//						cb.equal(studentRegistrationRoot.get("studentId"), studentDetailsRoot.get("studentId")),
-//						cb.equal(studentRegistrationRoot.get("studentId"), studentControlRoot.get("studentId")));
+
 		filterPredicates.add(cb.equal(studentRegistrationRoot.get("studentId"), studentActivityRoot.get("studentId")));
 		filterPredicates
 				.add(cb.equal(studentRegistrationRoot.get("studentId"), studentSubscriptionRoot.get("studentId")));
@@ -67,32 +60,19 @@ public class BulkStudentCustomImpl extends RepositoryImpl {
 		mapStudentPreferencePredicate(searchRequest, studentPreferencesRoot, cb, filterPredicates);
 		mapStudentSubscriptionPredicate(searchRequest, studentSubscriptionRoot, cb, filterPredicates);
 
-		q.select(cb.tuple(studentRegistrationRoot, studentActivityRoot, studentSubscriptionRoot, studentPreferencesRoot,
-				studentSchoolRoot, studentDetailsRoot, studentControlRoot))
+		criteriaQuery.select(cb.tuple(studentRegistrationRoot, studentSubscriptionRoot, studentPreferencesRoot, studentSchoolRoot,
+				studentDetailsRoot, studentControlRoot))
 				.where((Predicate[]) filterPredicates.toArray(new Predicate[0]));
-//		q.select(cb.tuple(studentControlRoot,studentDetailsRoot, studentSchoolRoot, studentPreferencesRoot,studentSubscriptionRoot, studentRegistrationRoot, studentActivityRoot)).where(
-//			    cb.and(cb.equal(studentRegistrationRoot.get("studentId"), studentControlRoot.get("studentId")),
-//			    	   cb.equal(studentRegistrationRoot.get("studentId"), studentDetailsRoot.get("studentId")),
-//			    	   cb.equal(studentRegistrationRoot.get("studentId"), studentSchoolRoot.get("studentId")),
-//			    	   cb.equal(studentRegistrationRoot.get("studentId"), studentPreferencesRoot.get("studentId")),
-//			    	   cb.equal(studentRegistrationRoot.get("studentId"), studentSubscriptionRoot.get("studentId")),
-//			    	   cb.equal(studentRegistrationRoot.get("studentId"), studentActivityRoot.get("studentId"))
-//			    		));
-//		q.select(cb.tuple(sRoot, sgRoot)).where(
-//				cb.equal(sRoot.get("studentId"), sgRoot.get("studentId")));
-		// q.multiselect(j1);
-		// List<Tuple> l = entityManager.createQuery(q).getResultList();
-		List<Tuple> l = entityManager.createQuery(q).getResultList();
+		List<Tuple> l = entityManager.createQuery(criteriaQuery).getResultList();
 		List<BulkStudentRegistrationPageData2> bulkList = new ArrayList<BulkStudentRegistrationPageData2>();
 		for (Tuple t : l) {
 			BulkStudentRegistrationPageData2 pageData = new BulkStudentRegistrationPageData2();
 			StudentRegistration s = (StudentRegistration) t.get(0);
-			StudentActivity sg = (StudentActivity) t.get(1);
-			StudentSubscription sc = (StudentSubscription) t.get(2);
-			StudentPreferences sf = (StudentPreferences) t.get(3);
-			StudentSchool ss = (StudentSchool) t.get(4);
-			StudentDetails sd = (StudentDetails) t.get(5);
-			StudentControl scs = (StudentControl) t.get(6);
+			StudentSubscription sc = (StudentSubscription) t.get(1);
+			StudentPreferences sf = (StudentPreferences) t.get(2);
+			StudentSchool ss = (StudentSchool) t.get(3);
+			StudentDetails sd = (StudentDetails) t.get(4);
+			StudentControl scs = (StudentControl) t.get(5);
 			pageData.setStudentRegistration(s);
 			pageData.setStudentSubscription(sc);
 			pageData.setStudentControl(scs);
@@ -100,15 +80,6 @@ public class BulkStudentCustomImpl extends RepositoryImpl {
 			pageData.setStudentPreferences(sf);
 			pageData.setStudentDetails(sd);
 			bulkList.add(pageData);
-
-			System.out.println("Student Registration is : " + s);
-			System.out.println("Student Activity is : " + sg);
-			System.out.println("Student subscription is : " + sc);
-			System.out.println("Student preferences is : " + sf);
-			System.out.println("Student school is : " + ss);
-			System.out.println("Student Detail is : " + sd);
-			System.out.println("Student Controls is : " + scs);
-
 		}
 		System.out.println("tuple list: " + l);
 		return bulkList;
@@ -140,6 +111,10 @@ public class BulkStudentCustomImpl extends RepositoryImpl {
 
 		if (!StringUtils.isEmpty(searchRequest.getIsDeleted()))
 			filterPredicates.add(cb.equal(studentRegistrationRoot.get("isDeleted"), searchRequest.getIsDeleted()));
+	
+		if (!StringUtils.isEmpty(searchRequest.getLastLoginTime()))
+			filterPredicates.add(cb.equal(studentRegistrationRoot.get("lastSuccessfulLoginAttempt"), searchRequest.getLastLoginTime()));
+
 	}
 
 	private void mapStudentControlPredicate(AdminSearchRequest searchRequest, Root<StudentControl> studentControlRoot,
@@ -181,7 +156,7 @@ public class BulkStudentCustomImpl extends RepositoryImpl {
 
 		if (!StringUtils.isEmpty(searchRequest.getDobFrom()) && !StringUtils.isEmpty(searchRequest.getDobTo()))
 			filterPredicates.add(
-					cb.between(studentDetailsRoot.get("dob"), searchRequest.getDobFrom(), searchRequest.getDobTo()));
+					cb.between(studentDetailsRoot.get("doB"), searchRequest.getDobFrom(), searchRequest.getDobTo()));
 
 		if (!StringUtils.isEmpty(searchRequest.getMobileNumber()))
 			filterPredicates.add(cb.equal(studentDetailsRoot.get("mobileNumber"), searchRequest.getMobileNumber()));
@@ -257,7 +232,8 @@ public class BulkStudentCustomImpl extends RepositoryImpl {
 		if (!StringUtils.isEmpty(searchRequest.getAutoRenewal()))
 			filterPredicates.add(cb.equal(studentSubscriptionRoot.get("autoRenewal"), searchRequest.getAutoRenewal()));
 
-		if (!StringUtils.isEmpty(searchRequest.getStartDateFrom()) && !StringUtils.isEmpty(searchRequest.getStartDateTo()))
+		if (!StringUtils.isEmpty(searchRequest.getStartDateFrom())
+				&& !StringUtils.isEmpty(searchRequest.getStartDateTo()))
 			filterPredicates.add(cb.between(studentSubscriptionRoot.get("startDate"), searchRequest.getStartDateFrom(),
 					searchRequest.getStartDateTo()));
 

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 import com.enewschamp.app.user.login.entity.UserAction;
 import com.enewschamp.app.user.login.entity.UserType;
-import com.enewschamp.domain.common.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
