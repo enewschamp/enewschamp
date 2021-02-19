@@ -74,9 +74,6 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 		case "List":
 			pageDto = listStudentRegistration(pageRequest);
 			break;
-		case "ListAll":
-			 listAll();
-			break;
 		default:
 			break;
 		}
@@ -194,13 +191,6 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 		dto.setData(pageData);
 		dto.setRecords(variable);
 		return dto;
-	}
-	
-	private PageDTO listAll() {
-		bulkStudent.findArticles();
-		System.out.println("inside all");
-		return null;
-		
 	}
 
 	private StudentRegistrationPageData mapPageData(StudentRegistration studentRegistration) {

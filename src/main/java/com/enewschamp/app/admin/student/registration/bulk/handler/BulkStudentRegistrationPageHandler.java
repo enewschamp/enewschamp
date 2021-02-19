@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.student.school.nonlist.handler.StudentSchoolNilDTO;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
@@ -122,10 +123,14 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 		return dto;
 	}
 
+	@SneakyThrows
 	private PageDTO listAll(PageRequestDTO pageRequest) {
 		PageDTO dto = new PageDTO();
 		RecordRoot root = new RecordRoot();
-		List<BulkStudentRegistrationPageData2> data = bulkStudentRepository.findArticles();
+		AdminSearchRequest searchRequest = objectMapper
+				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
+
+		List<BulkStudentRegistrationPageData2> data = bulkStudentRepository.findArticles(searchRequest);
 		System.out.println("inside all");
 		root.setRecords(data);
 		dto.setHeader(pageRequest.getHeader());

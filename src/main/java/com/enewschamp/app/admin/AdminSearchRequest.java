@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.enewschamp.app.user.login.entity.UserAction;
 import com.enewschamp.app.user.login.entity.UserType;
+import com.enewschamp.domain.common.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
@@ -59,6 +60,7 @@ public class AdminSearchRequest {
     private String loginFlag;
     private String emailId;
     private String phoneNumber;
+    private String mobileNumber;
     private String verified;
     private Long navId;
     private Long ruleId;
@@ -96,4 +98,25 @@ public class AdminSearchRequest {
     private String quizScore;
 	private LocalDateTime dateFrom;
 	private LocalDateTime dateTo;
+	private LocalDate dobFrom;
+	private LocalDate dobTo;
+	private String gender;
+	private String avatar;
+	private String photo;
+	private String theme;
+    private String evalAvailed;
+    private String schoolDetails;
+    private String studentDetails;
+    private String isAccountLocked;
+    private String isActive;
+    private String isDeleted;
+    private LocalDateTime lastLoginTime;
+    private String country;
+    private String state;	
+    private String city;
+    private String school;
+    private String grade;
+    private String dailyPublication;
+    private String scoresProgressReports;
+    private String alertsNotifications;
 }
