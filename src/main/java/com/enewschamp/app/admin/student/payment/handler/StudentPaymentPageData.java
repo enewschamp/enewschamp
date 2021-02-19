@@ -9,8 +9,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class StudentPaymentPageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	private Long paymentId = 0L;
-	private Long studentId = 0L;
+	private Long paymentId;
+	private Long studentId;
 	private String editionId;
 	private String subscriptionType;
 	private String subscriptionPeriod;

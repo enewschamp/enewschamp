@@ -21,15 +21,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.student.entity.StudentActivity;
-import com.enewschamp.app.student.registration.dto.StudentRegistrationDTO;
+import com.enewschamp.app.admin.student.school.nonlist.handler.StudentSchoolNilDTO;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.domain.service.RepositoryImpl;
-import com.enewschamp.subscription.app.dto.StudentControlDTO;
-import com.enewschamp.subscription.app.dto.StudentDetailsDTO;
-import com.enewschamp.subscription.app.dto.StudentPreferencesDTO;
-import com.enewschamp.subscription.app.dto.StudentSchoolDTO;
-import com.enewschamp.subscription.app.dto.StudentSubscriptionDTO;
 import com.enewschamp.subscription.domain.entity.StudentControl;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
 import com.enewschamp.subscription.domain.entity.StudentPreferences;
@@ -54,11 +48,11 @@ public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
 		Root<StudentPreferences> studentPreferencesRoot = criteriaQuery.from(StudentPreferences.class);
 		Root<StudentSubscription> studentSubscriptionRoot = criteriaQuery.from(StudentSubscription.class);
 		Root<StudentRegistration> studentRegistrationRoot = criteriaQuery.from(StudentRegistration.class);
-		Root<StudentActivity> studentActivityRoot = criteriaQuery.from(StudentActivity.class);
+	//	Root<StudentActivity> studentActivityRoot = criteriaQuery.from(StudentActivity.class);
 		
 		List<Predicate> filterPredicates = new ArrayList<>();
 
-		filterPredicates.add(cb.equal(studentRegistrationRoot.get("studentId"), studentActivityRoot.get("studentId")));
+	//	filterPredicates.add(cb.equal(studentRegistrationRoot.get("studentId"), studentActivityRoot.get("studentId")));
 		filterPredicates
 				.add(cb.equal(studentRegistrationRoot.get("studentId"), studentSubscriptionRoot.get("studentId")));
 		filterPredicates
@@ -75,11 +69,9 @@ public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
 		mapStudentPreferencePredicate(searchRequest, studentPreferencesRoot, cb, filterPredicates);
 		mapStudentSubscriptionPredicate(searchRequest, studentSubscriptionRoot, cb, filterPredicates);
 
-		criteriaQuery.select(cb.tuple(studentRegistrationRoot, studentSubscriptionRoot, studentPreferencesRoot, studentSchoolRoot,
-				studentDetailsRoot, studentControlRoot))
+		criteriaQuery.select(cb.tuple(studentRegistrationRoot, studentControlRoot, studentDetailsRoot, studentSchoolRoot, studentPreferencesRoot, studentSubscriptionRoot  
+				 ))
 				.where((Predicate[]) filterPredicates.toArray(new Predicate[0]));
-		//List<Tuple> l = entityManager.createQuery(criteriaQuery).getResultList();
-		
 		
 		TypedQuery<Tuple> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -95,21 +87,21 @@ public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
 		for (Tuple t : list) {
 			BulkStudentRegistrationPageData pageData = new BulkStudentRegistrationPageData();
 			StudentRegistration studentRegistration = (StudentRegistration) t.get(0);
-			StudentSubscription studentSubscription = (StudentSubscription) t.get(1);
-			StudentPreferences studentPreference = (StudentPreferences) t.get(2);
+			StudentControl studentControl = (StudentControl) t.get(1);
+			StudentDetails studentDetails = (StudentDetails) t.get(2);
 			StudentSchool studentSchool = (StudentSchool) t.get(3);
-			StudentDetails studentDetails = (StudentDetails) t.get(4);
-			StudentControl studentControl = (StudentControl) t.get(5);
-			pageData.setStudentRegistration(modelMapper.map(studentRegistration, StudentRegistrationDTO.class));
-			pageData.setStudentSubscription(modelMapper.map(studentSubscription, StudentSubscriptionDTO.class));
-			pageData.setStudentPreferences(modelMapper.map(studentPreference, StudentPreferencesDTO.class));
-			pageData.setStudentSchool(modelMapper.map(studentSchool, StudentSchoolDTO.class));
-			pageData.setStudentDetails(modelMapper.map(studentDetails, StudentDetailsDTO.class));
-			pageData.setStudentControl(modelMapper.map(studentControl, StudentControlDTO.class));
+			StudentPreferences studentPreference = (StudentPreferences) t.get(4);
+			StudentSubscription studentSubscription = (StudentSubscription) t.get(5);
+			
+			pageData.setStudentRegistration(modelMapper.map(studentRegistration, StudentRegistrationNilDTO.class));
+			pageData.setStudentSubscription(modelMapper.map(studentSubscription, StudentSubscriptionNilDTO.class));
+			pageData.setStudentPreferences(modelMapper.map(studentPreference, StudentPreferencesNilDTO.class));
+			pageData.setStudentSchool(modelMapper.map(studentSchool, StudentSchoolNilDTO.class));
+			pageData.setStudentDetails(modelMapper.map(studentDetails, StudentDetailsNilDTO.class));
+			pageData.setStudentControl(modelMapper.map(studentControl, StudentControlNilDTO.class));
 			bulkList.add(pageData);
 		}
 		return new PageImpl<>(bulkList, pageable, count);
-	//	return bulkList;
 	}
 
 	private void mapStudentRegistrationPredicate(AdminSearchRequest searchRequest,
@@ -120,9 +112,14 @@ public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
 		if (!StringUtils.isEmpty(searchRequest.getEmailId()))
 			filterPredicates.add(cb.equal(studentRegistrationRoot.get("emailId"), searchRequest.getEmailId()));
 
-		if (!StringUtils.isEmpty(searchRequest.getAvatar()))
-			filterPredicates.add(cb.equal(studentRegistrationRoot.get("avatarName"), searchRequest.getAvatar()));
-
+		if (!StringUtils.isEmpty(searchRequest.getAvatar()) && searchRequest.getAvatar().equals("Y")) {
+			filterPredicates.add(cb.and(cb.isNotNull(studentRegistrationRoot.get("avatarName")),
+					cb.notEqual(cb.trim(studentRegistrationRoot.get("avatarName")), "")));
+		}
+		if (!StringUtils.isEmpty(searchRequest.getAvatar()) && searchRequest.getAvatar().equals("N")) {
+			filterPredicates.add(cb.or(cb.isNull(studentRegistrationRoot.get("avatarName")),
+					cb.equal(cb.trim(studentRegistrationRoot.get("avatarName")), "")));
+		}
 		if (!StringUtils.isEmpty(searchRequest.getPhoto()))
 			filterPredicates.add(cb.equal(studentRegistrationRoot.get("photoName"), searchRequest.getPhoto()));
 

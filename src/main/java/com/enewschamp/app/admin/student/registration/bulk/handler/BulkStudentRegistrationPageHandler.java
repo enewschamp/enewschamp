@@ -1,5 +1,6 @@
 package com.enewschamp.app.admin.student.registration.bulk.handler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,6 +38,7 @@ import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentControl;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
 import com.enewschamp.subscription.domain.entity.StudentPayment;
+import com.enewschamp.subscription.domain.entity.StudentPreferenceComm;
 import com.enewschamp.subscription.domain.entity.StudentPreferences;
 import com.enewschamp.subscription.domain.entity.StudentSchool;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;
@@ -46,6 +48,7 @@ import com.enewschamp.subscription.domain.service.StudentPaymentService;
 import com.enewschamp.subscription.domain.service.StudentPreferencesService;
 import com.enewschamp.subscription.domain.service.StudentSchoolService;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
@@ -74,14 +77,15 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 	@Autowired
 	private StudentSchoolService studentSchoolService;
 
+	@Autowired
 	private StudentPreferencesService studentPreferencesService;
 
 	@Autowired
-	private ModelMapper modelMapper;
-	
+	ModelMapper modelMapper;
+
 	@Autowired
 	private BulkStudentRegistrationCustomImpl bulkStudentRepository;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
 	private Validator validator;
@@ -123,9 +127,9 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 	@SneakyThrows
 	@Transactional
 	private PageDTO insertBulkStudentRegistration(PageRequestDTO pageRequest) {
-		BulkStudentRegistrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
-				BulkStudentRegistrationPageData.class);
-		validateData(pageData);
+		List<BulkStudentRegistrationPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				new TypeReference<List<BulkStudentRegistrationPageData>>(){});
+		pageData.forEach(pagedata -> { validateData(pagedata); });
 		PageDTO dto = performInsertion(pageData, pageRequest);
 		return dto;
 	}
@@ -149,29 +153,34 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 		dto.setData(pageData);
 		dto.setRecords(records);
 		return dto;
-		
+
 	}
-	public PageDTO performInsertion(BulkStudentRegistrationPageData pageData, PageRequestDTO pageRequest) {
+
+	public PageDTO performInsertion(List<BulkStudentRegistrationPageData> pageData, PageRequestDTO pageRequest) {
 		PageDTO dto = new PageDTO();
-		try {
-			StudentRegistration studentRegistration = createStudentRegistration(pageData, pageRequest);
-			
-			Long studentId = studentRegistration.getStudentId();
-			
-			StudentControl studentControl = createStudentControl(pageData, pageRequest, studentId);
-			StudentSubscription studentSubscription = createStudentSubscription(pageData, pageRequest, studentId);
-			StudentPayment studentPayment = createStudentPayment(pageData, pageRequest, studentId);
-			StudentDetails studentDetails = createStudentDetails(pageData, pageRequest, studentId);
-			StudentSchool studentSchool = createStudentSchool(pageData, pageRequest, studentId);
-			StudentPreferences studentPreferences = createStudentPreferences(pageData, pageRequest, studentId);
-			BulkStudentRegistrationPageData data = buildPageData(studentRegistration, studentControl,
-					studentSubscription, studentPayment, studentDetails, studentSchool, studentPreferences, pageData);
-			dto.setHeader(pageRequest.getHeader());
-			dto.setData(data);
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			throw new BusinessException(ErrorCodeConstants.STUDENT_SCHOOL_NOTLIST_UPDATE_ERROR);
+		List<BulkStudentRegistrationPageData> records = new ArrayList<>();
+		for (BulkStudentRegistrationPageData page : pageData) {
+			try {
+				StudentRegistration studentRegistration = createStudentRegistration(page, pageRequest);
+				Long studentId = studentRegistration.getStudentId();
+				StudentControl studentControl = createStudentControl(page, pageRequest, studentId);
+				StudentSubscription studentSubscription = createStudentSubscription(page, pageRequest, studentId);
+				StudentPayment studentPayment = createStudentPayment(page, pageRequest, studentId);
+				StudentDetails studentDetails = createStudentDetails(page, pageRequest, studentId);
+				StudentSchool studentSchool = createStudentSchool(page, pageRequest, studentId);
+				StudentPreferences studentPreferences = createStudentPreferences(page, pageRequest, studentId);
+				BulkStudentRegistrationPageData data = buildPageData(studentRegistration, studentControl,
+						studentSubscription, studentPayment, studentDetails, studentSchool, studentPreferences, page);
+				records.add(data);
+
+			} catch (Exception e) {
+				log.error(e.getMessage());
+				throw new BusinessException(ErrorCodeConstants.STUDENT_SCHOOL_NOTLIST_UPDATE_ERROR);
+			}
 		}
+		List<PageData> recordList = records.stream().map(e -> (PageData) e).collect(Collectors.toList());
+		dto.setHeader(pageRequest.getHeader());
+		dto.setRecords(recordList);
 		return dto;
 	}
 
@@ -268,7 +277,7 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 
 	private StudentSchool createStudentSchool(BulkStudentRegistrationPageData pageData, PageRequestDTO pageRequest,
 			long studentId) {
-		StudentSchool studentSchool = modelMapper.map(pageData.getStudentDetails(), StudentSchool.class);
+		StudentSchool studentSchool = modelMapper.map(pageData.getStudentSchool(), StudentSchool.class);
 		studentSchool.setOperatorId(pageRequest.getHeader().getUserId());
 		studentSchool.setRecordInUse(RecordInUseType.Y);
 		studentSchool.setStudentId(studentId);
@@ -278,10 +287,16 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 
 	private StudentPreferences createStudentPreferences(BulkStudentRegistrationPageData pageData,
 			PageRequestDTO pageRequest, long studentId) {
-		StudentPreferences studentPreferences = modelMapper.map(pageData.getStudentDetails(), StudentPreferences.class);
+		StudentPreferences studentPreferences = modelMapper.map(pageData.getStudentPreferences(), StudentPreferences.class);
 		studentPreferences.setOperatorId(pageRequest.getHeader().getUserId());
 		studentPreferences.setRecordInUse(RecordInUseType.Y);
 		studentPreferences.setStudentId(studentId);
+		StudentPreferenceComm commsOverEmail = new StudentPreferenceComm();
+		commsOverEmail.setAlertsNotifications(pageData.getStudentPreferences().getAlertsNotifications());
+		commsOverEmail.setCommsEmailId(pageData.getStudentPreferences().getCommsEmailId());
+		commsOverEmail.setDailyPublication(pageData.getStudentPreferences().getDailyPublication());
+		commsOverEmail.setScoresProgressReports(pageData.getStudentPreferences().getScoresProgressReports());
+		studentPreferences.setCommsOverEmail(commsOverEmail);
 		studentPreferences = studentPreferencesService.create(studentPreferences);
 		return studentPreferences;
 	}

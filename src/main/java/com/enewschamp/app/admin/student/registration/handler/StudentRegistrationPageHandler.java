@@ -195,9 +195,6 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 
 	private StudentRegistrationPageData mapPageData(StudentRegistration studentRegistration) {
 		StudentRegistrationPageData pageData = modelMapper.map(studentRegistration, StudentRegistrationPageData.class);
-		pageData.setPassword(null);
-		pageData.setPassword1(null);
-		pageData.setPassword2(null);
 		pageData.setLastUpdate(studentRegistration.getOperationDateTime());
 		return pageData;
 	}

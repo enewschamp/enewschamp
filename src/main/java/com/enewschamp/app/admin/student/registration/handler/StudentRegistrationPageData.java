@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -42,4 +44,28 @@ public class StudentRegistrationPageData extends PageData {
 	private String forcePasswordChange;
 	private LocalDateTime creationDateTime;
 	
+	@JsonIgnore
+	public String getPassword() {
+		return this.password;
+	}
+	@JsonIgnore
+	public String getPassword1() {
+		return this.password1;
+	}
+	@JsonIgnore
+	public String getPassword2() {
+		return this.password2;
+	}
+	@JsonProperty
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	@JsonProperty
+	public void setPassword1(String password1) {
+		this.password1 = password;
+	}
+	@JsonProperty
+	public void setPassword2(String password2) {
+		this.password2 = password;
+	}
 }
