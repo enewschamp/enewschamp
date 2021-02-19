@@ -6,18 +6,30 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Tuple;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.student.entity.StudentActivity;
+import com.enewschamp.app.student.registration.dto.StudentRegistrationDTO;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.domain.service.RepositoryImpl;
+import com.enewschamp.subscription.app.dto.StudentControlDTO;
+import com.enewschamp.subscription.app.dto.StudentDetailsDTO;
+import com.enewschamp.subscription.app.dto.StudentPreferencesDTO;
+import com.enewschamp.subscription.app.dto.StudentSchoolDTO;
+import com.enewschamp.subscription.app.dto.StudentSubscriptionDTO;
 import com.enewschamp.subscription.domain.entity.StudentControl;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
 import com.enewschamp.subscription.domain.entity.StudentPreferences;
@@ -25,11 +37,14 @@ import com.enewschamp.subscription.domain.entity.StudentSchool;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;
 
 @Repository
-public class BulkStudentCustomImpl extends RepositoryImpl {
+public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	ModelMapper modelMapper;
 
-	public List<BulkStudentRegistrationPageData2> findArticles(AdminSearchRequest searchRequest) {
+	public Page<BulkStudentRegistrationPageData> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Tuple> criteriaQuery = cb.createQuery(Tuple.class);
@@ -63,26 +78,38 @@ public class BulkStudentCustomImpl extends RepositoryImpl {
 		criteriaQuery.select(cb.tuple(studentRegistrationRoot, studentSubscriptionRoot, studentPreferencesRoot, studentSchoolRoot,
 				studentDetailsRoot, studentControlRoot))
 				.where((Predicate[]) filterPredicates.toArray(new Predicate[0]));
-		List<Tuple> l = entityManager.createQuery(criteriaQuery).getResultList();
-		List<BulkStudentRegistrationPageData2> bulkList = new ArrayList<BulkStudentRegistrationPageData2>();
-		for (Tuple t : l) {
-			BulkStudentRegistrationPageData2 pageData = new BulkStudentRegistrationPageData2();
-			StudentRegistration s = (StudentRegistration) t.get(0);
-			StudentSubscription sc = (StudentSubscription) t.get(1);
-			StudentPreferences sf = (StudentPreferences) t.get(2);
-			StudentSchool ss = (StudentSchool) t.get(3);
-			StudentDetails sd = (StudentDetails) t.get(4);
-			StudentControl scs = (StudentControl) t.get(5);
-			pageData.setStudentRegistration(s);
-			pageData.setStudentSubscription(sc);
-			pageData.setStudentControl(scs);
-			pageData.setStudentSchool(ss);
-			pageData.setStudentPreferences(sf);
-			pageData.setStudentDetails(sd);
+		//List<Tuple> l = entityManager.createQuery(criteriaQuery).getResultList();
+		
+		
+		TypedQuery<Tuple> q = entityManager.createQuery(criteriaQuery);
+		if (pageable.getPageSize() > 0) {
+			int pageNumber = pageable.getPageNumber();
+			q.setFirstResult(pageNumber * pageable.getPageSize());
+			q.setMaxResults(pageable.getPageSize());
+		}
+		List<Tuple>  list = q.getResultList();
+		long count = getRecordCount(criteriaQuery, filterPredicates, studentRegistrationRoot);
+		
+		
+		List<BulkStudentRegistrationPageData> bulkList = new ArrayList<BulkStudentRegistrationPageData>();
+		for (Tuple t : list) {
+			BulkStudentRegistrationPageData pageData = new BulkStudentRegistrationPageData();
+			StudentRegistration studentRegistration = (StudentRegistration) t.get(0);
+			StudentSubscription studentSubscription = (StudentSubscription) t.get(1);
+			StudentPreferences studentPreference = (StudentPreferences) t.get(2);
+			StudentSchool studentSchool = (StudentSchool) t.get(3);
+			StudentDetails studentDetails = (StudentDetails) t.get(4);
+			StudentControl studentControl = (StudentControl) t.get(5);
+			pageData.setStudentRegistration(modelMapper.map(studentRegistration, StudentRegistrationDTO.class));
+			pageData.setStudentSubscription(modelMapper.map(studentSubscription, StudentSubscriptionDTO.class));
+			pageData.setStudentPreferences(modelMapper.map(studentPreference, StudentPreferencesDTO.class));
+			pageData.setStudentSchool(modelMapper.map(studentSchool, StudentSchoolDTO.class));
+			pageData.setStudentDetails(modelMapper.map(studentDetails, StudentDetailsDTO.class));
+			pageData.setStudentControl(modelMapper.map(studentControl, StudentControlDTO.class));
 			bulkList.add(pageData);
 		}
-		System.out.println("tuple list: " + l);
-		return bulkList;
+		return new PageImpl<>(bulkList, pageable, count);
+	//	return bulkList;
 	}
 
 	private void mapStudentRegistrationPredicate(AdminSearchRequest searchRequest,

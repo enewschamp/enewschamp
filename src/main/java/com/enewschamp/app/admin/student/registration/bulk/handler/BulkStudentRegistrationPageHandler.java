@@ -2,6 +2,7 @@ package com.enewschamp.app.admin.student.registration.bulk.handler;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -11,15 +12,21 @@ import javax.validation.ValidatorFactory;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.admin.student.school.nonlist.handler.StudentSchoolNilDTO;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
+import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.app.student.registration.service.StudentRegistrationService;
@@ -73,7 +80,7 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 	private ModelMapper modelMapper;
 	
 	@Autowired
-	private BulkStudentCustomImpl bulkStudentRepository;
+	private BulkStudentRegistrationCustomImpl bulkStudentRepository;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -105,7 +112,7 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 			pageDto = insertBulkStudentRegistration(pageRequest);
 			break;
 		case "List":
-			pageDto = listAll(pageRequest);
+			pageDto = findAll(pageRequest);
 			break;
 		default:
 			break;
@@ -124,17 +131,23 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 	}
 
 	@SneakyThrows
-	private PageDTO listAll(PageRequestDTO pageRequest) {
+	private PageDTO findAll(PageRequestDTO pageRequest) {
 		PageDTO dto = new PageDTO();
-		RecordRoot root = new RecordRoot();
 		AdminSearchRequest searchRequest = objectMapper
 				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
-
-		List<BulkStudentRegistrationPageData2> data = bulkStudentRepository.findArticles(searchRequest);
-		System.out.println("inside all");
-		root.setRecords(data);
+		int pageNo = pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt();
+		int pageSize = pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt();
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<BulkStudentRegistrationPageData> list = bulkStudentRepository.findAll(pageable, searchRequest);
+		List<PageData> records = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
+		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
+		pageData.getPagination().setIsLastPage(PageStatus.N);
 		dto.setHeader(pageRequest.getHeader());
-		dto.setData(root);
+		if ((list.getNumber() + 1) == list.getTotalPages()) {
+			pageData.getPagination().setIsLastPage(PageStatus.Y);
+		}
+		dto.setData(pageData);
+		dto.setRecords(records);
 		return dto;
 		
 	}
