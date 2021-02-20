@@ -3,13 +3,7 @@ package com.enewschamp.app.admin.page.navigator.handler;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +16,6 @@ import com.enewschamp.app.admin.bulk.handler.BulkInsertResponsePageData;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.admin.page.navigator.service.PageNavigatorService;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -33,16 +26,13 @@ import com.enewschamp.app.fw.page.navigation.entity.PageNavigator;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
-import com.enewschamp.problem.BusinessException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 @Component("PageNavigatorPageHandler")
 @Transactional
-@Slf4j
 public class PageNavigatorPageHandler implements IPageHandler {
 	@Autowired
 	private PageNavigatorService pageNavigatorService;
@@ -50,7 +40,6 @@ public class PageNavigatorPageHandler implements IPageHandler {
 	ModelMapper modelMapper;
 	@Autowired
 	ObjectMapper objectMapper;
-	private Validator validator;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -106,7 +95,7 @@ public class PageNavigatorPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				PageNavigatorPageData.class);
-		validateData(pageData);
+		validate(pageData);
 		PageNavigator pageNavigator = mapPageNavigatorData(pageRequest, pageData);
 		pageNavigator = pageNavigatorService.create(pageNavigator);
 		mapPageNavigator(pageRequest, pageDto, pageNavigator);
@@ -134,7 +123,7 @@ public class PageNavigatorPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				PageNavigatorPageData.class);
-		validateData(pageData);
+		validate(pageData);
 		PageNavigator pageNavigator = mapPageNavigatorData(pageRequest, pageData);
 		pageNavigator = pageNavigatorService.update(pageNavigator);
 		mapPageNavigator(pageRequest, pageDto, pageNavigator);
@@ -194,6 +183,9 @@ public class PageNavigatorPageHandler implements IPageHandler {
 		List<PageNavigatorPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				new TypeReference<List<PageNavigatorPageData>>() {
 				});
+		pageData.forEach(pagedata ->{
+			validate(pageData);
+		});
 		List<PageNavigator> pageNavigators = mapPageNavigators(pageRequest, pageData);
 		pageNavigatorService.clean();
 		int totalRecords = pageNavigatorService.createAll(pageNavigators);
@@ -238,18 +230,6 @@ public class PageNavigatorPageHandler implements IPageHandler {
 			}
 		}
 		return pageNavigatorPageDataList;
-	}
-
-	private void validateData(PageNavigatorPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<PageNavigatorPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error(e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
 	}
 
 	private List<PageNavigator> mapPageNavigators(PageRequestDTO pageRequest, List<PageNavigatorPageData> pageData) {
