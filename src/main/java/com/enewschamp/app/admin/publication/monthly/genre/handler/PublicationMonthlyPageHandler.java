@@ -1,4 +1,4 @@
-package com.enewschamp.app.admin.publication.daily.handler;
+package com.enewschamp.app.admin.publication.monthly.genre.handler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.article.daily.ArticlePublicationDaily;
+import com.enewschamp.app.admin.article.monthly.ArticlePublicationMonthlyGenre;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.PageDTO;
@@ -20,15 +20,15 @@ import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
-import com.enewschamp.publication.domain.service.PublicationDailySummaryService;
+import com.enewschamp.publication.domain.service.PublicationMonthlySummaryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
 
-@Component("PublicationDailySummaryPageHandler")
-public class PublicationDailySummaryPageHandler implements IPageHandler {
+@Component("PublicationMonthlyPageHandler")
+public class PublicationMonthlyPageHandler implements IPageHandler {
 	@Autowired
-	private PublicationDailySummaryService dailySummaryService;
+	private PublicationMonthlySummaryService dailySummaryService;
 	@Autowired
 	ModelMapper modelMapper;
 	@Autowired
@@ -39,7 +39,7 @@ public class PublicationDailySummaryPageHandler implements IPageHandler {
 		PageDTO pageDto = null;
 		switch (pageRequest.getHeader().getAction()) {
 		case "List":
-			pageDto = listPublicationDailySummary(pageRequest);
+			pageDto = listPublicationMonthlySummary(pageRequest);
 			break;
 		default:
 			break;
@@ -66,20 +66,21 @@ public class PublicationDailySummaryPageHandler implements IPageHandler {
 	}
 
 	@SneakyThrows
-	private PageDTO listPublicationDailySummary(PageRequestDTO pageRequest) {
+	private PageDTO listPublicationMonthlySummary(PageRequestDTO pageRequest) {
 		AdminSearchRequest searchRequest = objectMapper
 				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
-		Page<ArticlePublicationDaily> dailySummaryList = dailySummaryService.listPublicationDailySummary(searchRequest,
+		Page<ArticlePublicationMonthlyGenre> monthlySummaryList = dailySummaryService.listPublicationMonthlySummary(
+				searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
-		List<PublicationDailySummaryPageData> list = mapPublicationDailySummaryData(dailySummaryList);
+		List<PublicationMonthlySummaryPageData> list = mapPublicationMonthlySummaryData(monthlySummaryList);
 		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		pageData.getPagination().setIsLastPage(PageStatus.N);
 		dto.setHeader(pageRequest.getHeader());
-		if ((dailySummaryList.getNumber() + 1) == dailySummaryList.getTotalPages()) {
+		if ((monthlySummaryList.getNumber() + 1) == monthlySummaryList.getTotalPages()) {
 			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}
 		dto.setData(pageData);
@@ -87,17 +88,17 @@ public class PublicationDailySummaryPageHandler implements IPageHandler {
 		return dto;
 	}
 
-	public List<PublicationDailySummaryPageData> mapPublicationDailySummaryData(Page<ArticlePublicationDaily> page) {
-		List<PublicationDailySummaryPageData> dailySummaryPageDataList = new ArrayList<PublicationDailySummaryPageData>();
+	public List<PublicationMonthlySummaryPageData> mapPublicationMonthlySummaryData(
+			Page<ArticlePublicationMonthlyGenre> page) {
+		List<PublicationMonthlySummaryPageData> monthlySummaryPageDataList = new ArrayList<PublicationMonthlySummaryPageData>();
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
-			List<ArticlePublicationDaily> pageDataList = page.getContent();
-			for (ArticlePublicationDaily userLogin : pageDataList) {
-				PublicationDailySummaryPageData userLoginPageData = modelMapper.map(userLogin,
-						PublicationDailySummaryPageData.class);
-				//userLoginPageData.setLastUpdate(userLogin.getOperationDateTime());
-				dailySummaryPageDataList.add(userLoginPageData);
+			List<ArticlePublicationMonthlyGenre> pageDataList = page.getContent();
+			for (ArticlePublicationMonthlyGenre userLogin : pageDataList) {
+				PublicationMonthlySummaryPageData userLoginPageData = modelMapper.map(userLogin,
+						PublicationMonthlySummaryPageData.class);
+				monthlySummaryPageDataList.add(userLoginPageData);
 			}
 		}
-		return dailySummaryPageDataList;
+		return monthlySummaryPageDataList;
 	}
 }

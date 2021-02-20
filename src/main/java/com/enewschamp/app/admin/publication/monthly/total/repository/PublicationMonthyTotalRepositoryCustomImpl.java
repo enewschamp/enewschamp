@@ -1,4 +1,4 @@
-package com.enewschamp.app.admin.publication.monthly.repository;
+package com.enewschamp.app.admin.publication.monthly.total.repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,21 +19,22 @@ import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.article.monthly.ArticlePublicationMonthlyGenre;
+import com.enewschamp.app.admin.article.monthly.total.ArticlePublicationMonthlyTotal;
 import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class PublicationMonthySummaryRepositoryCustomImpl extends RepositoryImpl
-		implements IGenericListRepository<ArticlePublicationMonthlyGenre> {
+public class PublicationMonthyTotalRepositoryCustomImpl extends RepositoryImpl
+		implements IGenericListRepository<ArticlePublicationMonthlyTotal> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
-	public Page<ArticlePublicationMonthlyGenre> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
+	public Page<ArticlePublicationMonthlyTotal> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<ArticlePublicationMonthlyGenre> criteriaQuery = cb.createQuery(ArticlePublicationMonthlyGenre.class);
-		Root<ArticlePublicationMonthlyGenre> monthlySummaryRoot = criteriaQuery.from(ArticlePublicationMonthlyGenre.class);
+		CriteriaQuery<ArticlePublicationMonthlyTotal> criteriaQuery = cb.createQuery(ArticlePublicationMonthlyTotal.class);
+		Root<ArticlePublicationMonthlyTotal> monthlySummaryRoot = criteriaQuery.from(ArticlePublicationMonthlyTotal.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getReadingLevel()))
@@ -45,13 +46,13 @@ public class PublicationMonthySummaryRepositoryCustomImpl extends RepositoryImpl
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(monthlySummaryRoot.get("yearMonth")));
 		// Build query
-		TypedQuery<ArticlePublicationMonthlyGenre> q = entityManager.createQuery(criteriaQuery);
+		TypedQuery<ArticlePublicationMonthlyTotal> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
 			int pageNumber = pageable.getPageNumber();
 			q.setFirstResult(pageNumber * pageable.getPageSize());
 			q.setMaxResults(pageable.getPageSize());
 		}
-		List<ArticlePublicationMonthlyGenre> list = q.getResultList();
+		List<ArticlePublicationMonthlyTotal> list = q.getResultList();
 		long count = getRecordCount(criteriaQuery, filterPredicates, monthlySummaryRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
