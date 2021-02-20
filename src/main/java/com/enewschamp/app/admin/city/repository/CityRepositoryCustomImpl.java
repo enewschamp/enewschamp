@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.city.entity.City;
@@ -24,7 +25,7 @@ import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class CityRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<City> {
+public class CityRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<City>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -36,14 +37,14 @@ public class CityRepositoryCustomImpl extends RepositoryImpl implements IGeneric
 		Root<City> cityRoot = criteriaQuery.from(City.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		if (!StringUtils.isEmpty(searchRequest.getCountryId()))
-			filterPredicates.add(cb.equal(cityRoot.get("countryId"), searchRequest.getCountryId()));
+			filterPredicates.add(cb.equal(cityRoot.get(COUNTRY_ID), searchRequest.getCountryId()));
 		if (!StringUtils.isEmpty(searchRequest.getStateId()))
-			filterPredicates.add(cb.equal(cityRoot.get("stateId"), searchRequest.getStateId()));
+			filterPredicates.add(cb.equal(cityRoot.get(STATE_ID), searchRequest.getStateId()));
 		if (!StringUtils.isEmpty(searchRequest.getName()))
-			filterPredicates.add(cb.like(cityRoot.get("nameId"), "%" + searchRequest.getName() + "%"));
+			filterPredicates.add(cb.like(cityRoot.get(NAME_ID), "%" + searchRequest.getName() + "%"));
 		if (!StringUtils.isEmpty(searchRequest.getNewsEventsApplicable()))
 			filterPredicates
-					.add(cb.equal(cityRoot.get("isApplicableForNewsEvents"), searchRequest.getNewsEventsApplicable()));
+					.add(cb.equal(cityRoot.get(IS_APPLICABLE_FOR_NEWS_EVENT), searchRequest.getNewsEventsApplicable()));
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(cityRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query

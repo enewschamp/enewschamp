@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
-import com.enewschamp.app.admin.student.registration.bulk.handler.BulkStudentRegistrationCustomImpl;
+import com.enewschamp.app.admin.student.registration.bulk.handler.BulkStudentRegistrationRepositoryCustomImpl;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
@@ -45,7 +45,7 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 	private StudentRegistrationService studentRegistrationService;
 	
 	@Autowired
-	private BulkStudentRegistrationCustomImpl bulkStudent;
+	private BulkStudentRegistrationRepositoryCustomImpl bulkStudent;
 	@Autowired
 	ModelMapper modelMapper;
 	@Autowired

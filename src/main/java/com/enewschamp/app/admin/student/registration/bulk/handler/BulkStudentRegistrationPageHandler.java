@@ -78,7 +78,7 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 	ModelMapper modelMapper;
 
 	@Autowired
-	private BulkStudentRegistrationCustomImpl bulkStudentRepository;
+	private BulkStudentRegistrationRepositoryCustomImpl bulkStudentRepository;
 
 	@Autowired
 	private ObjectMapper objectMapper;

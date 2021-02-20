@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.institutionstakeholder.entity.InstitutionStakeholder;
 import com.enewschamp.app.common.CommonConstants;
@@ -25,7 +26,7 @@ import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class InstitutionStakeholderRepositoryCustomImpl extends RepositoryImpl
-		implements IGenericListRepository<InstitutionStakeholder> {
+		implements IGenericListRepository<InstitutionStakeholder>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -38,13 +39,13 @@ public class InstitutionStakeholderRepositoryCustomImpl extends RepositoryImpl
 		List<Predicate> filterPredicates = new ArrayList<>();
 		
 		if (!StringUtils.isEmpty(searchRequest.getInstitutionType()))
-			filterPredicates.add(cb.equal(inststakeHolderRoot.get("institutionType"), searchRequest.getInstitutionType()));
+			filterPredicates.add(cb.equal(inststakeHolderRoot.get(INSTITUTION_TYPE), searchRequest.getInstitutionType()));
 
 		if (!StringUtils.isEmpty(searchRequest.getInstitutionId()))
-			filterPredicates.add(cb.equal(inststakeHolderRoot.get("institutionId"), searchRequest.getInstitutionId()));
+			filterPredicates.add(cb.equal(inststakeHolderRoot.get(INSTITUTION_ID), searchRequest.getInstitutionId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getStakeHolderId()))
-			filterPredicates.add(cb.equal(inststakeHolderRoot.get("stakeHolderId"), searchRequest.getStakeHolderId()));
+			filterPredicates.add(cb.equal(inststakeHolderRoot.get(STAKE_HOLDER_ID), searchRequest.getStakeHolderId()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(inststakeHolderRoot.get(CommonConstants.OPERATION_DATE_TIME)));

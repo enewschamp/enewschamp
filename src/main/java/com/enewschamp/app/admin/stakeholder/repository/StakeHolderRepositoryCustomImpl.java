@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.stakeholder.entity.StakeHolder;
 import com.enewschamp.app.common.CommonConstants;
@@ -25,7 +26,7 @@ import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class StakeHolderRepositoryCustomImpl extends RepositoryImpl
-		implements IGenericListRepository<StakeHolder> {
+		implements IGenericListRepository<StakeHolder>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -38,10 +39,10 @@ public class StakeHolderRepositoryCustomImpl extends RepositoryImpl
 		List<Predicate> filterPredicates = new ArrayList<>();
 		
 		if (!StringUtils.isEmpty(searchRequest.getName()))
-			filterPredicates.add(cb.like(stakeHolderRoot.get("name"), "%" + searchRequest.getName() + "%"));
+			filterPredicates.add(cb.like(stakeHolderRoot.get(NAME), "%" + searchRequest.getName() + "%"));
 
 		if (!StringUtils.isEmpty(searchRequest.getSurname()))
-			filterPredicates.add(cb.like(stakeHolderRoot.get("surname"), "%" + searchRequest.getSurname() + "%"));
+			filterPredicates.add(cb.like(stakeHolderRoot.get(SURNAME), "%" + searchRequest.getSurname() + "%"));
 
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));

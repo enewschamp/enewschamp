@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,8 @@ import com.enewschamp.app.student.badges.entity.StudentBadges;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class StudentBadgesRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<StudentBadges> {
+public class StudentBadgesRepositoryCustomImpl extends RepositoryImpl
+		implements IGenericListRepository<StudentBadges>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,17 +39,17 @@ public class StudentBadgesRepositoryCustomImpl extends RepositoryImpl implements
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("studentId"), searchRequest.getStudentId()));
+			filterPredicates.add(cb.equal(studentachievementRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getStudentBadgesId()))
 			filterPredicates
-					.add(cb.equal(studentachievementRoot.get("studentBadgesId"), searchRequest.getStudentBadgesId()));
+					.add(cb.equal(studentachievementRoot.get(STUDENT_BADGES_ID), searchRequest.getStudentBadgesId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getYearMonth()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("yearMonth"), searchRequest.getYearMonth()));
+			filterPredicates.add(cb.equal(studentachievementRoot.get(YEAR_MONTH), searchRequest.getYearMonth()));
 
 		if (!StringUtils.isEmpty(searchRequest.getBadgeId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("badgeId"), searchRequest.getBadgeId()));
+			filterPredicates.add(cb.equal(studentachievementRoot.get(BADGE_ID), searchRequest.getBadgeId()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentachievementRoot.get(CommonConstants.OPERATION_DATE_TIME)));

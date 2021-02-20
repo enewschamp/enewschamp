@@ -17,13 +17,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.domain.repository.RepositoryImpl;
 @Repository
-public class StateRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<State>{
+public class StateRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<State>, AdminConstant{
 	
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -35,7 +36,7 @@ public class StateRepositoryCustomImpl extends RepositoryImpl implements IGeneri
 		Root<State> stateRoot = criteriaQuery.from(State.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		if(!StringUtils.isEmpty(searchRequest.getCountryId()))
-		filterPredicates.add(cb.equal(stateRoot.get("countryId"), searchRequest.getCountryId()));
+		filterPredicates.add(cb.equal(stateRoot.get(COUNTRY_ID), searchRequest.getCountryId()));
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(stateRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,7 @@ import com.enewschamp.app.helpdesk.entity.Helpdesk;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class HelpdeskRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Helpdesk> {
+public class HelpdeskRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Helpdesk>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -36,21 +37,21 @@ public class HelpdeskRepositoryCustomImpl extends RepositoryImpl implements IGen
 		Root<Helpdesk> helpdeskRoot = criteriaQuery.from(Helpdesk.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(helpdeskRoot.get("studentId"), searchRequest.getStudentId()));
+			filterPredicates.add(cb.equal(helpdeskRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
 		
 		if (!StringUtils.isEmpty(searchRequest.getCategoryId()))
-			filterPredicates.add(cb.equal(helpdeskRoot.get("categoryId"), searchRequest.getCategoryId()));
+			filterPredicates.add(cb.equal(helpdeskRoot.get(CATEGORY_ID), searchRequest.getCategoryId()));
 		
 		if (!StringUtils.isEmpty(searchRequest.getCloseFlag()))
-			filterPredicates.add(cb.equal(helpdeskRoot.get("closeFlag"), searchRequest.getCloseFlag()));
+			filterPredicates.add(cb.equal(helpdeskRoot.get(CLOSE_FLAG), searchRequest.getCloseFlag()));
 		
 		if (!StringUtils.isEmpty(searchRequest.getSupportUserId()))
-			filterPredicates.add(cb.equal(helpdeskRoot.get("supportUserId"), searchRequest.getSupportUserId()));
+			filterPredicates.add(cb.equal(helpdeskRoot.get(SUPPORT_USER_ID), searchRequest.getSupportUserId()));
 		
 		
 		if (!StringUtils.isEmpty(searchRequest.getCreateDateFrom()) && !StringUtils.isEmpty(searchRequest.getCreateDateTo()))
-			filterPredicates.add(cb.between(helpdeskRoot.get("createDateTime"), searchRequest.getCreateDateFrom(),
+			filterPredicates.add(cb.between(helpdeskRoot.get(CREATE_DATE_TIME), searchRequest.getCreateDateFrom(),
 					searchRequest.getCreateDateTo()));
 		
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));

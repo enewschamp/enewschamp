@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.institution.entity.InstitutionAddress;
 import com.enewschamp.app.common.CommonConstants;
@@ -25,7 +26,7 @@ import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class InstitutionAddressRepositoryCustomImpl extends RepositoryImpl
-		implements IGenericListRepository<InstitutionAddress> {
+		implements IGenericListRepository<InstitutionAddress>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -38,19 +39,19 @@ public class InstitutionAddressRepositoryCustomImpl extends RepositoryImpl
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getInstitutionId()))
-			filterPredicates.add(cb.equal(instAddressRoot.get("institutionId"), searchRequest.getInstitutionId()));
+			filterPredicates.add(cb.equal(instAddressRoot.get(INSTITUTION_ID), searchRequest.getInstitutionId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getInstitutionType()))
-			filterPredicates.add(cb.equal(instAddressRoot.get("institutionType"), searchRequest.getInstitutionType()));
+			filterPredicates.add(cb.equal(instAddressRoot.get(INSTITUTION_TYPE), searchRequest.getInstitutionType()));
 
 		if (!StringUtils.isEmpty(searchRequest.getCountryId()))
-			filterPredicates.add(cb.equal(instAddressRoot.get("countryId"), searchRequest.getCountryId()));
+			filterPredicates.add(cb.equal(instAddressRoot.get(COUNTRY_ID), searchRequest.getCountryId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getStateId()))
-			filterPredicates.add(cb.equal(instAddressRoot.get("stateId"), searchRequest.getStateId()));
+			filterPredicates.add(cb.equal(instAddressRoot.get(STATE_ID), searchRequest.getStateId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getCityId()))
-			filterPredicates.add(cb.equal(instAddressRoot.get("cityId"), searchRequest.getCityId()));
+			filterPredicates.add(cb.equal(instAddressRoot.get(CITY_ID), searchRequest.getCityId()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(instAddressRoot.get(CommonConstants.OPERATION_DATE_TIME)));

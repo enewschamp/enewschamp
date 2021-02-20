@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,7 @@ import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class UserLoginRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<UserLogin> {
+public class UserLoginRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<UserLogin>, AdminConstant{
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,19 +38,19 @@ public class UserLoginRepositoryCustomImpl extends RepositoryImpl implements IGe
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getUserLoginId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("userLoginId"), searchRequest.getUserLoginId()));
+			filterPredicates.add(cb.equal(studentachievementRoot.get(USER_LOGIN_ID), searchRequest.getUserLoginId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getUserId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("userId"), searchRequest.getUserId()));
+			filterPredicates.add(cb.equal(studentachievementRoot.get(USER_ID), searchRequest.getUserId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getUserType()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("userType"), searchRequest.getUserType()));
+			filterPredicates.add(cb.equal(studentachievementRoot.get(USER_TYPE), searchRequest.getUserType()));
 
 		if (!StringUtils.isEmpty(searchRequest.getDeviceId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("deviceId"), searchRequest.getDeviceId()));
+			filterPredicates.add(cb.equal(studentachievementRoot.get(DEVICE_ID), searchRequest.getDeviceId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getLoginFlag()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("loginFlag"), searchRequest.getLoginFlag()));
+			filterPredicates.add(cb.equal(studentachievementRoot.get(LOGIN_FLAG), searchRequest.getLoginFlag()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentachievementRoot.get(CommonConstants.OPERATION_DATE_TIME)));

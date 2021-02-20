@@ -20,19 +20,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.student.school.nonlist.handler.StudentSchoolNilDTO;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.domain.service.RepositoryImpl;
 import com.enewschamp.subscription.domain.entity.StudentControl;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
-import com.enewschamp.subscription.domain.entity.StudentPreferenceComm;
 import com.enewschamp.subscription.domain.entity.StudentPreferences;
 import com.enewschamp.subscription.domain.entity.StudentSchool;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;
 
 @Repository
-public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
+public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl implements AdminConstant {
+
 	@PersistenceContext
 	private EntityManager entityManager;
 	
@@ -55,12 +56,12 @@ public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
 
 	//	filterPredicates.add(cb.equal(studentRegistrationRoot.get("studentId"), studentActivityRoot.get("studentId")));
 		filterPredicates
-				.add(cb.equal(studentRegistrationRoot.get("studentId"), studentSubscriptionRoot.get("studentId")));
+				.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentSubscriptionRoot.get(STUDENT_ID)));
 		filterPredicates
-				.add(cb.equal(studentRegistrationRoot.get("studentId"), studentPreferencesRoot.get("studentId")));
-		filterPredicates.add(cb.equal(studentRegistrationRoot.get("studentId"), studentSchoolRoot.get("studentId")));
-		filterPredicates.add(cb.equal(studentRegistrationRoot.get("studentId"), studentDetailsRoot.get("studentId")));
-		filterPredicates.add(cb.equal(studentRegistrationRoot.get("studentId"), studentControlRoot.get("studentId")));
+				.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentPreferencesRoot.get(STUDENT_ID)));
+		filterPredicates.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentSchoolRoot.get(STUDENT_ID)));
+		filterPredicates.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentDetailsRoot.get(STUDENT_ID)));
+		filterPredicates.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentControlRoot.get(STUDENT_ID)));
 
 		// Apply the filter Criterias
 		mapStudentRegistrationPredicate(searchRequest, studentRegistrationRoot, cb, filterPredicates);
@@ -116,49 +117,49 @@ public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
 	private void mapStudentRegistrationPredicate(AdminSearchRequest searchRequest,
 			Root<StudentRegistration> studentRegistrationRoot, CriteriaBuilder cb, List<Predicate> filterPredicates) {
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentRegistrationRoot.get("studentId"), searchRequest.getStudentId()));
+			filterPredicates.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getEmailId()))
-			filterPredicates.add(cb.equal(studentRegistrationRoot.get("emailId"), searchRequest.getEmailId()));
+			filterPredicates.add(cb.equal(studentRegistrationRoot.get(EMAIL_ID), searchRequest.getEmailId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getAvatar()) && searchRequest.getAvatar().equals("Y")) {
-			filterPredicates.add(cb.and(cb.isNotNull(studentRegistrationRoot.get("avatarName")),
-					cb.notEqual(cb.trim(studentRegistrationRoot.get("avatarName")), "")));
+			filterPredicates.add(cb.and(cb.isNotNull(studentRegistrationRoot.get(AVATAR_NAME)),
+					cb.notEqual(cb.trim(studentRegistrationRoot.get(AVATAR_NAME)), "")));
 		}
 		if (!StringUtils.isEmpty(searchRequest.getAvatar()) && searchRequest.getAvatar().equals("N")) {
-			filterPredicates.add(cb.or(cb.isNull(studentRegistrationRoot.get("avatarName")),
-					cb.equal(cb.trim(studentRegistrationRoot.get("avatarName")), "")));
+			filterPredicates.add(cb.or(cb.isNull(studentRegistrationRoot.get(AVATAR_NAME)),
+					cb.equal(cb.trim(studentRegistrationRoot.get(AVATAR_NAME)), "")));
 		}
 		
 
 		if (!StringUtils.isEmpty(searchRequest.getPhoto()) && searchRequest.getPhoto().equals("Y")) {
-			filterPredicates.add(cb.and(cb.isNotNull(studentRegistrationRoot.get("photoName")),
-					cb.notEqual(cb.trim(studentRegistrationRoot.get("photoName")), "")));
+			filterPredicates.add(cb.and(cb.isNotNull(studentRegistrationRoot.get(PHOTO_NAME)),
+					cb.notEqual(cb.trim(studentRegistrationRoot.get(PHOTO_NAME)), "")));
 		}
 		if (!StringUtils.isEmpty(searchRequest.getPhoto()) && searchRequest.getPhoto().equals("N")) {
-			filterPredicates.add(cb.or(cb.isNull(studentRegistrationRoot.get("photoName")),
-					cb.equal(cb.trim(studentRegistrationRoot.get("photoName")), "")));
+			filterPredicates.add(cb.or(cb.isNull(studentRegistrationRoot.get(PHOTO_NAME)),
+					cb.equal(cb.trim(studentRegistrationRoot.get(PHOTO_NAME)), "")));
 		}
 
 		if (!StringUtils.isEmpty(searchRequest.getTheme()))
-			filterPredicates.add(cb.equal(studentRegistrationRoot.get("theme"), searchRequest.getTheme()));
+			filterPredicates.add(cb.equal(studentRegistrationRoot.get(THEME), searchRequest.getTheme()));
 
 		if (!StringUtils.isEmpty(searchRequest.getIsAccountLocked()))
 			filterPredicates
-					.add(cb.equal(studentRegistrationRoot.get("isAccountLocked"), searchRequest.getIsAccountLocked()));
+					.add(cb.equal(studentRegistrationRoot.get(IS_ACCOUNT_LOCKED), searchRequest.getIsAccountLocked()));
 
 		if (!StringUtils.isEmpty(searchRequest.getIsActive()))
-			filterPredicates.add(cb.equal(studentRegistrationRoot.get("isActive"), searchRequest.getIsActive()));
+			filterPredicates.add(cb.equal(studentRegistrationRoot.get(IS_ACTIVE), searchRequest.getIsActive()));
 
 		if (!StringUtils.isEmpty(searchRequest.getIsDeleted()))
-			filterPredicates.add(cb.equal(studentRegistrationRoot.get("isDeleted"), searchRequest.getIsDeleted()));
+			filterPredicates.add(cb.equal(studentRegistrationRoot.get(IS_DELETED), searchRequest.getIsDeleted()));
 	
 		if (!StringUtils.isEmpty(searchRequest.getLastLoginTime()))
-			filterPredicates.add(cb.equal(studentRegistrationRoot.get("lastSuccessfulLoginAttempt"), searchRequest.getLastLoginTime()));
+			filterPredicates.add(cb.equal(studentRegistrationRoot.get(LAST_SUCCESS_LOGIN_ATTEMPT), searchRequest.getLastLoginTime()));
 		
 		if (!StringUtils.isEmpty(searchRequest.getCreateDateFrom())
 				&& !StringUtils.isEmpty(searchRequest.getCreateDateTo()))
-			filterPredicates.add(cb.between(studentRegistrationRoot.get("creationDateTime"), searchRequest.getCreateDateFrom(),
+			filterPredicates.add(cb.between(studentRegistrationRoot.get(CREATION_DATE_TIME), searchRequest.getCreateDateFrom(),
 					searchRequest.getCreateDateTo()));
 
 	}
@@ -166,125 +167,123 @@ public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
 	private void mapStudentControlPredicate(AdminSearchRequest searchRequest, Root<StudentControl> studentControlRoot,
 			CriteriaBuilder cb, List<Predicate> filterPredicates) {
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentControlRoot.get("studentId"), searchRequest.getStudentId()));
+			filterPredicates.add(cb.equal(studentControlRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getEmailId()))
-			filterPredicates.add(cb.equal(studentControlRoot.get("emailId"), searchRequest.getEmailId()));
+			filterPredicates.add(cb.equal(studentControlRoot.get(EMAIL_ID), searchRequest.getEmailId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSubscriptionType()))
 			filterPredicates
-					.add(cb.equal(studentControlRoot.get("subscriptionType"), searchRequest.getSubscriptionType()));
+					.add(cb.equal(studentControlRoot.get(SUBSCRIPTION_TYPE), searchRequest.getSubscriptionType()));
 
 		if (!StringUtils.isEmpty(searchRequest.getEvalAvailed()))
-			filterPredicates.add(cb.equal(studentControlRoot.get("evalAvailed"), searchRequest.getEvalAvailed()));
+			filterPredicates.add(cb.equal(studentControlRoot.get(EVAL_AVAILED), searchRequest.getEvalAvailed()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSchoolDetails()))
-			filterPredicates.add(cb.equal(studentControlRoot.get("schoolDetails"), searchRequest.getSchoolDetails()));
+			filterPredicates.add(cb.equal(studentControlRoot.get(SCHOOL_DETAILS), searchRequest.getSchoolDetails()));
 
-		if (!StringUtils.isEmpty(searchRequest.getStudentDetails()))
-			filterPredicates.add(cb.equal(studentControlRoot.get("studentDetails"), searchRequest.getStudentDetails()));
 	}
 
 	private void mapStudentDetailsPredicate(AdminSearchRequest searchRequest, Root<StudentDetails> studentDetailsRoot,
 			CriteriaBuilder cb, List<Predicate> filterPredicates) {
 
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentDetailsRoot.get("studentId"), searchRequest.getStudentId()));
+			filterPredicates.add(cb.equal(studentDetailsRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getName()))
-			filterPredicates.add(cb.equal(studentDetailsRoot.get("name"), searchRequest.getName()));
+			filterPredicates.add(cb.equal(studentDetailsRoot.get(NAME), searchRequest.getName()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSurname()))
-			filterPredicates.add(cb.equal(studentDetailsRoot.get("surname"), searchRequest.getSurname()));
+			filterPredicates.add(cb.equal(studentDetailsRoot.get(SURNAME), searchRequest.getSurname()));
 
 		if (!StringUtils.isEmpty(searchRequest.getGender()))
-			filterPredicates.add(cb.equal(studentDetailsRoot.get("gender"), searchRequest.getGender()));
+			filterPredicates.add(cb.equal(studentDetailsRoot.get(GENDER), searchRequest.getGender()));
 
 		if (!StringUtils.isEmpty(searchRequest.getDobFrom()) && !StringUtils.isEmpty(searchRequest.getDobTo()))
 			filterPredicates.add(
-					cb.between(studentDetailsRoot.get("doB"), searchRequest.getDobFrom(), searchRequest.getDobTo()));
+					cb.between(studentDetailsRoot.get(DOB), searchRequest.getDobFrom(), searchRequest.getDobTo()));
 
 		if (!StringUtils.isEmpty(searchRequest.getMobileNumber()))
-			filterPredicates.add(cb.equal(studentDetailsRoot.get("mobileNumber"), searchRequest.getMobileNumber()));
+			filterPredicates.add(cb.equal(studentDetailsRoot.get(MOBILE_NUMBER), searchRequest.getMobileNumber()));
 	}
 
 	private void mapStudentSchoolPredicate(AdminSearchRequest searchRequest, Root<StudentSchool> studentSchoolRoot,
 			CriteriaBuilder cb, List<Predicate> filterPredicates) {
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentSchoolRoot.get("studentId"), searchRequest.getStudentId()));
+			filterPredicates.add(cb.equal(studentSchoolRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getCity()))
-			filterPredicates.add(cb.equal(studentSchoolRoot.get("city"), searchRequest.getCity()));
+			filterPredicates.add(cb.equal(studentSchoolRoot.get(CITY), searchRequest.getCity()));
 
 		if (!StringUtils.isEmpty(searchRequest.getCityNotInTheList()))
 			filterPredicates
-					.add(cb.equal(studentSchoolRoot.get("cityNotInTheList"), searchRequest.getCityNotInTheList()));
+					.add(cb.equal(studentSchoolRoot.get(CITY_NOT_IN_THE_LIST), searchRequest.getCityNotInTheList()));
 
 		if (!StringUtils.isEmpty(searchRequest.getCountry()))
-			filterPredicates.add(cb.equal(studentSchoolRoot.get("country"), searchRequest.getCountry()));
+			filterPredicates.add(cb.equal(studentSchoolRoot.get(COUNTRY), searchRequest.getCountry()));
 
 		if (!StringUtils.isEmpty(searchRequest.getCountryNotInTheList()))
 			filterPredicates.add(
-					cb.equal(studentSchoolRoot.get("countryNotInTheList"), searchRequest.getCountryNotInTheList()));
+					cb.equal(studentSchoolRoot.get(COUNTRY_NOT_IN_THE_LIST), searchRequest.getCountryNotInTheList()));
 		if (!StringUtils.isEmpty(searchRequest.getGrade()))
-			filterPredicates.add(cb.equal(studentSchoolRoot.get("grade"), searchRequest.getGrade()));
+			filterPredicates.add(cb.equal(studentSchoolRoot.get(GRADE), searchRequest.getGrade()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSchool()))
-			filterPredicates.add(cb.equal(studentSchoolRoot.get("school"), searchRequest.getSchool()));
+			filterPredicates.add(cb.equal(studentSchoolRoot.get(SCHOOL), searchRequest.getSchool()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSchoolNotInTheList()))
 			filterPredicates
-					.add(cb.equal(studentSchoolRoot.get("schoolNotInTheList"), searchRequest.getSchoolNotInTheList()));
+					.add(cb.equal(studentSchoolRoot.get(SCHOOL_NOT_IN_THE_LIST), searchRequest.getSchoolNotInTheList()));
 
 		if (!StringUtils.isEmpty(searchRequest.getState()))
-			filterPredicates.add(cb.equal(studentSchoolRoot.get("state"), searchRequest.getState()));
+			filterPredicates.add(cb.equal(studentSchoolRoot.get(STATE), searchRequest.getState()));
 
 		if (!StringUtils.isEmpty(searchRequest.getStateNotInTheList()))
 			filterPredicates
-					.add(cb.equal(studentSchoolRoot.get("stateNotInTheList"), searchRequest.getStateNotInTheList()));
+					.add(cb.equal(studentSchoolRoot.get(STATE_NOT_IN_THE_LIST), searchRequest.getStateNotInTheList()));
 
 	}
 
 	private void mapStudentPreferencePredicate(AdminSearchRequest searchRequest,
 			Root<StudentPreferences> studentPreferenceRoot, CriteriaBuilder cb, List<Predicate> filterPredicates) {
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentPreferenceRoot.get("studentId"), searchRequest.getStudentId()));
+			filterPredicates.add(cb.equal(studentPreferenceRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getReadingLevel()))
-			filterPredicates.add(cb.equal(studentPreferenceRoot.get("readingLevel"), searchRequest.getReadingLevel()));
+			filterPredicates.add(cb.equal(studentPreferenceRoot.get(READING_LEVEL), searchRequest.getReadingLevel()));
 
 		if (!StringUtils.isEmpty(searchRequest.getDailyPublication()))
 			filterPredicates
-					.add(cb.equal(studentPreferenceRoot.get("commsOverEmail").get("dailyPublication"), searchRequest.getDailyPublication()));
+					.add(cb.equal(studentPreferenceRoot.get(COMMS_OVER_MAIL).get(DAILY_PUBLICATION), searchRequest.getDailyPublication()));
 
 		if (!StringUtils.isEmpty(searchRequest.getScoresProgressReports()))
-			filterPredicates.add(cb.equal(studentPreferenceRoot.get("commsOverEmail").get("scoresProgressReports"),
+			filterPredicates.add(cb.equal(studentPreferenceRoot.get(COMMS_OVER_MAIL).get(SCHOOL_PROGRESS_REPORT),
 					searchRequest.getScoresProgressReports()));
 
 		if (!StringUtils.isEmpty(searchRequest.getAlertsNotifications()))
 			filterPredicates.add(
-					cb.equal(studentPreferenceRoot.get("commsOverEmail").get("alertsNotifications"), searchRequest.getAlertsNotifications()));
+					cb.equal(studentPreferenceRoot.get(COMMS_OVER_MAIL).get(ALERT_NOTIFICATION), searchRequest.getAlertsNotifications()));
 	}
 
 	private void mapStudentSubscriptionPredicate(AdminSearchRequest searchRequest,
 			Root<StudentSubscription> studentSubscriptionRoot, CriteriaBuilder cb, List<Predicate> filterPredicates) {
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentSubscriptionRoot.get("studentId"), searchRequest.getStudentId()));
+			filterPredicates.add(cb.equal(studentSubscriptionRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSubscriptionType()))
 			filterPredicates.add(
-					cb.equal(studentSubscriptionRoot.get("subscriptionSelected"), searchRequest.getSubscriptionType()));
+					cb.equal(studentSubscriptionRoot.get(SUBSCRIPTION_SELECTED), searchRequest.getSubscriptionType()));
 
 		if (!StringUtils.isEmpty(searchRequest.getAutoRenewal()))
-			filterPredicates.add(cb.equal(studentSubscriptionRoot.get("autoRenewal"), searchRequest.getAutoRenewal()));
+			filterPredicates.add(cb.equal(studentSubscriptionRoot.get(AUTO_RENEWAL), searchRequest.getAutoRenewal()));
 
 		if (!StringUtils.isEmpty(searchRequest.getStartDateFrom())
 				&& !StringUtils.isEmpty(searchRequest.getStartDateTo()))
-			filterPredicates.add(cb.between(studentSubscriptionRoot.get("startDate"), searchRequest.getStartDateFrom(),
+			filterPredicates.add(cb.between(studentSubscriptionRoot.get(START_DATE), searchRequest.getStartDateFrom(),
 					searchRequest.getStartDateTo()));
 
 		if (!StringUtils.isEmpty(searchRequest.getEndDateFrom()) && !StringUtils.isEmpty(searchRequest.getEndDateTo()))
-			filterPredicates.add(cb.between(studentSubscriptionRoot.get("endDate"), searchRequest.getEndDateFrom(),
+			filterPredicates.add(cb.between(studentSubscriptionRoot.get(END_DATE), searchRequest.getEndDateFrom(),
 					searchRequest.getEndDateTo()));
 
 	}

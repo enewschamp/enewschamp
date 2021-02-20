@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.schoolreport.entity.SchoolReport;
 import com.enewschamp.app.common.CommonConstants;
@@ -24,7 +25,7 @@ import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class SchoolReportRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<SchoolReport> {
+public class SchoolReportRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<SchoolReport>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,13 +38,13 @@ public class SchoolReportRepositoryCustomImpl extends RepositoryImpl implements 
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getStakeHolderId()))
-			filterPredicates.add(cb.equal(schoolReportRoot.get("stakeholderId"), searchRequest.getStakeHolderId()));
+			filterPredicates.add(cb.equal(schoolReportRoot.get(STAKE_HOLDER_ID), searchRequest.getStakeHolderId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSchoolId()))
-			filterPredicates.add(cb.equal(schoolReportRoot.get("schoolId"), searchRequest.getSchoolId()));
+			filterPredicates.add(cb.equal(schoolReportRoot.get(SCHOOL_ID), searchRequest.getSchoolId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getEditionId()))
-			filterPredicates.add(cb.equal(schoolReportRoot.get("editionId"), searchRequest.getEditionId()));
+			filterPredicates.add(cb.equal(schoolReportRoot.get(EDITION_ID), searchRequest.getEditionId()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(schoolReportRoot.get(CommonConstants.OPERATION_DATE_TIME)));

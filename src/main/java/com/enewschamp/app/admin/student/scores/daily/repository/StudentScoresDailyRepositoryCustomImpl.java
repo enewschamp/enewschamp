@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,7 @@ import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class StudentScoresDailyRepositoryCustomImpl extends RepositoryImpl
-		implements IGenericListRepository<StudentScoresDaily> {
+		implements IGenericListRepository<StudentScoresDaily>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,17 +38,17 @@ public class StudentScoresDailyRepositoryCustomImpl extends RepositoryImpl
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentScoresDailyRoot.get("studentId"), searchRequest.getStudentId()));
+			filterPredicates.add(cb.equal(studentScoresDailyRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getEditionId()))
-			filterPredicates.add(cb.equal(studentScoresDailyRoot.get("editionId"), searchRequest.getEditionId()));
+			filterPredicates.add(cb.equal(studentScoresDailyRoot.get(EDITION_ID), searchRequest.getEditionId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getReadingLevel()))
-			filterPredicates.add(cb.equal(studentScoresDailyRoot.get("readingLevel"), searchRequest.getReadingLevel()));
+			filterPredicates.add(cb.equal(studentScoresDailyRoot.get(READING_LEVEL), searchRequest.getReadingLevel()));
 
 		if (!StringUtils.isEmpty(searchRequest.getPublicationDate()))
 			filterPredicates
-					.add(cb.equal(studentScoresDailyRoot.get("publicationDate"), searchRequest.getPublicationDate()));
+					.add(cb.equal(studentScoresDailyRoot.get(PUBLICATION_DATE), searchRequest.getPublicationDate()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentScoresDailyRoot.get(CommonConstants.PUBLICATION_DATE)),

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -25,7 +26,7 @@ import com.enewschamp.subscription.domain.entity.StudentSchool;
 
 @Repository
 public class StudentSchoolRepositoryCustomImplNotInTheList extends RepositoryImpl
-		implements IGenericListRepository<StudentSchool> {
+		implements IGenericListRepository<StudentSchool>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -39,19 +40,19 @@ public class StudentSchoolRepositoryCustomImplNotInTheList extends RepositoryImp
 
 		if (!StringUtils.isEmpty(searchRequest.getCountryNotInTheList()))
 			filterPredicates.add(
-					cb.equal(studentSchoolsRoot.get("countryNotInTheList"), searchRequest.getCountryNotInTheList()));
+					cb.equal(studentSchoolsRoot.get(COUNTRY_NOT_IN_THE_LIST), searchRequest.getCountryNotInTheList()));
 
 		if (!StringUtils.isEmpty(searchRequest.getStateNotInTheList()))
 			filterPredicates
-					.add(cb.equal(studentSchoolsRoot.get("stateNotInTheList"), searchRequest.getStateNotInTheList()));
+					.add(cb.equal(studentSchoolsRoot.get(STATE_NOT_IN_THE_LIST), searchRequest.getStateNotInTheList()));
 
 		if (!StringUtils.isEmpty(searchRequest.getCityNotInTheList()))
 			filterPredicates
-					.add(cb.equal(studentSchoolsRoot.get("cityNotInTheList"), searchRequest.getCityNotInTheList()));
+					.add(cb.equal(studentSchoolsRoot.get(CITY_NOT_IN_THE_LIST), searchRequest.getCityNotInTheList()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSchoolNotInTheList()))
 			filterPredicates
-					.add(cb.equal(studentSchoolsRoot.get("schoolNotInTheList"), searchRequest.getSchoolNotInTheList()));
+					.add(cb.equal(studentSchoolsRoot.get(SCHOOL_NOT_IN_THE_LIST), searchRequest.getSchoolNotInTheList()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentSchoolsRoot.get(CommonConstants.OPERATION_DATE_TIME)));

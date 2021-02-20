@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,8 @@ import com.enewschamp.app.school.entity.SchoolPricing;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class SchoolPricingRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<SchoolPricing> {
+public class SchoolPricingRepositoryCustomImpl extends RepositoryImpl
+		implements IGenericListRepository<SchoolPricing>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,16 +39,15 @@ public class SchoolPricingRepositoryCustomImpl extends RepositoryImpl implements
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getInstitutionId()))
-			filterPredicates.add(cb.equal(schoolPricingRoot.get("institutionId"), searchRequest.getInstitutionId()));
+			filterPredicates.add(cb.equal(schoolPricingRoot.get(INSTITUTION_ID), searchRequest.getInstitutionId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getInstitutionType()))
-			filterPredicates
-					.add(cb.equal(schoolPricingRoot.get("institutionType"), searchRequest.getInstitutionType()));
+			filterPredicates.add(cb.equal(schoolPricingRoot.get(INSTITUTION_TYPE), searchRequest.getInstitutionType()));
 
 		if (!StringUtils.isEmpty(searchRequest.getEffectiveDateFrom())
 				&& !StringUtils.isEmpty(searchRequest.getEffectiveDateTo()))
-			filterPredicates.add(cb.between(schoolPricingRoot.get("effectiveDate"),
-					searchRequest.getEffectiveDateFrom(), searchRequest.getEffectiveDateTo()));
+			filterPredicates.add(cb.between(schoolPricingRoot.get(EFFECTIVE_DATE), searchRequest.getEffectiveDateFrom(),
+					searchRequest.getEffectiveDateTo()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(schoolPricingRoot.get(CommonConstants.OPERATION_DATE_TIME)));
