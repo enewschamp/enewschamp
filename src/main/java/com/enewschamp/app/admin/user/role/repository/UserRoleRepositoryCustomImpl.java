@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,7 @@ import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.user.domain.entity.UserRole;
 
 @Repository
-public class UserRoleRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<UserRole> {
+public class UserRoleRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<UserRole>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,10 +38,10 @@ public class UserRoleRepositoryCustomImpl extends RepositoryImpl implements IGen
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getUserId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("userRoleKey").get("userId"), searchRequest.getUserId()));
+			filterPredicates.add(cb.equal(studentachievementRoot.get(USER_ROLE_KEY).get(USER_ID), searchRequest.getUserId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getRoleId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("userRoleKey").get("roleId"), searchRequest.getRoleId()));
+			filterPredicates.add(cb.equal(studentachievementRoot.get(USER_ROLE_KEY).get(ROLE_ID), searchRequest.getRoleId()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentachievementRoot.get(CommonConstants.OPERATION_DATE_TIME)));

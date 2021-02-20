@@ -67,5 +67,28 @@ public interface AdminConstant {
 	public static String YEAR_MONTH = "yearMonth";
 	public static String BADGE_ID = "badgeId";
 	public static String PUBLICATION_DATE = "publicationDate";
-
+	public static String SCORE_YEAR_MIONTH = "scoreYearMonth";
+	public static String GENRE_ID = "genreId";
+	public static String USER_LEAVE_KEY = "userLeaveKey";
+	public static String APPROVAL_STATUS = "approvalStatus";
+	public static String USER_ROLE_KEY = "userRoleKey";
+	public static String ROLE_ID = "roleId";
+	public static String PAGE_NAME = "pageName";
+	public static String ROLE = "role";
+	public static String PHONE_NUMBER = "phoneNumber";
+	public static String VERIFIED = "verified";
+	public static String NAV_ID = "navId";
+	public static String CURRENT_PAGE = "currentPage";
+	public static String OPERATION = "operation";
+	public static String ACTION = "action";
+	public static String RULE_ID = "ruleId";
+	public static String UI_CONTROL_ID = "uiControlId";
+	public static String CONTROL_NAME = "controlName";
+	public static String GLOBAL_CONTROL_REF = "globalControlRef";
+	public static String IS_PREMIUM_FEATURE = "isPremiumFeature";
+	public static String UI_CONTROL_GLOBAL_ID = "uiControlGlobalId";
+	public static String PROPERTY_ID = "propertyId";
+	public static String APP_NAME = "appName";
+	public static String ERROR_CODE_ID = "errorCodeId";
+	public static String ERROR_CATEGORY = "errorCategory";
 }

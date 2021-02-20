@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,8 @@ import com.enewschamp.app.common.uicontrols.entity.UIControls;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class UIControlsRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<UIControls>{
+public class UIControlsRepositoryCustomImpl extends RepositoryImpl
+		implements IGenericListRepository<UIControls>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -35,27 +37,24 @@ public class UIControlsRepositoryCustomImpl extends RepositoryImpl implements IG
 		CriteriaQuery<UIControls> criteriaQuery = cb.createQuery(UIControls.class);
 		Root<UIControls> uiControlsRoot = criteriaQuery.from(UIControls.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		
+
 		if (!StringUtils.isEmpty(searchRequest.getUiControlId()))
-			filterPredicates.add(cb.equal(uiControlsRoot.get("uiControlId"), searchRequest.getUiControlId()));
+			filterPredicates.add(cb.equal(uiControlsRoot.get(UI_CONTROL_ID), searchRequest.getUiControlId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getPageName()))
-			filterPredicates.add(cb.equal(uiControlsRoot.get("pageName"), searchRequest.getPageName()));
-		
+			filterPredicates.add(cb.equal(uiControlsRoot.get(PAGE_NAME), searchRequest.getPageName()));
 
 		if (!StringUtils.isEmpty(searchRequest.getOperation()))
-			filterPredicates.add(cb.equal(uiControlsRoot.get("operation"), searchRequest.getOperation()));
-		
+			filterPredicates.add(cb.equal(uiControlsRoot.get(OPERATION), searchRequest.getOperation()));
 
 		if (!StringUtils.isEmpty(searchRequest.getControlName()))
-			filterPredicates.add(cb.equal(uiControlsRoot.get("controlName"), searchRequest.getControlName()));
-		
+			filterPredicates.add(cb.equal(uiControlsRoot.get(CONTROL_NAME), searchRequest.getControlName()));
 
 		if (!StringUtils.isEmpty(searchRequest.getGlobalControlRef()))
-			filterPredicates.add(cb.equal(uiControlsRoot.get("globalControlRef"), searchRequest.getGlobalControlRef()));
+			filterPredicates.add(cb.equal(uiControlsRoot.get(GLOBAL_CONTROL_REF), searchRequest.getGlobalControlRef()));
 
 		if (!StringUtils.isEmpty(searchRequest.getIsPremiumFeature()))
-			filterPredicates.add(cb.equal(uiControlsRoot.get("isPremiumFeature"), searchRequest.getIsPremiumFeature()));
+			filterPredicates.add(cb.equal(uiControlsRoot.get(IS_PREMIUM_FEATURE), searchRequest.getIsPremiumFeature()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(uiControlsRoot.get(CommonConstants.OPERATION_DATE_TIME)));

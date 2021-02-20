@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,8 @@ import com.enewschamp.app.fw.page.navigation.entity.PageNavigator;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class PageNavigatorRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<PageNavigator> {
+public class PageNavigatorRepositoryCustomImpl extends RepositoryImpl
+		implements IGenericListRepository<PageNavigator>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,16 +39,16 @@ public class PageNavigatorRepositoryCustomImpl extends RepositoryImpl implements
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getNavId()))
-			filterPredicates.add(cb.equal(pageNavigatorRoot.get("navId"), searchRequest.getNavId()));
+			filterPredicates.add(cb.equal(pageNavigatorRoot.get(NAV_ID), searchRequest.getNavId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getCurrentPage()))
-			filterPredicates.add(cb.equal(pageNavigatorRoot.get("currentPage"), searchRequest.getCurrentPage()));
+			filterPredicates.add(cb.equal(pageNavigatorRoot.get(CURRENT_PAGE), searchRequest.getCurrentPage()));
 
 		if (!StringUtils.isEmpty(searchRequest.getOperation()))
-			filterPredicates.add(cb.equal(pageNavigatorRoot.get("operation"), searchRequest.getOperation()));
+			filterPredicates.add(cb.equal(pageNavigatorRoot.get(OPERATION), searchRequest.getOperation()));
 
 		if (!StringUtils.isEmpty(searchRequest.getAction()))
-			filterPredicates.add(cb.equal(pageNavigatorRoot.get("action"), searchRequest.getAction()));
+			filterPredicates.add(cb.equal(pageNavigatorRoot.get(ACTION), searchRequest.getAction()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(pageNavigatorRoot.get(CommonConstants.OPERATION_DATE_TIME)));

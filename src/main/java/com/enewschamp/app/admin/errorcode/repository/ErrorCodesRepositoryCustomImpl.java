@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,7 @@ import com.enewschamp.common.domain.entity.ErrorCodes;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class ErrorCodesRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<ErrorCodes> {
+public class ErrorCodesRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<ErrorCodes>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,10 +38,10 @@ public class ErrorCodesRepositoryCustomImpl extends RepositoryImpl implements IG
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getErrorCodeId()))
-			filterPredicates.add(cb.equal(errorCodesRoot.get("errorCodeId"), searchRequest.getErrorCodeId()));
+			filterPredicates.add(cb.equal(errorCodesRoot.get(ERROR_CODE_ID), searchRequest.getErrorCodeId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getErrorCategory()))
-			filterPredicates.add(cb.equal(errorCodesRoot.get("errorCategory"), searchRequest.getErrorCategory()));
+			filterPredicates.add(cb.equal(errorCodesRoot.get(ERROR_CATEGORY), searchRequest.getErrorCategory()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(errorCodesRoot.get(CommonConstants.OPERATION_DATE_TIME)));

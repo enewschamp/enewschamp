@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,7 @@ import com.enewschamp.common.domain.entity.PropertiesFrontend;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class PropertiesFrontendRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<PropertiesFrontend> {
+public class PropertiesFrontendRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<PropertiesFrontend>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,10 +38,10 @@ public class PropertiesFrontendRepositoryCustomImpl extends RepositoryImpl imple
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getPropertyId()))
-			filterPredicates.add(cb.equal(propertiesBackendRoot.get("propertyId"), searchRequest.getPropertyId()));
+			filterPredicates.add(cb.equal(propertiesBackendRoot.get(PROPERTY_ID), searchRequest.getPropertyId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getAppName()))
-			filterPredicates.add(cb.equal(propertiesBackendRoot.get("appName"), searchRequest.getAppName()));
+			filterPredicates.add(cb.equal(propertiesBackendRoot.get(APP_NAME), searchRequest.getAppName()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(propertiesBackendRoot.get(CommonConstants.OPERATION_DATE_TIME)));

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,7 @@ import com.enewschamp.app.otp.entity.OTP;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class OTPRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<OTP> {
+public class OTPRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<OTP>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,13 +38,13 @@ public class OTPRepositoryCustomImpl extends RepositoryImpl implements IGenericL
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getEmailId()))
-			filterPredicates.add(cb.equal(otpRoot.get("emailId"), searchRequest.getEmailId()));
+			filterPredicates.add(cb.equal(otpRoot.get(EMAIL_ID), searchRequest.getEmailId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getPhoneNumber()))
-			filterPredicates.add(cb.equal(otpRoot.get("phoneNumber"), searchRequest.getPhoneNumber()));
+			filterPredicates.add(cb.equal(otpRoot.get(PHONE_NUMBER), searchRequest.getPhoneNumber()));
 
 		if (!StringUtils.isEmpty(searchRequest.getVerified()))
-			filterPredicates.add(cb.equal(otpRoot.get("verified"), searchRequest.getVerified()));
+			filterPredicates.add(cb.equal(otpRoot.get(VERIFIED), searchRequest.getVerified()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(otpRoot.get(CommonConstants.OPERATION_DATE_TIME)));

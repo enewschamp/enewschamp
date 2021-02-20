@@ -17,13 +17,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class StudentScoresMonthlyGenreRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<StudentScoresMonthlyGenre> {
+public class StudentScoresMonthlyGenreRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<StudentScoresMonthlyGenre>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -36,19 +37,19 @@ public class StudentScoresMonthlyGenreRepositoryCustomImpl extends RepositoryImp
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentScoresDailyRoot.get("studentId"), searchRequest.getStudentId()));
+			filterPredicates.add(cb.equal(studentScoresDailyRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getEditionId()))
-			filterPredicates.add(cb.equal(studentScoresDailyRoot.get("editionId"), searchRequest.getEditionId()));
+			filterPredicates.add(cb.equal(studentScoresDailyRoot.get(EDITION_ID), searchRequest.getEditionId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getReadingLevel()))
-			filterPredicates.add(cb.equal(studentScoresDailyRoot.get("readingLevel"), searchRequest.getReadingLevel()));
+			filterPredicates.add(cb.equal(studentScoresDailyRoot.get(READING_LEVEL), searchRequest.getReadingLevel()));
 
 		if (!StringUtils.isEmpty(searchRequest.getScoreYearMonth()))
-			filterPredicates.add(cb.equal(studentScoresDailyRoot.get("scoreYearMonth"), searchRequest.getScoreYearMonth()));
+			filterPredicates.add(cb.equal(studentScoresDailyRoot.get(SCORE_YEAR_MIONTH), searchRequest.getScoreYearMonth()));
 
 		if (!StringUtils.isEmpty(searchRequest.getGenreId()))
-			filterPredicates.add(cb.equal(studentScoresDailyRoot.get("genreId"), searchRequest.getGenreId()));
+			filterPredicates.add(cb.equal(studentScoresDailyRoot.get(GENRE_ID), searchRequest.getGenreId()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentScoresDailyRoot.get(CommonConstants.SCORE_YEAR_MONTH)),cb.desc(studentScoresDailyRoot.get(CommonConstants.GENRE_ID)), cb.desc(studentScoresDailyRoot.get(CommonConstants.QUIZ_CORRECT)));

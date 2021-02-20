@@ -17,13 +17,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class EntitlementRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Entitlement> {
+public class EntitlementRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Entitlement>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -35,13 +36,13 @@ public class EntitlementRepositoryCustomImpl extends RepositoryImpl implements I
 		Root<Entitlement> entitlementRoot = criteriaQuery.from(Entitlement.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 		if (!StringUtils.isEmpty(searchRequest.getUserId()))
-			filterPredicates.add(cb.equal(entitlementRoot.get("userId"), searchRequest.getUserId()));
+			filterPredicates.add(cb.equal(entitlementRoot.get(USER_ID), searchRequest.getUserId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getPageName()))
-			filterPredicates.add(cb.equal(entitlementRoot.get("pageName"), searchRequest.getPageName()));
+			filterPredicates.add(cb.equal(entitlementRoot.get(PAGE_NAME), searchRequest.getPageName()));
 
 		if (!StringUtils.isEmpty(searchRequest.getRole()))
-			filterPredicates.add(cb.equal(entitlementRoot.get("role"), searchRequest.getRole()));
+			filterPredicates.add(cb.equal(entitlementRoot.get(ROLE), searchRequest.getRole()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(entitlementRoot.get(CommonConstants.OPERATION_DATE_TIME)));

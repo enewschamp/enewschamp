@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,7 @@ import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.user.domain.entity.UserLeave;
 
 @Repository
-public class UserLeaveRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<UserLeave> {
+public class UserLeaveRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<UserLeave>,AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,14 +38,14 @@ public class UserLeaveRepositoryCustomImpl extends RepositoryImpl implements IGe
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getUserId()))
-			filterPredicates.add(cb.equal(userLeaveRoot.get("userLeaveKey").get("userId"), searchRequest.getUserId()));
+			filterPredicates.add(cb.equal(userLeaveRoot.get(USER_LEAVE_KEY).get(USER_ID), searchRequest.getUserId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getApprovalStatus()))
-			filterPredicates.add(cb.equal(userLeaveRoot.get("approvalStatus"), searchRequest.getApprovalStatus()));
+			filterPredicates.add(cb.equal(userLeaveRoot.get(APPROVAL_STATUS), searchRequest.getApprovalStatus()));
 
 		if (!StringUtils.isEmpty(searchRequest.getStartDateFrom())
 				&& !StringUtils.isEmpty(searchRequest.getStartDateTo()))
-			filterPredicates.add(cb.between(userLeaveRoot.get("startDate"), searchRequest.getStartDateFrom(),
+			filterPredicates.add(cb.between(userLeaveRoot.get(START_DATE), searchRequest.getStartDateFrom(),
 					searchRequest.getStartDateTo()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));

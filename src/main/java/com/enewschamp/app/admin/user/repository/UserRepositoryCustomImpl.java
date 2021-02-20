@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,7 @@ import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.user.domain.entity.User;
 
 @Repository
-public class UserRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<User> {
+public class UserRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<User>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,7 +38,7 @@ public class UserRepositoryCustomImpl extends RepositoryImpl implements IGeneric
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getUserId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get("userId"), searchRequest.getUserId()));
+			filterPredicates.add(cb.equal(studentachievementRoot.get(USER_ID), searchRequest.getUserId()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentachievementRoot.get(CommonConstants.OPERATION_DATE_TIME)));
