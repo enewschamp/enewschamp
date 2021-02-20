@@ -14,10 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.helpdesk.repository.HelpdeskRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.helpdesk.entity.Helpdesk;
 import com.enewschamp.app.helpdesk.repository.HelpdeskRepository;
-import com.enewschamp.app.helpdesk.repository.HelpdeskRepositoryCustomImpl;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 

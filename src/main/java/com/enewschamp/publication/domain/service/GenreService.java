@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.genre.repository.GenreRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -20,7 +21,6 @@ import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.common.GenreList;
 import com.enewschamp.publication.domain.entity.Genre;
-import com.enewschamp.publication.domain.repository.GenreRepositoryCustomImpl;
 
 @Service
 public class GenreService extends AbstractDomainService {

@@ -12,11 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.security.repository.AppSecurityRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.security.entity.AppSecurity;
 import com.enewschamp.security.repository.AppSecurityRepository;
-import com.enewschamp.security.repository.AppSecurityRepositoryCustomImpl;
 
 @Service
 public class AppSecurityService {
