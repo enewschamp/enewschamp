@@ -26,6 +26,7 @@ import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.domain.service.RepositoryImpl;
 import com.enewschamp.subscription.domain.entity.StudentControl;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
+import com.enewschamp.subscription.domain.entity.StudentPreferenceComm;
 import com.enewschamp.subscription.domain.entity.StudentPreferences;
 import com.enewschamp.subscription.domain.entity.StudentSchool;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;
@@ -96,12 +97,20 @@ public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
 			pageData.setStudentRegistration(modelMapper.map(studentRegistration, StudentRegistrationNilDTO.class));
 			pageData.setStudentSubscription(modelMapper.map(studentSubscription, StudentSubscriptionNilDTO.class));
 			pageData.setStudentPreferences(modelMapper.map(studentPreference, StudentPreferencesNilDTO.class));
+			buildCommsOverEmail(pageData, studentPreference);
 			pageData.setStudentSchool(modelMapper.map(studentSchool, StudentSchoolNilDTO.class));
 			pageData.setStudentDetails(modelMapper.map(studentDetails, StudentDetailsNilDTO.class));
 			pageData.setStudentControl(modelMapper.map(studentControl, StudentControlNilDTO.class));
 			bulkList.add(pageData);
 		}
 		return new PageImpl<>(bulkList, pageable, count);
+	}
+	
+	private void buildCommsOverEmail(BulkStudentRegistrationPageData pagedata, StudentPreferences studentPreference) {
+		pagedata.getStudentPreferences().setAlertsNotifications(studentPreference.getCommsOverEmail().getAlertsNotifications());
+		pagedata.getStudentPreferences().setCommsEmailId(studentPreference.getCommsOverEmail().getCommsEmailId());
+		pagedata.getStudentPreferences().setDailyPublication(studentPreference.getCommsOverEmail().getDailyPublication());
+		pagedata.getStudentPreferences().setScoresProgressReports(studentPreference.getCommsOverEmail().getScoresProgressReports());
 	}
 
 	private void mapStudentRegistrationPredicate(AdminSearchRequest searchRequest,
@@ -120,8 +129,16 @@ public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
 			filterPredicates.add(cb.or(cb.isNull(studentRegistrationRoot.get("avatarName")),
 					cb.equal(cb.trim(studentRegistrationRoot.get("avatarName")), "")));
 		}
-		if (!StringUtils.isEmpty(searchRequest.getPhoto()))
-			filterPredicates.add(cb.equal(studentRegistrationRoot.get("photoName"), searchRequest.getPhoto()));
+		
+
+		if (!StringUtils.isEmpty(searchRequest.getPhoto()) && searchRequest.getPhoto().equals("Y")) {
+			filterPredicates.add(cb.and(cb.isNotNull(studentRegistrationRoot.get("photoName")),
+					cb.notEqual(cb.trim(studentRegistrationRoot.get("photoName")), "")));
+		}
+		if (!StringUtils.isEmpty(searchRequest.getPhoto()) && searchRequest.getPhoto().equals("N")) {
+			filterPredicates.add(cb.or(cb.isNull(studentRegistrationRoot.get("photoName")),
+					cb.equal(cb.trim(studentRegistrationRoot.get("photoName")), "")));
+		}
 
 		if (!StringUtils.isEmpty(searchRequest.getTheme()))
 			filterPredicates.add(cb.equal(studentRegistrationRoot.get("theme"), searchRequest.getTheme()));
@@ -138,6 +155,11 @@ public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
 	
 		if (!StringUtils.isEmpty(searchRequest.getLastLoginTime()))
 			filterPredicates.add(cb.equal(studentRegistrationRoot.get("lastSuccessfulLoginAttempt"), searchRequest.getLastLoginTime()));
+		
+		if (!StringUtils.isEmpty(searchRequest.getCreateDateFrom())
+				&& !StringUtils.isEmpty(searchRequest.getCreateDateTo()))
+			filterPredicates.add(cb.between(studentRegistrationRoot.get("creationDateTime"), searchRequest.getCreateDateFrom(),
+					searchRequest.getCreateDateTo()));
 
 	}
 
@@ -233,15 +255,15 @@ public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
 
 		if (!StringUtils.isEmpty(searchRequest.getDailyPublication()))
 			filterPredicates
-					.add(cb.equal(studentPreferenceRoot.get("dailyPublication"), searchRequest.getDailyPublication()));
+					.add(cb.equal(studentPreferenceRoot.get("commsOverEmail").get("dailyPublication"), searchRequest.getDailyPublication()));
 
 		if (!StringUtils.isEmpty(searchRequest.getScoresProgressReports()))
-			filterPredicates.add(cb.equal(studentPreferenceRoot.get("scoresProgressReports"),
+			filterPredicates.add(cb.equal(studentPreferenceRoot.get("commsOverEmail").get("scoresProgressReports"),
 					searchRequest.getScoresProgressReports()));
 
 		if (!StringUtils.isEmpty(searchRequest.getAlertsNotifications()))
 			filterPredicates.add(
-					cb.equal(studentPreferenceRoot.get("alertsNotifications"), searchRequest.getAlertsNotifications()));
+					cb.equal(studentPreferenceRoot.get("commsOverEmail").get("alertsNotifications"), searchRequest.getAlertsNotifications()));
 	}
 
 	private void mapStudentSubscriptionPredicate(AdminSearchRequest searchRequest,
@@ -251,7 +273,7 @@ public class BulkStudentRegistrationCustomImpl extends RepositoryImpl {
 
 		if (!StringUtils.isEmpty(searchRequest.getSubscriptionType()))
 			filterPredicates.add(
-					cb.equal(studentSubscriptionRoot.get("subscriptionType"), searchRequest.getSubscriptionType()));
+					cb.equal(studentSubscriptionRoot.get("subscriptionSelected"), searchRequest.getSubscriptionType()));
 
 		if (!StringUtils.isEmpty(searchRequest.getAutoRenewal()))
 			filterPredicates.add(cb.equal(studentSubscriptionRoot.get("autoRenewal"), searchRequest.getAutoRenewal()));

@@ -2,13 +2,7 @@ package com.enewschamp.app.admin.student.registration.bulk.handler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -88,7 +82,6 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-	private Validator validator;
 
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
@@ -129,7 +122,15 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 	private PageDTO insertBulkStudentRegistration(PageRequestDTO pageRequest) {
 		List<BulkStudentRegistrationPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				new TypeReference<List<BulkStudentRegistrationPageData>>(){});
-		pageData.forEach(pagedata -> { validateData(pagedata); });
+		pageData.forEach(pagedata -> { 
+			validate(pagedata.getStudentRegistration()); 
+			validate(pagedata.getStudentControl()); 
+			validate(pagedata.getStudentPayment()); 
+			validate(pagedata.getStudentPreferences()); 
+			validate(pagedata.getStudentSchool()); 
+			validate(pagedata.getStudentSubscription()); 
+			validate(pagedata.getStudentDetails()); 
+			});
 		PageDTO dto = performInsertion(pageData, pageRequest);
 		return dto;
 	}
@@ -291,26 +292,19 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 		studentPreferences.setOperatorId(pageRequest.getHeader().getUserId());
 		studentPreferences.setRecordInUse(RecordInUseType.Y);
 		studentPreferences.setStudentId(studentId);
-		StudentPreferenceComm commsOverEmail = new StudentPreferenceComm();
-		commsOverEmail.setAlertsNotifications(pageData.getStudentPreferences().getAlertsNotifications());
-		commsOverEmail.setCommsEmailId(pageData.getStudentPreferences().getCommsEmailId());
-		commsOverEmail.setDailyPublication(pageData.getStudentPreferences().getDailyPublication());
-		commsOverEmail.setScoresProgressReports(pageData.getStudentPreferences().getScoresProgressReports());
+		StudentPreferenceComm commsOverEmail = buildCommsOverEmail(pageData);
 		studentPreferences.setCommsOverEmail(commsOverEmail);
 		studentPreferences = studentPreferencesService.create(studentPreferences);
 		return studentPreferences;
 	}
 
-	private void validateData(BulkStudentRegistrationPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<BulkStudentRegistrationPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error(e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
+	private StudentPreferenceComm buildCommsOverEmail(BulkStudentRegistrationPageData pageData) {
+		StudentPreferenceComm commsOverEmail = new StudentPreferenceComm();
+		commsOverEmail.setAlertsNotifications(pageData.getStudentPreferences().getAlertsNotifications());
+		commsOverEmail.setCommsEmailId(pageData.getStudentPreferences().getCommsEmailId());
+		commsOverEmail.setDailyPublication(pageData.getStudentPreferences().getDailyPublication());
+		commsOverEmail.setScoresProgressReports(pageData.getStudentPreferences().getScoresProgressReports());
+		return commsOverEmail;
 	}
 
 }
