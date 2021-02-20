@@ -1,6 +1,5 @@
 package com.enewschamp.app.admin.otp.handler;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,6 @@ import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PageStatus;
-import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.otp.entity.OTP;
 import com.enewschamp.app.otp.service.OTPService;

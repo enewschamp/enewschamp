@@ -1,16 +1,9 @@
 package com.enewschamp.app.admin.entitlement.handler;
 
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +15,19 @@ import com.enewschamp.app.admin.entitlement.repository.Entitlement;
 import com.enewschamp.app.admin.entitlement.service.EntitlementService;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PageStatus;
-import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
-import com.enewschamp.problem.BusinessException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 @Component("EntitlementPageHandler")
-@Slf4j
 public class EntitlementPageHandler implements IPageHandler {
 	@Autowired
 	private EntitlementService entitlementService;
@@ -47,7 +35,6 @@ public class EntitlementPageHandler implements IPageHandler {
 	ModelMapper modelMapper;
 	@Autowired
 	ObjectMapper objectMapper;
-	private Validator validator;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {

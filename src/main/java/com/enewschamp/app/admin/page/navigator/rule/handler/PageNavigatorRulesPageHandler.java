@@ -1,11 +1,8 @@
 package com.enewschamp.app.admin.page.navigator.rule.handler;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.validation.Validator;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +18,6 @@ import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PageStatus;
-import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.fw.page.navigation.entity.PageNavigatorRules;
 import com.enewschamp.app.fw.page.navigation.service.PageNavigationRulesService;
@@ -32,10 +28,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 @Component("PageNavigatorRulesPageHandler")
-@Slf4j
 @Transactional
 public class PageNavigatorRulesPageHandler implements IPageHandler {
 	@Autowired

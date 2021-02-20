@@ -1,6 +1,5 @@
 package com.enewschamp.app.admin.state.handler;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +16,6 @@ import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PageStatus;
-import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.app.common.state.service.StateService;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;

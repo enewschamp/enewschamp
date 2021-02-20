@@ -1,6 +1,5 @@
 package com.enewschamp.app.admin.school.handler;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +16,6 @@ import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PageStatus;
-import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.school.entity.School;
 import com.enewschamp.app.school.service.SchoolService;
@@ -27,10 +25,8 @@ import com.enewschamp.domain.common.RecordInUseType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 @Component("SchoolPageHandler")
-@Slf4j
 public class SchoolPageHandler implements IPageHandler {
 
 	@Autowired

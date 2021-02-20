@@ -1,6 +1,5 @@
 package com.enewschamp.app.admin.student.registration.handler;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -18,14 +17,12 @@ import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
-import com.enewschamp.app.admin.student.registration.bulk.handler.BulkStudentRegistrationRepositoryCustomImpl;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PageStatus;
-import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.app.student.registration.service.StudentRegistrationService;
@@ -44,8 +41,6 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 	@Autowired
 	private StudentRegistrationService studentRegistrationService;
 	
-	@Autowired
-	private BulkStudentRegistrationRepositoryCustomImpl bulkStudent;
 	@Autowired
 	ModelMapper modelMapper;
 	@Autowired
