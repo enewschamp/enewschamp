@@ -5763,7 +5763,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"City\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"countryId\": \"IN\",\n        \"stateId\": \"GUJ\",\n        \"nameId\": \"Ahmedabad\",\n        \"description\": \"Ahemdabad\",\n        \"isApplicableForNewsEvents\": \"Y\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"City\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"countryId\": \"IN\",\n        \"stateId\": \"GUK\",\n        \"nameId\": \"Ahmedabadd\",\n        \"description\": \"Ahemdabad\",\n        \"isApplicableForNewsEvents\": \"Y\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -8389,7 +8389,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"Close\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"requestId\": 30\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"Close\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"helpdeskId\": 15\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -8448,7 +8448,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"Reinstate\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"requestId\": 28\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"Reinstate\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n         \"helpdeskId\": 15\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -8507,7 +8507,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 2,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"createDateFrom\": \"2020-12-27T00:00:00\",\n            \"createDateTo\": \"2021-12-31T00:00:00\",\n            \"categoryId\": \"AP\",\n            \"closeFlag\": \"Y\",\n            \"supportUserId\": \"mesmayus\",\n            \"studentId\": 1\n        }\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 2,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"createDateFrom\": null,\n            \"createDateTo\": null,\n            \"categoryId\": \"\",\n            \"closeFlag\": \"\",\n            \"supportUserId\": \"\",\n            \"studentId\": \"\"\n        }\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
