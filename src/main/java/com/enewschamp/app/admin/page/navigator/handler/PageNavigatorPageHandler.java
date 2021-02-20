@@ -95,7 +95,7 @@ public class PageNavigatorPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				PageNavigatorPageData.class);
-		validate(pageData);
+		validate(pageData, this.getClass().getName());
 		PageNavigator pageNavigator = mapPageNavigatorData(pageRequest, pageData);
 		pageNavigator = pageNavigatorService.create(pageNavigator);
 		mapPageNavigator(pageRequest, pageDto, pageNavigator);
@@ -123,7 +123,7 @@ public class PageNavigatorPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		PageNavigatorPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				PageNavigatorPageData.class);
-		validate(pageData);
+		validate(pageData, this.getClass().getName());
 		PageNavigator pageNavigator = mapPageNavigatorData(pageRequest, pageData);
 		pageNavigator = pageNavigatorService.update(pageNavigator);
 		mapPageNavigator(pageRequest, pageDto, pageNavigator);
@@ -184,7 +184,7 @@ public class PageNavigatorPageHandler implements IPageHandler {
 				new TypeReference<List<PageNavigatorPageData>>() {
 				});
 		pageData.forEach(pagedata ->{
-			validate(pageData);
+			validate(pageData, this.getClass().getName());
 		});
 		List<PageNavigator> pageNavigators = mapPageNavigators(pageRequest, pageData);
 		pageNavigatorService.clean();

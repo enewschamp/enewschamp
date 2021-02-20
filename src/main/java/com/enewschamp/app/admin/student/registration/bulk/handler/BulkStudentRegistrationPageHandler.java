@@ -121,16 +121,17 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 	@Transactional
 	private PageDTO insertBulkStudentRegistration(PageRequestDTO pageRequest) {
 		List<BulkStudentRegistrationPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
-				new TypeReference<List<BulkStudentRegistrationPageData>>(){});
-		pageData.forEach(pagedata -> { 
-			validate(pagedata.getStudentRegistration()); 
-			validate(pagedata.getStudentControl()); 
-			validate(pagedata.getStudentPayment()); 
-			validate(pagedata.getStudentPreferences()); 
-			validate(pagedata.getStudentSchool()); 
-			validate(pagedata.getStudentSubscription()); 
-			validate(pagedata.getStudentDetails()); 
-			});
+				new TypeReference<List<BulkStudentRegistrationPageData>>() {
+				});
+		pageData.forEach(pagedata -> {
+			validate(pagedata.getStudentRegistration(), this.getClass().getName());
+			validate(pagedata.getStudentControl(), this.getClass().getName());
+			validate(pagedata.getStudentPayment(), this.getClass().getName());
+			validate(pagedata.getStudentPreferences(), this.getClass().getName());
+			validate(pagedata.getStudentSchool(), this.getClass().getName());
+			validate(pagedata.getStudentSubscription(), this.getClass().getName());
+			validate(pagedata.getStudentDetails(), this.getClass().getName());
+		});
 		PageDTO dto = performInsertion(pageData, pageRequest);
 		return dto;
 	}
@@ -288,7 +289,8 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 
 	private StudentPreferences createStudentPreferences(BulkStudentRegistrationPageData pageData,
 			PageRequestDTO pageRequest, long studentId) {
-		StudentPreferences studentPreferences = modelMapper.map(pageData.getStudentPreferences(), StudentPreferences.class);
+		StudentPreferences studentPreferences = modelMapper.map(pageData.getStudentPreferences(),
+				StudentPreferences.class);
 		studentPreferences.setOperatorId(pageRequest.getHeader().getUserId());
 		studentPreferences.setRecordInUse(RecordInUseType.Y);
 		studentPreferences.setStudentId(studentId);

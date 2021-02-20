@@ -86,7 +86,7 @@ public class CityPageHandler implements IPageHandler {
 	private PageDTO createCity(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		CityPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CityPageData.class);
-		validate(pageData);
+		validate(pageData, this.getClass().getName());
 		City city = mapCityData(pageRequest, pageData);
 		city = cityService.create(city);
 		mapCity(pageRequest, pageDto, city);
@@ -112,7 +112,7 @@ public class CityPageHandler implements IPageHandler {
 	private PageDTO updateCity(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		CityPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CityPageData.class);
-		validate(pageData);
+		validate(pageData, this.getClass().getName());
 		City city = mapCityData(pageRequest, pageData);
 		city = cityService.update(city);
 		mapCity(pageRequest, pageDto, city);

@@ -14,11 +14,12 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.problem.BusinessException;
 
 import lombok.extern.slf4j.Slf4j;
+
 public interface IPageHandler {
-	
-    @Slf4j
-    final class LogHolder
-    {}
+
+	@Slf4j
+	final class LogHolder {
+	}
 
 	// Method to process the data based on action take on the page
 	public PageDTO handleAction(PageRequestDTO pageRequest);
@@ -30,15 +31,16 @@ public interface IPageHandler {
 
 	// method to handle actions from app
 	public PageDTO handleAppAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO);
-	
-	default void validate(Object pageData) {
+
+	default void validate(Object pageData, String className) {
 		Validator validator;
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
 		Set<ConstraintViolation<Object>> violations = validator.validate(pageData);
 		if (!violations.isEmpty()) {
 			violations.forEach(e -> {
-				 LogHolder.log.error("Validation failed: " + e.getMessage());
+				LogHolder.log.error("Validation failed for caller class " + className + " for an object "
+						+ pageData.getClass() + ": " + e.getMessage());
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
