@@ -105,15 +105,6 @@ public class StudentScoresDailyPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
-
 	private StudentScoresDaily mapStudentScoresDailyData(PageRequestDTO pageRequest, StudentScoresDailyPageData pageData) {
 		StudentScoresDaily studentScoresDaily = modelMapper.map(pageData, StudentScoresDaily.class);
 		studentScoresDaily.setRecordInUse(RecordInUseType.Y);

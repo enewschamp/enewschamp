@@ -95,16 +95,6 @@ public class StudentPreferencesPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-
-	}
-
 	private StudentPreferences mapStudentPreferencesPageData(PageRequestDTO pageRequest, StudentPreferencesPageData pageData) {
 		StudentPreferences studentPreferences = modelMapper.map(pageData, StudentPreferences.class);
 		StudentPreferenceComm commsOverEmail = new StudentPreferenceComm();

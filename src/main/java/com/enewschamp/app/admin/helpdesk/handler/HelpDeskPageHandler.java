@@ -190,15 +190,6 @@ public class HelpDeskPageHandler implements IPageHandler {
 		pageDto.setData(pageData);
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
-
 
 	private HelpDeskPageData mapPageData(Helpdesk helpdesk) {
 		HelpDeskPageData pageData = modelMapper.map(helpdesk, HelpDeskPageData.class);

@@ -185,15 +185,6 @@ public class HolidayPageHandler implements IPageHandler {
 		pageDto.setData(pageData);
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
-
 	private Holiday mapHolidayData(PageRequestDTO pageRequest, HolidayPageData pageData) {
 		Holiday holiday = modelMapper.map(pageData, Holiday.class);
 		holiday.setRecordInUse(RecordInUseType.Y);

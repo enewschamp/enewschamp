@@ -119,15 +119,6 @@ public class BadgePageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
-
 	private Badge mapBadgeData(PageRequestDTO pageRequest, BadgePageData pageData) {
 		Badge badge = modelMapper.map(pageData, Badge.class);
 		badge.setRecordInUse(RecordInUseType.Y);

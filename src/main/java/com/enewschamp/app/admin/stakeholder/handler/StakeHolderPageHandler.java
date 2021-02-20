@@ -171,15 +171,6 @@ public class StakeHolderPageHandler implements IPageHandler {
 		pageDto.setData(pageData);
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
-
 	private StakeHolder mapStakeHolderData(PageRequestDTO pageRequest, StakeHolderPageData pageData) {
 		StakeHolder stakeHolder = modelMapper.map(pageData, StakeHolder.class);
 		stakeHolder.setRecordInUse(RecordInUseType.Y);

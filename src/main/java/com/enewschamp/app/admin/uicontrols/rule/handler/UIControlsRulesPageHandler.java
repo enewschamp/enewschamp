@@ -113,14 +113,6 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
 
 	private UIControlsRules mapUIControlsRulesData(PageRequestDTO pageRequest, UIControlsRulesPageData pageData) {
 		UIControlsRules uiControlesRules = modelMapper.map(pageData, UIControlsRules.class);

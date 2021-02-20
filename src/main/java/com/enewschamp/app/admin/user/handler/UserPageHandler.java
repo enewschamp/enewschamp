@@ -94,16 +94,6 @@ public class UserPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-
-	}
-
 	private User mapUserData(PageRequestDTO pageRequest, UserPageData pageData) {
 		User user = modelMapper.map(pageData, User.class);
 		user.setRecordInUse(RecordInUseType.Y);

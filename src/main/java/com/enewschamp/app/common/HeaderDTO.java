@@ -6,6 +6,9 @@ import java.time.LocalDate;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -42,4 +45,29 @@ public class HeaderDTO implements Serializable {
 	private String helpText;
 	private LocalDate todaysDate;
 	private String lastPropChangeTime;
+
+	@JsonIgnore
+	public String getLoginCredentials() {
+		return this.loginCredentials;
+	}
+	@JsonIgnore
+	public String getUserId() {
+		return this.userId;
+	}
+	@JsonIgnore
+	public String getDeviceId() {
+		return this.deviceId;
+	}
+    @JsonProperty
+	public void setLoginCredentials(String loginCredentials) {
+		this.loginCredentials = loginCredentials;
+	}
+    @JsonProperty
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+    @JsonProperty
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
 }

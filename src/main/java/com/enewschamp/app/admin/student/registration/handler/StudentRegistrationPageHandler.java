@@ -110,15 +110,6 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
-
 	private StudentRegistration mapStudentRegistrationData(PageRequestDTO pageRequest,
 			StudentRegistrationPageData pageData) {
 		StudentRegistration studentRegistration = modelMapper.map(pageData, StudentRegistration.class);

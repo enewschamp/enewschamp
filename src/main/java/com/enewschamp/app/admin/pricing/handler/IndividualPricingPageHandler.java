@@ -191,15 +191,6 @@ public class IndividualPricingPageHandler implements IPageHandler {
 		pageDto.setData(pageData);
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
-
 	private IndividualPricing mapPricingData(PageRequestDTO pageRequest, IndividualPricingPageData pageData) {
 		IndividualPricing pricing = modelMapper.map(pageData, IndividualPricing.class);
 		pricing.setRecordInUse(RecordInUseType.Y);

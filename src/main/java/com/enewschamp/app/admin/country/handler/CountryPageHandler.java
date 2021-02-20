@@ -172,15 +172,6 @@ public class CountryPageHandler implements IPageHandler {
 		pageDto.setData(pageData);
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
-
 	private Country mapCountryData(PageRequestDTO pageRequest, CountryPageData pageData) {
 		Country country = modelMapper.map(pageData, Country.class);
 		country.setRecordInUse(RecordInUseType.Y);

@@ -106,16 +106,6 @@ public class EntitlementPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-
-	}
-
 	private Entitlement mapEntitlementData(PageRequestDTO pageRequest, EntitlementPageData pageData) {
 		Entitlement entitlement = modelMapper.map(pageData, Entitlement.class);
 		entitlement.setRecordInUse(RecordInUseType.Y);

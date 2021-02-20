@@ -1,5 +1,7 @@
 package com.enewschamp.app.admin;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +69,7 @@ public class AdminPageController {
 			if (header == null) {
 				header = new HeaderDTO();
 			}
+			header.setTodaysDate(LocalDate.now());
 			header.setRequestStatus(RequestStatusType.F);
 			throw new Fault(e, header);
 		}

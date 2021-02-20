@@ -96,16 +96,6 @@ public class UserRolePageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-
-	}
-
 	private UserRole mapUserRoleData(PageRequestDTO pageRequest, UserRolePageData pageData) {
 		UserRole userRole = modelMapper.map(pageData, UserRole.class);
 		mapRoleKey(pageData, userRole);

@@ -120,15 +120,6 @@ public class CelebrationPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
-
 	private Celebration mapCelebrationData(PageRequestDTO pageRequest, CelebrationPageData pageData) {
 		Celebration celebration = modelMapper.map(pageData, Celebration.class);
 		celebration.setRecordInUse(RecordInUseType.Y);

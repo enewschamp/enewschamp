@@ -106,16 +106,6 @@ public class PageNavigatorRulesPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-
-	}
-
 	private PageNavigatorRules mapPageNavigatorRulesData(PageRequestDTO pageRequest,
 			PageNavigatorRulesPageData pageData) {
 		PageNavigatorRules pageNavigator = modelMapper.map(pageData, PageNavigatorRules.class);

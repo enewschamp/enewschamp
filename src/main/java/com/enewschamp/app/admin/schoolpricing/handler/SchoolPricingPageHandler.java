@@ -183,15 +183,6 @@ public class SchoolPricingPageHandler implements IPageHandler {
 		pageDto.setData(pageData);
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
-
 	private SchoolPricing mapSchoolPricingData(PageRequestDTO pageRequest,
 			SchoolPricingPageData pageData) {
 		SchoolPricing schoolPricing = modelMapper.map(pageData, SchoolPricing.class);

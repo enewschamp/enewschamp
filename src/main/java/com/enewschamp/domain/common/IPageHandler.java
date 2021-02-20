@@ -1,5 +1,6 @@
 package com.enewschamp.domain.common;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -10,6 +11,7 @@ import javax.validation.ValidatorFactory;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.problem.BusinessException;
 
@@ -31,6 +33,12 @@ public interface IPageHandler {
 
 	// method to handle actions from app
 	public PageDTO handleAppAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO);
+	
+	default void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
+		pageDto.setHeader(pageRequest.getHeader());
+		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
+		pageDto.getHeader().setTodaysDate(LocalDate.now());
+	}
 
 	default void validate(Object pageData, String className) {
 		Validator validator;

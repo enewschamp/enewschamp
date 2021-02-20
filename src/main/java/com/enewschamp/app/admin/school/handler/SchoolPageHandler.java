@@ -169,15 +169,6 @@ public class SchoolPageHandler implements IPageHandler {
 		pageDto.setData(pageData);
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
-
 	private School mapSchoolData(PageRequestDTO pageRequest, SchoolPageData pageData) {
 		School school = modelMapper.map(pageData, School.class);
 		school.setRecordInUse(RecordInUseType.Y);

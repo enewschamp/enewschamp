@@ -1,6 +1,5 @@
 package com.enewschamp.app.admin.page.navigator.handler;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +19,6 @@ import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PageStatus;
-import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.fw.page.navigation.entity.PageNavigator;
 import com.enewschamp.domain.common.IPageHandler;
@@ -100,16 +98,6 @@ public class PageNavigatorPageHandler implements IPageHandler {
 		pageNavigator = pageNavigatorService.create(pageNavigator);
 		mapPageNavigator(pageRequest, pageDto, pageNavigator);
 		return pageDto;
-	}
-
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-
 	}
 
 	private PageNavigator mapPageNavigatorData(PageRequestDTO pageRequest, PageNavigatorPageData pageData) {

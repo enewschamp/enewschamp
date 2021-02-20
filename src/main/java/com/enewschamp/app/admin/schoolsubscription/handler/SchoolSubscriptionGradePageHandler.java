@@ -172,15 +172,6 @@ public class SchoolSubscriptionGradePageHandler implements IPageHandler {
 		pageDto.setData(pageData);
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
-
 	private SchoolSubscriptionGrade mapSchoolSubscriptionGradeData(PageRequestDTO pageRequest,
 			SchoolSubscriptionGradePageData pageData) {
 		SchoolSubscriptionGrade schoolSubscriptionGrade = modelMapper.map(pageData, SchoolSubscriptionGrade.class);

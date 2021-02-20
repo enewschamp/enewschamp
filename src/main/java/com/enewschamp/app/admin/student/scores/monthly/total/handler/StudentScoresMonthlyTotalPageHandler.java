@@ -105,14 +105,6 @@ public class StudentScoresMonthlyTotalPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private void mapHeaderData(PageRequestDTO pageRequest, PageDTO pageDto) {
-		pageDto.setHeader(pageRequest.getHeader());
-		pageDto.getHeader().setRequestStatus(RequestStatusType.S);
-		pageDto.getHeader().setTodaysDate(LocalDate.now());
-		pageDto.getHeader().setLoginCredentials(null);
-		pageDto.getHeader().setUserId(null);
-		pageDto.getHeader().setDeviceId(null);
-	}
 
 	private StudentScoresMonthlyTotal mapStudentScoresMonthlyTotalData(PageRequestDTO pageRequest, StudentScoresMonthlyTotalPageData pageData) {
 		StudentScoresMonthlyTotal studentScoresMonthly = modelMapper.map(pageData, StudentScoresMonthlyTotal.class);
