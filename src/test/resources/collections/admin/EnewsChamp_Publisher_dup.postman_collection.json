@@ -5742,7 +5742,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"City\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"countryId\": \"IN\",\n        \"stateId\": \"GUJ\",\n        \"nameId\": \"Ahmedabad\",\n        \"description\": \"Ahemdabad\",\n        \"isApplicableForNewsEvents\": \"Y\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"City\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"countryId\": \"\",\n        \"stateId\": \"GUJ\",\n        \"nameId\": \"Ahmedabad\",\n        \"description\": \"Ahemdabad\",\n        \"isApplicableForNewsEvents\": \"Y\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -12475,7 +12475,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StudentRegistration\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"studentId\": 1,\n        \"emailId\": \"saxena_govind@hotmail.com\",\n        \"fontHeight\": \"1\",\n        \"incorrectLoginAttempts\": \"0\",\n        \"isAccountLocked\": \"N\",\n        \"isActive\": \"Y\",\n        \"isDeleted\": \"N\",\n        \"lastSuccessfulLoginAttempt\": null,\n        \"lastUnsuccessfulLoginAttempt\": null,\n        \"password\": \"12345\",\n        \"password1\": \"67890\",\n        \"password2\": \"34567\",\n        \"theme\": \"\",\n        \"avatarName\": \"10.jpg\",\n        \"forcePasswordChange\": \"Y\",\n        \"isTestUser\": \"N\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StudentRegistration\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"studentId\": 1,\n        \"emailId\": \"saxena_govind@hotmail.comm2\",\n        \"fontHeight\": \"1\",\n        \"incorrectLoginAttempts\": \"0\",\n        \"isAccountLocked\": \"N\",\n        \"isActive\": \"Y\",\n        \"isDeleted\": \"N\",\n        \"lastSuccessfulLoginAttempt\": null,\n        \"lastUnsuccessfulLoginAttempt\": null,\n        \"password\": \"12345\",\n        \"password1\": \"67890\",\n        \"password2\": \"34567\",\n        \"theme\": \"\",\n        \"avatarName\": \"10.jpg\",\n        \"forcePasswordChange\": \"Y\",\n        \"isTestUser\": \"N\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -12747,6 +12747,65 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StudentRegistration\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"studentId\": 113\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"enewschamp-api",
+										"v1",
+										"admin"
+									],
+									"query": [
+										{
+											"key": "appKey",
+											"value": "GODISALMIGHTY",
+											"disabled": true
+										},
+										{
+											"key": "appName",
+											"value": "ENEWSCHAMPADMIN",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "listStudentRegistration Copy",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "appKey",
+										"type": "text",
+										"value": "{{appKey}}"
+									},
+									{
+										"key": "appName",
+										"type": "text",
+										"value": "{{appName}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StudentRegistration\",\n        \"action\": \"ListAll\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"studentId\": 113\n        }\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -18204,7 +18263,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"PageNavigator\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"currentPage\": \"Publication\",\n        \"operation\": \"WelcomeHomeUser\",\n        \"action\": \"Publication\",\n        \"submissionMethod\": \"\",\n        \"updationTable\": \"\",\n        \"controlWorkEntryExit\": \"\",\n        \"workToMaster\": \"\",\n        \"nextPage\": \"Publication\",\n        \"nextPageOperation\": \"loadPublicationPage\",\n        \"nextPageLoadMethod\": \"loadPublicationPage\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"PageNavigator\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"currentPage\": \"\",\n        \"operation\": \"WelcomeHomeUser\",\n        \"action\": \"Publication\",\n        \"submissionMethod\": \"\",\n        \"updationTable\": \"\",\n        \"controlWorkEntryExit\": \"\",\n        \"workToMaster\": \"\",\n        \"nextPage\": \"Publication\",\n        \"nextPageOperation\": \"loadPublicationPage\",\n        \"nextPageLoadMethod\": \"loadPublicationPage\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -18534,7 +18593,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"PageNavigator\",\n        \"action\": \"Insert\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": [\n        {\n            \"operatorId\": \"SYSTEM\",\n            \"lastUpdate\": \"2021-01-02T00:00\",\n            \"recordInUse\": \"Y\",\n            \"currentPage\": \"PublicationTest\",\n            \"operation\": \"Publication\",\n            \"action\": \"Next\",\n            \"nextPage\": \"Publication\",\n            \"submissionMethod\": \"\",\n            \"workToMaster\": \"\",\n            \"nextPageOperation\": \"Publication\",\n            \"nextPageLoadMethod\": \"loadNextPublicationPage\",\n            \"updationTable\": \"\"\n        },\n        {\n            \"operatorId\": \"SYSTEM\",\n            \"lastUpdate\": \"2021-01-02T00:00\",\n            \"recordInUse\": \"Y\",\n            \"currentPage\": \"SubscriptionTest\",\n            \"operation\": \"Subscription\",\n            \"action\": \"Next\",\n            \"nextPage\": \"Preferences\",\n            \"submissionMethod\": \"handleNextAction\",\n            \"workToMaster\": \"\",\n            \"nextPageOperation\": \"Subscription\",\n            \"nextPageLoadMethod\": \"loadWorkDataPage\",\n            \"updationTable\": \"W\"\n        }\n    ]\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"PageNavigator\",\n        \"action\": \"Insert\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": [\n        {\n            \"operatorId\": \"SYSTEM\",\n            \"lastUpdate\": \"2021-01-02T00:00\",\n            \"recordInUse\": \"Y\",\n            \"currentPage\": \"\",\n            \"operation\": \"Publication\",\n            \"action\": \"Next\",\n            \"nextPage\": \"Publication\",\n            \"submissionMethod\": \"\",\n            \"workToMaster\": \"\",\n            \"nextPageOperation\": \"Publication\",\n            \"nextPageLoadMethod\": \"loadNextPublicationPage\",\n            \"updationTable\": \"\"\n        },\n        {\n            \"operatorId\": \"SYSTEM\",\n            \"lastUpdate\": \"2021-01-02T00:00\",\n            \"recordInUse\": \"Y\",\n            \"currentPage\": \"SubscriptionTest\",\n            \"operation\": \"Subscription\",\n            \"action\": \"Next\",\n            \"nextPage\": \"Preferences\",\n            \"submissionMethod\": \"handleNextAction\",\n            \"workToMaster\": \"\",\n            \"nextPageOperation\": \"Subscription\",\n            \"nextPageLoadMethod\": \"loadWorkDataPage\",\n            \"updationTable\": \"W\"\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -21871,7 +21930,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"BulkStudentRegistration\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"studentControl\": {\n            \"emailId\": \"saxena_govind@hotmail.com\",\n            \"studentDetails\": \"Y\",\n            \"schoolDetails\": \"Y\",\n            \"subscriptionType\": \"P\",\n            \"preferences\": \"Y\",\n            \"emailIdVerified\": \"Y\",\n            \"evalAvailed\": \"Y\"\n        },\n        \"studentRegistration\": {\n            \"emailId\": \"saxena_govind@hotmail.com\",\n            \"isDeleted\": \"N\",\n            \"isAccountLocked\": \"N\",\n            \"incorrectLoginAttempts\": 0,\n            \"isActive\": \"Y\",\n            \"theme\": \"\",\n            \"fontHeight\": \"1\",\n            \"avatarName\": \"10.jpg\",\n            \"isTestUser\": \"N\",\n            \"forcePasswordChange\": \"Y\",\n            \"creationDateTime\": \"2021-01-21T21:13:23\"\n        },\n        \"studentDetails\": {\n            \"name\": \"sukhendra\",\n            \"surname\": \"parouha\",\n            \"otherNames\": \"sukhi\",\n            \"gender\": \"M\",\n            \"doB\": \"2009-02-18\",\n            \"mobileNumber\": \"9004502606\"\n        },\n        \"studentSchool\": {\n            \"country\": \"IN\",\n            \"countryNotInTheList\": \"N\",\n            \"state\": \"MH\",\n            \"stateNotInTheList\": \"N\",\n            \"city\": \"Mumbai\",\n            \"cityNotInTheList\": \"N\",\n            \"school\": \"2\",\n            \"schoolNotInTheList\": \"N\",\n            \"section\": \"3\",\n            \"grade\": \"2\"\n        },\n        \"studentPreferences\": {\n            \"readingLevel\": \"3\",\n            \"dailyPublication\": \"Y\",\n            \"scoresProgressReports\": \"\",\n            \"alertsNotifications\": \"Y\",\n            \"commsEmailId\": \"saxena_govind@hotmail.com\"\n        },\n        \"studentSubscription\": {\n            \"editionId\": \"INDIAN\",\n            \"subscriptionSelected\": \"P\",\n            \"startDate\": \"2021-01-02\",\n            \"endDate\": \"2022-02-02\",\n            \"autoRenewal\": \"Y\"\n        }\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"BulkStudentRegistration\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": [\n        {\n            \"studentControl\": {\n                \"emailId\": \"test_user@gmail.com\",\n                \"studentDetails\": \"Y\",\n                \"schoolDetails\": \"Y\",\n                \"subscriptionType\": \"P\",\n                \"preferences\": \"Y\",\n                \"emailIdVerified\": \"Y\",\n                \"evalAvailed\": \"Y\"\n            },\n            \"studentRegistration\": {\n                \"emailId\": \"test_user@gmail.com\",\n                \"password\": \"12345\",\n                \"password1\": \"67890\",\n                \"password2\": \"34567\",\n                \"isDeleted\": \"N\",\n                \"isAccountLocked\": \"N\",\n                \"incorrectLoginAttempts\": 0,\n                \"isActive\": \"Y\",\n                \"theme\": \"\",\n                \"fontHeight\": \"1\",\n                \"avatarName\": \"10.jpg\",\n                \"isTestUser\": \"N\",\n                \"forcePasswordChange\": \"Y\",\n                \"creationDateTime\": \"2021-01-21T21:13:23\"\n            },\n            \"studentDetails\": {\n                \"name\": \"test\",\n                \"surname\": \"user\",\n                \"otherNames\": \"user\",\n                \"gender\": \"M\",\n                \"doB\": \"2009-02-18\",\n                \"mobileNumber\": \"9004502606\"\n            },\n            \"studentSchool\": {\n                \"country\": \"IN\",\n                \"countryNotInTheList\": \"N\",\n                \"state\": \"MH\",\n                \"stateNotInTheList\": \"N\",\n                \"city\": \"Mumbai\",\n                \"cityNotInTheList\": \"N\",\n                \"school\": \"2\",\n                \"schoolNotInTheList\": \"N\",\n                \"section\": \"3\",\n                \"grade\": \"2\"\n            },\n            \"studentPreferences\": {\n                \"readingLevel\": \"3\",\n                \"dailyPublication\": \"Y\",\n                \"scoresProgressReports\": \"\",\n                \"alertsNotifications\": \"Y\",\n                \"commsEmailId\": \"test_user@gmail.com\"\n            },\n            \"studentSubscription\": {\n                \"editionId\": \"INDIAN\",\n                \"subscriptionSelected\": \"P\",\n                \"startDate\": \"2021-01-02\",\n                \"endDate\": \"2022-02-02\",\n                \"autoRenewal\": \"Y\"\n            },\n            \"studentPayment\": {\n                \"paymentId\": 3,\n                \"editionId\": \"INDIAN\",\n                \"subscriptionType\": \"P\",\n                \"subscriptionPeriod\": \"1Y\",\n                \"paymentCurrency\": \"INR\",\n                \"paymentAmount\": 850.0\n            }\n        },\n        {\n            \"studentControl\": {\n                \"emailId\": \"test_user1@gmail.com\",\n                \"studentDetails\": \"Y\",\n                \"schoolDetails\": \"Y\",\n                \"subscriptionType\": \"P\",\n                \"preferences\": \"Y\",\n                \"emailIdVerified\": \"Y\",\n                \"evalAvailed\": \"Y\"\n            },\n            \"studentRegistration\": {\n                \"emailId\": \"test_user1@gmail.com\",\n                \"password\": \"12345\",\n                \"password1\": \"67890\",\n                \"password2\": \"34567\",\n                \"isDeleted\": \"N\",\n                \"isAccountLocked\": \"N\",\n                \"incorrectLoginAttempts\": 0,\n                \"isActive\": \"Y\",\n                \"theme\": \"\",\n                \"fontHeight\": \"1\",\n                \"avatarName\": \"10.jpg\",\n                \"isTestUser\": \"N\",\n                \"forcePasswordChange\": \"Y\",\n                \"creationDateTime\": \"2021-01-21T21:13:23\"\n            },\n            \"studentDetails\": {\n                \"name\": \"test1\",\n                \"surname\": \"user\",\n                \"otherNames\": \"test1\",\n                \"gender\": \"M\",\n                \"doB\": \"2009-02-18\",\n                \"mobileNumber\": \"9004502606\"\n            },\n            \"studentSchool\": {\n                \"country\": \"IN\",\n                \"countryNotInTheList\": \"N\",\n                \"state\": \"MH\",\n                \"stateNotInTheList\": \"N\",\n                \"city\": \"Mumbai\",\n                \"cityNotInTheList\": \"N\",\n                \"school\": \"2\",\n                \"schoolNotInTheList\": \"N\",\n                \"section\": \"3\",\n                \"grade\": \"2\"\n            },\n            \"studentPreferences\": {\n                \"readingLevel\": \"3\",\n                \"dailyPublication\": \"Y\",\n                \"scoresProgressReports\": \"\",\n                \"alertsNotifications\": \"Y\",\n                \"commsEmailId\": \"test_user1@gmail.com\"\n            },\n            \"studentSubscription\": {\n                \"editionId\": \"INDIAN\",\n                \"subscriptionSelected\": \"P\",\n                \"startDate\": \"2021-01-02\",\n                \"endDate\": \"2022-02-02\",\n                \"autoRenewal\": \"Y\"\n            },\n            \"studentPayment\": {\n                \"paymentId\": 3,\n                \"editionId\": \"INDIAN\",\n                \"subscriptionType\": \"P\",\n                \"subscriptionPeriod\": \"1Y\",\n                \"paymentCurrency\": \"INR\",\n                \"paymentAmount\": 850.0\n            }\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -21895,7 +21954,7 @@
 							"response": []
 						},
 						{
-							"name": "updateCelebration",
+							"name": "listStudentDetails",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -21918,231 +21977,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"Celebration\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"errorCodeId\": 2,\n        \"errorCategory\": \"01\",\n        \"errorDescription\": \"\",\n        \"errorCode\": \"PUB_002\",\n        \"errorMessage\": \"Article {0} not found\"\n    }\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "readCelebration",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									},
-									{
-										"key": "appKey",
-										"type": "text",
-										"value": "{{appKey}}"
-									},
-									{
-										"key": "appName",
-										"type": "text",
-										"value": "{{appName}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"Celebration\",\n        \"action\": \"Read\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"errorCodeId\": 2\n    }\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
-									],
-									"query": [
-										{
-											"key": "appKey",
-											"value": "GODISALMIGHTY",
-											"disabled": true
-										},
-										{
-											"key": "appName",
-											"value": "ENEWSCHAMPADMIN",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "closeCelebration",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									},
-									{
-										"key": "appKey",
-										"type": "text",
-										"value": "{{appKey}}"
-									},
-									{
-										"key": "appName",
-										"type": "text",
-										"value": "{{appName}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"Celebration\",\n        \"action\": \"Close\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"errorCodeId\": 2\n    }\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
-									],
-									"query": [
-										{
-											"key": "appKey",
-											"value": "GODISALMIGHTY",
-											"disabled": true
-										},
-										{
-											"key": "appName",
-											"value": "ENEWSCHAMPADMIN",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "reinstateCelebration",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									},
-									{
-										"key": "appKey",
-										"type": "text",
-										"value": "{{appKey}}"
-									},
-									{
-										"key": "appName",
-										"type": "text",
-										"value": "{{appName}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"Celebration\",\n        \"action\": \"Reinstate\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"errorCodeId\": 2\n    }\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
-									],
-									"query": [
-										{
-											"key": "appKey",
-											"value": "GODISALMIGHTY",
-											"disabled": true
-										},
-										{
-											"key": "appName",
-											"value": "ENEWSCHAMPADMIN",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "listCelebration",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									},
-									{
-										"key": "appKey",
-										"type": "text",
-										"value": "{{appKey}}"
-									},
-									{
-										"key": "appName",
-										"type": "text",
-										"value": "{{appName}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"Celebration\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"errorCodeId\": 2,\n            \"errorCategory\": \"01\"\n        }\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"BulkStudentRegistration\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"studentId\": \"\",\n            \"emailId\": \"\",\n            \"mobileNumber\": \"\",\n            \"name\": \"\",\n            \"surname\": \"\",\n            \"dobFrom\": null,\n            \"dobTo\": null,\n            \"gender\": \"\",\n            \"avatar\": \"\",\n            \"photo\": \"\",\n            \"theme\": \"\",\n            \"subscriptionType\": \"\",\n            \"evalAvailed\": \"\",\n            \"schoolDetails\": \"\",\n            \"studentDetails\": \"\",\n            \"isAccountLocked\": \"\",\n            \"isActive\": \"\",\n            \"isDeleted\": \"\",\n            \"lastLoginTime\": null,\n            \"country\": \"\",\n            \"countryNotInTheList\": \"\",\n            \"state\": \"\",\n            \"stateNotInTheList\": \"\",\n            \"city\": \"\",\n            \"cityNotInTheList\": \"\",\n            \"school\": \"\",\n            \"schoolNotInTheList\": \"\",\n            \"grade\": \"\",\n            \"readingLevel\": \"\",\n            \"dailyPublication\": \"\",\n            \"scoresProgressReports\": \"\",\n            \"alertsNotifications\": \"\",\n            \"startDateFrom\": null,\n            \"startDateTo\": null,\n            \"endDateFrom\": null,\n            \"endDateTo\": null,\n            \"autoRenewal\": \"\",\n            \"createDateFrom\": \"2021-01-21T21:13:23\",\n            \"createDateTo\": \"2021-02-19T19:08:34\"\n        }\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -22609,7 +22444,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"PublicationDailySummary\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"publicationDate\": \"2020-05-27\"\n        }\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"PublicationDailySummary\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 2,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"publicationDate\": \"2020-05-27\"\n        }\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
