@@ -99,7 +99,7 @@ public class EntitlementPageHandler implements IPageHandler {
 	private PageDTO createEntitlement(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EntitlementPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		Entitlement entitlement = mapEntitlementData(pageRequest, pageData);
 		entitlement = entitlementService.create(entitlement);
 		mapEntitlement(pageRequest, pageDto, entitlement);
@@ -126,7 +126,7 @@ public class EntitlementPageHandler implements IPageHandler {
 	private PageDTO updateEntitlement(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EntitlementPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		Entitlement entitlement = mapEntitlementData(pageRequest, pageData);
 		entitlement = entitlementService.update(entitlement);
 		mapEntitlement(pageRequest, pageDto, entitlement);
@@ -211,15 +211,4 @@ public class EntitlementPageHandler implements IPageHandler {
 		return entitlementPageDataList;
 	}
 
-	private void validateData(EntitlementPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<EntitlementPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error(e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
-	}
 }

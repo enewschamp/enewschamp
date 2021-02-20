@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.entitlement.repository.Entitlement;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.admin.schoolreport.entity.SchoolReport;
 import com.enewschamp.app.admin.schoolreport.service.SchoolReportService;
@@ -47,7 +48,6 @@ public class SchoolReportPageHandler implements IPageHandler {
 	private ModelMapper modelMapper;
 	@Autowired
 	private ObjectMapper objectMapper;
-	private Validator validator;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -100,7 +100,7 @@ public class SchoolReportPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		SchoolReportPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				SchoolReportPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		SchoolReport schoolReport = mapSchoolReportData(pageRequest, pageData);
 		schoolReport = schoolReportService.create(schoolReport);
 		mapSchoolReport(pageRequest, pageDto, schoolReport);
@@ -112,7 +112,7 @@ public class SchoolReportPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		SchoolReportPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				SchoolReportPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		SchoolReport schoolReport = mapSchoolReportData(pageRequest, pageData);
 		schoolReport = schoolReportService.update(schoolReport);
 		mapSchoolReport(pageRequest, pageDto, schoolReport);
@@ -220,15 +220,4 @@ public class SchoolReportPageHandler implements IPageHandler {
 		return schoolReportPageDataList;
 	}
 
-	private void validateData(SchoolReportPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<SchoolReportPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error("Validation failed: " + e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
-	}
 }

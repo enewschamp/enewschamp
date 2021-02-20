@@ -3,13 +3,7 @@ package com.enewschamp.app.admin.student.details.handler;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +13,6 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -29,16 +22,13 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
-import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
 import com.enewschamp.subscription.domain.service.StudentDetailsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 @Component("StudentDetailPageHandler")
-@Slf4j
 public class StudentDetailsPageHandler implements IPageHandler {
 
 	@Autowired
@@ -47,7 +37,6 @@ public class StudentDetailsPageHandler implements IPageHandler {
 	private ModelMapper modelMapper;
 	@Autowired
 	private ObjectMapper objectMapper;
-	private Validator validator;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -100,7 +89,7 @@ public class StudentDetailsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		StudentDetailsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				StudentDetailsPageData.class);
-		validateData(pageData);
+		validate(pageData, this.getClass().getName());
 		StudentDetails studentDetails = mapStudentDetailsData(pageRequest, pageData);
 		studentDetails = studentDetailsService.create(studentDetails);
 		mapStudentDetails(pageRequest, pageDto, studentDetails);
@@ -112,7 +101,7 @@ public class StudentDetailsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		StudentDetailsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				StudentDetailsPageData.class);
-		validateData(pageData);
+		validate(pageData, this.getClass().getName());
 		StudentDetails studentDetails = mapStudentDetailsData(pageRequest, pageData);
 		studentDetails = studentDetailsService.update(studentDetails);
 		mapStudentDetails(pageRequest, pageDto, studentDetails);
@@ -175,8 +164,7 @@ public class StudentDetailsPageHandler implements IPageHandler {
 		return dto;
 	}
 
-	private void mapStudentDetails(PageRequestDTO pageRequest, PageDTO pageDto,
-			StudentDetails studentDetails) {
+	private void mapStudentDetails(PageRequestDTO pageRequest, PageDTO pageDto, StudentDetails studentDetails) {
 		StudentDetailsPageData pageData;
 		mapHeaderData(pageRequest, pageDto);
 		pageData = mapPageData(studentDetails);
@@ -192,16 +180,14 @@ public class StudentDetailsPageHandler implements IPageHandler {
 		pageDto.getHeader().setDeviceId(null);
 	}
 
-	private StudentDetails mapStudentDetailsData(PageRequestDTO pageRequest,
-			StudentDetailsPageData pageData) {
+	private StudentDetails mapStudentDetailsData(PageRequestDTO pageRequest, StudentDetailsPageData pageData) {
 		StudentDetails studentDetails = modelMapper.map(pageData, StudentDetails.class);
 		studentDetails.setRecordInUse(RecordInUseType.Y);
 		return studentDetails;
 	}
 
 	private StudentDetailsPageData mapPageData(StudentDetails studentDetails) {
-		StudentDetailsPageData pageData = modelMapper.map(studentDetails,
-				StudentDetailsPageData.class);
+		StudentDetailsPageData pageData = modelMapper.map(studentDetails, StudentDetailsPageData.class);
 		pageData.setLastUpdate(studentDetails.getOperationDateTime());
 		return pageData;
 	}
@@ -211,24 +197,11 @@ public class StudentDetailsPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<StudentDetails> pageDataList = page.getContent();
 			for (StudentDetails studentDetails : pageDataList) {
-				StudentDetailsPageData pageData = modelMapper.map(studentDetails,
-						StudentDetailsPageData.class);
+				StudentDetailsPageData pageData = modelMapper.map(studentDetails, StudentDetailsPageData.class);
 				pageData.setLastUpdate(studentDetails.getOperationDateTime());
 				studentDetailsPageDataList.add(pageData);
 			}
 		}
 		return studentDetailsPageDataList;
-	}
-
-	private void validateData(StudentDetailsPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<StudentDetailsPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error("Validation failed: " + e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
 	}
 }

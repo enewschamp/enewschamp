@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.entitlement.repository.Entitlement;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
@@ -47,7 +48,6 @@ public class SchoolPricingPageHandler implements IPageHandler {
 	private ModelMapper modelMapper;
 	@Autowired
 	private ObjectMapper objectMapper;
-	private Validator validator;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -100,7 +100,7 @@ public class SchoolPricingPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		SchoolPricingPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				SchoolPricingPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		SchoolPricing schoolPricing = mapSchoolPricingData(pageRequest, pageData);
 		schoolPricing = schoolPricingService.create(schoolPricing);
 		mapSchoolPricing(pageRequest, pageDto, schoolPricing);
@@ -112,7 +112,7 @@ public class SchoolPricingPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		SchoolPricingPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				SchoolPricingPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		SchoolPricing schoolPricing = mapSchoolPricingData(pageRequest, pageData);
 		schoolPricing = schoolPricingService.update(schoolPricing);
 		mapSchoolPricing(pageRequest, pageDto, schoolPricing);
@@ -220,15 +220,4 @@ public class SchoolPricingPageHandler implements IPageHandler {
 		return schoolPricingPageDataList;
 	}
 
-	private void validateData(SchoolPricingPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<SchoolPricingPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error("Validation failed: " + e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
-	}
 }

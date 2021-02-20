@@ -1,12 +1,6 @@
 package com.enewschamp.app.admin.student.school.nonlist.handler;
 
 import java.time.LocalDateTime;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.student.school.handler.StudentSchoolPageHandler;
-import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -57,7 +50,6 @@ public class NotInTheListPageHandler implements IPageHandler {
 	private ModelMapper modelMapper;
 	@Autowired
 	private ObjectMapper objectMapper;
-	private Validator validator;
 
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
@@ -98,7 +90,7 @@ public class NotInTheListPageHandler implements IPageHandler {
 	private PageDTO updateStudentSchoolNotInTheList(PageRequestDTO pageRequest) {
 		StudentSchoolNotInTheListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				StudentSchoolNotInTheListPageData.class);
-		validateData(pageData);
+		validate(pageData, this.getClass().getName());
 		PageDTO dto = performUpdation(pageData, pageRequest);
 		return dto;
 	}
@@ -199,18 +191,6 @@ public class NotInTheListPageHandler implements IPageHandler {
 			System.out.println(existingStuSchool1);
 		}
 		return existingStuSchool;
-	}
-
-	private void validateData(StudentSchoolNotInTheListPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<StudentSchoolNotInTheListPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error("Validation failed: " + e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
 	}
 
 }

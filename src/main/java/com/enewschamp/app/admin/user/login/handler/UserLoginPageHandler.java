@@ -3,13 +3,7 @@ package com.enewschamp.app.admin.user.login.handler;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +13,6 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -31,14 +24,11 @@ import com.enewschamp.app.user.login.service.UserLoginService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
-import com.enewschamp.problem.BusinessException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 @Component("UserLoginPageHandler")
-@Slf4j
 public class UserLoginPageHandler implements IPageHandler {
 	@Autowired
 	private UserLoginService userLoginService;
@@ -46,7 +36,6 @@ public class UserLoginPageHandler implements IPageHandler {
 	ModelMapper modelMapper;
 	@Autowired
 	ObjectMapper objectMapper;
-	private Validator validator;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -95,7 +84,7 @@ public class UserLoginPageHandler implements IPageHandler {
 	private PageDTO createUserLogin(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserLoginPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserLoginPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		UserLogin userLogin = mapUserLoginData(pageRequest, pageData);
 		userLogin = userLoginService.create(userLogin);
 		mapUserLogin(pageRequest, pageDto, userLogin);
@@ -122,7 +111,7 @@ public class UserLoginPageHandler implements IPageHandler {
 	private PageDTO updateUserLogin(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserLoginPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserLoginPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		UserLogin userLogin = mapUserLoginData(pageRequest, pageData);
 		userLogin = userLoginService.update(userLogin);
 		mapUserLogin(pageRequest, pageDto, userLogin);
@@ -207,15 +196,5 @@ public class UserLoginPageHandler implements IPageHandler {
 		return userLoginPageDataList;
 	}
 
-	private void validateData(UserLoginPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<UserLoginPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error(e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
-	}
+
 }

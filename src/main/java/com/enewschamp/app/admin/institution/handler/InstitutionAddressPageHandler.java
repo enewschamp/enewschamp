@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.entitlement.repository.Entitlement;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.admin.institution.entity.InstitutionAddress;
 import com.enewschamp.app.admin.institution.service.InstitutionAddressService;
@@ -99,7 +100,7 @@ public class InstitutionAddressPageHandler implements IPageHandler {
 	private PageDTO createInstitutionAddress(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		InstitutionAddressPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), InstitutionAddressPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		InstitutionAddress institutionAddress = mapInstitutionAddressData(pageRequest, pageData);
 		institutionAddress = institutionAddressService.create(institutionAddress);
 		mapInstitutionAddress(pageRequest, pageDto, institutionAddress);
@@ -110,7 +111,7 @@ public class InstitutionAddressPageHandler implements IPageHandler {
 	private PageDTO updateInstitutionAddress(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		InstitutionAddressPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), InstitutionAddressPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		InstitutionAddress institutionAddress = mapInstitutionAddressData(pageRequest, pageData);
 		institutionAddress = institutionAddressService.update(institutionAddress);
 		mapInstitutionAddress(pageRequest, pageDto, institutionAddress);
@@ -211,15 +212,4 @@ public class InstitutionAddressPageHandler implements IPageHandler {
 		return InstitutionAddressPageDataList;
 	}
 
-	private void validateData(InstitutionAddressPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<InstitutionAddressPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error("Validation failed: " + e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
-	}
 }

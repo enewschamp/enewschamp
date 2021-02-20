@@ -97,7 +97,7 @@ public class CountryPageHandler implements IPageHandler {
 	private PageDTO createCountry(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		CountryPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CountryPageData.class);
-		validateData(pageData);
+		validate(pageData, this.getClass().getName());
 		Country country = mapCountryData(pageRequest, pageData);
 		country = countryService.create(country);
 		mapCountry(pageRequest, pageDto, country);
@@ -108,7 +108,7 @@ public class CountryPageHandler implements IPageHandler {
 	private PageDTO updateCountry(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		CountryPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CountryPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		Country country = mapCountryData(pageRequest, pageData);
 		country = countryService.update(country);
 		mapCountry(pageRequest, pageDto, country);
@@ -205,17 +205,5 @@ public class CountryPageHandler implements IPageHandler {
 			}
 		}
 		return countryPageDataList;
-	}
-
-	private void validateData(CountryPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<CountryPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error("Validation failed: " + e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
 	}
 }

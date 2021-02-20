@@ -4,13 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +14,6 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -30,17 +23,14 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
-import com.enewschamp.problem.BusinessException;
 import com.enewschamp.user.domain.entity.UserLeave;
 import com.enewschamp.user.domain.entity.UserLeaveKey;
 import com.enewschamp.user.domain.service.UserLeaveService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 @Component("UserLeavePageHandler")
-@Slf4j
 public class UserLeavePageHandler implements IPageHandler {
 	@Autowired
 	private UserLeaveService userLeaveService;
@@ -48,7 +38,6 @@ public class UserLeavePageHandler implements IPageHandler {
 	ModelMapper modelMapper;
 	@Autowired
 	ObjectMapper objectMapper;
-	private Validator validator;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -100,7 +89,7 @@ public class UserLeavePageHandler implements IPageHandler {
 	private PageDTO createUserLeave(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserLeavePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserLeavePageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		UserLeave userLeave = mapUserLeaveData(pageRequest, pageData);
 		if (pageData.getUpdateApplicationDateTime() != null && pageData.getUpdateApplicationDateTime().equals("Y"))
 			userLeave.setApplicationDateTime(LocalDateTime.now());
@@ -130,7 +119,7 @@ public class UserLeavePageHandler implements IPageHandler {
 	private PageDTO updateUserLeave(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserLeavePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserLeavePageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		UserLeave userLeave = mapUserLeaveData(pageRequest, pageData);
 		if (pageData.getUpdateApplicationDateTime() != null && pageData.getUpdateApplicationDateTime().equals("Y"))
 			userLeave.setApplicationDateTime(LocalDateTime.now());
@@ -234,16 +223,5 @@ public class UserLeavePageHandler implements IPageHandler {
 		}
 		return userLeavePageDataList;
 	}
-
-	private void validateData(UserLeavePageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<UserLeavePageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error(e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
-	}
+	
 }

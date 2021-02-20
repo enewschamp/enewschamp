@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.admin.entitlement.repository.Entitlement;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.admin.schoolchain.entity.SchoolChain;
 import com.enewschamp.app.admin.schoolchain.service.SchoolChainService;
@@ -46,7 +47,6 @@ public class SchoolChainPageHandler implements IPageHandler {
 	ModelMapper modelMapper;
 	@Autowired
 	ObjectMapper objectMapper;
-	private Validator validator;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -99,7 +99,7 @@ public class SchoolChainPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		SchoolChainPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				SchoolChainPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		SchoolChain schoolChain = mapSchoolChainData(pageRequest, pageData);
 		schoolChain = schoolChainService.create(schoolChain);
 		mapSchoolChain(pageRequest, pageDto, schoolChain);
@@ -111,7 +111,7 @@ public class SchoolChainPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		SchoolChainPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				SchoolChainPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		SchoolChain schoolChain = mapSchoolChainData(pageRequest, pageData);
 		schoolChain = schoolChainService.update(schoolChain);
 		mapSchoolChain(pageRequest, pageDto, schoolChain);
@@ -212,15 +212,4 @@ public class SchoolChainPageHandler implements IPageHandler {
 		return schoolChainPageDataList;
 	}
 
-	private void validateData(SchoolChainPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<SchoolChainPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error("Validation failed: " + e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
-	}
 }

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.entitlement.repository.Entitlement;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.admin.institutionstakeholder.entity.InstitutionStakeholder;
 import com.enewschamp.app.admin.institutionstakeholder.service.InstitutionStakeholderService;
@@ -100,7 +101,7 @@ public class InstitutionStakeholderPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		InstitutionStakeholderPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				InstitutionStakeholderPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		InstitutionStakeholder institutionStakeholder = mapInstitutionStakeholderData(pageRequest, pageData);
 		institutionStakeholder = instStackHolderService.create(institutionStakeholder);
 		mapInstitutionStakeholder(pageRequest, pageDto, institutionStakeholder);
@@ -112,7 +113,7 @@ public class InstitutionStakeholderPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		InstitutionStakeholderPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				InstitutionStakeholderPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		InstitutionStakeholder institutionStakeholder = mapInstitutionStakeholderData(pageRequest, pageData);
 		institutionStakeholder = instStackHolderService.update(institutionStakeholder);
 		mapInstitutionStakeholder(pageRequest, pageDto, institutionStakeholder);
@@ -220,15 +221,4 @@ public class InstitutionStakeholderPageHandler implements IPageHandler {
 		return institutionStakeholderPageDataList;
 	}
 
-	private void validateData(InstitutionStakeholderPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<InstitutionStakeholderPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error("Validation failed: " + e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
-	}
 }

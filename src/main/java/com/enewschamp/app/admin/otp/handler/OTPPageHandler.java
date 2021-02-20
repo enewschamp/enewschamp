@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.entitlement.repository.Entitlement;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
@@ -100,7 +101,7 @@ public class OTPPageHandler implements IPageHandler {
 	private PageDTO createOTP(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		OTPPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), OTPPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		OTP otp = mapOTPData(pageRequest, pageData);
 		if (StringUtils.isEmpty(otp.getOtpGenTime()))
 			otp.setOtpGenTime(LocalDateTime.now());
@@ -129,7 +130,7 @@ public class OTPPageHandler implements IPageHandler {
 	private PageDTO updateOTP(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		OTPPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), OTPPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		OTP otp = mapOTPData(pageRequest, pageData);
 		otp = otpService.update(otp);
 		mapOTP(pageRequest, pageDto, otp);
@@ -214,15 +215,4 @@ public class OTPPageHandler implements IPageHandler {
 		return otpPageDataList;
 	}
 
-	private void validateData(OTPPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<OTPPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error(e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
-	}
 }

@@ -3,13 +3,7 @@ package com.enewschamp.app.admin.school.handler;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +13,6 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -31,7 +24,6 @@ import com.enewschamp.app.school.service.SchoolService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
-import com.enewschamp.problem.BusinessException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
@@ -47,7 +39,7 @@ public class SchoolPageHandler implements IPageHandler {
 	ModelMapper modelMapper;
 	@Autowired
 	ObjectMapper objectMapper;
-	private Validator validator;
+
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -99,7 +91,7 @@ public class SchoolPageHandler implements IPageHandler {
 	private PageDTO createSchool(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		SchoolPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), SchoolPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		School school = mapSchoolData(pageRequest, pageData);
 		school = schoolService.create(school);
 		mapSchool(pageRequest, pageDto, school);
@@ -110,7 +102,7 @@ public class SchoolPageHandler implements IPageHandler {
 	private PageDTO updateSchool(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		SchoolPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), SchoolPageData.class);
-		validateData(pageData);
+		validate(pageData,  this.getClass().getName());
 		School school = mapSchoolData(pageRequest, pageData);
 		school = schoolService.update(school);
 		mapSchool(pageRequest, pageDto, school);
@@ -210,17 +202,5 @@ public class SchoolPageHandler implements IPageHandler {
 			}
 		}
 		return SchoolPageDataList;
-	}
-
-	private void validateData(SchoolPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<SchoolPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error("Validation failed: " + e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
 	}
 }

@@ -3,13 +3,7 @@ package com.enewschamp.app.admin.student.badges.handler;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +13,6 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
-import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -31,14 +24,11 @@ import com.enewschamp.app.student.badges.service.StudentBadgesService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
-import com.enewschamp.problem.BusinessException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 @Component("StudentBadgesPageHandler")
-@Slf4j
 public class StudentBadgesPageHandler implements IPageHandler {
 	@Autowired
 	private StudentBadgesService studentBadgesService;
@@ -46,7 +36,6 @@ public class StudentBadgesPageHandler implements IPageHandler {
 	ModelMapper modelMapper;
 	@Autowired
 	ObjectMapper objectMapper;
-	private Validator validator;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -97,8 +86,9 @@ public class StudentBadgesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createStudentBadge(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentBadgesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentBadgesPageData.class);
-		validateData(pageData);
+		StudentBadgesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentBadgesPageData.class);
+		validate(pageData, this.getClass().getName());
 		StudentBadges studentBadges = mapStudentBadgesData(pageRequest, pageData);
 		studentBadges = studentBadgesService.create(studentBadges);
 		mapStudentBadges(pageRequest, pageDto, studentBadges);
@@ -124,8 +114,9 @@ public class StudentBadgesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updateStudentBadge(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentBadgesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentBadgesPageData.class);
-		validateData(pageData);
+		StudentBadgesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentBadgesPageData.class);
+		validate(pageData, this.getClass().getName());
 		StudentBadges studentBadges = mapStudentBadgesData(pageRequest, pageData);
 		studentBadges = studentBadgesService.update(studentBadges);
 		mapStudentBadges(pageRequest, pageDto, studentBadges);
@@ -142,7 +133,8 @@ public class StudentBadgesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readStudentBadge(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentBadgesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentBadgesPageData.class);
+		StudentBadgesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentBadgesPageData.class);
 		StudentBadges studentBadges = modelMapper.map(pageData, StudentBadges.class);
 		studentBadges = studentBadgesService.read(studentBadges);
 		mapStudentBadges(pageRequest, pageDto, studentBadges);
@@ -152,7 +144,8 @@ public class StudentBadgesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reInstateStudentBadge(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentBadgesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentBadgesPageData.class);
+		StudentBadgesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentBadgesPageData.class);
 		StudentBadges studentBadges = modelMapper.map(pageData, StudentBadges.class);
 		studentBadges = studentBadgesService.reInstate(studentBadges);
 		mapStudentBadges(pageRequest, pageDto, studentBadges);
@@ -168,7 +161,8 @@ public class StudentBadgesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closeStudentBadge(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentBadgesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentBadgesPageData.class);
+		StudentBadgesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentBadgesPageData.class);
 		StudentBadges studentBadges = modelMapper.map(pageData, StudentBadges.class);
 		studentBadges = studentBadgesService.close(studentBadges);
 		mapStudentBadges(pageRequest, pageDto, studentBadges);
@@ -202,23 +196,12 @@ public class StudentBadgesPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<StudentBadges> pageDataList = page.getContent();
 			for (StudentBadges studentBadges : pageDataList) {
-				StudentBadgesPageData studentBadgesPageData = modelMapper.map(studentBadges, StudentBadgesPageData.class);
+				StudentBadgesPageData studentBadgesPageData = modelMapper.map(studentBadges,
+						StudentBadgesPageData.class);
 				studentBadgesPageData.setLastUpdate(studentBadges.getOperationDateTime());
 				studentBadgesPageDataList.add(studentBadgesPageData);
 			}
 		}
 		return studentBadgesPageDataList;
-	}
-
-	private void validateData(StudentBadgesPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<StudentBadgesPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error(e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST, CommonConstants.DATA);
-		}
 	}
 }
