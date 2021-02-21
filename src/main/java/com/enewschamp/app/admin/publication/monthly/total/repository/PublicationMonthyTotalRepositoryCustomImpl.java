@@ -17,15 +17,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.article.monthly.ArticlePublicationMonthlyGenre;
 import com.enewschamp.app.admin.article.monthly.total.ArticlePublicationMonthlyTotal;
 import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class PublicationMonthyTotalRepositoryCustomImpl extends RepositoryImpl
-		implements IGenericListRepository<ArticlePublicationMonthlyTotal> {
+		implements IGenericListRepository<ArticlePublicationMonthlyTotal>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -38,13 +38,13 @@ public class PublicationMonthyTotalRepositoryCustomImpl extends RepositoryImpl
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getReadingLevel()))
-			filterPredicates.add(cb.equal(monthlySummaryRoot.get("readingLevel"), searchRequest.getReadingLevel()));
+			filterPredicates.add(cb.equal(monthlySummaryRoot.get(READING_LEVEL), searchRequest.getReadingLevel()));
 
 		if (!StringUtils.isEmpty(searchRequest.getYearMonth()))
-			filterPredicates.add(cb.equal(monthlySummaryRoot.get("yearMonth"), searchRequest.getYearMonth()));
+			filterPredicates.add(cb.equal(monthlySummaryRoot.get(YEAR_MONTH), searchRequest.getYearMonth()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
-		criteriaQuery.orderBy(cb.desc(monthlySummaryRoot.get("yearMonth")));
+		criteriaQuery.orderBy(cb.desc(monthlySummaryRoot.get(YEAR_MONTH)));
 		// Build query
 		TypedQuery<ArticlePublicationMonthlyTotal> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {

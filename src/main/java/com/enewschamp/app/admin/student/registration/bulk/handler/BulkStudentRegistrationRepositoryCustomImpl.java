@@ -50,11 +50,9 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 		Root<StudentPreferences> studentPreferencesRoot = criteriaQuery.from(StudentPreferences.class);
 		Root<StudentSubscription> studentSubscriptionRoot = criteriaQuery.from(StudentSubscription.class);
 		Root<StudentRegistration> studentRegistrationRoot = criteriaQuery.from(StudentRegistration.class);
-	//	Root<StudentActivity> studentActivityRoot = criteriaQuery.from(StudentActivity.class);
 		
 		List<Predicate> filterPredicates = new ArrayList<>();
 
-	//	filterPredicates.add(cb.equal(studentRegistrationRoot.get("studentId"), studentActivityRoot.get("studentId")));
 		filterPredicates
 				.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentSubscriptionRoot.get(STUDENT_ID)));
 		filterPredicates

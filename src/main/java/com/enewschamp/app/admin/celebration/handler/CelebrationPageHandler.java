@@ -1,15 +1,8 @@
 package com.enewschamp.app.admin.celebration.handler;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +15,19 @@ import com.enewschamp.app.admin.celebration.service.CelebrationService;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.CommonService;
-import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PageStatus;
-import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
-import com.enewschamp.problem.BusinessException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 @Component("CelebrationPageHandler")
-@Slf4j
 public class CelebrationPageHandler implements IPageHandler {
 	@Autowired
 	private CelebrationService celebrationService;
@@ -52,8 +40,6 @@ public class CelebrationPageHandler implements IPageHandler {
 	
 	@Autowired
 	ObjectMapper objectMapper;
-	
-	private Validator validator;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
@@ -105,7 +91,7 @@ public class CelebrationPageHandler implements IPageHandler {
 	private PageDTO createCelebration(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		CelebrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CelebrationPageData.class);
-		validate(pageData);
+		validate(pageData, this.getClass().getName());
 		Celebration celebration = mapCelebrationData(pageRequest, pageData);
 		celebration = celebrationService.create(celebration);
 		String newImageName = celebration.getCelebrationId() + "_" + System.currentTimeMillis();
@@ -130,7 +116,7 @@ public class CelebrationPageHandler implements IPageHandler {
 	private PageDTO updateCelebration(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		CelebrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CelebrationPageData.class);
-		validate(pageData);
+		validate(pageData, this.getClass().getName());
 		Celebration celebration = mapCelebrationData(pageRequest, pageData);
 		celebration = celebrationService.update(celebration);
 		mapCelebration(pageRequest, pageDto, celebration);
@@ -215,15 +201,4 @@ public class CelebrationPageHandler implements IPageHandler {
 		return celebrationPageDataList;
 	}
 
-	private void validate(CelebrationPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<CelebrationPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.info(e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
-		}
-	}
 }

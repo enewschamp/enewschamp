@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,7 @@ import com.enewschamp.app.user.login.entity.UserActivityTracker;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class UserActivityTrackerRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<UserActivityTracker> {
+public class UserActivityTrackerRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<UserActivityTracker>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,19 +38,19 @@ public class UserActivityTrackerRepositoryCustomImpl extends RepositoryImpl impl
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getUserId()))
-			filterPredicates.add(cb.equal(userActivityTrackerRoot.get("userId"), searchRequest.getUserId()));
+			filterPredicates.add(cb.equal(userActivityTrackerRoot.get(USER_ID), searchRequest.getUserId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getUserType()))
-			filterPredicates.add(cb.equal(userActivityTrackerRoot.get("userType"), searchRequest.getUserType()));
+			filterPredicates.add(cb.equal(userActivityTrackerRoot.get(USER_TYPE), searchRequest.getUserType()));
 
 		if (!StringUtils.isEmpty(searchRequest.getDeviceId()))
-			filterPredicates.add(cb.equal(userActivityTrackerRoot.get("deviceId"), searchRequest.getDeviceId()));
+			filterPredicates.add(cb.equal(userActivityTrackerRoot.get(DEVICE_ID), searchRequest.getDeviceId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getActionPerformed()))
-			filterPredicates.add(cb.equal(userActivityTrackerRoot.get("actionPerformed"), searchRequest.getActionPerformed()));
+			filterPredicates.add(cb.equal(userActivityTrackerRoot.get(ACTION_PERFORMED), searchRequest.getActionPerformed()));
 
 		if (!StringUtils.isEmpty(searchRequest.getActionStatus()))
-			filterPredicates.add(cb.equal(userActivityTrackerRoot.get("actionStatus"), searchRequest.getActionStatus()));
+			filterPredicates.add(cb.equal(userActivityTrackerRoot.get(ACTION_STATUS), searchRequest.getActionStatus()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(userActivityTrackerRoot.get(CommonConstants.OPERATION_DATE_TIME)));

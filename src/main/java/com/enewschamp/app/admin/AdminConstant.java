@@ -92,4 +92,13 @@ public interface AdminConstant {
 	public static String APP_NAME = "appName";
 	public static String ERROR_CODE_ID = "errorCodeId";
 	public static String ERROR_CATEGORY = "errorCategory";
+	public static String ACTION_PERFORMED = "actionPerformed";
+	public static String ACTION_STATUS = "actionStatus";
+	public static String NEWS_ARTICLE_ID = "newsArticleId";
+	public static String REACTION = "reaction";
+	public static String SAVED = "saved";
+	public static String OPINIOIN = "opinion";
+	public static String QUIZ_SCORE = "quizScore";
+	public static String SUBSCRIPTION_PERIOD = "subscriptionPeriod";
+	
 }

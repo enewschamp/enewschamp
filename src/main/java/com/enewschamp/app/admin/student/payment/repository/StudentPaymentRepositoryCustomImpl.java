@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -24,7 +25,7 @@ import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.subscription.domain.entity.StudentPayment;
 
 @Repository
-public class StudentPaymentRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<StudentPayment> {
+public class StudentPaymentRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<StudentPayment>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -37,16 +38,16 @@ public class StudentPaymentRepositoryCustomImpl extends RepositoryImpl implement
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentPaymentRoot.get("studentId"), searchRequest.getStudentId()));
+			filterPredicates.add(cb.equal(studentPaymentRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getEditionId()))
-			filterPredicates.add(cb.equal(studentPaymentRoot.get("editionId"), searchRequest.getEditionId()));
+			filterPredicates.add(cb.equal(studentPaymentRoot.get(EDITION_ID), searchRequest.getEditionId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSubscriptionType()))
-			filterPredicates.add(cb.equal(studentPaymentRoot.get("subscriptionType"), searchRequest.getSubscriptionType()));
+			filterPredicates.add(cb.equal(studentPaymentRoot.get(SUBSCRIPTION_TYPE), searchRequest.getSubscriptionType()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSubscriptionPeriod()))
-			filterPredicates.add(cb.equal(studentPaymentRoot.get("subscriptionPeriod"), searchRequest.getSubscriptionPeriod()));
+			filterPredicates.add(cb.equal(studentPaymentRoot.get(SUBSCRIPTION_PERIOD), searchRequest.getSubscriptionPeriod()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentPaymentRoot.get(CommonConstants.OPERATION_DATE_TIME)));

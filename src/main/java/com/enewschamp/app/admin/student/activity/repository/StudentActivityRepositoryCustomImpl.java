@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
@@ -25,7 +26,7 @@ import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
 public class StudentActivityRepositoryCustomImpl extends RepositoryImpl
-		implements IGenericListRepository<StudentActivity> {
+		implements IGenericListRepository<StudentActivity>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -38,37 +39,37 @@ public class StudentActivityRepositoryCustomImpl extends RepositoryImpl
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentActivityRoot.get("studentId"), searchRequest.getStudentId()));
+			filterPredicates.add(cb.equal(studentActivityRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getEditionId()))
-			filterPredicates.add(cb.equal(studentActivityRoot.get("editionId"), searchRequest.getEditionId()));
+			filterPredicates.add(cb.equal(studentActivityRoot.get(EDITION_ID), searchRequest.getEditionId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getNewsArticleId()))
-			filterPredicates.add(cb.equal(studentActivityRoot.get("newsArticleId"), searchRequest.getNewsArticleId()));
+			filterPredicates.add(cb.equal(studentActivityRoot.get(NEWS_ARTICLE_ID), searchRequest.getNewsArticleId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getReadingLevel()))
-			filterPredicates.add(cb.equal(studentActivityRoot.get("readingLevel"), searchRequest.getReadingLevel()));
+			filterPredicates.add(cb.equal(studentActivityRoot.get(READING_LEVEL), searchRequest.getReadingLevel()));
 
 		if (!StringUtils.isEmpty(searchRequest.getReaction()))
-			filterPredicates.add(cb.equal(studentActivityRoot.get("reaction"), searchRequest.getReaction()));
+			filterPredicates.add(cb.equal(studentActivityRoot.get(REACTION), searchRequest.getReaction()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSaved()))
-			filterPredicates.add(cb.equal(studentActivityRoot.get("saved"), searchRequest.getSaved()));
+			filterPredicates.add(cb.equal(studentActivityRoot.get(SAVED), searchRequest.getSaved()));
 
 		if (!StringUtils.isEmpty(searchRequest.getOpinionPresent()) && searchRequest.getOpinionPresent().equals("Y")) {
-			filterPredicates.add(cb.and(cb.isNotNull(studentActivityRoot.get("opinion")),
-					cb.notEqual(cb.trim(studentActivityRoot.get("opinion")), "")));
+			filterPredicates.add(cb.and(cb.isNotNull(studentActivityRoot.get(OPINIOIN)),
+					cb.notEqual(cb.trim(studentActivityRoot.get(OPINIOIN)), "")));
 		}
 		if (!StringUtils.isEmpty(searchRequest.getOpinionPresent()) && searchRequest.getOpinionPresent().equals("N")) {
-			filterPredicates.add(cb.or(cb.isNull(studentActivityRoot.get("opinion")),
-					cb.equal(cb.trim(studentActivityRoot.get("opinion")), "")));
+			filterPredicates.add(cb.or(cb.isNull(studentActivityRoot.get(OPINIOIN)),
+					cb.equal(cb.trim(studentActivityRoot.get(OPINIOIN)), "")));
 		}
 
 		if (!StringUtils.isEmpty(searchRequest.getQuizScore()))
-			filterPredicates.add(cb.equal(studentActivityRoot.get("quizScore"), searchRequest.getQuizScore()));
+			filterPredicates.add(cb.equal(studentActivityRoot.get(QUIZ_SCORE), searchRequest.getQuizScore()));
 
 		if (!StringUtils.isEmpty(searchRequest.getDateFrom()) && !StringUtils.isEmpty(searchRequest.getDateTo()))
-			filterPredicates.add(cb.between(studentActivityRoot.get("operationDateTime"), searchRequest.getDateFrom(),
+			filterPredicates.add(cb.between(studentActivityRoot.get(CommonConstants.OPERATION_DATE_TIME), searchRequest.getDateFrom(),
 					searchRequest.getDateTo()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
