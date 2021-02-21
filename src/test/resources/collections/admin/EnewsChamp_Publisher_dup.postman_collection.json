@@ -5329,10 +5329,10 @@
 			"name": "Admin",
 			"item": [
 				{
-					"name": "login",
+					"name": "Authentication",
 					"item": [
 						{
-							"name": "login",
+							"name": "Login",
 							"event": [
 								{
 									"listen": "test",
@@ -5365,12 +5365,12 @@
 									},
 									{
 										"key": "appName",
-										"value": "ENEWSCHAMPADMIN",
+										"value": "{{appName}}",
 										"type": "text"
 									},
 									{
 										"key": "appKey",
-										"value": "GODISALMIGHTY",
+										"value": "{{appKey}}",
 										"type": "text"
 									}
 								],
@@ -5384,16 +5384,118 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "appName",
+										"value": "{{appName}}"
+									},
+									{
+										"key": "appKey",
+										"value": "{{appKey}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"header\": {\n        \"module\": \"Admin\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"Login\",\n        \"action\": \"logout\",\n        \"operation\": \"\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"editionId\": \"INDIAN\"\n    },\n    \"data\": {}\n}"
+								},
+								"url": {
+									"raw": "{{admin-endpoint-url}}",
+									"host": [
+										"{{admin-endpoint-url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RefreshToken",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var reqJSONData =JSON.parse(request.data);",
+											"var resJSONData = JSON.parse(responseBody);",
+											"if(resJSONData.header.requestStatus==\"S\"){",
+											"    pm.environment.set(\"userId\", reqJSONData.header.userId);",
+											"    pm.environment.set(\"loginCredentials\",resJSONData.data.loginCredentials);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "appName",
+										"value": "{{appName}}"
+									},
+									{
+										"key": "appKey",
+										"value": "{{appKey}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"header\": {\n        \"module\": \"Admin\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"Login\",\n        \"action\": \"RefreshToken\",\n        \"operation\": \"\",\n        \"userId\": \"mesmayus\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"editionId\": \"INDIAN\"\n    },\n    \"data\": {\n    }\n        \n}"
+								},
+								"url": {
+									"raw": "{{admin-endpoint-url}}",
+									"host": [
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -5428,7 +5530,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"State\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"countryId\": \"IN\",\n        \"nameId\": \"HAR\",\n        \"description\": \"HARIYANA\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"State\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"countryId\": \"IN\",\n        \"nameId\": \"BENN\",\n        \"description\": \"Bengal\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5436,16 +5538,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -5475,7 +5570,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"State\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"stateId\": 16,\n        \"countryId\": \"IN\",\n        \"nameId\": \"AND\",\n        \"description\": \"ANDHRAPRADESH\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"State\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"stateId\": 45,\n        \"countryId\": \"IN\",\n        \"nameId\": \"MAH\",\n        \"description\": \"Bengal\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5483,16 +5578,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -5530,16 +5618,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -5589,16 +5670,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -5648,16 +5722,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -5707,16 +5774,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -5771,16 +5831,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -5818,16 +5871,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -5865,16 +5911,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -5924,16 +5963,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -5983,16 +6015,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -6042,16 +6067,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -6126,16 +6144,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -6173,16 +6184,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -6220,16 +6224,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -6279,16 +6276,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -6338,16 +6328,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -6397,16 +6380,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -6481,16 +6457,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -6528,16 +6497,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -6575,16 +6537,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -6634,16 +6589,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -6693,16 +6641,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -6752,16 +6693,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -6836,16 +6770,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -6875,7 +6802,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"Avatar\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"avatarId\": 31,\n        \"nameId\": \"rupublic\",\n        \"gender\": \"M\",\n        \"readingLevel\": 3,\n        \"imageName\": \"31_1611675916944.jpg\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"Avatar\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"avatarId\": 31,\n        \"nameId\": \"rupublic\",\n        \"gender\": \"M\",\n        \"readingLevel\": 3,\n        \"base64Image\":\"\",\n        \"deleteImage\":\"\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -6883,16 +6810,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -6930,16 +6850,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -6989,16 +6902,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -7048,16 +6954,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -7107,16 +7006,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -7179,16 +7071,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -7226,16 +7111,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -7273,16 +7151,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -7332,16 +7203,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -7391,16 +7255,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -7450,16 +7307,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -7534,16 +7384,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -7581,16 +7424,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -7628,16 +7464,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -7687,16 +7516,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -7746,16 +7568,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -7805,16 +7620,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -7889,16 +7697,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -7936,16 +7737,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -7983,16 +7777,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -8042,16 +7829,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -8101,16 +7881,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -8160,16 +7933,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -8210,7 +7976,7 @@
 					]
 				},
 				{
-					"name": "help_desk",
+					"name": "Helpdesk",
 					"item": [
 						{
 							"name": "createHelpDesk",
@@ -8244,16 +8010,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -8291,16 +8050,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -8338,16 +8090,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -8397,16 +8142,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -8456,16 +8194,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -8515,16 +8246,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -8599,16 +8323,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -8646,16 +8363,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -8693,16 +8403,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -8752,16 +8455,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -8811,16 +8507,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -8870,16 +8559,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -8954,16 +8636,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -9001,16 +8676,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -9048,16 +8716,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -9107,16 +8768,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -9166,16 +8820,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -9225,16 +8872,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -9309,16 +8949,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -9356,16 +8989,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -9403,16 +9029,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -9462,16 +9081,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -9521,16 +9133,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -9572,7 +9177,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"Promotion\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {}\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"Promotion\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 1\n        },\n        \"filter\": {}\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -9580,16 +9185,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -9664,16 +9262,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -9711,16 +9302,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -9758,16 +9342,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -9817,16 +9394,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -9876,16 +9446,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -9935,16 +9498,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -10019,16 +9575,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -10066,16 +9615,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -10113,16 +9655,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -10172,16 +9707,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -10231,16 +9759,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -10290,16 +9811,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -10374,16 +9888,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -10421,16 +9928,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -10468,16 +9968,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -10527,16 +10020,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -10586,16 +10072,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -10645,16 +10124,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -10729,16 +10201,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -10776,16 +10241,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -10823,16 +10281,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -10882,16 +10333,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -10941,16 +10385,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -11000,16 +10437,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -11084,16 +10514,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -11131,16 +10554,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -11178,16 +10594,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -11237,16 +10646,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -11296,16 +10698,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -11355,16 +10750,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -11439,16 +10827,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -11486,16 +10867,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -11533,16 +10907,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -11592,16 +10959,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -11620,7 +10980,7 @@
 							"response": []
 						},
 						{
-							"name": "reinstateInstitutionStakeholder",
+							"name": "reinstateSchoolSubscriptionGradesr",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -11651,16 +11011,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -11679,7 +11032,7 @@
 							"response": []
 						},
 						{
-							"name": "listInstitutionStakeholder",
+							"name": "listSchoolSubscriptionGrades",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -11710,16 +11063,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -11794,16 +11140,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -11841,16 +11180,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -11888,16 +11220,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -11947,16 +11272,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -12006,16 +11324,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -12065,16 +11376,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -12149,16 +11453,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -12196,16 +11493,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -12243,16 +11533,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -12302,16 +11585,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -12361,16 +11637,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -12420,16 +11689,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -12504,16 +11766,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -12551,16 +11806,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -12598,16 +11846,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -12657,16 +11898,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -12716,16 +11950,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -12775,16 +12002,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -12834,16 +12054,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -12918,16 +12131,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -12977,16 +12183,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -13061,16 +12260,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -13108,16 +12300,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -13167,16 +12352,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -13226,16 +12404,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -13285,16 +12456,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -13369,16 +12533,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -13416,16 +12573,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -13463,16 +12613,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -13522,16 +12665,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -13581,16 +12717,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -13640,16 +12769,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -13724,16 +12846,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -13771,16 +12886,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -13818,16 +12926,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -13877,16 +12978,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -13936,16 +13030,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -13995,16 +13082,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -14079,16 +13159,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -14126,16 +13199,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -14173,16 +13239,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -14232,16 +13291,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -14291,16 +13343,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -14350,16 +13395,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -14434,16 +13472,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -14481,16 +13512,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -14528,16 +13552,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -14587,16 +13604,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -14646,16 +13656,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -14705,16 +13708,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -14789,16 +13785,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -14836,16 +13825,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -14883,16 +13865,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -14942,16 +13917,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -15001,16 +13969,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -15060,16 +14021,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -15144,16 +14098,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -15191,16 +14138,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -15238,16 +14178,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -15297,16 +14230,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -15356,16 +14282,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -15415,16 +14334,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -15499,16 +14411,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -15546,16 +14451,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -15593,16 +14491,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -15652,16 +14543,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -15711,16 +14595,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -15770,16 +14647,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -15854,16 +14724,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -15901,16 +14764,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -15948,16 +14804,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -16007,16 +14856,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -16066,16 +14908,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -16125,16 +14960,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -16209,16 +15037,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -16256,16 +15077,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -16303,16 +15117,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -16362,16 +15169,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -16421,16 +15221,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -16480,16 +15273,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -16564,16 +15350,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -16611,16 +15390,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -16658,16 +15430,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -16717,16 +15482,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -16776,16 +15534,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -16835,16 +15586,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -16919,16 +15663,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -16966,16 +15703,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -17013,16 +15743,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -17072,16 +15795,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -17131,16 +15847,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -17190,16 +15899,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -17274,16 +15976,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -17321,16 +16016,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -17368,16 +16056,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -17427,16 +16108,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -17486,16 +16160,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -17545,16 +16212,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -17629,16 +16289,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -17676,16 +16329,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -17735,16 +16381,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -17794,16 +16433,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -17853,16 +16485,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -17937,16 +16562,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -17984,16 +16602,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -18031,16 +16642,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -18090,16 +16694,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -18149,16 +16746,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -18208,16 +16798,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -18292,16 +16875,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -18339,16 +16915,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -18386,16 +16955,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -18445,16 +17007,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -18504,16 +17059,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -18563,16 +17111,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -18622,16 +17163,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -18706,16 +17240,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -18753,16 +17280,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -18800,16 +17320,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -18859,16 +17372,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -18918,16 +17424,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -18977,16 +17476,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -19036,16 +17528,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -19120,16 +17605,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -19167,16 +17645,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -19214,16 +17685,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -19273,16 +17737,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -19332,16 +17789,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -19391,16 +17841,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -19450,16 +17893,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -19534,16 +17970,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -19581,16 +18010,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -19628,16 +18050,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -19687,16 +18102,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -19746,16 +18154,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -19805,16 +18206,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -19864,16 +18258,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -19948,16 +18335,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -19995,16 +18375,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -20042,16 +18415,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -20101,16 +18467,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -20160,16 +18519,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -20219,16 +18571,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -20278,16 +18623,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -20362,16 +18700,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -20409,16 +18740,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -20456,16 +18780,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -20515,16 +18832,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -20574,16 +18884,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -20633,16 +18936,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -20692,16 +18988,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -20776,16 +19065,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -20823,16 +19105,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -20870,16 +19145,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -20929,16 +19197,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -20988,16 +19249,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -21047,16 +19301,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -21106,16 +19353,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -21190,16 +19430,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -21237,16 +19470,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -21284,16 +19510,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -21343,16 +19562,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -21402,16 +19614,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -21461,16 +19666,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -21520,16 +19718,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -21604,16 +19795,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -21651,16 +19835,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -21698,16 +19875,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -21757,16 +19927,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -21816,16 +19979,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -21875,16 +20031,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -21959,16 +20108,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -21998,7 +20140,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"BulkStudentRegistration\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"studentId\": \"\",\n            \"emailId\": \"\",\n            \"mobileNumber\": \"\",\n            \"name\": \"\",\n            \"surname\": \"\",\n            \"dobFrom\": null,\n            \"dobTo\": null,\n            \"gender\": \"\",\n            \"avatar\": \"\",\n            \"photo\": \"\",\n            \"theme\": \"\",\n            \"subscriptionType\": \"\",\n            \"evalAvailed\": \"\",\n            \"schoolDetails\": \"\",\n            \"studentDetails\": \"\",\n            \"isAccountLocked\": \"\",\n            \"isActive\": \"\",\n            \"isDeleted\": \"\",\n            \"lastLoginTime\": null,\n            \"country\": \"\",\n            \"countryNotInTheList\": \"\",\n            \"state\": \"\",\n            \"stateNotInTheList\": \"\",\n            \"city\": \"\",\n            \"cityNotInTheList\": \"\",\n            \"school\": \"\",\n            \"schoolNotInTheList\": \"\",\n            \"grade\": \"\",\n            \"readingLevel\": \"\",\n            \"dailyPublication\": \"\",\n            \"scoresProgressReports\": \"\",\n            \"alertsNotifications\": \"\",\n            \"startDateFrom\": null,\n            \"startDateTo\": null,\n            \"endDateFrom\": null,\n            \"endDateTo\": null,\n            \"autoRenewal\": \"\",\n            \"createDateFrom\": \"2021-01-21T21:13:23\",\n            \"createDateTo\": \"2021-02-19T19:08:34\"\n        }\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"requestStatus\": \"S\",\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"BulkStudentRegistration\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"studentId\": \"\",\n            \"emailId\": \"\",\n            \"mobileNumber\": \"\",\n            \"name\": \"\",\n            \"surname\": \"\",\n            \"dobFrom\": null,\n            \"dobTo\": null,\n            \"gender\": \"\",\n            \"avatar\": \"\",\n            \"photo\": \"\",\n            \"theme\": \"\",\n            \"subscriptionType\": \"\",\n            \"evalAvailed\": \"\",\n            \"schoolDetails\": \"\",\n            \"studentDetails\": \"\",\n            \"isAccountLocked\": \"\",\n            \"isActive\": \"\",\n            \"isDeleted\": \"\",\n            \"lastLoginTime\": null,\n            \"country\": \"\",\n            \"countryNotInTheList\": \"\",\n            \"state\": \"\",\n            \"stateNotInTheList\": \"\",\n            \"city\": \"\",\n            \"cityNotInTheList\": \"\",\n            \"school\": \"\",\n            \"schoolNotInTheList\": \"\",\n            \"grade\": \"\",\n            \"readingLevel\": \"\",\n            \"dailyPublication\": \"\",\n            \"scoresProgressReports\": \"\",\n            \"alertsNotifications\": \"\",\n            \"startDateFrom\": null,\n            \"startDateTo\": null,\n            \"endDateFrom\": null,\n            \"endDateTo\": null,\n            \"autoRenewal\": \"\",\n            \"createDateFrom\": null,\n            \"createDateTo\": null,\n            \"lastSuccessLoginTimeFrom\": \"2020-01-21T21:16:00\",\n            \"lastSuccessLoginTimeTo\": \"2021-01-20T21:16:00\",\n            \"lastUnSuccessLoginTimeFrom\": \"2020-01-20T21:16:00\",\n            \"lastUnSuccessLoginTimeTo\": \"2021-01-20T21:16:00\"\n        }\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -22006,16 +20148,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -22090,16 +20225,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									]
 								}
 							},
@@ -22137,16 +20265,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -22221,16 +20342,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -22305,16 +20419,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -22389,16 +20496,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -22473,16 +20573,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -22557,16 +20650,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
@@ -22641,16 +20727,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/enewschamp-api/v1/admin",
-									"protocol": "http",
+									"raw": "{{admin-endpoint-url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"enewschamp-api",
-										"v1",
-										"admin"
+										"{{admin-endpoint-url}}"
 									],
 									"query": [
 										{
