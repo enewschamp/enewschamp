@@ -154,8 +154,15 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 		if (!StringUtils.isEmpty(searchRequest.getIsDeleted()))
 			filterPredicates.add(cb.equal(studentRegistrationRoot.get(IS_DELETED), searchRequest.getIsDeleted()));
 	
-		if (!StringUtils.isEmpty(searchRequest.getLastLoginTime()))
-			filterPredicates.add(cb.equal(studentRegistrationRoot.get(LAST_SUCCESS_LOGIN_ATTEMPT), searchRequest.getLastLoginTime()));
+		if (!StringUtils.isEmpty(searchRequest.getLastSuccessLoginTimeFrom())
+				&& !StringUtils.isEmpty(searchRequest.getLastSuccessLoginTimeTo()))
+			filterPredicates.add(cb.between(studentRegistrationRoot.get(LAST_SUCCESS_LOGIN_ATTEMPT), searchRequest.getLastSuccessLoginTimeFrom(),
+					searchRequest.getLastSuccessLoginTimeTo()));
+		
+		if (!StringUtils.isEmpty(searchRequest.getLastUnSuccessLoginTimeFrom())
+				&& !StringUtils.isEmpty(searchRequest.getLastUnSuccessLoginTimeTo()))
+			filterPredicates.add(cb.between(studentRegistrationRoot.get(LAST_UNSUCCESS_LOGIN_ATTEMPT), searchRequest.getLastUnSuccessLoginTimeFrom(),
+					searchRequest.getLastUnSuccessLoginTimeTo()));
 		
 		if (!StringUtils.isEmpty(searchRequest.getCreateDateFrom())
 				&& !StringUtils.isEmpty(searchRequest.getCreateDateTo()))

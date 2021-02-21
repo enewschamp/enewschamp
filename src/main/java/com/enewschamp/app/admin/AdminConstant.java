@@ -38,6 +38,7 @@ public interface AdminConstant {
 	public static String IS_ACTIVE = "isActive";
 	public static String IS_DELETED = "isDeleted";
 	public static String LAST_SUCCESS_LOGIN_ATTEMPT = "lastSuccessfulLoginAttempt";
+	public static String LAST_UNSUCCESS_LOGIN_ATTEMPT = "lastUnsuccessfulLoginAttempt";
 	public static String CREATION_DATE_TIME = "creationDateTime";
 	public static String SUBSCRIPTION_TYPE = "subscriptionType";
 	public static String EVAL_AVAILED = "evalAvailed";

@@ -109,7 +109,10 @@ public class AdminSearchRequest {
     private String isAccountLocked;
     private String isActive;
     private String isDeleted;
-    private LocalDateTime lastLoginTime;
+    private LocalDateTime lastSuccessLoginTimeFrom;
+    private LocalDateTime lastSuccessLoginTimeTo;
+    private LocalDateTime lastUnSuccessLoginTimeFrom;
+    private LocalDateTime lastUnSuccessLoginTimeTo;
     private String country;
     private String state;	
     private String city;
