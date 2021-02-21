@@ -104,7 +104,7 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		UIControlsRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				UIControlsRulesPageData.class);
-		validate(pageData);
+		validate(pageData, this.getClass().getName());
 		UIControlsRules uiControlesRulesGlobal = mapUIControlsRulesData(pageRequest, pageData);
 		uiControlesRulesGlobal = uiControlsRuleService.create(uiControlesRulesGlobal);
 		mapUIControlsRules(pageRequest, pageDto, uiControlesRulesGlobal);
@@ -123,7 +123,7 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		UIControlsRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				UIControlsRulesPageData.class);
-		validate(pageData);
+		validate(pageData, this.getClass().getName());
 		UIControlsRules uiControlesRules = mapUIControlsRulesData(pageRequest, pageData);
 		uiControlesRules = uiControlsRuleService.update(uiControlesRules);
 		mapUIControlsRules(pageRequest, pageDto, uiControlesRules);
@@ -192,6 +192,9 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 		List<UIControlsRulesPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				new TypeReference<List<UIControlsRulesPageData>>() {
 				});
+		pageData.forEach(page->{
+			validate(pageData, this.getClass().getName());
+		});
 		List<UIControlsRules> uiControlsRules = mapPageUIControlsRules(pageRequest, pageData);
 		uiControlsRuleService.clean();
 		int totalRecords = uiControlsRuleService.createAll(uiControlsRules);
@@ -227,18 +230,6 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 			}
 		}
 		return uiControlesRulesPageDataList;
-	}
-
-	private void validate(UIControlsRulesPageData pageData) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<UIControlsRulesPageData>> violations = validator.validate(pageData);
-		if (!violations.isEmpty()) {
-			violations.forEach(e -> {
-				log.error(e.getMessage());
-			});
-			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
-		}
 	}
 
 	private List<UIControlsRules> mapPageUIControlsRules(PageRequestDTO pageRequest,

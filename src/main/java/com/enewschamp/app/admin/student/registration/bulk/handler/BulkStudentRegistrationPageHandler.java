@@ -124,13 +124,15 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 				new TypeReference<List<BulkStudentRegistrationPageData>>() {
 				});
 		pageData.forEach(pagedata -> {
-			validate(pagedata.getStudentRegistration(), this.getClass().getName());
-			validate(pagedata.getStudentControl(), this.getClass().getName());
-			validate(pagedata.getStudentPayment(), this.getClass().getName());
-			validate(pagedata.getStudentPreferences(), this.getClass().getName());
-			validate(pagedata.getStudentSchool(), this.getClass().getName());
-			validate(pagedata.getStudentSubscription(), this.getClass().getName());
-			validate(pagedata.getStudentDetails(), this.getClass().getName());
+			String className = this.getClass().getName();
+			validate(pagedata, className);
+			validate(pagedata.getStudentRegistration(), className);
+			validate(pagedata.getStudentControl(), className);
+			validate(pagedata.getStudentPayment(), className);
+			validate(pagedata.getStudentPreferences(), className);
+			validate(pagedata.getStudentSchool(), className);
+			validate(pagedata.getStudentSubscription(), className);
+			validate(pagedata.getStudentDetails(), className);
 		});
 		PageDTO dto = performInsertion(pageData, pageRequest);
 		return dto;

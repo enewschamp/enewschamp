@@ -183,5 +183,19 @@ public class MessageConstants {
 	public static final String PRESENCE_NOT_EMPTY = "Presence must not be empty";
 	public static final String OCCASION_NOT_NULL = "Occasion must not be null";
 	public static final String OCCASION_NOT_EMPTY = "Occasion must not be empty";
+	public static final String STUDENT_CONTROL_NOT_NULL = "StudentControl must not be null";
+	public static final String STUDENT_CONTROL_NOT_EMPTY = "StudentControl must not be null";
+	public static final String STUDENT_REGISTRATION_NOT_NULL = "StudentRegistration must not be null";
+	public static final String STUDENT_REGISTRATION_NOT_EMPTY = "StudentRegistration must not be null";
+	public static final String STUDENT_SUBSCRIPTION_NOT_NULL = "StudentSubscription must not be null";
+	public static final String STUDENT_SUBSCRIPTION_NOT_EMPTY = "StudentSubscription must not be null";
+	public static final String STUDENT_PAYMENT_NOT_NULL = "StudentPayment must not be null";
+	public static final String STUDENT_PAYMENT_NOT_EMPTY = "StudentPayment must not be null";
+	public static final String STUDENT_DETAILS_NOT_NULL = "StudentDetails must not be null";
+	public static final String STUDENT_DETAILS_NOT_EMPTY = "StudentDetails must not be null";
+	public static final String STUDENT_SCHOOL_NOT_NULL = "StudentSchool must not be null";
+	public static final String STUDENT_SCHOOL_NOT_EMPTY = "StudentSchool must not be null";
+	public static final String STUDENT_PREFERENCES_NOT_NULL = "StudentPreferences must not be null";
+	public static final String STUDENT_PREFERENCES_NOT_EMPTY = "StudentPreferences must not be null";
 	
 }
