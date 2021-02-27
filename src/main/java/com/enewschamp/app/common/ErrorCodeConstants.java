@@ -140,4 +140,7 @@ public interface ErrorCodeConstants {
 	public static String STUDENT_SCORES_DAILY_NOT_FOUND = "STU_SC_DLY_001";
 	public static String STUDENT_SCORES_MONTHLY_NOT_FOUND = "STU_SC_MNTH_001";
 	public static String STUDENT_SCHOOL_NOTLIST_UPDATE_ERROR = "STU_SCH_NIL_001";
+	public static String ENTITY_CLASS_NOT_FOUND = "AUDIT_01";
+	public static String ENTITY_PACKAGE_NOT_FOUND = "AUDIT_02";
+	public static String ENTITY_FIELD_NOT_FOUND = "AUDIT_03";
 }

@@ -23,6 +23,7 @@ import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.publication.app.dto.AvatarDTO;
 import com.enewschamp.publication.domain.entity.Avatar;
 import com.enewschamp.publication.domain.service.AvatarService;
+import com.google.common.net.MediaType;
 
 @RestController
 @RequestMapping("/enewschamp-api/v1")
@@ -91,7 +92,7 @@ public class AvatarController {
 		return new ResponseEntity<List<ListOfValuesItem>>(avatarService.getLOV(), HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/admin/avatars/{avatarId}/audit")
+	@GetMapping(value = "/admin/avatars/{avatarId}/audit", produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getAudit(@PathVariable Long avatarId) {
 		String audit = avatarService.getAudit(avatarId);
 		return new ResponseEntity<String>(audit, HttpStatus.OK);
