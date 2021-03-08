@@ -52,6 +52,7 @@ public class PublicationHelper {
 
 	@Transactional
 	public PublicationDTO createPublication(PublicationDTO publicationDTO) {
+		System.out.println(">>>>>>>>>>>>>>>publicationDTO1>>>>>>>>>>>>>>>>>>>>>>" + publicationDTO);
 		List<NewsArticleDTO> articleLinked = publicationDTO.getNewsArticles();
 		if (articleLinked != null) {
 			for (NewsArticleDTO newsArticleDTO : articleLinked) {
@@ -62,14 +63,18 @@ public class PublicationHelper {
 		// Remove articles which have been deleted on the UI
 		removeDelinkedArticles(publicationDTO, articleLinked);
 		publicationDTO.setNewsArticlesLinked(articleLinked);
+		System.out.println(">>>>>>>>>>>>>>>publicationDTO2>>>>>>>>>>>>>>>>>>>>>>" + publicationDTO);
 		Publication publication = modelMapper.map(publicationDTO, Publication.class);
+		System.out.println(">>>>>>>>>>>>>>>publicationDTO3>>>>>>>>>>>>>>>>>>>>>>" + publication);
 		publication = publicationService.create(publication);
 		publicationDTO = modelMapper.map(publication, PublicationDTO.class);
+		System.out.println(">>>>>>>>>>>>>>>publicationDTO4>>>>>>>>>>>>>>>>>>>>>>" + publicationDTO);
 		List<NewsArticleDTO> newsArticleDTO = new ArrayList<NewsArticleDTO>();
 		if (articleLinked != null) {
 			for (NewsArticleDTO articleLinkageDTO : articleLinked) {
 				articleLinkageDTO.setPublicationId(publicationDTO.getPublicationId());
 				articleLinkageDTO.setPublicationDate(publicationDTO.getPublicationDate());
+				articleLinkageDTO.setReadyForTest(publicationDTO.getReadyForTest());
 				if (userRoleService.getByUserIdAndRole(publicationDTO.getOperatorId(),
 						CommonConstants.PUBLISHER_ROLE) != null) {
 					articleLinkageDTO.setPublisherWorked(publicationDTO.getOperatorId());
@@ -102,6 +107,7 @@ public class PublicationHelper {
 				existingArticleLinkage.setPublicationDate(null);
 				existingArticleLinkage.setPublicationId(null);
 				existingArticleLinkage.setSequence(0);
+				existingArticleLinkage.setReadyForTest(null);
 				if (userRoleService.getByUserIdAndRole(publicationDTO.getOperatorId(),
 						CommonConstants.PUBLISHER_ROLE) != null) {
 					existingArticleLinkage.setPublisherWorked(publicationDTO.getOperatorId());

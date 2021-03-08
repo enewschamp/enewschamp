@@ -49,12 +49,26 @@ public class UserController {
 		}
 		User user = modelMapper.map(userDTO, User.class);
 		user = userService.create(user);
-		String newImageName = user.getUserId() + "_" + System.currentTimeMillis();
-		String imageType = userDTO.getImageTypeExt();
-		boolean saveFlag = commonService.saveImages("Admin", "user", imageType, userDTO.getBase64Image(), newImageName,
-				user.getImageName());
-		if (saveFlag) {
-			user.setImageName(newImageName + "." + imageType);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(userDTO.getImageUpdate())) {
+			String newImageName = user.getUserId() + "_" + System.currentTimeMillis();
+			String imageType = userDTO.getImageTypeExt();
+			String currentImageName = user.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "user", imageType, userDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				user.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				user.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "user", currentImageName);
+				updateFlag = true;
+			}
+		}
+		if (updateFlag) {
 			user = userService.update(user);
 		}
 		userDTO = modelMapper.map(user, UserDTO.class);
@@ -66,6 +80,28 @@ public class UserController {
 		userDTO.setUserId(userId);
 		User user = modelMapper.map(userDTO, User.class);
 		user = userService.update(user);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(userDTO.getImageUpdate())) {
+			String newImageName = user.getUserId() + "_" + System.currentTimeMillis();
+			String imageType = userDTO.getImageTypeExt();
+			String currentImageName = user.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "user", imageType, userDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				user.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				user.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "user", currentImageName);
+				updateFlag = true;
+			}
+		}
+		if (updateFlag) {
+			user = userService.update(user);
+		}
 		userDTO = modelMapper.map(user, UserDTO.class);
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}

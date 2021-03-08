@@ -13,4 +13,5 @@ public class NotificationsSearchRequest {
 	private String isRead;
 	private Long studentId;
 	private LocalDateTime operationDateTime;
+	private String countOnly;
 }

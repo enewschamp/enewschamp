@@ -1,13 +1,13 @@
 package com.enewschamp.subscription.app.dto;
 
-import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class StudentPreferencesWorkDTO extends AbstractDTO {
+public class StudentPreferencesWorkDTO extends BaseEntity {
 
 	/**
 	 * 
@@ -16,5 +16,7 @@ public class StudentPreferencesWorkDTO extends AbstractDTO {
 
 	private Long studentId;
 	private String readingLevel;
+	private String featureProfileInChamps;
+	private ChampPermissionsWorkDTO champPermissions;
 	private StudentPreferencesCommWorkDTO commsOverEmail;
 }

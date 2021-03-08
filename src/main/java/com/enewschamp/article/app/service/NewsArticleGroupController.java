@@ -1,17 +1,11 @@
 package com.enewschamp.article.app.service;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,15 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
 import com.enewschamp.article.domain.service.NewsArticleGroupService;
-
-import lombok.var;
 
 @RestController
 @RequestMapping("/enewschamp-api/v1")

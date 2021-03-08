@@ -26,7 +26,7 @@ public class StudentDetails extends BaseEntity {
 
 	@Id
 	@NotNull
-	@Column(name = "StudentId", length = 10)
+	@Column(name = "studentId", length = 100)
 	private Long studentId = 0L;
 
 	@Column(name = "Name", length = 50)
@@ -46,5 +46,8 @@ public class StudentDetails extends BaseEntity {
 
 	@Column(name = "MobileNumber", length = 15)
 	private String mobileNumber;
+
+	@Column(name = "approvalRequired", length = 1)
+	private String approvalRequired;
 
 }

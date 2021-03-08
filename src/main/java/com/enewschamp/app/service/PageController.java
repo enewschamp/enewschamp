@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
@@ -20,7 +19,6 @@ import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
 
 import lombok.extern.java.Log;
 

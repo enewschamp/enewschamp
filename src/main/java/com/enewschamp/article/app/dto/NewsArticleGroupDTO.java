@@ -120,6 +120,9 @@ public class NewsArticleGroupDTO extends MaintenanceDTO {
 	private Boolean readingLevel4;
 
 	@JsonInclude
+	private String deleteImage;
+
+	@JsonInclude
 	@Size(max = 10)
 	private String textCoordinateX;
 

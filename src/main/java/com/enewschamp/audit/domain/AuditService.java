@@ -117,6 +117,21 @@ public class AuditService {
 		return null;
 	}
 
+	public List<CdoSnapshot> getEntitySnapshots(InstanceId instanceId, AuditQueryCriteria snapshotQuery) {
+
+		QueryBuilder jqlQuery = null;
+		jqlQuery = QueryBuilder.byInstanceId(instanceId.getCdoId(), instanceId.getTypeName());
+
+		if (snapshotQuery.getSnapshotType() != null) {
+			jqlQuery = jqlQuery.withSnapshotType(snapshotQuery.getSnapshotType());
+		}
+		if (snapshotQuery.getPropertyName() != null) {
+			jqlQuery.withChangedProperty(snapshotQuery.getPropertyName());
+		}
+		jqlQuery.withNewObjectChanges(true);
+		return javers.findSnapshots(jqlQuery.build());
+	}
+
 	public Shadow<Object> getLatestShadowForEntity(InstanceId instanceId) {
 
 		QueryBuilder jqlQuery = null;

@@ -36,7 +36,7 @@ public class ScoresDaily extends BaseEntity {
 	private Long scoresDailyId;
 
 	@NotNull
-	@Column(name = "studentId", length = 10)
+	@Column(name = "studentId", length = 100)
 	private Long studentId;
 
 	@NotNull

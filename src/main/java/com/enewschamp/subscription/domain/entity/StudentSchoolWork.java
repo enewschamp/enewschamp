@@ -24,8 +24,8 @@ public class StudentSchoolWork extends BaseEntity {
 
 	@Id
 	@NotNull
-	@Column(name = "studentId", length = 10)
-	private long studentId = 0L;
+	@Column(name = "studentId", length = 100)
+	private Long studentId;
 
 	@NotNull
 	private String country;
@@ -53,5 +53,8 @@ public class StudentSchoolWork extends BaseEntity {
 	@NotNull
 	@Column(name = "grade", length = 10)
 	private String grade;
+
+	@Column(name = "approvalRequired", length = 1)
+	private String approvalRequired;
 
 }

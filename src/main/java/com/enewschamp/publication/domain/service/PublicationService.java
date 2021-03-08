@@ -12,13 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.HeaderDTO;
-import com.enewschamp.article.domain.common.ArticleStatusType;
-import com.enewschamp.article.domain.entity.NewsArticle;
+import com.enewschamp.article.domain.service.NewsArticleGroupService;
 import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.article.page.data.PropertyAuditData;
 import com.enewschamp.audit.domain.AuditBuilder;
@@ -47,6 +45,12 @@ public class PublicationService {
 
 	@Autowired
 	private PublicationRepositoryCustom customRepository;
+
+	@Autowired
+	NewsArticleGroupService newsArticleGroupService;
+
+	@Autowired
+	NewsArticleService newsArticleService;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -138,8 +142,10 @@ public class PublicationService {
 	public String getAudit(Long publicationId) {
 		Publication publication = new Publication();
 		publication.setPublicationId(publicationId);
-		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig)
+		AuditBuilder auditBuilder = AuditBuilder
+				.getInstance(auditService, newsArticleGroupService, newsArticleService, objectMapper, appConfig)
 				.forParentObject(publication);
+		System.out.println(">>>>>>>>auditBuilder>>>>>>>>>>" + auditBuilder);
 		// Fetch article linkage changes
 		// publication = load(publicationId);
 		// for (NewsArticle articleLinkage : publication.getNewsArticles()) {
@@ -147,6 +153,7 @@ public class PublicationService {
 		// AuditBuilder auditBuilder1 = AuditBuilder.getInstance(auditService,
 		// objectMapper, propertyService).forParentObject(articleLinkage);
 		// }
+
 		return auditBuilder.build();
 	}
 
@@ -256,14 +263,16 @@ public class PublicationService {
 	public List<PropertyAuditData> getPreviousComments(Long publicationId) {
 		Publication publication = new Publication();
 		publication.setPublicationId(publicationId);
-		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig)
+		AuditBuilder auditBuilder = AuditBuilder
+				.getInstance(auditService, newsArticleGroupService, newsArticleService, objectMapper, appConfig)
 				.forParentObject(publication);
 		auditBuilder.forProperty("comments");
 		return auditBuilder.buildPropertyAudit();
 	}
 
-	public Page<PublicationSummaryDTO> findPublications(PublicationSearchRequest searchRequest, HeaderDTO header) {
-		Pageable pageable = null; // PageRequest.of(1, 10);
+	public Page<PublicationSummaryDTO> findPublications(PublicationSearchRequest searchRequest, int pageNo,
+			int pageSize, HeaderDTO header) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		return customRepository.findPublications(searchRequest, pageable);
 	}
 }

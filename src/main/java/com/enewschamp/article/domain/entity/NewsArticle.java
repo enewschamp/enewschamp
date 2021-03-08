@@ -24,6 +24,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.javers.core.metamodel.annotation.DiffIgnore;
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.enewschamp.app.student.entity.StudentActivity;
@@ -41,6 +42,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "NewsArticle", uniqueConstraints = {
 		@UniqueConstraint(columnNames = { "newsArticleGroupId", "readingLevel" }) })
+@JaversSpringDataAuditable
 public class NewsArticle extends BaseEntity {
 
 	private static final long serialVersionUID = 4067120832023693933L;

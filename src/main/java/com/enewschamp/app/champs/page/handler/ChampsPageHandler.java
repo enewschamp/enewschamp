@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import com.enewschamp.app.champs.page.data.ChampsPageData;
 import com.enewschamp.app.champs.page.data.ChampsSearchData;
 import com.enewschamp.app.common.CommonFilterData;
 import com.enewschamp.app.common.CommonService;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PaginationData;
@@ -82,13 +84,15 @@ public class ChampsPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
 	}
 
@@ -114,9 +118,6 @@ public class ChampsPageHandler implements IPageHandler {
 			pageData.setPagination(paginationData);
 		}
 		ChampsSearchData champsSearchData = new ChampsSearchData();
-		champsSearchData
-				.setLimitDate(commonService.getLimitDate(pageNavigationContext.getPageRequest().getHeader().getModule(),
-						PropertyConstants.VIEW_RECOGNITIONS_LIMIT, emailId));
 		CommonFilterData filterData = pageData.getFilter();
 		if (filterData != null) {
 			if (filterData.getYearMonth() == null || "".equals(filterData.getYearMonth())) {

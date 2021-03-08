@@ -1,5 +1,6 @@
 package com.enewschamp.subscription.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -47,11 +48,10 @@ public class StudentPaymentWorkService {
 		repository.deleteByStudentId(studentId);
 	}
 
-	public StudentPaymentWork update(StudentPaymentWork StudentPaymentWork) {
-		Long paymentId = StudentPaymentWork.getPaymentId();
-
+	public StudentPaymentWork update(StudentPaymentWork studentPaymentWork) {
+		Long paymentId = studentPaymentWork.getPaymentId();
 		StudentPaymentWork existingEntity = get(paymentId);
-		modelMapper.map(StudentPaymentWork, existingEntity);
+		modelMapper.map(studentPaymentWork, existingEntity);
 		return repository.save(existingEntity);
 	}
 
@@ -72,7 +72,26 @@ public class StudentPaymentWorkService {
 	}
 
 	public StudentPaymentWork getByStudentIdAndEdition(Long studentId, String editionId) {
-		Optional<StudentPaymentWork> existingEntity = repository.getByStudentIdAndEdition(studentId, editionId);
+		List<StudentPaymentWork> existingEntities = repository.getByStudentIdAndEdition(studentId, editionId);
+		if (existingEntities != null && existingEntities.size() > 0) {
+			return existingEntities.get(0);
+		} else {
+			return null;
+		}
+	}
+
+	public StudentPaymentWork getSuccessTransactionByStudentIdAndEdition(Long studentId, String editionId) {
+		List<StudentPaymentWork> existingEntities = repository.getSuccessTransactionByStudentIdAndEdition(studentId,
+				editionId);
+		if (existingEntities != null && existingEntities.size() > 0) {
+			return existingEntities.get(0);
+		} else {
+			return null;
+		}
+	}
+
+	public StudentPaymentWork getByOrderId(String orderId) {
+		Optional<StudentPaymentWork> existingEntity = repository.getByOrderId(orderId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {

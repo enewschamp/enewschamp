@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -108,7 +109,8 @@ public class ThemePageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();

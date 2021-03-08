@@ -21,4 +21,5 @@ public class LoginPageData extends PageData implements Serializable {
 	private String userRole;
 	private String loginCredentials;
 	private String tokenValidity;
+	private String imageName;
 }

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import com.enewschamp.app.article.page.dto.NewsEventsPublicationData;
 import com.enewschamp.app.common.BusinessRulesPlugin;
 import com.enewschamp.app.common.CommonFilterData;
 import com.enewschamp.app.common.CommonService;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -112,13 +114,15 @@ public class NewsEventsPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
 	}
 
@@ -153,7 +157,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 		}
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (studentId > 0 && (preferenceBusiness.getPreferenceFromMaster(studentId) != null)) {
+		if (!"".equals(studentId) && (preferenceBusiness.getPreferenceFromMaster(studentId) != null)) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 			readingLevel = Integer.parseInt(preferenceDto.getReadingLevel());
 		}
@@ -162,7 +166,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 		searchRequestData.setIsTestUser(isTestUser);
 		searchRequestData.setArticleType(ArticleType.NEWSEVENT);
 		searchRequestData.setPublicationDateFrom(
-				commonService.getLimitDate(module, PropertyConstants.VIEW_NEWS_EVENTS_LIMIT, emailId));
+				commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_NEWS_EVENTS, emailId));
 		if (readingLevel == 1) {
 			searchRequestData.setReadingLevel1(AppConstants.YES);
 		} else if (readingLevel == 2) {

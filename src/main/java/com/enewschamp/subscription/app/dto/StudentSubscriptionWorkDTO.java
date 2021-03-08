@@ -3,14 +3,14 @@ package com.enewschamp.subscription.app.dto;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class StudentSubscriptionWorkDTO extends AbstractDTO {
+public class StudentSubscriptionWorkDTO extends BaseEntity {
 
 	/**
 	 * 
@@ -19,7 +19,7 @@ public class StudentSubscriptionWorkDTO extends AbstractDTO {
 
 	@NotNull
 	@Size(max = 10)
-	private long studentId = 0L;
+	private Long studentId = 0L;
 
 	@NotNull
 	@Size(max = 6)

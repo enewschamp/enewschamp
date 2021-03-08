@@ -6,9 +6,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.domain.common.RecordInUseType;
-import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.StudentShareAchievementsDTO;
 import com.enewschamp.subscription.domain.entity.StudentShareAchievements;
 import com.enewschamp.subscription.domain.service.StudentShareAchievementsService;
@@ -27,8 +24,6 @@ public class StudentShareAchievementsBusiness {
 
 		StudentShareAchievements studentAchievements = modelMapper.map(studentShareAchievementsDTO,
 				StudentShareAchievements.class);
-		studentAchievements.setOperatorId("APP");
-		studentAchievements.setRecordInUse(RecordInUseType.Y);
 		studentAchievements = studentShareAchievementsService.create(studentAchievements);
 		return studentAchievements;
 	}

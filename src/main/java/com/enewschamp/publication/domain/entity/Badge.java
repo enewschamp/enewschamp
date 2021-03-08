@@ -11,7 +11,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -65,6 +64,18 @@ public class Badge extends BaseEntity {
 	private String base64Image;
 
 	@Transient
+	private String base64SuccessImage;
+
+	@Transient
+	private String base64AudioFile;
+
+	@Transient
 	private String imageTypeExt;
+
+	@Transient
+	private String successImageTypeExt;
+
+	@Transient
+	private String audioFileTypeExt;
 
 }

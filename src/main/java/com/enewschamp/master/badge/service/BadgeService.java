@@ -120,7 +120,6 @@ public class BadgeService {
 		return badgeRepository.getBadgeList();
 	}
 
-	
 	public String getAudit(Long badgeId) {
 		Badge badge = new Badge();
 		badge.setBadgeId(badgeId);

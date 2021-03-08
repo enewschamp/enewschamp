@@ -19,5 +19,7 @@ public class HolidayDTO extends BaseEntity {
 	private String editionId;
 	private LocalDate holidayDate;
 	private String holiday;
+	private String publication;
+	private String helpdesk;
 
 }

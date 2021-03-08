@@ -10,11 +10,7 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
-import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
-import com.enewschamp.app.student.registration.entity.RegistrationStatus;
-import com.enewschamp.article.app.dto.NewsArticleGroupDTO;
-import com.enewschamp.article.domain.service.NewsArticleGroupService;
 import com.enewschamp.article.page.data.HashTagPageData;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
@@ -22,13 +18,9 @@ import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.app.dto.HashTagDTO;
 import com.enewschamp.publication.domain.entity.HashTag;
 import com.enewschamp.publication.domain.service.HashTagService;
-import com.enewschamp.publication.domain.service.PublicationGroupService;
-import com.enewschamp.publication.page.handler.PublicationGroupPageHandler;
-import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "HashTagPageHandler")

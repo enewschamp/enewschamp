@@ -3,10 +3,12 @@ package com.enewschamp.app.signin.page.handler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
@@ -75,7 +77,8 @@ public class AppUnavailablePageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();

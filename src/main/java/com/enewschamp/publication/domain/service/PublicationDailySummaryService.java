@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.article.app.dto.NewsArticleDTO;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.domain.service.AbstractDomainService;
@@ -73,7 +72,7 @@ public class PublicationDailySummaryService extends AbstractDomainService {
 				publicationDailySummary.setNewsArticleCount(getArticleLinkagesCount(publication.getNewsArticles()));
 			}
 			publicationDailySummary.setQuizCount(getQuizCount(publication.getNewsArticles()));
-			publicationDailySummary.setOperatorId("SYSTEM");
+			publicationDailySummary.setOperatorId(publicationGroup.getOperatorId());
 		}
 		repository.save(publicationDailySummary);
 		monthlySummaryService.saveSummary(publicationGroup, publication);

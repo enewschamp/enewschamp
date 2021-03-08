@@ -25,6 +25,7 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.user.domain.entity.User;
 import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -85,13 +86,16 @@ public class PublisherLoginPageHandler implements IPageHandler {
 		PublisherLoginPageData loginPageData = new PublisherLoginPageData();
 		String userId = pageRequest.getHeader().getUserId();
 		String deviceId = pageRequest.getHeader().getDeviceId();
+		String module = pageRequest.getHeader().getModule();
 		String tokenId = pageRequest.getHeader().getLoginCredentials();
+		String appVersion = pageRequest.getHeader().getAppVersion();
 		String password = "";
 		boolean loginSuccess = false;
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId("SYSTEM");
+		userActivityTracker.setOperatorId(userId);
 		userActivityTracker.setRecordInUse(RecordInUseType.Y);
-		userActivityTracker.setActionPerformed(action);
+		userActivityTracker.setActionPerformed(
+				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);
 		userActivityTracker.setDeviceId(deviceId);
 		userActivityTracker.setUserId(userId);
 		userActivityTracker.setUserType(UserType.P);
@@ -115,7 +119,13 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			}
 			loginSuccess = userService.validatePassword(userId, password, userActivityTracker);
 			if (loginSuccess) {
-				userLoginBusiness.publisherLogin(userId, deviceId, tokenId, UserType.P);
+				User user = userService.get(userId);
+				if ("Y".equals(user.getForcePasswordChange())) {
+					userActivityTracker.setActionStatus(UserAction.FAILURE);
+					userLoginBusiness.auditUserActivity(userActivityTracker);
+					throw new BusinessException(ErrorCodeConstants.USER_PASSWORD_FORCE_CHANGE_REQUIRED, userId);
+				}
+				userLoginBusiness.publisherLogin(userId, deviceId, tokenId, module, appVersion, UserType.P);
 				userActivityTracker.setActionStatus(UserAction.SUCCESS);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 			} else {
@@ -244,7 +254,8 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			userLoginBusiness.isUserLoggedIn(deviceId, tokenId, userId, UserType.P, userActivityTracker);
+			// userLoginBusiness.isUserLoggedIn(deviceId, tokenId, userId, UserType.P,
+			// userActivityTracker);
 			if (password == null && "".equals(password)) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);

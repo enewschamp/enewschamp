@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import com.enewschamp.app.article.page.dto.ArticleQuizCompletionDTO;
 import com.enewschamp.app.article.page.dto.ArticleQuizDetailsPageData;
 import com.enewschamp.app.article.page.dto.ArticleQuizPageData;
 import com.enewschamp.app.article.page.dto.ArticleQuizQuestionsPageData;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
@@ -102,13 +104,15 @@ public class QuizPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
 	}
 
@@ -188,7 +192,8 @@ public class QuizPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -207,7 +212,7 @@ public class QuizPageHandler implements IPageHandler {
 		ArticleCompletionQuizPageData articleCompletionQuizPageData = new ArticleCompletionQuizPageData();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		int readingLevel = 3;
-		if (studentId > 0) {
+		if (!"".equals(studentId)) {
 			StudentPreferencesDTO preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 			if (preferenceDto != null) {
 				readingLevel = Integer.parseInt(preferenceDto.getReadingLevel());
@@ -220,7 +225,7 @@ public class QuizPageHandler implements IPageHandler {
 		StudentActivityDTO stdactivity = studentActivityBusiness.getActivity(studentId, newsArticleId);
 		if (stdactivity == null || stdactivity.getQuizScore() == null) {
 			ArticleQuizCompletionDTO articleQuizCompletionDTO = quizScoreBusiness.saveQuizScore(newsArticleId,
-					quizScoreDTOList, studentId, editionId, readingLevel);
+					quizScoreDTOList, studentId, editionId, readingLevel, emailId);
 			articleCompletionQuizPageData.setNewsArticleId(articleQuizCompletionDTO.getArticleId());
 			articleCompletionQuizPageData.setGenreBadge(articleQuizCompletionDTO.getGenreBadge());
 			articleCompletionQuizPageData.setMonthlyBadge(articleQuizCompletionDTO.getMonthlyBadge());

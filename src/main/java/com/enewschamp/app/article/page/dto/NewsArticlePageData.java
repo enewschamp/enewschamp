@@ -2,8 +2,6 @@ package com.enewschamp.app.article.page.dto;
 
 import java.time.LocalDate;
 
-import org.javers.core.metamodel.annotation.DiffIgnore;
-
 import com.enewschamp.app.common.PageData;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -56,4 +54,6 @@ public class NewsArticlePageData extends PageData {
 	private Integer reactionSCount;
 	@JsonInclude
 	private Integer reactionWCount;
+	@JsonInclude
+	private String imageName;
 }

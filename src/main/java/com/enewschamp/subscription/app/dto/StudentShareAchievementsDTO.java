@@ -1,13 +1,13 @@
 package com.enewschamp.subscription.app.dto;
 
-import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class StudentShareAchievementsDTO extends AbstractDTO {
+public class StudentShareAchievementsDTO extends BaseEntity {
 
 	/**
 	 * 
@@ -17,6 +17,8 @@ public class StudentShareAchievementsDTO extends AbstractDTO {
 	private Long studentId;
 
 	private String personalisedMessage;
+
+	private String approvalRequired;
 
 	private String recipientName1;
 

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.common.app.dto.PropertiesFrontendDTO;
+import com.enewschamp.common.domain.entity.PropertiesBackend;
 import com.enewschamp.common.domain.entity.PropertiesFrontend;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
@@ -39,8 +43,30 @@ public class PropertiesFrontendService extends AbstractDomainService {
 	}
 
 	public String getValue(String appName, String name) {
-		PropertiesFrontend property = repository.getProperty(appName, name);
-		return property == null ? null : property.getValue();
+		// PropertiesFrontend property = repository.getProperty(appName, name);
+		// return property == null ? null : property.getValue();
+		String arr[] = name.split("\\.");
+		String value = "";
+		// System.out.println(">>>>>>>>>>>property name>>>>>>>>>>>>>>" +
+		// name.split("\\.")[0]);
+		PropertiesFrontend property = repository.getProperty(appName, name.split("\\.")[0]);
+		if (arr.length > 1) {
+			JSONParser parser = new JSONParser();
+			try {
+				// System.out.println(">>>>>>>>>property_value>>>>>>>>>>>>>>>>" +
+				// property.getValue());
+				JSONObject json = (JSONObject) parser.parse(property.getValue());
+				if (json.get(arr[1]) != null) {
+					value = json.get(arr[1]).toString();
+				}
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			value = property.getValue();
+		}
+		return value;
 	}
 
 	public PropertiesFrontend create(PropertiesFrontend properties) {

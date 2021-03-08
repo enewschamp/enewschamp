@@ -21,16 +21,10 @@ import org.springframework.stereotype.Repository;
 import com.enewschamp.app.champs.entity.Champ;
 import com.enewschamp.app.champs.page.data.ChampsSearchData;
 import com.enewschamp.app.common.PropertyConstants;
-import com.enewschamp.app.common.city.entity.City;
-import com.enewschamp.app.school.entity.School;
 import com.enewschamp.app.student.dto.ChampStudentDTO;
 import com.enewschamp.app.student.dto.ChampStudentMYDTO;
-import com.enewschamp.app.student.scores.entity.ScoresMonthlyTotal;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.service.RepositoryImpl;
-import com.enewschamp.subscription.domain.entity.StudentDetails;
-import com.enewschamp.subscription.domain.entity.StudentPreferences;
-import com.enewschamp.subscription.domain.entity.StudentSchool;
 
 @Repository
 public class ChampRepositoryImpl extends RepositoryImpl implements ChampStudentRepository {
@@ -42,65 +36,17 @@ public class ChampRepositoryImpl extends RepositoryImpl implements ChampStudentR
 	PropertiesBackendService propertiesService;
 
 	@Override
-	public Page<ChampStudentDTO> findChampStudents(ChampsSearchData searchRequest, Pageable pageable) {
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<ChampStudentDTO> criteriaQuery = cb.createQuery(ChampStudentDTO.class);
-
-		Root<StudentSchool> studentSchoolRoot = criteriaQuery.from(StudentSchool.class);
-		Root<StudentDetails> studentDetailsRoot = criteriaQuery.from(StudentDetails.class);
-		Root<School> schoolRoot = criteriaQuery.from(School.class);
-		Root<City> cityRoot = criteriaQuery.from(City.class);
-
-		Root<ScoresMonthlyTotal> scoresMonthlyRoot = criteriaQuery.from(ScoresMonthlyTotal.class);
-		Root<StudentPreferences> studentPrefRoot = criteriaQuery.from(StudentPreferences.class);
-
-		criteriaQuery = criteriaQuery.select(cb.construct(ChampStudentDTO.class, studentDetailsRoot.get("name"),
-				studentDetailsRoot.get("surname"), studentSchoolRoot.get("grade"), schoolRoot.get("name"),
-				cityRoot.get("nameId"), scoresMonthlyRoot.get("quizQCorrect")));
-
-		// Build filter conditions
-		List<Predicate> filterPredicates = new ArrayList<>();
-
-		filterPredicates.add(cb.equal((studentDetailsRoot.get("studentId")), (studentSchoolRoot.get("studentId"))));
-		filterPredicates.add(cb.equal(schoolRoot.get("schoolId"), studentSchoolRoot.get("schoolId")));
-		filterPredicates.add(cb.equal(schoolRoot.get("cityId"), cityRoot.get("cityId")));
-		filterPredicates.add(cb.equal(studentDetailsRoot.get("studentId"), scoresMonthlyRoot.get("studentId")));
-		filterPredicates.add(cb.equal(studentDetailsRoot.get("studentId"), studentPrefRoot.get("studentId")));
-
-		if (searchRequest.getReadingLevel() != null) {
-			filterPredicates.add(cb.equal(studentPrefRoot.get("readingLevel"), searchRequest.getReadingLevel()));
-		}
-		if (searchRequest.getYearMonth() != null) {
-			filterPredicates.add(cb.equal(scoresMonthlyRoot.get("yearMonth"), searchRequest.getYearMonth()));
-		}
-
-		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
-
-		// Build query
-		TypedQuery<ChampStudentDTO> q = entityManager.createQuery(criteriaQuery);
-
-		if (pageable.getPageSize() > 0) {
-			int pageNumber = pageable.getPageNumber();
-			q.setFirstResult(pageNumber * pageable.getPageSize());
-			q.setMaxResults(pageable.getPageSize());
-
-		}
-		List<ChampStudentDTO> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, studentDetailsRoot);
-
-		return new PageImpl<>(list, pageable, count);
-
-	}
-
-	@Override
 	public Page<ChampStudentDTO> findChampions(ChampsSearchData searchRequest, Pageable pageable) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<ChampStudentDTO> criteriaQuery = cb.createQuery(ChampStudentDTO.class);
 		Root<Champ> champRoot = criteriaQuery.from(Champ.class);
 		criteriaQuery = criteriaQuery.select(cb.construct(ChampStudentDTO.class, champRoot.get("studentId"),
-				champRoot.get("studentName"), champRoot.get("surname"), champRoot.get("grade"),
-				champRoot.get("schoolName"), champRoot.get("cityName"), champRoot.get("score"), champRoot.get("rank"),
-				champRoot.get("avatarName"), champRoot.get("photoName")));
+				champRoot.get("name"), champRoot.get("surname"), champRoot.get("grade"), champRoot.get("school"),
+				champRoot.get("city"), champRoot.get("state"), champRoot.get("country"), champRoot.get("score"),
+				champRoot.get("rank"), champRoot.get("avatarName"), champRoot.get("photoName"),
+				champRoot.get("featureProfileInChamps"), champRoot.get("champCity"), champRoot.get("champProfilePic"),
+				champRoot.get("champSchool"), champRoot.get("imageApprovalRequired"),
+				champRoot.get("studentDetailsApprovalRequired"), champRoot.get("schoolDetailsApprovalRequired")));
 
 		// Build filter conditions
 		List<Predicate> filterPredicates = new ArrayList<>();
@@ -110,6 +56,8 @@ public class ChampRepositoryImpl extends RepositoryImpl implements ChampStudentR
 		if (searchRequest.getYearMonth() != null) {
 			filterPredicates.add(cb.equal(champRoot.get("yearMonth"), searchRequest.getYearMonth()));
 		}
+		filterPredicates.add(cb.notEqual(champRoot.get("studentDetailsApprovalRequired"), "Y"));
+		filterPredicates.add(cb.equal(champRoot.get("featureProfileInChamps"), "Y"));
 		filterPredicates.add(cb.lessThanOrEqualTo(champRoot.get("rank"),
 				Integer.valueOf(propertiesService.getValue("StudentApp", PropertyConstants.CHAMPS_LIMIT))));
 		criteriaQuery.orderBy(cb.desc(champRoot.get("score")));
@@ -132,7 +80,7 @@ public class ChampRepositoryImpl extends RepositoryImpl implements ChampStudentR
 		String readingLevel = searchRequest.getReadingLevel();
 		String yearMonth = searchRequest.getYearMonth();
 		Query query = entityManager.createNativeQuery(
-				"SELECT student_id,reading_level,avatar_name,photo_name,student_name as name,surname,grade,school_name as school,city_name as city,SUM(score) AS score,RANK() OVER (PARTITION BY reading_level ORDER BY score DESC) AS `rank` FROM champs_vw WHERE `year_month` IN (?,?,?) AND reading_level=? GROUP BY student_id,reading_level",
+				"SELECT student_id,reading_level,feature_profile_in_champs,champ_city,champ_school,champ_profile_pic,image_approval_required,student_details_approval_required,school_details_approval_required,avatar_name,photo_name,name,surname,grade,school,city,state,country,SUM(score) AS score,DENSE_RANK() OVER (PARTITION BY reading_level ORDER BY score DESC) AS `rank` FROM champs_vw WHERE feature_profile_in_champs='Y' AND student_details_approval_required<>'Y' AND `year_month` IN (?,?,?) AND reading_level=? GROUP BY student_id,reading_level",
 				ChampStudentMYDTO.class);
 		String yearMonth1 = "";
 		String yearMonth2 = "";
@@ -178,7 +126,7 @@ public class ChampRepositoryImpl extends RepositoryImpl implements ChampStudentR
 		String readingLevel = searchRequest.getReadingLevel();
 		String yearMonth = searchRequest.getYearMonth();
 		Query query = entityManager.createNativeQuery(
-				"SELECT student_id,reading_level,avatar_name,photo_name,student_name as name,surname,grade,school_name as school,city_name as city,SUM(score) AS score,RANK() OVER (PARTITION BY reading_level ORDER BY score DESC) AS `rank` FROM champs_vw WHERE SUBSTRING(`year_month`,1,4)=? AND reading_level=? GROUP BY student_id,reading_level",
+				"SELECT student_id,reading_level,feature_profile_in_champs,champ_city,champ_school,champ_profile_pic,image_approval_required,student_details_approval_required,school_details_approval_required,avatar_name,photo_name,name,surname,grade,school,city,state,country,SUM(score) AS score,DENSE_RANK() OVER (PARTITION BY reading_level ORDER BY score DESC) AS `rank` FROM champs_vw WHERE feature_profile_in_champs='Y' AND student_details_approval_required<>'Y' AND SUBSTRING(`year_month`,1,4)=? AND reading_level=? GROUP BY student_id,reading_level",
 				ChampStudentMYDTO.class);
 		query.setParameter(1, yearMonth);
 		query.setParameter(2, readingLevel);

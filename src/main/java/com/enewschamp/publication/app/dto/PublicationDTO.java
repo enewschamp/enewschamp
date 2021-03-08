@@ -38,6 +38,10 @@ public class PublicationDTO extends MaintenanceDTO {
 	private LocalDate publicationDate;
 
 	@JsonInclude
+	@NotNull
+	private String readyForTest;
+
+	@JsonInclude
 	private PublicationStatusType status;
 
 	@JsonInclude

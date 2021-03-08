@@ -34,9 +34,9 @@ public abstract class TransactionEntity implements IEntity, Serializable {
 	@PrePersist
 	@PreUpdate
 	public void prePersist() {
-		if (operationDateTime == null) {
-			operationDateTime = LocalDateTime.now();
-		}
+		// if (operationDateTime == null) {
+		operationDateTime = LocalDateTime.now();
+		// }
 	}
 
 	public String getKeyAsString() {

@@ -34,7 +34,7 @@ public class Helpdesk extends BaseEntity {
 	private Long helpdeskId;
 
 	@NotNull
-	@Column(name = "studentId", length = 10)
+	@Column(name = "studentId", length = 100)
 	private Long studentId;
 
 	@NotNull

@@ -13,14 +13,14 @@ import com.enewschamp.app.article.page.dto.ArticleQuizCompletionDTO;
 import com.enewschamp.app.student.badges.business.StudentBadgesBusiness;
 import com.enewschamp.app.student.badges.entity.StudentBadges;
 import com.enewschamp.app.student.business.StudentActivityBusiness;
+import com.enewschamp.app.student.quiz.dto.QuizScoreDTO;
+import com.enewschamp.app.student.quiz.entity.QuizScore;
+import com.enewschamp.app.student.quiz.service.QuizScoreService;
 import com.enewschamp.app.student.scores.business.ScoresDailyBusiness;
 import com.enewschamp.app.student.scores.business.ScoresMonthlyGenreBusiness;
 import com.enewschamp.app.student.scores.business.ScoresMonthlyTotalBusiness;
 import com.enewschamp.app.student.scores.dto.ScoresMonthlyGenreDTO;
 import com.enewschamp.app.student.scores.dto.ScoresMonthlyTotalDTO;
-import com.enewschamp.app.student.quiz.dto.QuizScoreDTO;
-import com.enewschamp.app.student.quiz.entity.QuizScore;
-import com.enewschamp.app.student.quiz.service.QuizScoreService;
 import com.enewschamp.app.welcome.page.data.BadgeDetailsDTO;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleQuiz;
@@ -65,7 +65,7 @@ public class QuizScoreBusiness {
 
 	@Transactional
 	public ArticleQuizCompletionDTO saveQuizScore(Long newsArticleId, List<QuizScoreDTO> quizScoreDTOList,
-			Long studentId, String editionId, int readingLevel) {
+			Long studentId, String editionId, int readingLevel, String emailId) {
 		Long quizQAttempted = 0L;
 		Long quizQCorrect = 0L;
 		for (QuizScoreDTO quizscore : quizScoreDTOList) {
@@ -76,14 +76,13 @@ public class QuizScoreBusiness {
 			}
 			quizscore.setResponseCorrect(isCorrectAns);
 			QuizScore quizScore = modelMapper.map(quizscore, QuizScore.class);
-			// TO TO to be corrected
 			quizScore.setRecordInUse(RecordInUseType.Y);
-			quizScore.setOperatorId("SYSTEM");
+			quizScore.setOperatorId(emailId);
 			quizScore = quizScoreService.create(quizScore);
 		}
 
 		// update the daily score entity..
-		scoresDailyBusiness.saveQuizData(newsArticleId, studentId, editionId, readingLevel, quizQAttempted,
+		scoresDailyBusiness.saveQuizData(newsArticleId, studentId, emailId, editionId, readingLevel, quizQAttempted,
 				quizQCorrect);
 
 		// update the Monthly Score Genre Entity
@@ -96,7 +95,7 @@ public class QuizScoreBusiness {
 
 		// update Student Activity
 
-		studentActivityBusiness.saveQuizData(studentId, editionId, readingLevel, newsArticleId, quizQCorrect);
+		studentActivityBusiness.saveQuizData(studentId, emailId, editionId, readingLevel, newsArticleId, quizQCorrect);
 
 		// grant badge if monthly points exceeds..
 		NewsArticle newsArticle = newsArticleService.get(newsArticleId);
@@ -105,13 +104,13 @@ public class QuizScoreBusiness {
 		int month = publicationDate.getMonthValue();
 		String yearMonth = year + "" + (month > 9 ? month : "0" + month);
 		String genreId = scoresMonthlyGenreBusiness.getGenreId(newsArticleId);
-		StudentBadges studGenreBadge = studentBadgesBusiness.grantGenreBadge(studentId, editionId, readingLevel,
-				Long.valueOf(yearMonth), genreId, scoresMonthlyGenreDTO);
-		StudentBadges studBadge = studentBadgesBusiness.grantBadge(studentId, editionId, readingLevel,
+		StudentBadges studGenreBadge = studentBadgesBusiness.grantGenreBadge(studentId, emailId, editionId,
+				readingLevel, Long.valueOf(yearMonth), genreId, scoresMonthlyGenreDTO);
+		StudentBadges studBadge = studentBadgesBusiness.grantBadge(studentId, emailId, editionId, readingLevel,
 				Long.valueOf(yearMonth), "MONTHLY", scoresMonthlyTotalDTO);
 		ArticleQuizCompletionDTO quizCompletiondto = new ArticleQuizCompletionDTO();
 		quizCompletiondto.setArticleId(newsArticleId);
-		String message = "You got " + quizQCorrect + " correct answers...";
+		String message = "" + quizQCorrect;
 		if (studGenreBadge != null) {
 			Badge badge = badgeService.get(studGenreBadge.getBadgeId());
 			BadgeDetailsDTO genreBadgeDetailsDTO = new BadgeDetailsDTO();
@@ -129,9 +128,6 @@ public class QuizScoreBusiness {
 			monthlyBadgeDetailsDTO.setImageName(badge.getImageName());
 			monthlyBadgeDetailsDTO.setBadgeGenre(badge.getGenreId());
 			quizCompletiondto.setMonthlyBadge(monthlyBadgeDetailsDTO);
-		}
-		if (studGenreBadge != null || studBadge != null) {
-			message = message + "You also have the following badges ! Congratulations !!!";
 		}
 		quizCompletiondto.setQuizCompletionMessage(message);
 		return quizCompletiondto;

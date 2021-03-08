@@ -38,12 +38,62 @@ public class BadgeController {
 	public ResponseEntity<BadgeDTO> create(@RequestBody @Valid BadgeDTO badgeDTO) {
 		Badge badge = modelMapper.map(badgeDTO, Badge.class);
 		badge = badgeService.create(badge);
-		String newImageName = badge.getBadgeId() + "_" + System.currentTimeMillis();
-		String imageType = badgeDTO.getImageTypeExt();
-		boolean saveFlag = commonService.saveImages("Admin", "badge", imageType, badgeDTO.getBase64Image(),
-				newImageName, badge.getImageName());
-		if (saveFlag) {
-			badge.setImageName(newImageName + "." + imageType);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(badgeDTO.getImageUpdate())) {
+			String newImageName = badge.getBadgeId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = badgeDTO.getImageTypeExt();
+			String currentImageName = badge.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "badge", imageType, badgeDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				badge.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				badge.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "badge", currentImageName);
+				updateFlag = true;
+			}
+		}
+		if ("Y".equalsIgnoreCase(badgeDTO.getSuccessImageUpdate())) {
+			String successImageType = badgeDTO.getSuccessImageTypeExt();
+			String newSucessImageName = badge.getBadgeId() + "_SI_" + System.currentTimeMillis();
+			String currentSuccessImageName = badge.getSuccessImageName();
+			boolean saveSuccessImageFlag = commonService.saveImages("Admin", "badge", successImageType,
+					badgeDTO.getBase64SuccessImage(), newSucessImageName);
+			if (saveSuccessImageFlag) {
+				badge.setSuccessImageName(newSucessImageName + "." + successImageType);
+				updateFlag = true;
+			} else {
+				badge.setSuccessImageName(null);
+				updateFlag = true;
+			}
+			if (currentSuccessImageName != null && !"".equals(currentSuccessImageName)) {
+				commonService.deleteImages("Admin", "badge", currentSuccessImageName);
+				updateFlag = true;
+			}
+		}
+		if ("Y".equalsIgnoreCase(badgeDTO.getAudioFileUpdate())) {
+			String audioFileName = badge.getBadgeId() + "_" + System.currentTimeMillis();
+			String audioFileType = badgeDTO.getAudioFileTypeExt();
+			String currentAudioFileName = badge.getAudioFileName();
+			boolean saveAudioFileFlag = commonService.saveAudioFile("Admin", "badge", audioFileType,
+					badgeDTO.getBase64AudioFile(), audioFileName);
+			if (saveAudioFileFlag) {
+				badge.setAudioFileName(audioFileName + "." + audioFileType);
+				updateFlag = true;
+			} else {
+				badge.setAudioFileName(null);
+				updateFlag = true;
+			}
+			if (currentAudioFileName != null && !"".equals(currentAudioFileName)) {
+				commonService.deleteAudios("Admin", "badge", currentAudioFileName);
+				updateFlag = true;
+			}
+		}
+		if (updateFlag) {
 			badge = badgeService.update(badge);
 		}
 		badgeDTO = modelMapper.map(badge, BadgeDTO.class);
@@ -53,8 +103,70 @@ public class BadgeController {
 	@PutMapping(value = "/admin/badges/{badgeId}")
 	public ResponseEntity<BadgeDTO> update(@RequestBody @Valid BadgeDTO badgeDTO, @PathVariable Long badgeId) {
 		badgeDTO.setBadgeId(badgeId);
-		Badge badge = modelMapper.map(badgeDTO, Badge.class);
+		Badge badge = badgeService.get(badgeId);
+		String currentImageName = badge.getImageName();
+		String currentSuccessImageName = badge.getSuccessImageName();
+		String currentAudioFileName = badge.getAudioFileName();
+		badgeDTO.setAudioFileName(currentAudioFileName);
+		badgeDTO.setSuccessImageName(currentSuccessImageName);
+		badgeDTO.setImageName(currentImageName);
+		badge = modelMapper.map(badgeDTO, Badge.class);
 		badge = badgeService.update(badge);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(badgeDTO.getImageUpdate())) {
+			String newImageName = badge.getBadgeId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = badgeDTO.getImageTypeExt();
+			boolean saveImageFlag = commonService.saveImages("Admin", "badge", imageType, badgeDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				badge.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				badge.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "badge", currentImageName);
+				updateFlag = true;
+			}
+		}
+		if ("Y".equalsIgnoreCase(badgeDTO.getSuccessImageUpdate())) {
+			String successImageType = badgeDTO.getSuccessImageTypeExt();
+			String newSucessImageName = badge.getBadgeId() + "_SI_" + System.currentTimeMillis();
+			boolean saveSuccessImageFlag = commonService.saveImages("Admin", "badge", successImageType,
+					badgeDTO.getBase64SuccessImage(), newSucessImageName);
+			if (saveSuccessImageFlag) {
+				badge.setSuccessImageName(newSucessImageName + "." + successImageType);
+				updateFlag = true;
+			} else {
+				badge.setSuccessImageName(null);
+				updateFlag = true;
+			}
+			if (currentSuccessImageName != null && !"".equals(currentSuccessImageName)) {
+				commonService.deleteImages("Admin", "badge", currentSuccessImageName);
+				updateFlag = true;
+			}
+		}
+		if ("Y".equalsIgnoreCase(badgeDTO.getAudioFileUpdate())) {
+			String audioFileName = badge.getBadgeId() + "_" + System.currentTimeMillis();
+			String audioFileType = badgeDTO.getAudioFileTypeExt();
+			boolean saveAudioFileFlag = commonService.saveAudioFile("Admin", "badge", audioFileType,
+					badgeDTO.getBase64AudioFile(), audioFileName);
+			if (saveAudioFileFlag) {
+				badge.setAudioFileName(audioFileName + "." + audioFileType);
+				updateFlag = true;
+			} else {
+				badge.setAudioFileName(null);
+				updateFlag = true;
+			}
+			if (currentAudioFileName != null && !"".equals(currentAudioFileName)) {
+				commonService.deleteAudios("Admin", "badge", currentAudioFileName);
+				updateFlag = true;
+			}
+		}
+		if (updateFlag) {
+			badge = badgeService.update(badge);
+		}
 		badgeDTO = modelMapper.map(badge, BadgeDTO.class);
 		return new ResponseEntity<BadgeDTO>(badgeDTO, HttpStatus.OK);
 	}

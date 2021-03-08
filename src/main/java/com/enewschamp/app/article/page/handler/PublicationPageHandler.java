@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.article.page.dto.PublicationData;
 import com.enewschamp.app.article.page.dto.PublicationPageData;
 import com.enewschamp.app.common.CommonService;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -29,6 +31,8 @@ import com.enewschamp.app.student.notification.service.StudentNotificationServic
 import com.enewschamp.app.student.registration.business.StudentRegistrationBusiness;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.app.student.registration.service.StudentRegistrationService;
+import com.enewschamp.app.user.login.entity.UserType;
+import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
 import com.enewschamp.article.domain.common.ArticleType;
 import com.enewschamp.article.domain.service.NewsArticleService;
@@ -87,6 +91,9 @@ public class PublicationPageHandler implements IPageHandler {
 	@Autowired
 	StudentNotificationService studentNotificationService;
 
+	@Autowired
+	UserLoginBusiness userLoginBusiness;
+
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
 		return null;
@@ -117,12 +124,14 @@ public class PublicationPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 		} else {
+			pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		}
 		return pageDTO;
 	}
@@ -131,6 +140,8 @@ public class PublicationPageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
+		String tokenId = pageNavigationContext.getPageRequest().getHeader().getLoginCredentials();
+		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
@@ -141,7 +152,7 @@ public class PublicationPageHandler implements IPageHandler {
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (studentId > 0) {
+		if (!"".equals(studentId)) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {
@@ -162,8 +173,6 @@ public class PublicationPageHandler implements IPageHandler {
 		} else if (readingLevel == 4) {
 			searchRequestData.setReadingLevel4(AppConstants.YES);
 		}
-		// searchRequestData.setPublicationDateLimit(commonService.getLimitDate(PropertyConstants.VIEW_PUBLICATION_LIMIT,
-		// emailId));
 		if (publicationDate == null) {
 			publicationDate = newsArticleService.getLatestPublication(editionId, isTestUser, readingLevel,
 					ArticleType.NEWSARTICLE);
@@ -200,25 +209,30 @@ public class PublicationPageHandler implements IPageHandler {
 			pageData.getPagination().setPageNumber(-1);
 		}
 		pageData.setNewsArticles(publicationData);
-		pageData.setNotificationsCount(getUnreadNotificationsCount(module, emailId, studentId, editionId));
+		pageData.setNotificationsCount(
+				getUnreadNotificationsCount(module, emailId, studentId, editionId, deviceId, tokenId));
 		pageDTO.setData(pageData);
 		pageDTO.setHeader(header);
 		return pageDTO;
 	}
 
-	private Long getUnreadNotificationsCount(String module, String emailId, Long studentId, String editionId) {
-		NotificationsSearchRequest searchRequest = new NotificationsSearchRequest();
-		searchRequest.setEditionId(editionId);
-		searchRequest.setStudentId(studentId);
-		String limitDate = commonService.getLimitDate(module, PropertyConstants.VIEW_NOTIFICATIONS_LIMIT, emailId)
-				+ " 00:00";
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		searchRequest.setOperationDateTime(LocalDateTime.parse(limitDate, formatter));
-		searchRequest.setIsRead("N");
-		Page<StudentNotificationDTO> pageResult = studentNotificationService.getNotificationList(searchRequest, 1,
-				Integer.MAX_VALUE);
-		if (pageResult != null && pageResult.getContent() != null) {
-			return Long.valueOf(pageResult.getContent().size());
+	private Long getUnreadNotificationsCount(String module, String emailId, Long studentId, String editionId,
+			String deviceId, String tokenId) {
+		if (userLoginBusiness.getLoginDetails(deviceId, tokenId, emailId, UserType.S) != null) {
+			NotificationsSearchRequest searchRequest = new NotificationsSearchRequest();
+			searchRequest.setEditionId(editionId);
+			searchRequest.setStudentId(studentId);
+			String limitDate = commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_NOTIFICATIONS, emailId)
+					+ " 00:00";
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			searchRequest.setOperationDateTime(LocalDateTime.parse(limitDate, formatter));
+			searchRequest.setIsRead("N");
+			searchRequest.setCountOnly("Y");
+			Page<StudentNotificationDTO> pageResult = studentNotificationService.getNotificationList(searchRequest, 1,
+					Integer.MAX_VALUE);
+			if (pageResult != null && pageResult.getContent() != null) {
+				return Long.valueOf(pageResult.getContent().size());
+			}
 		}
 		return 0L;
 	}
@@ -227,6 +241,8 @@ public class PublicationPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
+		String tokenId = pageNavigationContext.getPageRequest().getHeader().getLoginCredentials();
+		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
@@ -237,7 +253,7 @@ public class PublicationPageHandler implements IPageHandler {
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (studentId > 0) {
+		if (!"".equals(studentId)) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {
@@ -258,8 +274,6 @@ public class PublicationPageHandler implements IPageHandler {
 		} else if (readingLevel == 4) {
 			searchRequestData.setReadingLevel4(AppConstants.YES);
 		}
-		// searchRequestData.setPublicationDateLimit(commonService.getLimitDate(PropertyConstants.VIEW_PUBLICATION_LIMIT,
-		// emailId));
 		LocalDate newDate = newsArticleService.getNextAvailablePublicationDate(publicationDate, isTestUser, editionId,
 				readingLevel, ArticleType.NEWSARTICLE);
 		searchRequestData.setPublicationDate(newDate);
@@ -295,7 +309,8 @@ public class PublicationPageHandler implements IPageHandler {
 			pageData.getPagination().setPageNumber(-1);
 		}
 		pageData.setNewsArticles(publicationData);
-		pageData.setNotificationsCount(getUnreadNotificationsCount(module, emailId, studentId, editionId));
+		pageData.setNotificationsCount(
+				getUnreadNotificationsCount(module, emailId, studentId, editionId, deviceId, tokenId));
 		pageDto.setData(pageData);
 		pageDto.setHeader(header);
 		return pageDto;
@@ -305,6 +320,8 @@ public class PublicationPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
+		String tokenId = pageNavigationContext.getPageRequest().getHeader().getLoginCredentials();
+		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
@@ -315,7 +332,7 @@ public class PublicationPageHandler implements IPageHandler {
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (studentId > 0) {
+		if (!"".equals(studentId)) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {
@@ -327,8 +344,6 @@ public class PublicationPageHandler implements IPageHandler {
 		searchRequestData.setEditionId(editionId);
 		searchRequestData.setIsTestUser(isTestUser);
 		searchRequestData.setArticleType(ArticleType.NEWSARTICLE);
-		// searchRequestData.setPublicationDateFrom(commonService.getLimitDate(PropertyConstants.VIEW_PUBLICATION_LIMIT,
-		// emailId));
 		if (readingLevel == 1) {
 			searchRequestData.setReadingLevel1(AppConstants.YES);
 		} else if (readingLevel == 2) {
@@ -373,7 +388,8 @@ public class PublicationPageHandler implements IPageHandler {
 			pageData.getPagination().setPageNumber(-1);
 		}
 		pageData.setNewsArticles(publicationData);
-		pageData.setNotificationsCount(getUnreadNotificationsCount(module, emailId, studentId, editionId));
+		pageData.setNotificationsCount(
+				getUnreadNotificationsCount(module, emailId, studentId, editionId, deviceId, tokenId));
 		pageDto.setData(pageData);
 		pageDto.setHeader(header);
 		return pageDto;
@@ -383,6 +399,8 @@ public class PublicationPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
+		String tokenId = pageNavigationContext.getPageRequest().getHeader().getLoginCredentials();
+		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
@@ -393,7 +411,7 @@ public class PublicationPageHandler implements IPageHandler {
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (studentId > 0) {
+		if (!"".equals(studentId)) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {
@@ -445,7 +463,8 @@ public class PublicationPageHandler implements IPageHandler {
 			pageData.getPagination().setPageNumber(-1);
 		}
 		pageData.setNewsArticles(publicationData);
-		pageData.setNotificationsCount(getUnreadNotificationsCount(module, emailId, studentId, editionId));
+		pageData.setNotificationsCount(
+				getUnreadNotificationsCount(module, emailId, studentId, editionId, deviceId, tokenId));
 		pageDto.setData(pageData);
 		pageDto.setHeader(header);
 		return pageDto;
@@ -455,6 +474,8 @@ public class PublicationPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
+		String tokenId = pageNavigationContext.getPageRequest().getHeader().getLoginCredentials();
+		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
@@ -465,7 +486,7 @@ public class PublicationPageHandler implements IPageHandler {
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (studentId > 0) {
+		if (!"".equals(studentId)) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {
@@ -517,7 +538,8 @@ public class PublicationPageHandler implements IPageHandler {
 			pageData.getPagination().setPageNumber(-1);
 		}
 		pageData.setNewsArticles(publicationData);
-		pageData.setNotificationsCount(getUnreadNotificationsCount(module, emailId, studentId, editionId));
+		pageData.setNotificationsCount(
+				getUnreadNotificationsCount(module, emailId, studentId, editionId, deviceId, tokenId));
 		pageDto.setData(pageData);
 		pageDto.setHeader(header);
 		return pageDto;

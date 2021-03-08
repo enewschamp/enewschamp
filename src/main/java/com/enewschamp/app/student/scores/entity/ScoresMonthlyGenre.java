@@ -35,7 +35,7 @@ public class ScoresMonthlyGenre extends BaseEntity {
 	private Long scoresMonthlyGenreId;
 
 	@NotNull
-	@Column(name = "studentId", length = 10)
+	@Column(name = "studentId", length = 100)
 	private Long studentId;
 
 	@NotNull

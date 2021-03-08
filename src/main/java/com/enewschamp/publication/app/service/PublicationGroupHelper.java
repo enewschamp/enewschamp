@@ -74,7 +74,11 @@ public class PublicationGroupHelper {
 			publications.add(modelMapper.map(publicationDTO, Publication.class));
 		}
 		publicationGroup.setPublications(publications);
-		publicationGroup = publicationGroupService.create(publicationGroup);
+		if (publicationGroup.getPublicationGroupId() != null && publicationGroup.getPublicationGroupId() > 0) {
+			publicationGroup = publicationGroupService.update(publicationGroup);
+		} else {
+			publicationGroup = publicationGroupService.create(publicationGroup);
+		}
 		publicationGroupDTO = modelMapper.map(publicationGroup, PublicationGroupDTO.class);
 
 		List<PublicationDTO> publicationList = new ArrayList<PublicationDTO>();

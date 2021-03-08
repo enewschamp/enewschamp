@@ -31,6 +31,8 @@ public class StudentDetailsPageData extends PageData {
 	@JsonInclude
 	private String mobileNumber;
 	@JsonInclude
+	private String approvalRequired;
+	@JsonInclude
 	private String nameM;
 	@JsonInclude
 	private String surnameM;
@@ -42,4 +44,6 @@ public class StudentDetailsPageData extends PageData {
 	private LocalDate doBM;
 	@JsonInclude
 	private String mobileNumberM;
+	@JsonInclude
+	private String approvalRequiredM;
 }

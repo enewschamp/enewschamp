@@ -51,9 +51,9 @@ public class PublicationDailySummary extends TransactionEntity {
 	@PrePersist
 	@PreUpdate
 	public void prePersist() {
-		if (operationDateTime == null) {
-			operationDateTime = LocalDateTime.now();
-		}
+		// if (operationDateTime == null) {
+		operationDateTime = LocalDateTime.now();
+		// }
 		month = publicationDate.getMonthValue();
 		year = publicationDate.getYear();
 	}

@@ -65,16 +65,15 @@ public class StudentNotificationCustomRepositoryImpl extends RepositoryImpl
 
 		// Build query
 		TypedQuery<StudentNotificationDTO> q = entityManager.createQuery(criteriaQuery);
-
-		if (pageable.getPageSize() > 0) {
+		if ("Y".equals(searchRequest.getCountOnly())) {
+			// do nothing
+		} else if (pageable.getPageSize() > 0) {
 			int pageNumber = pageable.getPageNumber();
 			q.setFirstResult(pageNumber * pageable.getPageSize());
 			q.setMaxResults(pageable.getPageSize());
-
 		}
 		List<StudentNotificationDTO> list = q.getResultList();
 		long count = getRecordCount(criteriaQuery, filterPredicates, notificationRoot);
-
 		return new PageImpl<>(list, pageable, count);
 	}
 

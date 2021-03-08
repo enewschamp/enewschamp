@@ -1,6 +1,6 @@
-INSERT INTO app_security(app_security_id,app_name, app_key,module) VALUES (1,'ENEWSCHAMPAPP','ABNGYHUKLOIHGTY','StudentApp');
-INSERT INTO app_security(app_security_id,app_name, app_key,module) VALUES (2,'ENEWSCHAMPPUBLISHER','GODISALMIGHTY','Publisher');
-INSERT INTO app_security(app_security_id,app_name, app_key,module) VALUES (3,'ENEWSCHAMPADMIN','GODISALMIGHTY','Admin');
+INSERT INTO app_security(app_security_id,app_name, app_key,module,compatible_versions,is_app_available) VALUES (1,'ENEWSCHAMPAPP','ABNGYHUKLOIHGTY','StudentApp','1.0.0','Y');
+INSERT INTO app_security(app_security_id,app_name, app_key,module,compatible_versions,is_app_available) VALUES (2,'ENEWSCHAMPPUBLISHER','GODISALMIGHTY','Publisher','1.0.0','Y');
+INSERT INTO app_security(app_security_id,app_name, app_key,module,compatible_versions,is_app_available) VALUES (3,'ENEWSCHAMPADMIN','GODISALMIGHTY','Admin','1.0.0','Y');
 
 INSERT INTO country (country_id,name_Id,description,isd,currency_id, language_Id,operator_Id,operation_Date_Time,record_In_Use) VALUES (1,'IN','India','11','INR','EN','SYSTEM', CURRENT_DATE, 'Y');
 INSERT INTO country (country_id,name_Id,description,isd,currency_id, language_Id,Operator_Id,operation_Date_Time,record_In_Use) VALUES (2,'US','United States','12','USD','EN','SYSTEM', CURRENT_DATE, 'Y');

@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.javers.spring.annotation.JaversSpringDataAuditable;
+
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 import com.enewschamp.publication.domain.common.PublicationGroupStatusType;
@@ -26,6 +28,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "PublicationGroup")
+@JaversSpringDataAuditable
 public class PublicationGroup extends BaseEntity {
 
 	private static final long serialVersionUID = 819426502462078317L;

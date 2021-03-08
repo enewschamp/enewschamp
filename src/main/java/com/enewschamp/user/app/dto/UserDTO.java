@@ -74,11 +74,13 @@ public class UserDTO extends MaintenanceDTO {
 
 	private String imageTypeExt = "jpg";
 
+	private String imageUpdate;
+
 	@JsonInclude
 	private String theme;
-	
+
 	@JsonInclude
 	private String fontHeight;
-	
+
 	private LocalDateTime creationDateTime;
 }

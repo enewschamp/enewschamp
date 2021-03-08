@@ -14,7 +14,6 @@ import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
 import com.enewschamp.article.domain.service.NewsArticleGroupService;
 import com.enewschamp.article.domain.service.NewsArticleService;
-import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 
 @Service
@@ -33,17 +32,10 @@ public class ScoresMonthlyGenreBusiness {
 	NewsArticleGroupService newsArticleGroupService;
 
 	public ScoresMonthlyGenreDTO saveScoresMonthly(ScoresMonthlyGenreDTO scoresMonthlyGenreDTO) {
-		ScoresMonthlyGenre scoresMonthlyGenre = modelMapper.map(scoresMonthlyGenreDTO,
-				ScoresMonthlyGenre.class);
-
-		// TO DO to be corrected
-		scoresMonthlyGenre.setRecordInUse(RecordInUseType.Y);
-		scoresMonthlyGenre.setOperatorId("SYSTEM");
-
+		ScoresMonthlyGenre scoresMonthlyGenre = modelMapper.map(scoresMonthlyGenreDTO, ScoresMonthlyGenre.class);
 		scoresMonthlyGenre = scoresMonthlyGenreService.create(scoresMonthlyGenre);
 		ScoresMonthlyGenreDTO scoresMonthlyGenreDTOnew = modelMapper.map(scoresMonthlyGenre,
 				ScoresMonthlyGenreDTO.class);
-
 		return scoresMonthlyGenreDTOnew;
 	}
 
@@ -51,14 +43,13 @@ public class ScoresMonthlyGenreBusiness {
 			String genreId) {
 		ScoresMonthlyGenre scoresMonthlyGenre = null;
 		try {
-			scoresMonthlyGenre = scoresMonthlyGenreService.getScoresMonthly(studentId, editionId, readingLevel, yearMonth,
-					genreId);
+			scoresMonthlyGenre = scoresMonthlyGenreService.getScoresMonthly(studentId, editionId, readingLevel,
+					yearMonth, genreId);
 		} catch (Exception e) {
 			return null;
 		}
 		if (scoresMonthlyGenre != null) {
-			ScoresMonthlyGenreDTO scoresMonthlyGenreDTO = modelMapper
-					.map(scoresMonthlyGenre,
+			ScoresMonthlyGenreDTO scoresMonthlyGenreDTO = modelMapper.map(scoresMonthlyGenre,
 					ScoresMonthlyGenreDTO.class);
 			return scoresMonthlyGenreDTO;
 		} else

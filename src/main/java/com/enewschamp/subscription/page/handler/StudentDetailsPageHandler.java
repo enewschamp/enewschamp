@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.fw.page.navigation.service.PageNavigationService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.service.AvatarService;
 import com.enewschamp.subscription.app.dto.StudentControlDTO;
@@ -79,13 +81,15 @@ public class StudentDetailsPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
 	}
 
@@ -94,7 +98,7 @@ public class StudentDetailsPageHandler implements IPageHandler {
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		StudentDetailsPageData studentDetailsPageData = new StudentDetailsPageData();
-		if (studentId == null || studentId == 0L) {
+		if ("".equals(studentId)) {
 			throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
 		}
 		StudentDetailsDTO studentDetailsDTO = studentDetailsBusiness.getStudentDetailsFromMaster(studentId);
@@ -106,6 +110,7 @@ public class StudentDetailsPageHandler implements IPageHandler {
 			studentDetailsPageData.setGenderM(studentDetailsDTO.getGender());
 			studentDetailsPageData.setDoBM(studentDetailsDTO.getDoB());
 			studentDetailsPageData.setMobileNumberM(studentDetailsDTO.getMobileNumber());
+			studentDetailsPageData.setApprovalRequiredM(studentDetailsDTO.getApprovalRequired());
 		}
 		pageDTO.setData(studentDetailsPageData);
 		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
@@ -134,6 +139,7 @@ public class StudentDetailsPageHandler implements IPageHandler {
 			studentDetailsPageData.setGenderM(studentDetailsDTO.getGender());
 			studentDetailsPageData.setDoBM(studentDetailsDTO.getDoB());
 			studentDetailsPageData.setMobileNumberM(studentDetailsDTO.getMobileNumber());
+			studentDetailsPageData.setApprovalRequiredM(studentDetailsDTO.getApprovalRequired());
 		}
 		pageDTO.setData(studentDetailsPageData);
 		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
@@ -154,6 +160,7 @@ public class StudentDetailsPageHandler implements IPageHandler {
 			studentDetailsPageData.setGenderM(studentDetailsDTO.getGender());
 			studentDetailsPageData.setDoBM(studentDetailsDTO.getDoB());
 			studentDetailsPageData.setMobileNumberM(studentDetailsDTO.getMobileNumber());
+			studentDetailsPageData.setApprovalRequiredM(studentDetailsDTO.getApprovalRequired());
 		}
 		pageDTO.setData(studentDetailsPageData);
 		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
@@ -192,7 +199,8 @@ public class StudentDetailsPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -210,6 +218,8 @@ public class StudentDetailsPageHandler implements IPageHandler {
 			studentId = studentControlBusiness.getStudentId(emailId);
 			StudentDetailsDTO studentDetailsDTO = mapPageToDTO(pageRequest);
 			studentDetailsDTO.setStudentId(studentId);
+			studentDetailsDTO.setOperatorId(emailId);
+			studentDetailsDTO.setRecordInUse(RecordInUseType.Y);
 			studentDetailsBusiness.saveAsMaster(studentDetailsDTO);
 			StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
 			studentControlDTO.setStudentDetails("Y");
@@ -220,6 +230,8 @@ public class StudentDetailsPageHandler implements IPageHandler {
 			StudentDetailsWorkDTO studentDetailsWorkDTO = null;
 			studentDetailsWorkDTO = mapPageToWorkDTO(pageRequest);
 			studentDetailsWorkDTO.setStudentId(studentId);
+			studentDetailsWorkDTO.setOperatorId(emailId);
+			studentDetailsWorkDTO.setRecordInUse(RecordInUseType.Y);
 			studentDetailsBusiness.saveAsWork(studentDetailsWorkDTO);
 			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
 			studentControlWorkDTO.setStudentDetailsW("Y");

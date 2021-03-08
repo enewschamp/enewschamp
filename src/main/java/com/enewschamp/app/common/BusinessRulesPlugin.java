@@ -24,6 +24,7 @@ import com.enewschamp.subscription.domain.business.PreferenceBusiness;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.entity.StudentControl;
 import com.enewschamp.subscription.domain.entity.StudentControlWork;
+import com.enewschamp.subscription.domain.entity.StudentPaymentWork;
 import com.enewschamp.subscription.domain.service.StudentControlService;
 import com.enewschamp.subscription.domain.service.StudentControlWorkService;
 import com.enewschamp.subscription.domain.service.StudentPaymentService;
@@ -83,6 +84,9 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 		if (ruleStr.contains("operation")) {
 			dataMap = getIncompleteOperation(pageRequest, pageResponse, dataMap);
 		}
+		if (ruleStr.contains("pageName")) {
+			dataMap = getIncompletePageName(pageRequest, pageResponse, dataMap);
+		}
 		if (ruleStr.contains("isAccountLocked")) {
 			dataMap = isAccountLocked(pageRequest, pageResponse, dataMap);
 		}
@@ -100,6 +104,9 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 		}
 		if (ruleStr.contains("registrationCompletionGraceDaysLapsed")) {
 			dataMap = registrationCompletionGraceDaysLapsed(pageRequest, pageResponse, dataMap);
+		}
+		if (ruleStr.contains("paymentSuccess")) {
+			dataMap = paymentSuccess(pageRequest, pageResponse, dataMap);
 		}
 		if (ruleStr.contains("studentDetails")) {
 			dataMap = studentDetails(pageRequest, pageResponse, dataMap);
@@ -150,9 +157,10 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 		String registrationCompletionGraceDaysLapsed = "";
 		StudentControl studentEntity = studentControlService.getStudentByEmail(emailId);
 		if (studentEntity != null) {
-			registrationCompletionGraceDaysLapsed = (studentEntity != null && studentEntity.getOperationDateTime()
+			StudentRegistration studentRegistration = regService.getStudentReg(emailId);
+			registrationCompletionGraceDaysLapsed = (studentRegistration.getCreationDateTime()
 					.plusDays(Integer.valueOf(propertiesService.getValue(pageRequest.getHeader().getModule(),
-							PropertyConstants.REGISTRATION_COMPLETION_GRACE_DAYS)))
+							PropertyConstants.STUDENT_REGISTRATION_COMPLETION_GRACE_DAYS)))
 					.toLocalDate().isBefore(LocalDate.now())) ? "Y" : "N";
 		}
 		dataMap.put("registrationCompletionGraceDaysLapsed", registrationCompletionGraceDaysLapsed);
@@ -187,6 +195,20 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 		return dataMap;
 	}
 
+	public Map<String, String> getIncompletePageName(PageRequestDTO pageRequest, PageDTO page,
+			Map<String, String> dataMap) {
+		String emailId = pageRequest.getHeader().getEmailId();
+		String pageName = "";
+		if (emailId != "" && emailId != null) {
+			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+			if ((studentControlWorkDTO != null)) {
+				pageName = studentControlWorkDTO.getNextPageName();
+			}
+		}
+		dataMap.put("pageName", pageName);
+		return dataMap;
+	}
+
 	public Map<String, String> getRegistrationNextPage(PageRequestDTO pageRequest, PageDTO page,
 			Map<String, String> dataMap) {
 		String emailId = pageRequest.getHeader().getEmailId();
@@ -215,11 +237,13 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 
 	public Map<String, String> subscriptionTypeW(PageRequestDTO pageRequest, PageDTO page,
 			Map<String, String> dataMap) {
-		String subscriptionTypeW = "";
+		String subscriptionTypeW = "F";
 		String emailId = pageRequest.getHeader().getEmailId();
 		StudentControlWork studentEntityWork = studentControlWorkService.getStudentByEmail(emailId);
 		if (studentEntityWork != null) {
-			subscriptionTypeW = studentEntityWork.getSubscriptionTypeW();
+			subscriptionTypeW = (studentEntityWork.getSubscriptionTypeW() != null
+					? studentEntityWork.getSubscriptionTypeW()
+					: "F");
 		}
 		dataMap.put("subscriptionTypeW", subscriptionTypeW);
 		return dataMap;
@@ -234,6 +258,22 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 			evalAvailed = studentEntity.getEvalAvailed() != null ? studentEntity.getEvalAvailed() : "N";
 		}
 		dataMap.put("evalAvailed", evalAvailed);
+		return dataMap;
+	}
+
+	public Map<String, String> paymentSuccess(PageRequestDTO pageRequest, PageDTO page, Map<String, String> dataMap) {
+		String paymentSuccess = "N";
+		String emailId = pageRequest.getHeader().getEmailId();
+		String editionId = pageRequest.getHeader().getEditionId();
+		StudentControl studentEntity = studentControlService.getStudentByEmail(emailId);
+		if (studentEntity != null) {
+			StudentPaymentWork studentPaymentWork = studentPaymentWorkService
+					.getSuccessTransactionByStudentIdAndEdition(studentEntity.getStudentId(), editionId);
+			if (studentPaymentWork != null) {
+				paymentSuccess = "Y";
+			}
+		}
+		dataMap.put("paymentSuccess", paymentSuccess);
 		return dataMap;
 	}
 

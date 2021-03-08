@@ -1,19 +1,19 @@
 package com.enewschamp.subscription.app.dto;
 
-import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class StudentSchoolDTO extends AbstractDTO {
+public class StudentSchoolDTO extends BaseEntity {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private long studentId = 0L;
+	private Long studentId = 0L;
 	private String country;
 	private String countryNotInTheList;
 	private String state;
@@ -24,4 +24,5 @@ public class StudentSchoolDTO extends AbstractDTO {
 	private String schoolNotInTheList;
 	private String section;
 	private String grade;
+	private String approvalRequired;
 }

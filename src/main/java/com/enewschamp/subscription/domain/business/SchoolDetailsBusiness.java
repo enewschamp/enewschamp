@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.subscription.app.dto.StudentSchoolDTO;
 import com.enewschamp.subscription.app.dto.StudentSchoolWorkDTO;
 import com.enewschamp.subscription.domain.entity.StudentSchool;
@@ -30,23 +29,12 @@ public class SchoolDetailsBusiness {
 	public StudentSchoolWork saveAsWork(StudentSchoolWorkDTO studentSchoolWorkDTO) {
 
 		StudentSchoolWork studentSchoolWork = modelMapper.map(studentSchoolWorkDTO, StudentSchoolWork.class);
-		// to be changed
-		studentSchoolWork.setOperatorId("APP");
-
-		studentSchoolWork.setRecordInUse(RecordInUseType.Y);
-
 		studentSchoolWork = studentSchoolWorkService.create(studentSchoolWork);
 		return studentSchoolWork;
 	}
 
 	public StudentSchool saveAsMaster(StudentSchoolDTO studentSchoolDTO) {
-
 		StudentSchool studentSchool = modelMapper.map(studentSchoolDTO, StudentSchool.class);
-		// to be changed
-		studentSchool.setOperatorId("APP");
-
-		studentSchool.setRecordInUse(RecordInUseType.Y);
-
 		studentSchool = studentSchoolService.create(studentSchool);
 		return studentSchool;
 	}
@@ -58,15 +46,6 @@ public class SchoolDetailsBusiness {
 			studentSchoolService.create(masterEntity);
 		}
 	}
-
-	public void deleteFromWork(StudentSchoolWorkDTO studentSchoolWorkDTO) {
-		// studentSchoolWorkService.delete(studentSchoolWorkDTO.getStudentId());
-	}
-
-	/*
-	 * public boolean isStudentExistInMaster(Long studentId) { return
-	 * studentSchoolService.studentSchoolExist(studentId); }
-	 */
 
 	public StudentSchoolDTO getStudentFromMaster(Long studentId) {
 

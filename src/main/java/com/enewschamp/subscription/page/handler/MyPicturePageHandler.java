@@ -1,6 +1,5 @@
 package com.enewschamp.subscription.page.handler;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.modelmapper.ModelMapper;
@@ -76,9 +75,11 @@ public class MyPicturePageHandler implements IPageHandler {
 		if (studentRegistration != null) {
 			myPicturePageData.setAvatarName(studentRegistration.getAvatarName());
 			myPicturePageData.setPhotoName(studentRegistration.getPhotoName());
+			myPicturePageData.setImageApprovalRequired(studentRegistration.getImageApprovalRequired());
 		} else {
 			myPicturePageData.setAvatarName("");
 			myPicturePageData.setPhotoName("");
+			myPicturePageData.setImageApprovalRequired("");
 		}
 		pageDto.setData(myPicturePageData);
 		return pageDto;
@@ -98,50 +99,38 @@ public class MyPicturePageHandler implements IPageHandler {
 		MyPicturePageData myPicturePageData = new MyPicturePageData();
 		StudentRegistration studentRegistration = studentRegistrationService.getStudentReg(emailId);
 		myPicturePageData = mapPagedata(pageRequest);
+		studentRegistration.setImageApprovalRequired(myPicturePageData.getImageApprovalRequired());
 		if ("Y".equals(myPicturePageData.getDeleteImage())) {
-			studentRegistration.setAvatarName(null);
+			String currentImageName = studentRegistration.getPhotoName();
 			studentRegistration.setPhotoName(null);
+			studentRegistration.setAvatarName(null);
 			studentRegistrationService.update(studentRegistration);
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages(module, "student", currentImageName);
+			}
 		} else {
 			if (myPicturePageData.getAvatarName() != null && !"".equals(myPicturePageData.getAvatarName())) {
 				studentRegistration.setAvatarName(myPicturePageData.getAvatarName());
 				String currentImageName = studentRegistration.getPhotoName();
 				studentRegistration.setPhotoName(null);
-				String imagesFolderPath = propertiesService.getProperty(module,
-						"student-image-config.imagesRootFolderPath");
 				if (currentImageName != null && !"".equals(currentImageName)) {
-					String size1OldFileName = imagesFolderPath
-							+ propertiesService.getProperty(module, "student-image-config.size1-folder-path")
-							+ currentImageName;
-					String size2OldFileName = imagesFolderPath
-							+ propertiesService.getProperty(module, "student-image-config.size2-folder-path")
-							+ currentImageName;
-					String size3OldFileName = imagesFolderPath
-							+ propertiesService.getProperty(module, "student-image-config.size3-folder-path")
-							+ currentImageName;
-					String size4OldFileName = imagesFolderPath
-							+ propertiesService.getProperty(module, "student-image-config.size4-folder-path")
-							+ currentImageName;
-					File oldFileJPG1 = new File(size1OldFileName);
-					oldFileJPG1.delete();
-					File oldFileJPG2 = new File(size2OldFileName);
-					oldFileJPG2.delete();
-					File oldFileJPG3 = new File(size3OldFileName);
-					oldFileJPG3.delete();
-					File oldFileJPG4 = new File(size4OldFileName);
-					oldFileJPG4.delete();
+					commonService.deleteImages(module, "student", currentImageName);
 				}
 			} else if (myPicturePageData.getPhotoBase64() != null && !"".equals(myPicturePageData.getPhotoBase64())) {
 				String newImageName = studentRegistration.getStudentId() + "_" + System.currentTimeMillis();
+				String currentImageName = studentRegistration.getPhotoName();
 				String imageType = "jpg";
 				if (myPicturePageData.getImageTypeExt() != null && !"".equals(myPicturePageData.getImageTypeExt())) {
 					imageType = myPicturePageData.getImageTypeExt();
 				}
 				boolean saveFlag = commonService.saveImages(module, "student", imageType,
-						myPicturePageData.getPhotoBase64(), newImageName, studentRegistration.getPhotoName());
+						myPicturePageData.getPhotoBase64(), newImageName);
 				if (saveFlag) {
 					studentRegistration.setAvatarName(null);
 					studentRegistration.setPhotoName(newImageName + "." + imageType);
+				}
+				if (currentImageName != null && !"".equals(currentImageName)) {
+					commonService.deleteImages(module, "student", currentImageName);
 				}
 			}
 			studentRegistrationService.update(studentRegistration);

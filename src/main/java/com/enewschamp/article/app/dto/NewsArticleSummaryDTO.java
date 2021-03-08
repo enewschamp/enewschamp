@@ -2,7 +2,6 @@ package com.enewschamp.article.app.dto;
 
 import java.time.LocalDate;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.enewschamp.app.common.AbstractDTO;

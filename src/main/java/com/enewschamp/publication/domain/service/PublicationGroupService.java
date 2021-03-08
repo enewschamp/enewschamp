@@ -9,9 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.article.domain.service.NewsArticleGroupService;
+import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.BusinessException;
@@ -43,6 +44,12 @@ public class PublicationGroupService {
 	AuditService auditService;
 
 	@Autowired
+	NewsArticleGroupService newsArticleGroupService;
+
+	@Autowired
+	NewsArticleService newsArticleService;
+
+	@Autowired
 	private PublicationService publicationService;
 
 	@Autowired
@@ -57,6 +64,7 @@ public class PublicationGroupService {
 	}
 
 	public PublicationGroup update(PublicationGroup publicationGroup) {
+		deriveStatus(publicationGroup);
 		Long publicationGroupId = publicationGroup.getPublicationGroupId();
 		PublicationGroup existingEntity = load(publicationGroupId);
 		modelMapper.map(publicationGroup, existingEntity);
@@ -109,7 +117,8 @@ public class PublicationGroupService {
 	public String getAudit(Long publicationGroupId) {
 		PublicationGroup publicationGroup = new PublicationGroup();
 		publicationGroup.setPublicationGroupId(publicationGroupId);
-		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig)
+		AuditBuilder auditBuilder = AuditBuilder
+				.getInstance(auditService, newsArticleGroupService, newsArticleService, objectMapper, appConfig)
 				.forParentObject(publicationGroup);
 		return auditBuilder.build();
 	}

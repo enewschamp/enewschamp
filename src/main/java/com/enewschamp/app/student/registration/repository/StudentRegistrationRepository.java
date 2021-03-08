@@ -13,4 +13,7 @@ public interface StudentRegistrationRepository extends JpaRepository<StudentRegi
 	@Query("Select s from  StudentRegistration s where s.emailId= :emailId")
 	public Optional<StudentRegistration> getStudent(@Param("emailId") String emailId);
 
+	@Query("Select s.emailId from  StudentRegistration s where s.studentKey= :studentKey")
+	public String getStudentEmailByKey(@Param("studentKey") String studentKey);
+
 }

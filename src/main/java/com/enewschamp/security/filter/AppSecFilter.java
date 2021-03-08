@@ -22,7 +22,9 @@ import org.springframework.web.filter.GenericFilterBean;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageRequestDTO;
+import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.common.RequestStatusType;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.Fault;
 import com.enewschamp.security.service.AppSecurityService;
@@ -34,7 +36,10 @@ public class AppSecFilter extends GenericFilterBean {
 
 	@Autowired
 	AppSecurityService appSecService;
-	
+
+	@Autowired
+	private PropertiesBackendService propertiesService;
+
 	@Autowired
 	ObjectMapper objectMapper;
 
@@ -45,8 +50,14 @@ public class AppSecFilter extends GenericFilterBean {
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
+		String callbackURL = propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_CALLBACK_URL);
+		System.out.println(">>>>>URL>>>>>>>>" + request.getRequestURL());
 		final MultiReadHttpServletRequest requestWrapper = new MultiReadHttpServletRequest(request);
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
+		if (callbackURL.equalsIgnoreCase(request.getRequestURL().toString())) {
+			filterChain.doFilter(request, response);
+			return;
+		}
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
 		response.setHeader("Access-Control-Allow-Headers", "*");

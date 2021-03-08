@@ -21,7 +21,6 @@ import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
 
 import lombok.extern.java.Log;
 

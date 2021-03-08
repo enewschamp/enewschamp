@@ -27,7 +27,6 @@ import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.article.domain.common.ArticleType;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
-import com.enewschamp.article.domain.entity.NewsArticleQuiz;
 import com.enewschamp.article.page.data.NewsArticleSearchRequest;
 import com.enewschamp.article.page.data.PropertyAuditData;
 import com.enewschamp.audit.domain.AuditBuilder;
@@ -64,6 +63,9 @@ public class NewsArticleService {
 
 	@Autowired
 	AuditService auditService;
+
+	@Autowired
+	NewsArticleGroupService newsArticleGroupService;
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -122,7 +124,8 @@ public class NewsArticleService {
 	public List<PropertyAuditData> getPreviousComments(Long articleId) {
 		NewsArticle newsArticle = new NewsArticle();
 		newsArticle.setNewsArticleId(articleId);
-		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig)
+		AuditBuilder auditBuilder = AuditBuilder
+				.getInstance(auditService, newsArticleGroupService, this, objectMapper, appConfig)
 				.forParentObject(newsArticle);
 		auditBuilder.forProperty("comments");
 		return auditBuilder.buildPropertyAudit();
@@ -152,14 +155,15 @@ public class NewsArticleService {
 		NewsArticle article = new NewsArticle();
 		article.setNewsArticleId(articleId);
 
-		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig)
+		AuditBuilder auditBuilder = AuditBuilder
+				.getInstance(auditService, newsArticleGroupService, this, objectMapper, appConfig)
 				.forParentObject(article);
 
 		// Fetch article quiz changes
-		article = load(articleId);
-		for (NewsArticleQuiz quiz : article.getNewsArticleQuiz()) {
-			auditBuilder.forChildObject(quiz);
-		}
+		// article = load(articleId);
+		// for (NewsArticleQuiz quiz : article.getNewsArticleQuiz()) {
+		// auditBuilder.forChildObject(quiz);
+		// }
 		return auditBuilder.build();
 	}
 

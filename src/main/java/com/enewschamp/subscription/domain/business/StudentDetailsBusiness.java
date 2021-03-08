@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.subscription.app.dto.StudentDetailsDTO;
 import com.enewschamp.subscription.app.dto.StudentDetailsWorkDTO;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
@@ -26,9 +25,6 @@ public class StudentDetailsBusiness {
 
 	public StudentDetailsWork saveAsWork(StudentDetailsWorkDTO studentDetailsWorkDTO) {
 		StudentDetailsWork studentDetailsWork = modelMapper.map(studentDetailsWorkDTO, StudentDetailsWork.class);
-		// to be changed
-		studentDetailsWork.setOperatorId("APP");
-		studentDetailsWork.setRecordInUse(RecordInUseType.Y);
 		studentDetailsWork = studentDetailsWorkService.create(studentDetailsWork);
 		return studentDetailsWork;
 	}
@@ -43,9 +39,7 @@ public class StudentDetailsBusiness {
 
 	public StudentDetails saveAsMaster(StudentDetailsDTO studentDetailsDTO) {
 		StudentDetails studentEntity = modelMapper.map(studentDetailsDTO, StudentDetails.class);
-		studentEntity.setOperatorId("APP");
-		studentEntity.setRecordInUse(RecordInUseType.Y);
-		studentDetailsService.create(studentEntity);
+		studentEntity = studentDetailsService.create(studentEntity);
 		return studentEntity;
 	}
 
@@ -66,35 +60,4 @@ public class StudentDetailsBusiness {
 		}
 		return studentDetailsDTO;
 	}
-
-	/*
-	 * public void deleteFromWork(StudentDetailsWorkDTO studentDetailsWorkDTO) {
-	 * studentDetailsWorkService.delete(studentDetailsWorkDTO.getStudentId()); }
-	 */
-
-	/*
-	 * public boolean isStudentExist(Long studentId) { return
-	 * studentDetailsService.studentExist(studentId); }
-	 */
-
-	/*
-	 * public StudentControlDTO getStudentFromMaster(String emailId) {
-	 * StudentControl studentEntity =
-	 * studentDetailsService.getStudentByEmail(emailId); if(studentEntity!=null) {
-	 * StudentControlDTO studentDto =
-	 * modelMapper.map(studentEntity,StudentControlDTO.class); return studentDto; }
-	 * else return null;
-	 * 
-	 * }
-	 */
-
-	/*
-	 * public StudentControlWorkDTO getStudentFromWork(String emailId) {
-	 * StudentControlWork studentEntityWork =
-	 * studentControlWorkService.getStudentByEmail(emailId); StudentControlWorkDTO
-	 * studentDto = modelMapper.map(studentEntityWork,StudentControlWorkDTO.class);
-	 * return studentDto;
-	 * 
-	 * }
-	 */
 }

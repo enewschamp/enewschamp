@@ -111,6 +111,7 @@ public class NewsArticleHelper {
 		article.setPublicationId(newsArticleLinkageDTO.getPublicationId());
 		article.setPublicationDate(publicationDate);
 		article.setSequence(newsArticleLinkageDTO.getSequence());
+		article.setReadyForTest(newsArticleLinkageDTO.getReadyForTest());
 		if (PublicationStatusType.Published.equals(publicationStatus)) {
 			article.setStatus(ArticleStatusType.Published, article.getStatus());
 			NewsArticleGroup articleGroup = newsArticleGroupService.get(article.getNewsArticleGroupId());

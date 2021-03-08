@@ -41,12 +41,26 @@ public class AvatarController {
 	public ResponseEntity<AvatarDTO> create(@RequestBody @Valid AvatarDTO avatarDTO) {
 		Avatar avatar = modelMapper.map(avatarDTO, Avatar.class);
 		avatar = avatarService.create(avatar);
-		String newImageName = avatar.getAvatarId() + "_" + System.currentTimeMillis();
-		String imageType = avatarDTO.getImageTypeExt();
-		boolean saveFlag = commonService.saveImages("Admin", "avatar", imageType, avatarDTO.getBase64Image(),
-				newImageName, avatar.getImageName());
-		if (saveFlag) {
-			avatar.setImageName(newImageName + "." + imageType);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(avatarDTO.getImageUpdate())) {
+			String newImageName = avatar.getAvatarId() + "_" + System.currentTimeMillis();
+			String imageType = avatarDTO.getImageTypeExt();
+			String currentImageName = avatar.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "avatar", imageType, avatarDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				avatar.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				avatar.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "avatar", currentImageName);
+				updateFlag = true;
+			}
+		}
+		if (updateFlag) {
 			avatar = avatarService.update(avatar);
 		}
 		avatarDTO = modelMapper.map(avatar, AvatarDTO.class);
@@ -58,6 +72,28 @@ public class AvatarController {
 		avatarDTO.setAvatarId(avatarId);
 		Avatar avatar = modelMapper.map(avatarDTO, Avatar.class);
 		avatar = avatarService.update(avatar);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(avatarDTO.getImageUpdate())) {
+			String newImageName = avatar.getAvatarId() + "_" + System.currentTimeMillis();
+			String imageType = avatarDTO.getImageTypeExt();
+			String currentImageName = avatar.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "avatar", imageType, avatarDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				avatar.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				avatar.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "avatar", currentImageName);
+				updateFlag = true;
+			}
+		}
+		if (updateFlag) {
+			avatar = avatarService.update(avatar);
+		}
 		avatarDTO = modelMapper.map(avatar, AvatarDTO.class);
 		return new ResponseEntity<AvatarDTO>(avatarDTO, HttpStatus.OK);
 	}

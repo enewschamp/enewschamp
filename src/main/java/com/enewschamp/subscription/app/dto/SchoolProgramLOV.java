@@ -1,18 +1,15 @@
 package com.enewschamp.subscription.app.dto;
 
+import java.io.Serializable;
+
+import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.enewschamp.app.common.AbstractDTO;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-//@Entity
-public class SchoolProgramLOV extends AbstractDTO {
+@Entity
+public class SchoolProgramLOV implements Serializable {
 
 	/**
 	 * 

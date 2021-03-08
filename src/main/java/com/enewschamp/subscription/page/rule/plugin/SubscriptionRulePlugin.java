@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.rules.plugin.IPageNavRuleDataPlugin;
-import com.enewschamp.subscription.app.dto.StudentControlWorkDTO;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
-import com.enewschamp.subscription.domain.entity.StudentSubscriptionWork;
 
 @Component(value = "SubscriptionRulePlugin")
 public class SubscriptionRulePlugin implements IPageNavRuleDataPlugin {

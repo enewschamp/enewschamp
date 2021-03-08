@@ -78,6 +78,7 @@ public class NewsArticleGroupPageHandler implements IPageHandler {
 				objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
 				articleGroupDTO = objectMapper.readValue(pageRequest.getData().toString(), NewsArticleGroupDTO.class);
 			} catch (JsonParseException e) {
+				System.out.println(e);
 				throw new RuntimeException(e);
 			} catch (JsonMappingException e) {
 				throw new RuntimeException(e);

@@ -2,10 +2,7 @@ package com.enewschamp.subscription.domain.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -27,12 +24,15 @@ public class StudentShareAchievements extends BaseEntity {
 
 	@Id
 	@NotNull
-	@Column(name = "studentId", length = 10)
+	@Column(name = "studentId", length = 100)
 	private Long studentId;
 
 	@NotNull
-	@Column(name = "personalisedMessage", length = 200)
+	@Column(name = "personalisedMessage", length = 500)
 	private String personalisedMessage;
+
+	@Column(name = "approvalRequired", length = 1)
+	private String approvalRequired;
 
 	@Column(name = "recipientName1", length = 99)
 	private String recipientName1;

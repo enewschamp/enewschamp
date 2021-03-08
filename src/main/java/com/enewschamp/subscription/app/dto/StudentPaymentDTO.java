@@ -1,7 +1,5 @@
 package com.enewschamp.subscription.app.dto;
 
-import java.util.Date;
-
 import com.enewschamp.app.common.AbstractDTO;
 
 import lombok.Data;

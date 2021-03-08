@@ -11,7 +11,6 @@ public class ArticleQuizCompletionDTO implements java.io.Serializable {
 
 	private Long articleId;
 	private String quizCompletionMessage;
-	private String soundFile;
 	private BadgeDetailsDTO monthlyBadge;
 	private BadgeDetailsDTO genreBadge;
 }

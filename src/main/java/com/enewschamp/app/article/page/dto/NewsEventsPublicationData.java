@@ -45,4 +45,6 @@ public class NewsEventsPublicationData {
 	private String quizAvailable;
 	@JsonInclude
 	private String quizCompleted;
+	@JsonInclude
+	private String imageName;
 }

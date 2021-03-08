@@ -12,12 +12,10 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.city.repository.CityRepository;
-import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.CityPageData;
-import com.enewschamp.subscription.app.dto.CountryPageData;
 
 @Service
 public class CityService extends AbstractDomainService {
@@ -54,8 +52,8 @@ public class CityService extends AbstractDomainService {
 		cityRepository.deleteById(CityId);
 	}
 
-	public City get(Long CityId) {
-		Optional<City> existingEntity = cityRepository.findById(CityId);
+	public City get(Long cityId) {
+		Optional<City> existingEntity = cityRepository.findById(cityId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {

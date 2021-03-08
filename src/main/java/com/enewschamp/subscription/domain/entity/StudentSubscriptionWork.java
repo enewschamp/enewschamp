@@ -17,10 +17,15 @@ import lombok.EqualsAndHashCode;
 @Table(name = "StudentSubscriptionWork")
 public class StudentSubscriptionWork extends BaseEntity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@NotNull
-	@Column(name = "StudentId", length = 10)
-	private long studentId = 0L;
+	@Column(name = "studentId", length = 100)
+	private Long studentId;
 
 	@NotNull
 	@Column(name = "EditionId", length = 6)

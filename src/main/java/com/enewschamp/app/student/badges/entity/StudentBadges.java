@@ -34,7 +34,7 @@ public class StudentBadges extends BaseEntity {
 	private Long studentBadgesId;
 
 	@NotNull
-	@Column(name = "studentId", length = 10)
+	@Column(name = "studentId", length = 100)
 	private Long studentId;
 
 	@Column(name = "badgeId", length = 3)

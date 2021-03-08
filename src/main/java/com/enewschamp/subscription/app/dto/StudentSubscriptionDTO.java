@@ -21,7 +21,7 @@ public class StudentSubscriptionDTO extends AbstractDTO {
 
 	@NotNull
 	@Size(max = 10)
-	private long studentId = 0L;
+	private Long studentId = 0L;
 
 	@NotNull
 	@Size(max = 6)

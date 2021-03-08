@@ -42,4 +42,8 @@ public class AppSecurity {
 	@Column(name = "isAppAvailable", length = 1)
 	private String isAppAvailable;
 
+	@NotNull
+	@Column(name = "compatibleVersions", length = 500)
+	private String compatibleVersions;
+
 }

@@ -8,17 +8,19 @@ DROP TABLE recognition_data;
 
 CREATE OR REPLACE VIEW champs_vw AS
     SELECT 
-        a.student_id AS student_id,r.avatar_name, r.photo_name,a.name AS student_name, a.surname AS surname, b.grade, c.name AS school_name,
-d.name_id AS city_name, e.quiz_correct AS score, e.score_year_month AS 'year_month', FORMAT(f.reading_level,0) AS reading_level,
-RANK() OVER (PARTITION BY FORMAT(f.reading_level,0),e.score_year_month ORDER BY e.quiz_correct DESC) AS `rank`
+        a.student_id AS student_id,f.feature_profile_in_champs,f.champ_city,f.champ_school,f.champ_profile_pic,r.image_approval_required,r.avatar_name,r.photo_name,a.name AS NAME,a.surname AS surname,a.approval_required AS student_details_approval_required,b.grade,b.approval_required AS school_details_approval_required,ifnull(c.name,b.school) AS school,
+ifnull(ct.description,b.city) AS city,ifnull(st.description,b.state) AS state,ifnull(co.description,b.country) AS country, e.quiz_correct AS score, e.score_year_month AS 'year_month', FORMAT(f.reading_level,0) AS reading_level,
+DENSE_RANK() OVER (PARTITION BY FORMAT(f.reading_level,0),e.score_year_month ORDER BY e.quiz_correct DESC) AS `rank`
     FROM
-	scores_monthly_total e
+	student_details a,scores_monthly_total e
 	LEFT OUTER JOIN student_preferences f ON f.student_id=e.student_id
 	LEFT OUTER JOIN student_registration r ON r.student_id=e.student_id
-	LEFT OUTER JOIN student_details a ON a.student_id=e.student_id
 	LEFT OUTER JOIN student_school b ON b.student_id=e.student_id
 	LEFT OUTER JOIN school c ON b.school=c.school_id
-	LEFT OUTER JOIN city d ON d.name_id=c.city_id;
+     LEFT OUTER JOIN city ct ON ct.name_id=b.city
+    LEFT OUTER JOIN state st ON st.name_id=b.state
+    LEFT OUTER JOIN country co ON co.name_id=b.country
+	WHERE a.student_id=e.student_id;
 	
 CREATE OR REPLACE VIEW daily_published_articles_vw AS
 SELECT a.publication_date AS publication_date,a.reading_level AS reading_level,COUNT(DISTINCT a.news_article_id) AS articles_published,COUNT(q.news_article_quiz_id) AS quiz_published

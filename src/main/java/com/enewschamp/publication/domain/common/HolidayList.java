@@ -7,4 +7,8 @@ public interface HolidayList {
 	LocalDate getHolidayDate();
 
 	String getHoliday();
+
+	String getPublication();
+
+	String getHelpdesk();
 }

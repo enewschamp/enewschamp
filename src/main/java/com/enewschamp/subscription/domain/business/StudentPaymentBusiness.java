@@ -4,11 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.subscription.app.dto.StudentPaymentDTO;
 import com.enewschamp.subscription.app.dto.StudentPaymentWorkDTO;
 import com.enewschamp.subscription.domain.entity.StudentPayment;
+import com.enewschamp.subscription.domain.entity.StudentPaymentFailed;
 import com.enewschamp.subscription.domain.entity.StudentPaymentWork;
+import com.enewschamp.subscription.domain.service.StudentPaymentFailedService;
 import com.enewschamp.subscription.domain.service.StudentPaymentService;
 import com.enewschamp.subscription.domain.service.StudentPaymentWorkService;
 
@@ -24,10 +25,11 @@ public class StudentPaymentBusiness {
 	@Autowired
 	StudentPaymentWorkService studentPaymentWorkService;
 
+	@Autowired
+	StudentPaymentFailedService studentPaymentFailedService;
+
 	public void saveAsMaster(StudentPaymentDTO studentPaymentPageDTO) {
 		StudentPayment studentPayment = modelMapper.map(studentPaymentPageDTO, StudentPayment.class);
-		studentPayment.setRecordInUse(RecordInUseType.Y);
-		studentPayment.setOperatorId("SYSTEM");
 		studentPaymentService.create(studentPayment);
 	}
 
@@ -37,12 +39,20 @@ public class StudentPaymentBusiness {
 	}
 
 	public void workToMaster(Long studentId, String editionId) {
-		StudentPaymentWork workEntity = studentPaymentWorkService.getByStudentIdAndEdition(studentId, editionId);
+		StudentPaymentWork workEntity = studentPaymentWorkService.getSuccessTransactionByStudentIdAndEdition(studentId,
+				editionId);
 		if (workEntity != null) {
 			StudentPayment masterEntity = modelMapper.map(workEntity, StudentPayment.class);
-			masterEntity.setOperatorId("SYSTEM");
-			masterEntity.setRecordInUse(RecordInUseType.Y);
 			studentPaymentService.create(masterEntity);
+		}
+	}
+
+	public void workToFailed(String orderId) {
+		StudentPaymentWork workEntity = studentPaymentWorkService.getByOrderId(orderId);
+		if (workEntity != null) {
+			StudentPaymentFailed masterEntity = modelMapper.map(workEntity, StudentPaymentFailed.class);
+			studentPaymentFailedService.create(masterEntity);
+			studentPaymentWorkService.delete(workEntity.getPaymentId());
 		}
 	}
 

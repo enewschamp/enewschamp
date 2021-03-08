@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
@@ -15,8 +14,6 @@ import com.enewschamp.app.fw.page.navigation.entity.PageNavigatorRules;
 import com.enewschamp.app.fw.page.navigation.repository.PageNavigatorRulesRepository;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.problem.Fault;
-import com.enewschamp.problem.HttpStatusAdapter;
 import com.google.common.reflect.TypeToken;
 
 @Service

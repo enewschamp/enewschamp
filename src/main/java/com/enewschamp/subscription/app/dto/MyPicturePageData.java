@@ -23,6 +23,9 @@ public class MyPicturePageData extends PageData {
 	@JsonInclude
 	private String photoName;
 
+	@JsonInclude
+	private String imageApprovalRequired;
+
 	private String photoBase64;
 
 	private String imageTypeExt;

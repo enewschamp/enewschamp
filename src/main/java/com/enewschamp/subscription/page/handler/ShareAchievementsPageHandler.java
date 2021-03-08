@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.ReceipientsPageData;
 import com.enewschamp.subscription.app.dto.StudentShareAchievementsDTO;
@@ -89,7 +91,8 @@ public class ShareAchievementsPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -107,6 +110,8 @@ public class ShareAchievementsPageHandler implements IPageHandler {
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		StudentShareAchievementsDTO studAch = mapPageToDTO(studentShareAchievementsPageData);
 		studAch.setStudentId(studentId);
+		studAch.setOperatorId(emailId);
+		studAch.setRecordInUse(RecordInUseType.Y);
 		studAch.setPersonalisedMessage(studentShareAchievementsPageData.getPersonalisedMessage());
 		try {
 			studentShareAchievementsBusiness.saveAsMaster(studAch);
@@ -174,6 +179,7 @@ public class ShareAchievementsPageHandler implements IPageHandler {
 		recipientList = addRecipient(recipientContact10, recipientName10, recipientGreeting10, recipientList);
 		studentShareAchievementsPageData.setRecipients(recipientList);
 		studentShareAchievementsPageData.setPersonalisedMessage(ach.getPersonalisedMessage());
+		studentShareAchievementsPageData.setApprovalRequired(ach.getApprovalRequired());
 		return studentShareAchievementsPageData;
 	}
 
@@ -193,6 +199,7 @@ public class ShareAchievementsPageHandler implements IPageHandler {
 		StudentShareAchievementsDTO studentShareAchievementsDTO = new StudentShareAchievementsDTO();
 		List<ReceipientsPageData> recipientList = studentShareAchievementsPageData.getRecipients();
 		studentShareAchievementsDTO.setPersonalisedMessage(studentShareAchievementsPageData.getPersonalisedMessage());
+		studentShareAchievementsDTO.setApprovalRequired(studentShareAchievementsPageData.getApprovalRequired());
 		if (!recipientList.isEmpty()) {
 			studentShareAchievementsDTO.setRecipientContact1(recipientList.get(0).getRecipientContact());
 			studentShareAchievementsDTO.setRecipientName1(recipientList.get(0).getRecipientName());

@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -122,15 +121,18 @@ public class User extends BaseEntity {
 	@NotNull
 	@Column(name = "isActive", length = 1)
 	private String isActive = "Y";
-	
+
 	@Column(name = "theme", length = 1)
 	private String theme;
 
 	@Column(name = "fontHeight", length = 1)
 	private String fontHeight;
 
-	@Column(name = "ImageName", length = 100)
+	@Column(name = "imageName", length = 100)
 	private String imageName;
+
+	@Column(name = "forcePasswordChange", length = 1)
+	private String forcePasswordChange = "N";
 
 	@Column(name = "creationDateTime")
 	private LocalDateTime creationDateTime;

@@ -26,4 +26,6 @@ public class GenreDTO extends MaintenanceDTO {
 	@JsonInclude
 	private String imageName;
 
+	private String imageUpdate;
+
 }

@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.app.dto.StudentControlWorkDTO;
 import com.enewschamp.subscription.domain.entity.StudentControl;
@@ -26,26 +25,18 @@ public class StudentControlBusiness {
 
 	public StudentControlWork saveAsWork(StudentControlWorkDTO studenControlWorkDTO) {
 		StudentControlWork studentControlWork = modelMapper.map(studenControlWorkDTO, StudentControlWork.class);
-		// to be changed
-		studentControlWork.setOperatorId("APP");
-		studentControlWork.setRecordInUse(RecordInUseType.Y);
 		studentControlWork = studentControlWorkService.create(studentControlWork);
 		return studentControlWork;
 	}
 
 	public StudentControlWork updateAsWork(StudentControlWorkDTO studenControlWorkDto) {
 		StudentControlWork studentControlWork = modelMapper.map(studenControlWorkDto, StudentControlWork.class);
-		studentControlWork.setOperatorId("APP");
-		studentControlWork.setRecordInUse(RecordInUseType.Y);
 		studentControlWork = studentControlWorkService.update(studentControlWork);
 		return studentControlWork;
 	}
 
 	public StudentControl saveAsMaster(StudentControlDTO studenControlDto) {
 		StudentControl studentControl = modelMapper.map(studenControlDto, StudentControl.class);
-		// to be changed
-		studentControl.setOperatorId("APP");
-		studentControl.setRecordInUse(RecordInUseType.Y);
 		studentControl = studentControlService.create(studentControl);
 		return studentControl;
 	}

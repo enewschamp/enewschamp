@@ -27,8 +27,6 @@ public class ScoresDailyBusiness {
 
 	public ScoresDailyDTO saveScoresDaily(ScoresDailyDTO studentActivityDTO) {
 		ScoresDaily scoresDaily = modelMapper.map(studentActivityDTO, ScoresDaily.class);
-		scoresDaily.setRecordInUse(RecordInUseType.Y);
-		scoresDaily.setOperatorId("SYSTEM");
 		scoresDaily = scoresDailyService.create(scoresDaily);
 		ScoresDailyDTO studentActivityNew = modelMapper.map(scoresDaily, ScoresDailyDTO.class);
 		return studentActivityNew;
@@ -49,8 +47,8 @@ public class ScoresDailyBusiness {
 			return null;
 	}
 
-	public ScoresDailyDTO saveQuizData(Long newsArticleId, Long studentId, String editionId, int readingLevel,
-			Long quizQAttempted, Long quizQCorrect) {
+	public ScoresDailyDTO saveQuizData(Long newsArticleId, Long studentId, String emailId, String editionId,
+			int readingLevel, Long quizQAttempted, Long quizQCorrect) {
 		NewsArticle newsArticle = newsArticleService.get(newsArticleId);
 		LocalDate publicationDate = newsArticle.getPublicationDate();
 		ScoresDailyDTO scoresDailyDTO = getScoresDaily(studentId, editionId, readingLevel, publicationDate);
@@ -63,6 +61,8 @@ public class ScoresDailyBusiness {
 			scoresDailyDTONew.setArticlesRead(Long.valueOf(1));
 			scoresDailyDTONew.setQuizAttempted(quizQAttempted);
 			scoresDailyDTONew.setQuizCorrect(quizQCorrect);
+			scoresDailyDTONew.setOperatorId(emailId);
+			scoresDailyDTONew.setRecordInUse(RecordInUseType.Y);
 			scoresDailyDTO = saveScoresDaily(scoresDailyDTONew);
 		} else {
 			Long quizQAttemptedTmp = (scoresDailyDTO.getQuizAttempted() == null) ? 0
@@ -75,6 +75,8 @@ public class ScoresDailyBusiness {
 			Long quizQCorrectTmp = (scoresDailyDTO.getQuizCorrect() == null) ? 0 : scoresDailyDTO.getQuizCorrect();
 			quizQCorrectTmp = quizQCorrectTmp + quizQCorrect;
 			scoresDailyDTO.setQuizCorrect(quizQCorrectTmp);
+			scoresDailyDTO.setOperatorId(emailId);
+			scoresDailyDTO.setRecordInUse(RecordInUseType.Y);
 			scoresDailyDTO = saveScoresDaily(scoresDailyDTO);
 		}
 		return scoresDailyDTO;

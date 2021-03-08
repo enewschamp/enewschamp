@@ -9,6 +9,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import com.enewschamp.app.common.uicontrols.dto.UIControlsDTO;
 import com.enewschamp.common.app.dto.PropertiesFrontendDTO;
+import com.enewschamp.publication.domain.common.BOUserList;
 import com.enewschamp.publication.domain.common.BadgeList;
 import com.enewschamp.publication.domain.common.GenreList;
 import com.enewschamp.publication.domain.common.HolidayList;
@@ -40,5 +41,11 @@ public class PageDTO implements Serializable {
 
 	private List<HolidayList> holidays;
 
+	private List<BOUserList> boUsers;
+
 	private String errorMessage;
+
+	private String exitPrev;
+
+	private String exitNext;
 }

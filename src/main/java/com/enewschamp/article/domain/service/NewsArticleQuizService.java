@@ -56,7 +56,7 @@ public class NewsArticleQuizService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.EDITION_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.QUIZ_NOT_FOUND, String.valueOf(newsArticleQuizId));
 		}
 	}
 
@@ -65,7 +65,7 @@ public class NewsArticleQuizService {
 		if (!existingEntity.isEmpty()) {
 			return existingEntity;
 		} else {
-			throw new BusinessException(ErrorCodeConstants.ARTICLE_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.ARTICLE_NOT_FOUND, String.valueOf(newsArticleId));
 		}
 	}
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,9 +17,9 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.registration.business.StudentRegistrationBusiness;
 import com.enewschamp.app.student.registration.service.StudentRegistrationService;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
-import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.app.dto.StudentControlWorkDTO;
@@ -81,21 +82,25 @@ public class SubscriptionPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
 	}
 
 	public PageDTO loadSubscriptionPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		StudentSubscriptionPageData subscripionPagedata = new StudentSubscriptionPageData();
-		if (pageNavigationContext.getPageRequest().getData().get("emailId") != null) {
-			subscripionPagedata.setEmailId(pageNavigationContext.getPageRequest().getData().get("emailId").asText());
+		String emailId = pageNavigationContext.getPageRequest().getData().get("emailId").asText();
+		if (emailId != null) {
+			subscripionPagedata.setEmailId(emailId);
+			pageNavigationContext.getPageRequest().getHeader().setEmailId(emailId);
 		}
 		pageDto.setData(subscripionPagedata);
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
@@ -163,7 +168,8 @@ public class SubscriptionPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -178,10 +184,10 @@ public class SubscriptionPageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		String operation = pageRequest.getHeader().getOperation();
 		String editionId = pageRequest.getHeader().getEditionId();
+		String emailId = pageRequest.getHeader().getEmailId();
 		String saveIn = pageNavigatorDTO.getUpdationTable();
 		String evalAvailed = "";
 		StudentSubscriptionPageData subscripionPagedata = mapPagedata(pageRequest);
-		String emailId = subscripionPagedata.getEmailId();
 		studentRegBusiness.checkAndUpdateIfEvalPeriodExpired(emailId, editionId);
 		Long studentId = 0L;
 		if (PageSaveTable.W.toString().equals(saveIn)) {
@@ -200,6 +206,8 @@ public class SubscriptionPageHandler implements IPageHandler {
 					&& "S".equalsIgnoreCase(subscripionPagedata.getSubscriptionSelected())) {
 				studentControlWorkDTO.setNextPageOperation("SchoolSubs");
 			}
+			studentControlWorkDTO.setOperatorId(emailId);
+			studentControlWorkDTO.setRecordInUse(RecordInUseType.Y);
 			StudentControlWork studentControlWork = studentControlBusiness.saveAsWork(studentControlWorkDTO);
 			studentId = studentControlWork.getStudentId();
 			subscriptionBusiness.saveAsWork(studentId, evalAvailed, pageRequest);

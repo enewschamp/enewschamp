@@ -46,16 +46,17 @@ public class UserLoginBusiness {
 		userLogin.setDeviceId(deviceId);
 		userLogin.setLoginFlag(AppConstants.NO);
 		userLogin.setLastLoginTime(LocalDateTime.now());
-		userLogin.setTokenExpirationTime(LocalDateTime.now().plusSeconds(Integer
-				.valueOf(propertiesService.getValue("Common", PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS))));
+		userLogin.setTokenExpirationTime(LocalDateTime.now().plusSeconds(
+				Integer.valueOf(propertiesService.getValue("Common", PropertyConstants.LOGIN_SESSION_EXPIRY_SECS))));
 		userLogin.setTokenId("" + System.currentTimeMillis());
-		userLogin.setOperatorId("SYSTEM");
+		userLogin.setOperatorId(userId);
 		userLogin.setUserType(userType);
 		userLogin.setRecordInUse(RecordInUseType.Y);
 		return loginService.create(userLogin);
 	}
 
-	public UserLogin login(final String userId, final String deviceId, final String tokenId, UserType userType) {
+	public UserLogin login(final String userId, final String deviceId, final String tokenId, final String appName,
+			final String appVersion, UserType userType) {
 		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, tokenId, userType);
 		if (loggedIn == null) {
 			loggedIn = loginService.getOperatorLogin(userId);
@@ -65,39 +66,40 @@ public class UserLoginBusiness {
 		}
 		if (loggedIn == null) {
 			UserLogin userLogin = new UserLogin();
-			userLogin.setUserId(userId);
+			userLogin.setUserId((userId == null ? "unknown" : userId));
 			userLogin.setDeviceId(deviceId);
 			userLogin.setLoginFlag(AppConstants.NO);
 			userLogin.setLastLoginTime(LocalDateTime.now());
 			userLogin.setTokenExpirationTime(LocalDateTime.now().plusSeconds(Integer
-					.valueOf(propertiesService.getValue("Common", PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS))));
+					.valueOf(propertiesService.getValue("Common", PropertyConstants.LOGIN_SESSION_EXPIRY_SECS))));
 			userLogin.setTokenId("" + System.currentTimeMillis());
-			userLogin.setOperatorId("SYSTEM");
+			userLogin.setAppName(appName);
+			userLogin.setAppVersion(appVersion);
+			userLogin.setOperatorId((userId == null ? "unknown" : userId));
 			userLogin.setUserType(userType);
 			userLogin.setRecordInUse(RecordInUseType.Y);
 			loggedIn = loginService.create(userLogin);
 		} else {
 			loggedIn.setLastLoginTime(LocalDateTime.now());
 			loggedIn.setTokenExpirationTime(LocalDateTime.now().plusSeconds(Integer
-					.valueOf(propertiesService.getValue("Common", PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS))));
-			if (!userId.equalsIgnoreCase(loggedIn.getUserId())) {
+					.valueOf(propertiesService.getValue("Common", PropertyConstants.LOGIN_SESSION_EXPIRY_SECS))));
+			if (!loggedIn.getUserId().equalsIgnoreCase(userId)) {
 				loggedIn.setUserId("");
 				loggedIn.setLoginFlag(AppConstants.NO);
 			}
 			loggedIn.setTokenId("" + System.currentTimeMillis());
+			loggedIn.setAppName(appName);
+			loggedIn.setAppVersion(appVersion);
 			loginService.update(loggedIn);
 		}
 		return loggedIn;
 	}
 
 	public UserLogin publisherLogin(final String userId, final String deviceId, final String tokenId,
-			UserType userType) {
+			final String appName, final String appVersion, UserType userType) {
 		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, tokenId, userType);
 		if (loggedIn == null) {
 			loggedIn = loginService.getOperatorLogin(userId);
-		}
-		if (UserType.S.equals(userType) && loggedIn == null) {
-			loggedIn = getStudentLoginByDeviceId(deviceId);
 		}
 		if (loggedIn == null) {
 			UserLogin userLogin = new UserLogin();
@@ -106,21 +108,27 @@ public class UserLoginBusiness {
 			userLogin.setLoginFlag(AppConstants.YES);
 			userLogin.setLastLoginTime(LocalDateTime.now());
 			userLogin.setTokenExpirationTime(LocalDateTime.now().plusSeconds(Integer
-					.valueOf(propertiesService.getValue("Common", PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS))));
+					.valueOf(propertiesService.getValue("Common", PropertyConstants.LOGIN_SESSION_EXPIRY_SECS))));
 			userLogin.setTokenId("" + System.currentTimeMillis());
-			userLogin.setOperatorId("SYSTEM");
+			userLogin.setAppName(appName);
+			userLogin.setAppVersion(appVersion);
+			userLogin.setOperatorId(userId);
 			userLogin.setUserType(userType);
 			userLogin.setRecordInUse(RecordInUseType.Y);
 			loggedIn = loginService.create(userLogin);
 		} else {
 			loggedIn.setLastLoginTime(LocalDateTime.now());
 			loggedIn.setTokenExpirationTime(LocalDateTime.now().plusSeconds(Integer
-					.valueOf(propertiesService.getValue("Common", PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS))));
+					.valueOf(propertiesService.getValue("Common", PropertyConstants.LOGIN_SESSION_EXPIRY_SECS))));
 			if (!userId.equalsIgnoreCase(loggedIn.getUserId())) {
 				loggedIn.setUserId("");
 				loggedIn.setLoginFlag(AppConstants.NO);
+			} else {
+				loggedIn.setLoginFlag(AppConstants.YES);
 			}
 			loggedIn.setTokenId("" + System.currentTimeMillis());
+			loggedIn.setAppName(appName);
+			loggedIn.setAppVersion(appVersion);
 			loginService.update(loggedIn);
 		}
 		return loggedIn;

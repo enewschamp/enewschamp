@@ -5,9 +5,7 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -28,7 +26,7 @@ public class StudentDetailsWork extends BaseEntity {
 
 	@Id
 	@NotNull
-	@Column(name = "StudentId", length = 10)
+	@Column(name = "studentId", length = 100)
 	private Long studentId = 0L;
 
 	@Column(name = "Name", length = 50)
@@ -48,4 +46,7 @@ public class StudentDetailsWork extends BaseEntity {
 
 	@Column(name = "MobileNumber", length = 15)
 	private String mobileNumber;
+
+	@Column(name = "approvalRequired", length = 1)
+	private String approvalRequired;
 }

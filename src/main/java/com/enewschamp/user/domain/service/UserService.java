@@ -23,6 +23,7 @@ import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.publication.domain.common.BOUserList;
 import com.enewschamp.user.domain.entity.User;
 
 @Service
@@ -104,6 +105,10 @@ public class UserService extends AbstractDomainService {
 		return toListOfValuesItems(repository.getEditorLOV());
 	}
 
+	public List<BOUserList> getBOUserList() {
+		return repository.getBOUserList();
+	}
+
 	public String getAudit(String userId) {
 		User user = new User();
 		user.setUserId(userId);
@@ -147,16 +152,16 @@ public class UserService extends AbstractDomainService {
 			user.setLastUnsuccessfulLoginAttempt(LocalDateTime.now());
 			user.setIncorrectLoginAttempts(user.getIncorrectLoginAttempts() + 1);
 			if (user.getIncorrectLoginAttempts() == Integer
-					.valueOf(propertiesService.getValue("Publisher", PropertyConstants.PUBLISHER_LOGIN_MAX_ATTEMPTS))) {
+					.valueOf(propertiesService.getValue("Publisher", PropertyConstants.LOGIN_MAX_ATTEMPTS))) {
 				user.setIsAccountLocked("Y");
 			}
-			repository.save(user);
 		} else {
 			user.setLastSuccessfulLoginAttempt(LocalDateTime.now());
 			user.setLastUnsuccessfulLoginAttempt(null);
 			user.setIncorrectLoginAttempts(0);
 			isValid = true;
 		}
+		repository.save(user);
 		return isValid;
 	}
 
@@ -176,6 +181,7 @@ public class UserService extends AbstractDomainService {
 		user.setPassword2(user.getPassword1());
 		user.setPassword1(user.getPassword());
 		user.setPassword(password);
+		user.setForcePasswordChange("N");
 		repository.save(user);
 	}
 
@@ -190,6 +196,7 @@ public class UserService extends AbstractDomainService {
 		user.setIncorrectLoginAttempts(0);
 		user.setLastUnsuccessfulLoginAttempt(null);
 		user.setIsAccountLocked("N");
+		user.setForcePasswordChange("N");
 		repository.save(user);
 	}
 

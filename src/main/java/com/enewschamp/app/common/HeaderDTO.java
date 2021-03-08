@@ -20,11 +20,12 @@ public class HeaderDTO implements Serializable {
 	private String operation;
 	private String editionId;
 	private LocalDate publicationDate;
+	private String studentKey;
 	private String emailId;
 	private String appVersion;
 	private String deviceId;
 	private String userId;
 	private String helpText;
 	private LocalDate todaysDate;
-	private String lastPropChangeTime;
+	private String propertiesLabel;
 }

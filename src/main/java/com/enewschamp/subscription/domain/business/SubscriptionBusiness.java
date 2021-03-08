@@ -66,11 +66,6 @@ public class SubscriptionBusiness {
 			StudentSubscriptionWorkDTO studentSubscpritionWorkDTO) {
 		StudentSubscriptionWork studentSubscriptionWork = modelMapper.map(studentSubscpritionWorkDTO,
 				StudentSubscriptionWork.class);
-		// TO Do // change the operator id..
-
-		studentSubscriptionWork.setOperatorId("APP");
-		studentSubscriptionWork.setRecordInUse(RecordInUseType.Y);
-
 		studentSubscriptionWork = studentWorkSubscription.create(studentSubscriptionWork);
 		return studentSubscriptionWork;
 	}
@@ -93,12 +88,14 @@ public class SubscriptionBusiness {
 		String subscriptionType = subscripionDto.getSubscriptionSelected();
 		String editionId = header.getEditionId();
 		String module = header.getModule();
+		String emailId = header.getEmailId();
 		subscripionDto.setEditionId(editionId);
 		subscripionDto.setStudentId(studentId);
 		Date startDate = new Date();
 		if ("F".equals(subscriptionType)) {
 			if (!"Y".equalsIgnoreCase(evalAvailed)) {
-				int evalDays = Integer.valueOf(propertiesService.getValue(module, PropertyConstants.EVAL_DAYS));
+				int evalDays = Integer
+						.valueOf(propertiesService.getValue(module, PropertyConstants.STUDENT_REGISTRATION_EVAL_DAYS));
 				Calendar c = Calendar.getInstance();
 				c.setTime(startDate);
 				c.add(Calendar.DATE, evalDays);
@@ -110,7 +107,7 @@ public class SubscriptionBusiness {
 			subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 		}
 		subscripionDto.setRecordInUse(RecordInUseType.Y);
-		subscripionDto.setOperatorId("APP");
+		subscripionDto.setOperatorId(emailId);
 		StudentSubscriptionWork subsWork = modelMapper.map(subscripionDto, StudentSubscriptionWork.class);
 		subsWork.setStudentId(studentId);
 		studentWorkSubscription.create(subsWork);
@@ -134,6 +131,7 @@ public class SubscriptionBusiness {
 		String subscriptionType = subscripionDto.getSubscriptionSelected();
 		String editionId = header.getEditionId();
 		String module = header.getModule();
+		String emailId = header.getEmailId();
 		subscripionDto.setEditionId(editionId);
 		boolean studentExist = studentControlBusiness.isStudentExist(studentId);
 
@@ -141,7 +139,8 @@ public class SubscriptionBusiness {
 		if (studentExist) {
 			if ("F".equals(subscriptionType)) {
 				if (!"Y".equalsIgnoreCase(evalAvailed)) {
-					int evalDays = Integer.valueOf(propertiesService.getValue(module, PropertyConstants.EVAL_DAYS));
+					int evalDays = Integer.valueOf(
+							propertiesService.getValue(module, PropertyConstants.STUDENT_REGISTRATION_EVAL_DAYS));
 					Date startDate = new Date();
 					Calendar c = Calendar.getInstance();
 					c.setTime(startDate);
@@ -156,7 +155,7 @@ public class SubscriptionBusiness {
 			subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 		}
 		subscripionDto.setRecordInUse(RecordInUseType.Y);
-		subscripionDto.setOperatorId("APP");
+		subscripionDto.setOperatorId(emailId);
 		StudentSubscription subsmast = modelMapper.map(subscripionDto, StudentSubscription.class);
 		subsmast.setStudentId(studentId);
 		studentSubscriptionService.create(subsmast);
@@ -176,7 +175,8 @@ public class SubscriptionBusiness {
 			StudentSubscription studSubsDto = modelMapper.map(subsWork, StudentSubscription.class);
 			String subscriptionSelected = subsWork.getSubscriptionSelected();
 			if ("F".equalsIgnoreCase(subscriptionSelected)) {
-				int evalDays = Integer.valueOf(propertiesService.getValue(appName, PropertyConstants.EVAL_DAYS));
+				int evalDays = Integer
+						.valueOf(propertiesService.getValue(appName, PropertyConstants.STUDENT_REGISTRATION_EVAL_DAYS));
 				Date startDate = new Date();
 				Calendar c = Calendar.getInstance();
 				c.setTime(startDate);
@@ -238,7 +238,8 @@ public class SubscriptionBusiness {
 					studSubsDto.setEndDate(currentEndDate);
 				} else {
 					currentEndDate = startDate;
-					int evalDays = Integer.valueOf(propertiesService.getValue(appName, PropertyConstants.EVAL_DAYS));
+					int evalDays = Integer.valueOf(
+							propertiesService.getValue(appName, PropertyConstants.STUDENT_REGISTRATION_EVAL_DAYS));
 					currentEndDate = currentEndDate.plusDays(evalDays);
 					if (subscriptionPeriod.endsWith("D")) {
 						currentEndDate = currentEndDate.plusDays(days);
@@ -279,7 +280,8 @@ public class SubscriptionBusiness {
 		LocalDate startDate = studentSubscriptionEntity.getStartDate();
 		LocalDate endDate = studentSubscriptionEntity.getEndDate();
 		long diffDays = ChronoUnit.DAYS.between(startDate, endDate);
-		long evalDays = Integer.valueOf(propertiesService.getValue(appName, PropertyConstants.EVAL_DAYS));
+		long evalDays = Integer
+				.valueOf(propertiesService.getValue(appName, PropertyConstants.STUDENT_REGISTRATION_EVAL_DAYS));
 		if (evalDays >= diffDays) {
 			validSubcription = true;
 		}

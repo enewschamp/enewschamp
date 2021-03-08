@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -105,7 +106,8 @@ public class HelpdeskPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -122,7 +124,7 @@ public class HelpdeskPageHandler implements IPageHandler {
 		String editionId = pageRequest.getHeader().getEditionId();
 		String emailId = pageRequest.getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		if (studentId == null || studentId == 0L) {
+		if ("".equals(studentId)) {
 			throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
 		}
 		HelpdeskInputPageData helpdeskInputPageData = null;
@@ -149,7 +151,7 @@ public class HelpdeskPageHandler implements IPageHandler {
 			helpdeskDTO.setCallbackDateTime(callbackDateTime);
 			helpdeskDTO.setStudentId(studentId);
 			helpdeskDTO.setRecordInUse(RecordInUseType.Y);
-			helpdeskDTO.setOperatorId("" + studentId);
+			helpdeskDTO.setOperatorId(emailId);
 			helpdeskDTO.setCreateDateTime(LocalDateTime.now());
 			Helpdesk helpdesk = modelMapper.map(helpdeskDTO, Helpdesk.class);
 			Helpdesk helpDeskExisting = helpdeskService.getByStudentId(studentId);

@@ -32,15 +32,15 @@ public class UserLoginService {
 	}
 
 	public UserLogin update(UserLogin userLogin) {
-		Long UserLoginId = userLogin.getUserLoginId();
-		UserLogin existingUserLogin = get(UserLoginId);
+		Long userLoginId = userLogin.getUserLoginId();
+		UserLogin existingUserLogin = get(userLoginId);
 		modelMapper.map(userLogin, existingUserLogin);
 		return repository.save(existingUserLogin);
 	}
 
 	public UserLogin patch(UserLogin userLogin) {
-		Long UserLoginId = userLogin.getUserLoginId();
-		UserLogin existingEntity = get(UserLoginId);
+		Long userLoginId = userLogin.getUserLoginId();
+		UserLogin existingEntity = get(userLoginId);
 		modelMapperForPatch.map(userLogin, existingEntity);
 		return repository.save(existingEntity);
 	}

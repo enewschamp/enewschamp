@@ -41,9 +41,9 @@ public abstract class BaseEntity implements IEntity, Serializable {
 	@PrePersist
 	@PreUpdate
 	public void prePersist() {
-		if (operationDateTime == null) {
-			operationDateTime = LocalDateTime.now();
-		}
+		// if (operationDateTime == null) {
+		operationDateTime = LocalDateTime.now();
+		// }
 	}
 
 	public String getKeyAsString() {

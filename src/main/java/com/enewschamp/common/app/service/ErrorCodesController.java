@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.common.app.dto.ErrorCodesDTO;
 import com.enewschamp.common.domain.entity.ErrorCodes;
 import com.enewschamp.common.domain.service.ErrorCodesService;

@@ -21,6 +21,9 @@ public class StudentShareAchievementsPageData extends PageData {
 	private String personalisedMessage;
 
 	@JsonInclude
+	private String approvalRequired;
+
+	@JsonInclude
 	private List<ReceipientsPageData> recipients;
 
 }

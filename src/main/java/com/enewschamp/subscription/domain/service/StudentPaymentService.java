@@ -1,5 +1,6 @@
 package com.enewschamp.subscription.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -11,7 +12,6 @@ import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentPayment;
-import com.enewschamp.subscription.domain.entity.StudentPaymentWork;
 import com.enewschamp.subscription.domain.repository.StudentPaymentRepository;
 
 @Service
@@ -66,9 +66,9 @@ public class StudentPaymentService {
 	}
 
 	public StudentPayment getByStudentIdAndEdition(Long studentId, String editionId) {
-		Optional<StudentPayment> existingEntity = repository.getByStudentIdAndEdition(studentId, editionId);
-		if (existingEntity.isPresent()) {
-			return existingEntity.get();
+		List<StudentPayment> existingEntities = repository.getByStudentIdAndEdition(studentId, editionId);
+		if (existingEntities != null && existingEntities.size() > 0) {
+			return existingEntities.get(0);
 		} else {
 			return null;
 		}

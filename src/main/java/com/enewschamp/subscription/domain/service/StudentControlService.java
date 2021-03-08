@@ -57,7 +57,7 @@ public class StudentControlService {
 		}
 	}
 
-	public boolean studentExist(String emailId) {
+	public boolean studentExistsByEmail(String emailId) {
 		StudentControl existingEntity = repository.searchByEmail(emailId);
 		if (existingEntity != null) {
 			return true;

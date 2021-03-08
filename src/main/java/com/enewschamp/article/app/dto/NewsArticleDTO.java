@@ -119,6 +119,9 @@ public class NewsArticleDTO extends MaintenanceDTO {
 	private Integer likeSCount;
 
 	@JsonInclude
+	private String readyForTest;
+
+	@JsonInclude
 	private LocalDate publicationDate;
 
 	@JsonInclude

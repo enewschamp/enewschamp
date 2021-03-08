@@ -31,6 +31,10 @@ import org.javers.core.metamodel.object.SnapshotType;
 import com.enewschamp.EnewschampApplicationProperties;
 import com.enewschamp.app.dto.AuditDTO;
 import com.enewschamp.app.dto.FieldChangeDTO;
+import com.enewschamp.article.domain.entity.NewsArticle;
+import com.enewschamp.article.domain.entity.NewsArticleGroup;
+import com.enewschamp.article.domain.service.NewsArticleGroupService;
+import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.article.page.data.PropertyAuditData;
 import com.enewschamp.domain.common.IEntity;
 import com.enewschamp.domain.common.OperationType;
@@ -63,18 +67,32 @@ public class AuditBuilder {
 
 	private Map<BigDecimal, AuditDTO> commitWiseParentAudit;
 
+	private NewsArticleService newsArticleService;
+
+	private NewsArticleGroupService newsArticleGroupService;
+
+	private HashMap<String, String> sequenceSnapshotCommits;
+
+	private HashMap<String, String> quizSnapshotCommits;
+
 	private String propertyName;
 
-	private AuditBuilder(AuditService auditService, ObjectMapper objectMapper,
+	private AuditBuilder(AuditService auditService, NewsArticleGroupService newsArticleGroupService,
+			NewsArticleService newsArticleService, ObjectMapper objectMapper,
 			EnewschampApplicationProperties appConfig) {
 		this.auditService = auditService;
 		this.objectMapper = objectMapper;
 		this.appConfig = appConfig;
+		this.newsArticleGroupService = newsArticleGroupService;
+		this.newsArticleService = newsArticleService;
+		this.sequenceSnapshotCommits = new HashMap<String, String>();
+		this.quizSnapshotCommits = new HashMap<String, String>();
 	}
 
-	public static AuditBuilder getInstance(AuditService auditService, ObjectMapper objectMapper,
+	public static AuditBuilder getInstance(AuditService auditService, NewsArticleGroupService newsArticleGroupService,
+			NewsArticleService newsArticleService, ObjectMapper objectMapper,
 			EnewschampApplicationProperties appConfig) {
-		return new AuditBuilder(auditService, objectMapper, appConfig);
+		return new AuditBuilder(auditService, newsArticleGroupService, newsArticleService, objectMapper, appConfig);
 	}
 
 	public AuditBuilder forParentObject(IEntity parentObjectInstance) {
@@ -164,8 +182,8 @@ public class AuditBuilder {
 		// audit for Added and Removed Child object also comes as part of
 		// collection change audit. Same applies for all levels of object hierarchy.
 		allAudit.addAll(getAuditForObject(this.parentObject));
+		System.out.println(">>>>>>>>allAudit>>>>>>>>>>" + allAudit);
 		addCommitWiseParentAudit(allAudit);
-
 		if (childObjects != null) {
 			for (Object childObject : childObjects) {
 				allAudit.addAll(getAuditForObject(childObject));
@@ -203,25 +221,19 @@ public class AuditBuilder {
 			byCommit.groupByObject().forEach(byObject -> {
 				AuditDTO auditDTO = new AuditDTO();
 				InstanceId instanceId = (InstanceId) byObject.getGlobalId();
-
 				auditDTO.addObjectProperties(instanceId, getIdPropertyName(instanceId.getTypeName()));
-
 				printDebugLine("Processing audit for object: " + instanceId.getTypeName() + " Commit Id: "
 						+ commitMetadata.getId());
 
 				AuditQueryCriteria snapshotQueryCriteria = new AuditQueryCriteria();
 				snapshotQueryCriteria.setCommitId(commitMetadata.getId());
 				CdoSnapshot snapshot = getEntitySnapshot((InstanceId) byObject.getGlobalId(), snapshotQueryCriteria);
-
 				if (snapshot != null) {
 					auditDTO.setSnapshot(buildSnapShotNode(snapshot));
 					auditDTO.setAction(OperationType.fromSnapShotType(snapshot.getType()));
 				}
-
 				if (this.parentObject.getClass().getName().equals(instanceId.getTypeName())) {
-
 					auditDTO.addCommitInfo(commitMetadata);
-
 					this.parentObjectId = instanceId.getCdoId().toString();
 					buildParentChangeAuditDTO(commitMetadata, auditDTO, byObject, instanceId.getTypeName());
 					audits.add(auditDTO);
@@ -310,6 +322,7 @@ public class AuditBuilder {
 	private void getChildAuditForSameParentCommitId(CommitMetadata commitMetadata, AuditDTO auditDTO) {
 
 		printDebugLine("Checking for child audit records for commit id: " + commitMetadata.getId().valueAsNumber());
+		System.out.println(">>>>>>>>>childCollectionProperties>>>>>>>>>>" + childCollectionProperties);
 		if (childCollectionProperties != null) {
 			childCollectionProperties.forEach((propertyTypeName, propertyName) -> {
 				AuditQueryCriteria queryCriteria = new AuditQueryCriteria();
@@ -317,16 +330,17 @@ public class AuditBuilder {
 				queryCriteria.setObjectName(propertyTypeName);
 				queryCriteria.setWithNewObjectChanges(true);
 				Changes changes = auditService.getEntityChangesByCriteria(null, queryCriteria);
-
+				System.out.println(">>>>>>>>>changes>>>>>>>>>>" + changes);
 				changes.groupByObject().forEach(byChildObject -> {
-
 					// Ignore the changes for those child objects which are still present
 					InstanceId objectInstance = (InstanceId) byChildObject.getGlobalId();
+					System.out.println(">>>>>>>>>objectInstance>>>>>>>>>>" + objectInstance);
 					if (childObjectExists(objectInstance)) {
 						System.out.println(
 								"Skipping audit for " + objectInstance.getTypeName() + "#" + objectInstance.getCdoId());
 						return;
 					}
+					System.out.println(">>>>>>>>>byChildObject>>>>>>>>>>" + byChildObject);
 					if (byChildObject.getNewObjects() != null && byChildObject.getNewObjects().size() > 0) {
 						Change change = byChildObject.getNewObjects().get(0);
 						handleItemAddition(commitMetadata, auditDTO, propertyName,
@@ -335,6 +349,7 @@ public class AuditBuilder {
 					}
 					byChildObject.get().forEach(change -> {
 						InstanceId instance = (InstanceId) change.getAffectedGlobalId();
+						System.out.println(">>>>>>>>>change>>>>>>>>>>" + change);
 						if (change instanceof ValueChange) {
 							handleItemModification(commitMetadata, auditDTO, propertyName, instance,
 									(ValueChange) change);
@@ -440,7 +455,6 @@ public class AuditBuilder {
 			Map<String, Object> valueMap = new HashMap<String, Object>();
 			for (String propertyName : state.getPropertyNames()) {
 				Object value = state.getPropertyValue(propertyName);
-
 				if (value instanceof List) {
 					List<InstanceId> valueList = (ArrayList<InstanceId>) value;
 					List<Object> newValueList = new ArrayList<Object>();
@@ -448,6 +462,132 @@ public class AuditBuilder {
 						Map<String, Object> modifiedMap = new HashMap<String, Object>();
 						// modifiedMap.put("objectName", instanceId.getTypeName());
 						modifiedMap.put(getIdPropertyName(instanceId.getTypeName()), instanceId.getCdoId().toString());
+						if ("com.enewschamp.article.domain.entity.NewsArticle".equals(instanceId.getTypeName())) {
+							AuditQueryCriteria queryCriteria = new AuditQueryCriteria();
+							queryCriteria.setPropertyName("sequence");
+							queryCriteria.setSnapshotType(SnapshotType.UPDATE);
+							queryCriteria.setObjectName("com.enewschamp.article.domain.entity.NewsArticle");
+							List<CdoSnapshot> sequenceChanges = auditService.getEntitySnapshots(instanceId,
+									queryCriteria);
+							String defaultSequence = "0";
+							String sequence = "";
+							for (int i = 0; i < sequenceChanges.size(); i++) {
+								CdoSnapshot sequenceSnapshot = sequenceChanges.get(i);
+								if (instanceId.getCdoId().equals(sequenceSnapshot.getPropertyValue("newsArticleId"))
+										&& sequenceSnapshot.getPropertyValue("sequence") != null && Integer.valueOf(
+												sequenceSnapshot.getPropertyValue("sequence").toString()) > 0) {
+									if ("0".equals(defaultSequence)
+											&& sequenceSnapshot.getPropertyValue("sequence") != null
+											&& !sequenceSnapshotCommits
+													.containsKey(sequenceSnapshot.getCommitId().toString())) {
+										defaultSequence = sequenceSnapshot.getPropertyValue("sequence").toString();
+									}
+									if (snapshot.getCommitId().isBeforeOrEqual(sequenceSnapshot.getCommitId())
+											&& !sequenceSnapshotCommits
+													.containsKey(sequenceSnapshot.getCommitId().toString())) {
+										sequence = sequenceSnapshot.getPropertyValue("sequence").toString();
+										sequenceSnapshotCommits.put(sequenceSnapshot.getCommitId().toString(),
+												sequenceSnapshot.getCommitId().toString());
+										break;
+									}
+								}
+							}
+							if ("".equals(sequence)) {
+								sequence = defaultSequence;
+							}
+							modifiedMap.put("sequence", sequence);
+							NewsArticle newsArticle = newsArticleService
+									.get(Long.valueOf(instanceId.getCdoId().toString()));
+							NewsArticleGroup newsArticleGroup = newsArticleGroupService
+									.get(newsArticle.getNewsArticleGroupId());
+							modifiedMap.put("genreId", newsArticleGroup.getGenreId());
+							modifiedMap.put("headline", newsArticleGroup.getHeadline());
+							modifiedMap.put("articleType", newsArticleGroup.getArticleType());
+							if ("".equals(sequence)) {
+								sequence = defaultSequence;
+							}
+							modifiedMap.put("sequence", sequence);
+
+						}
+						if ("com.enewschamp.article.domain.entity.NewsArticleQuiz".equals(instanceId.getTypeName())) {
+							AuditQueryCriteria queryCriteria = new AuditQueryCriteria();
+							// queryCriteria.setPropertyName("question");
+							// queryCriteria.setSnapshotType(SnapshotType.UPDATE);
+							queryCriteria.setObjectName("com.enewschamp.article.domain.entity.NewsArticleQuiz");
+							List<CdoSnapshot> sequenceChanges = auditService.getEntitySnapshots(instanceId,
+									queryCriteria);
+							String defaultQuestion = "";
+							String defaultOpt1 = "";
+							String defaultOpt2 = "";
+							String defaultOpt3 = "";
+							String defaultOpt4 = "";
+							String defaultCorrectOpt = "";
+							String question = "";
+							String opt1 = "";
+							String opt2 = "";
+							String opt3 = "";
+							String opt4 = "";
+							String correctOpt = "";
+							for (int i = 0; i < sequenceChanges.size(); i++) {
+								CdoSnapshot sequenceSnapshot = sequenceChanges.get(i);
+								if (instanceId.getCdoId().equals(sequenceSnapshot.getPropertyValue("newsArticleQuizId"))
+										&& sequenceSnapshot.getPropertyValue("question") != null) {
+									if ("".equals(defaultQuestion)
+											&& sequenceSnapshot.getPropertyValue("question") != null
+											&& !quizSnapshotCommits
+													.containsKey(sequenceSnapshot.getCommitId().toString())) {
+										defaultQuestion = sequenceSnapshot.getPropertyValue("question").toString();
+										defaultOpt1 = sequenceSnapshot.getPropertyValue("opt1").toString();
+										defaultOpt2 = sequenceSnapshot.getPropertyValue("opt2").toString();
+										defaultOpt3 = (sequenceSnapshot.getPropertyValue("opt3") == null ? ""
+												: sequenceSnapshot.getPropertyValue("opt3").toString());
+										defaultOpt4 = (sequenceSnapshot.getPropertyValue("opt4") == null ? ""
+												: sequenceSnapshot.getPropertyValue("opt4").toString());
+										defaultCorrectOpt = sequenceSnapshot.getPropertyValue("correctOpt").toString();
+									}
+									// isBeforeOrEqual(sequenceSnapshot.getCommitId())
+									if (snapshot.getCommitId().toString().equals(sequenceSnapshot.getCommitId())
+											&& !quizSnapshotCommits
+													.containsKey(sequenceSnapshot.getCommitId().toString())) {
+										question = sequenceSnapshot.getPropertyValue("question").toString();
+										opt1 = sequenceSnapshot.getPropertyValue("opt1").toString();
+										opt2 = sequenceSnapshot.getPropertyValue("opt2").toString();
+										opt3 = (sequenceSnapshot.getPropertyValue("opt3") == null ? ""
+												: sequenceSnapshot.getPropertyValue("opt3").toString());
+										opt4 = (sequenceSnapshot.getPropertyValue("opt4") == null ? ""
+												: sequenceSnapshot.getPropertyValue("opt4").toString());
+										correctOpt = sequenceSnapshot.getPropertyValue("correctOpt").toString();
+										quizSnapshotCommits.put(sequenceSnapshot.getCommitId().toString(),
+												sequenceSnapshot.getCommitId().toString());
+										break;
+									}
+								}
+							}
+							if ("".equals(question)) {
+								question = defaultQuestion;
+							}
+							if ("".equals(opt1)) {
+								opt1 = defaultOpt1;
+							}
+							if ("".equals(opt2)) {
+								opt2 = defaultOpt2;
+							}
+							if ("".equals(opt3)) {
+								opt3 = defaultOpt3;
+							}
+							if ("".equals(opt4)) {
+								opt4 = defaultOpt4;
+							}
+							if ("".equals(correctOpt)) {
+								correctOpt = defaultCorrectOpt;
+							}
+							modifiedMap.put("question", question);
+							modifiedMap.put("opt1", opt1);
+							modifiedMap.put("opt2", opt2);
+							modifiedMap.put("opt3", opt3);
+							modifiedMap.put("opt4", opt4);
+							modifiedMap.put("correctOpt", correctOpt);
+						}
 						newValueList.add(modifiedMap);
 					}
 					valueMap.put(propertyName, newValueList);
@@ -455,6 +595,7 @@ public class AuditBuilder {
 					valueMap.put(propertyName, state.getPropertyValue(propertyName));
 				}
 			}
+			System.out.println(">>>>valueMap>>>>>>>>" + valueMap);
 			node = objectMapper.convertValue(valueMap, JsonNode.class);
 		}
 		return node;
@@ -524,7 +665,7 @@ public class AuditBuilder {
 	}
 
 	private void printDebugLine(String line) {
-		// System.out.println(line);
+		System.out.println(line);
 	}
 
 	public List<PropertyAuditData> buildPropertyAudit() {

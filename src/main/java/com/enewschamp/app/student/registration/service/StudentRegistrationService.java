@@ -44,12 +44,12 @@ public class StudentRegistrationService {
 		return studentDto;
 	}
 
-	public StudentRegistration get(Long studentRegistrationId) {
-		Optional<StudentRegistration> existingEntity = repository.findById(studentRegistrationId);
+	public StudentRegistration get(Long studentId) {
+		Optional<StudentRegistration> existingEntity = repository.findById(studentId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.STUD_REG_NOT_FOUND, String.valueOf(studentRegistrationId));
+			throw new BusinessException(ErrorCodeConstants.STUD_REG_NOT_FOUND, String.valueOf(studentId));
 		}
 	}
 
@@ -60,6 +60,10 @@ public class StudentRegistrationService {
 		} else {
 			return null;
 		}
+	}
+
+	public String getStudentEmailByKey(String studentKey) {
+		return repository.getStudentEmailByKey(studentKey);
 	}
 
 	public boolean userExists(String emailId) {

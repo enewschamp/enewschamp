@@ -10,14 +10,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.entity.Avatar;
 import com.enewschamp.subscription.app.dto.AvatarPageData;
-import com.enewschamp.subscription.app.dto.CountryPageData;
 
 @Service
 public class AvatarService extends AbstractDomainService {

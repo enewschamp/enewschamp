@@ -19,19 +19,26 @@ public class Champ {
 	@Column(name = "studentId", updatable = false, nullable = false)
 	private Long studentId;
 
-	@Column(name = "studentName")
-	private String studentName;
+	@Column(name = "name")
+	private String name;
 
 	@Column(name = "surname")
 	private String surname;
+
 	@Column(name = "grade")
 	private String grade;
 
-	@Column(name = "schoolName")
-	private String schoolName;
+	@Column(name = "school")
+	private String school;
 
-	@Column(name = "cityName")
-	private String cityName;
+	@Column(name = "city")
+	private String city;
+
+	@Column(name = "state")
+	private String state;
+
+	@Column(name = "country")
+	private String country;
 
 	@Column(name = "score")
 	private Long score;
@@ -50,4 +57,26 @@ public class Champ {
 
 	@Column(name = "photoName")
 	private String photoName;
+
+	@Column(name = "featureProfileInChamps")
+	private String featureProfileInChamps;
+
+	@Column(name = "champCity")
+	private String champCity;
+
+	@Column(name = "champProfilePic")
+	private String champProfilePic;
+
+	@Column(name = "champSchool")
+	private String champSchool;
+
+	@Column(name = "imageApprovalRequired")
+	private String imageApprovalRequired;
+
+	@Column(name = "studentDetailsApprovalRequired")
+	private String studentDetailsApprovalRequired;
+
+	@Column(name = "schoolDetailsApprovalRequired")
+	private String schoolDetailsApprovalRequired;
+
 }

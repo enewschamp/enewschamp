@@ -10,13 +10,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.app.common.state.repository.StateRepository;
 import com.enewschamp.domain.service.AbstractDomainService;
-import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.subscription.app.dto.CityPageData;
 import com.enewschamp.subscription.app.dto.StatePageData;
 
 @Service

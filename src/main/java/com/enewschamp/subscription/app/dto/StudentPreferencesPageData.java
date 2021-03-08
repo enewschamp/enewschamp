@@ -17,8 +17,16 @@ public class StudentPreferencesPageData extends PageData {
 
 	@JsonInclude
 	private Long studentId;
+
 	@JsonInclude
 	private String readingLevel;
+
+	@JsonInclude
+	private String featureProfileInChamps;
+
+	@JsonInclude
+	private ChampPermissionsPageData champPermissions;
+
 	@JsonInclude
 	private StudentPreferencesCommPageData commsOverEmail;
 }

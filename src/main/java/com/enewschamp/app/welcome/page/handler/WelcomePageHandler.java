@@ -7,10 +7,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.city.service.CityService;
@@ -56,6 +58,7 @@ import com.enewschamp.subscription.domain.business.SchoolDetailsBusiness;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.StudentDetailsBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
+import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "WelcomePageHandler")
@@ -127,6 +130,9 @@ public class WelcomePageHandler implements IPageHandler {
 	@Autowired
 	ScoreService scoreService;
 
+	@Autowired
+	UserService userService;
+
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
 		return null;
@@ -152,7 +158,8 @@ public class WelcomePageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -199,19 +206,28 @@ public class WelcomePageHandler implements IPageHandler {
 			studentDetailsPageData = modelMapper.map(studentDetailsDTO, StudentDetailsPageData.class);
 		}
 		MyPicturePageData myPicturePageData = new MyPicturePageData();
+		AppearancePageData appearancePageData = new AppearancePageData();
 		StudentRegistration studentRegistration = studentRegistrationService.getStudentReg(emailId);
 		if (studentRegistration != null) {
 			myPicturePageData.setAvatarName(studentRegistration.getAvatarName());
 			myPicturePageData.setPhotoName(studentRegistration.getPhotoName());
+			myPicturePageData.setImageApprovalRequired(studentRegistration.getImageApprovalRequired());
 			if ("Y".equalsIgnoreCase(studentRegistration.getIsTestUser())) {
 				pageData.setTestUser("Y");
 			} else {
 				pageData.setTestUser("N");
 			}
+			pageData.setCreationDatetime(studentRegistration.getCreationDateTime());
+			appearancePageData.setTheme(studentRegistration.getTheme());
+			appearancePageData.setFontHeight(studentRegistration.getFontHeight());
 		} else {
 			myPicturePageData.setAvatarName("");
 			myPicturePageData.setPhotoName("");
+			myPicturePageData.setImageApprovalRequired("");
 			pageData.setTestUser("N");
+			pageData.setCreationDatetime(null);
+			appearancePageData.setTheme("");
+			appearancePageData.setFontHeight("");
 		}
 		StudentSchoolPageData studentSchoolPageData = new StudentSchoolPageData();
 		StudentSchoolDTO studentSchoolDTO = schoolDetailsBusiness.getStudentFromMaster(studentId);
@@ -238,12 +254,6 @@ public class WelcomePageHandler implements IPageHandler {
 		StudentPreferencesDTO studentPreferencesDTO = preferenceBusiness.getPreferenceFromMaster(studentId);
 		if (studentPreferencesDTO != null) {
 			studentPreferencesPageData = modelMapper.map(studentPreferencesDTO, StudentPreferencesPageData.class);
-		}
-		AppearancePageData appearancePageData = new AppearancePageData();
-		StudentRegistration studReg = regService.getStudentReg(emailId);
-		if (studReg != null) {
-			appearancePageData.setTheme(studReg.getTheme());
-			appearancePageData.setFontHeight(studReg.getFontHeight());
 		}
 		Edition edition = editionService.getEdition(editionId);
 		editionName = edition.getEditionName();
@@ -294,7 +304,6 @@ public class WelcomePageHandler implements IPageHandler {
 		pageData.setSubscription(studentSubscriptionPageData);
 		pageData.setBadgeDetails(studentbadges);
 		pageData.setLastActivityDatetime(lastLogin);
-
 		pageDto.setData(pageData);
 		return pageDto;
 	}

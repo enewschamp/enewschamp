@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -119,13 +120,15 @@ public class NewsArticlePageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
 	}
 
@@ -144,14 +147,14 @@ public class NewsArticlePageHandler implements IPageHandler {
 		PublicationPageData pageData = new PublicationPageData();
 		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
 		int pageNo = 1;
-		int pageSize = Integer.valueOf(propertiesService.getProperty(
-				pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
+		int pageSize = Integer.valueOf(propertiesService
+				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
 		if (pageData.getPagination() != null) {
 			pageNo = pageData.getPagination().getPageNumber() > 0 ? pageData.getPagination().getPageNumber() : 1;
 			pageSize = pageData.getPagination().getPageSize() > 0 ? pageData.getPagination().getPageSize()
-					: Integer.valueOf(propertiesService.getProperty(
-							pageNavigationContext.getPageRequest().getHeader().getModule(),
-							PropertyConstants.PAGE_SIZE));
+					: Integer.valueOf(
+							propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+									PropertyConstants.PAGE_SIZE));
 		} else {
 			PaginationData paginationData = new PaginationData();
 			paginationData.setPageNumber(pageNo);
@@ -256,6 +259,9 @@ public class NewsArticlePageHandler implements IPageHandler {
 		List<NewsArticleSummaryDTO> pageResult = customImpl.getArticleDetails(pageData.getNewsArticleId(), studentId);
 		if (pageResult != null && pageResult.size() > 0) {
 			pageData = modelMapper.map(pageResult.get(0), NewsArticlePageData.class);
+		} else {
+			throw new BusinessException(ErrorCodeConstants.ARTICLE_NOT_FOUND,
+					String.valueOf(pageData.getNewsArticleId()));
 		}
 		HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
 		pageDto.setHeader(header);
@@ -281,11 +287,14 @@ public class NewsArticlePageHandler implements IPageHandler {
 		searchRequestData.setYearMonth(filterData.getYearMonth());
 		searchRequestData.setStudentId(studentId);
 		int pageNo = 1;
-		int pageSize = Integer.valueOf(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),PropertyConstants. PAGE_SIZE));
+		int pageSize = Integer.valueOf(propertiesService
+				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
 		if (pageData.getPagination() != null) {
 			pageNo = pageData.getPagination().getPageNumber() > 0 ? pageData.getPagination().getPageNumber() : 1;
 			pageSize = pageData.getPagination().getPageSize() > 0 ? pageData.getPagination().getPageSize()
-					: Integer.valueOf(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),PropertyConstants. PAGE_SIZE));
+					: Integer.valueOf(
+							propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+									PropertyConstants.PAGE_SIZE));
 		} else {
 			PaginationData paginationData = new PaginationData();
 			paginationData.setPageNumber(pageNo);
@@ -348,11 +357,14 @@ public class NewsArticlePageHandler implements IPageHandler {
 		PublicationPageData pageData = new PublicationPageData();
 		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
 		int pageNo = 1;
-		int pageSize = Integer.valueOf(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),PropertyConstants. PAGE_SIZE));
+		int pageSize = Integer.valueOf(propertiesService
+				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
 		if (pageData.getPagination() != null) {
 			pageNo = pageData.getPagination().getPageNumber() > 0 ? pageData.getPagination().getPageNumber() : 1;
 			pageSize = pageData.getPagination().getPageSize() > 0 ? pageData.getPagination().getPageSize()
-					: Integer.valueOf(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),PropertyConstants. PAGE_SIZE));
+					: Integer.valueOf(
+							propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+									PropertyConstants.PAGE_SIZE));
 		} else {
 			PaginationData paginationData = new PaginationData();
 			paginationData.setPageNumber(pageNo);
@@ -409,7 +421,8 @@ public class NewsArticlePageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -441,7 +454,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 		}
 		try {
 			String likeFlag = articlePageData.getLikeFlag();
-			studentActivityBusiness.likeArticle(studentId, newsArticleId, likeFlag, readingLevel, editionId);
+			studentActivityBusiness.likeArticle(studentId, emailId, newsArticleId, likeFlag, readingLevel, editionId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, e.getMessage());
@@ -471,7 +484,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 		}
 		try {
 			String opinion = articlePageData.getOpinionText();
-			studentActivityBusiness.saveOpinion(studentId, newsArticleId, opinion, readingLevel, editionId);
+			studentActivityBusiness.saveOpinion(studentId, emailId, newsArticleId, opinion, readingLevel, editionId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, e.getMessage());
@@ -501,7 +514,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 		}
 		try {
 			String saveFlag = articlePageData.getSaveFlag();
-			studentActivityBusiness.saveArticle(studentId, newsArticleId, saveFlag, readingLevel, editionId);
+			studentActivityBusiness.saveArticle(studentId, emailId, newsArticleId, saveFlag, readingLevel, editionId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, e.getMessage());

@@ -45,4 +45,12 @@ public class Holiday extends BaseEntity {
 	@Column(name = "holiday", length = 30)
 	private String holiday;
 
+	@NotNull
+	@Column(name = "publication", length = 1)
+	private String publication;
+
+	@NotNull
+	@Column(name = "helpdesk", length = 1)
+	private String helpdesk;
+
 }

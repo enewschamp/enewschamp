@@ -121,9 +121,11 @@ public class MyProfilePageHandler implements IPageHandler {
 		if (studentRegistration != null) {
 			myPicturePageData.setAvatarName(studentRegistration.getAvatarName());
 			myPicturePageData.setPhotoName(studentRegistration.getPhotoName());
+			myPicturePageData.setImageApprovalRequired(studentRegistration.getImageApprovalRequired());
 		} else {
 			myPicturePageData.setAvatarName("");
 			myPicturePageData.setPhotoName("");
+			myPicturePageData.setImageApprovalRequired("");
 		}
 		StudentSchoolPageData studentSchoolPageData = new StudentSchoolPageData();
 		StudentSchoolDTO studentSchoolDTO = schoolDetailsBusiness.getStudentFromMaster(studentId);
@@ -228,6 +230,7 @@ public class MyProfilePageHandler implements IPageHandler {
 
 		studentShareAchievementsPageData.setRecipients(recipientList);
 		studentShareAchievementsPageData.setPersonalisedMessage(ach.getPersonalisedMessage());
+		studentShareAchievementsPageData.setApprovalRequired(ach.getApprovalRequired());
 		return studentShareAchievementsPageData;
 
 	}

@@ -36,7 +36,7 @@ public class Avatar extends BaseEntity {
 	private Long avatarId = 0L;
 
 	@NotNull
-	@Column(name = "NameId", length = 50)
+	@Column(name = "nameId", length = 50)
 	private String nameId;
 
 	@Enumerated(EnumType.STRING)
@@ -45,10 +45,10 @@ public class Avatar extends BaseEntity {
 	private Gender gender;
 
 	@NotNull
-	@Column(name = "ReadingLevel", length = 1)
+	@Column(name = "readingLevel", length = 1)
 	private int readingLevel;
 
-	@Column(name = "ImageName", length = 100)
+	@Column(name = "imageName", length = 100)
 	private String imageName;
 
 	@Transient

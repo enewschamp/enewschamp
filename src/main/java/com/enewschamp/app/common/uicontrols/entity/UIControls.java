@@ -60,7 +60,7 @@ public class UIControls extends BaseEntity {
 	@Column(name = "placeHolder", length = 500)
 	private String placeHolder;
 
-	@Column(name = "helpText", length = 500)
+	@Column(name = "helpText", length = 4000)
 	private String helpText;
 
 	@Column(name = "icon", length = 50)

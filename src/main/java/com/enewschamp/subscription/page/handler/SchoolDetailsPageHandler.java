@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ import com.enewschamp.app.school.service.SchoolService;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.SchoolData;
 import com.enewschamp.subscription.app.dto.SchoolDetailsRequestData;
@@ -105,13 +107,15 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
 	}
 
@@ -119,7 +123,8 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		StudentSchoolPageData studentSchoolPageData = new StudentSchoolPageData();
 		studentSchoolPageData.setCountryLOV(countryService.getCountries());
-		studentSchoolPageData.setCountry(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),PropertyConstants. DEFAULT_COUNTRY));
+		studentSchoolPageData.setCountry(propertiesService.getValue(
+				pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.DEFAULT_COUNTRY));
 		studentSchoolPageData.setStateLOV(stateService.getStatesForCountry(studentSchoolPageData.getCountry()));
 		pageDTO.setData(studentSchoolPageData);
 		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
@@ -182,7 +187,9 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 		} else {
 			studentSchoolPageData.setCountryLOV(countryService.getCountries());
 			if (studentSchoolPageData.getCountry() == null || "".equals(studentSchoolPageData.getCountry())) {
-				studentSchoolPageData.setCountry(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),PropertyConstants. DEFAULT_COUNTRY));
+				studentSchoolPageData.setCountry(
+						propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+								PropertyConstants.DEFAULT_COUNTRY));
 			}
 			studentSchoolPageData.setStateLOV(stateService.getStatesForCountry(studentSchoolPageData.getCountry()));
 			studentSchoolPageData.setCityLOV(cityService.getCitiesForStateCountry(studentSchoolPageData.getState(),
@@ -364,7 +371,8 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -386,6 +394,8 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 			Long studentId = studentControlBusiness.getStudentId(emailId);
 			StudentSchoolDTO studSchool = modelMapper.map(studentSchoolPageData, StudentSchoolDTO.class);
 			studSchool.setStudentId(studentId);
+			studSchool.setOperatorId(emailId);
+			studSchool.setRecordInUse(RecordInUseType.Y);
 			schoolDetailsBusiness.saveAsMaster(studSchool);
 			StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
 			studentControlDTO.setSchoolDetails("Y");
@@ -398,6 +408,8 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 			Long studentId = studentControlBusiness.getStudentId(emailId);
 			StudentSchoolWorkDTO studenSchool = modelMapper.map(studentSchoolPageData, StudentSchoolWorkDTO.class);
 			studenSchool.setStudentId(studentId);
+			studenSchool.setOperatorId(emailId);
+			studenSchool.setRecordInUse(RecordInUseType.Y);
 			schoolDetailsBusiness.saveAsWork(studenSchool);
 			studentControlWorkDTO.setSchoolDetailsW("Y");
 			studentControlWorkDTO.setNextPageOperation(operation);

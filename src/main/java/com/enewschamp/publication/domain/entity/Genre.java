@@ -27,14 +27,14 @@ public class Genre extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "genre_id_generator")
 	@SequenceGenerator(name = "genre_id_generator", sequenceName = "genre_id_seq", allocationSize = 1)
-	@Column(name = "GenreId", length = 3)
+	@Column(name = "genreId", length = 3)
 	private Long genreId = 0L;
 
 	@NotNull
-	@Column(name = "NameId")
+	@Column(name = "nameId")
 	private String nameId;
 
-	@Column(name = "ImageName", length = 100)
+	@Column(name = "imageName", length = 100)
 	private String imageName;
 
 	@Transient

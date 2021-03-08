@@ -54,6 +54,12 @@ public class UserLogin extends BaseEntity {
 	@Column(name = "deviceId", length = 50)
 	private String deviceId;
 
+	@Column(name = "appName", length = 50)
+	private String appName;
+
+	@Column(name = "appVersion", length = 50)
+	private String appVersion;
+
 	@Column(name = "userType")
 	@Enumerated(EnumType.STRING)
 	private UserType userType;

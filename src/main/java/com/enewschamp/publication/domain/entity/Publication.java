@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OrderBy;
 import org.javers.core.metamodel.annotation.DiffIgnore;
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.domain.common.BaseEntity;
@@ -38,6 +39,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "Publication", uniqueConstraints = {
 		@UniqueConstraint(columnNames = { "publicationId", "readingLevel", "publicationDate" }) })
+@JaversSpringDataAuditable
 public class Publication extends BaseEntity {
 
 	private static final long serialVersionUID = -6656836773546374871L;
@@ -78,6 +80,9 @@ public class Publication extends BaseEntity {
 
 	@Column(name = "PublisherWorked", length = ForeignKeyColumnLength.UserId)
 	private String publisherWorked;
+
+	@Column(name = "ReadyForTest", length = 1)
+	private String readyForTest;
 
 	@Column(name = "Comments")
 	@Lob

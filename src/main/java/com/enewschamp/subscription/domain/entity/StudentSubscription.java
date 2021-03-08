@@ -26,8 +26,8 @@ public class StudentSubscription extends BaseEntity {
 
 	@Id
 	@NotNull
-	@Column(name = "StudentId", length = 10)
-	private long studentId = 0L;
+	@Column(name = "studentId", length = 100)
+	private Long studentId;
 
 	@NotNull
 	@Column(name = "EditionId", length = 6)

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.article.page.dto.ArticlePageData;
 import com.enewschamp.app.common.CommonFilterData;
 import com.enewschamp.app.common.CommonService;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -101,13 +103,15 @@ public class SavedArticlesPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
 	}
 
@@ -141,7 +145,7 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		searchRequestData.setEditionId(editionId);
 		searchRequestData.setStudentId(studentId);
 		searchRequestData.setPublicationDateFrom(
-				commonService.getLimitDate(module, PropertyConstants.VIEW_SAVED_ARTICLES_LIMIT, emailId));
+				commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_SAVED_ARTICLES, emailId));
 		if (filterData != null) {
 			searchRequestData.setGenre(filterData.getGenre());
 			searchRequestData.setHeadline(filterData.getHeadline());
@@ -214,7 +218,8 @@ public class SavedArticlesPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -226,9 +231,9 @@ public class SavedArticlesPageHandler implements IPageHandler {
 
 	public PageDTO handleLikeAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
-		String eMailId = pageRequest.getHeader().getEmailId();
+		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
-		Long studentId = studentControlBusiness.getStudentId(eMailId);
+		Long studentId = studentControlBusiness.getStudentId(emailId);
 		ArticlePageData articlePageData = new ArticlePageData();
 		articlePageData = mapPageData(articlePageData, pageRequest);
 		String likeFlag = articlePageData.getLikeFlag();
@@ -238,16 +243,16 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		if (studPref != null && studPref.getReadingLevel() != null) {
 			readingLevel = Integer.parseInt(studPref.getReadingLevel());
 		}
-		studentActivityBusiness.likeArticle(studentId, newsArticleId, likeFlag, readingLevel, editionId);
+		studentActivityBusiness.likeArticle(studentId, emailId, newsArticleId, likeFlag, readingLevel, editionId);
 		pageDTO.setHeader(pageRequest.getHeader());
 		return pageDTO;
 	}
 
 	public PageDTO handleSaveOpinionAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
-		String eMailId = pageRequest.getHeader().getEmailId();
+		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
-		Long studentId = studentControlBusiness.getStudentId(eMailId);
+		Long studentId = studentControlBusiness.getStudentId(emailId);
 		ArticlePageData articlePageData = new ArticlePageData();
 		articlePageData = mapPageData(articlePageData, pageRequest);
 		String opinion = articlePageData.getOpinionText();
@@ -257,16 +262,16 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		if (studPref != null && studPref.getReadingLevel() != null) {
 			readingLevel = Integer.parseInt(studPref.getReadingLevel());
 		}
-		studentActivityBusiness.saveOpinion(studentId, newsArticleId, opinion, readingLevel, editionId);
+		studentActivityBusiness.saveOpinion(studentId, emailId, newsArticleId, opinion, readingLevel, editionId);
 		pageDTO.setHeader(pageRequest.getHeader());
 		return pageDTO;
 	}
 
 	public PageDTO handleSaveArticleAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
-		String eMailId = pageRequest.getHeader().getEmailId();
+		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
-		Long studentId = studentControlBusiness.getStudentId(eMailId);
+		Long studentId = studentControlBusiness.getStudentId(emailId);
 		ArticlePageData saveData = new ArticlePageData();
 		saveData = mapPageData(saveData, pageRequest);
 		String saveFlag = saveData.getSaveFlag();
@@ -276,7 +281,7 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		if (studPref != null && studPref.getReadingLevel() != null) {
 			readingLevel = Integer.parseInt(studPref.getReadingLevel());
 		}
-		studentActivityBusiness.saveArticle(studentId, newsArticleId, saveFlag, readingLevel, editionId);
+		studentActivityBusiness.saveArticle(studentId, emailId, newsArticleId, saveFlag, readingLevel, editionId);
 		pageDTO.setHeader(pageRequest.getHeader());
 		return pageDTO;
 	}

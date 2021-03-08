@@ -41,12 +41,26 @@ public class GenreController {
 	public ResponseEntity<GenreDTO> create(@RequestBody @Valid GenreDTO genreDTO) {
 		Genre genre = modelMapper.map(genreDTO, Genre.class);
 		genre = genreService.create(genre);
-		String newImageName = genre.getGenreId() + "_" + System.currentTimeMillis();
-		String imageType = genreDTO.getImageTypeExt();
-		boolean saveFlag = commonService.saveImages("Admin", "genre", imageType, genreDTO.getBase64Image(),
-				newImageName, genre.getImageName());
-		if (saveFlag) {
-			genre.setImageName(newImageName + "." + imageType);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(genreDTO.getImageUpdate())) {
+			String newImageName = genre.getGenreId() + "_" + System.currentTimeMillis();
+			String imageType = genreDTO.getImageTypeExt();
+			String currentImageName = genre.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "genre", imageType, genreDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				genre.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				genre.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "genre", currentImageName);
+				updateFlag = true;
+			}
+		}
+		if (updateFlag) {
 			genre = genreService.update(genre);
 		}
 		genreDTO = modelMapper.map(genre, GenreDTO.class);
@@ -58,6 +72,28 @@ public class GenreController {
 		genreDTO.setGenreId(genreId);
 		Genre genre = modelMapper.map(genreDTO, Genre.class);
 		genre = genreService.update(genre);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(genreDTO.getImageUpdate())) {
+			String newImageName = genre.getGenreId() + "_" + System.currentTimeMillis();
+			String imageType = genreDTO.getImageTypeExt();
+			String currentImageName = genre.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "genre", imageType, genreDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				genre.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				genre.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "genre", currentImageName);
+				updateFlag = true;
+			}
+		}
+		if (updateFlag) {
+			genre = genreService.update(genre);
+		}
 		genreDTO = modelMapper.map(genre, GenreDTO.class);
 		return new ResponseEntity<GenreDTO>(genreDTO, HttpStatus.OK);
 	}

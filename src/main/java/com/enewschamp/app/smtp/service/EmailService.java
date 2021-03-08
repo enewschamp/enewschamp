@@ -31,8 +31,8 @@ public class EmailService {
 
 	public boolean sendMail(final String appName, final String subject, final String body, final String toEmail) {
 		boolean sendSuccess = true;
-		final String username = propertiesService.getValue(appName, PropertyConstants.FROM_MAIL_ID);
-		final String password = propertiesService.getValue(appName, PropertyConstants.EMAIL_PWD);
+		final String username = propertiesService.getValue(appName, PropertyConstants.EMAIL_FROM_MAIL_ID);
+		final String password = propertiesService.getValue(appName, PropertyConstants.EMAIL_PASSWORD);
 		Properties prop = new Properties();
 		prop.put("mail.smtp.host", propertiesService.getValue(appName, PropertyConstants.EMAIL_HOST));
 		prop.put("mail.smtp.port", propertiesService.getValue(appName, PropertyConstants.EMAIL_PORT));
@@ -45,7 +45,8 @@ public class EmailService {
 		});
 		try {
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(propertiesService.getValue(appName, PropertyConstants.FROM_MAIL_ID)));
+			message.setFrom(
+					new InternetAddress(propertiesService.getValue(appName, PropertyConstants.EMAIL_FROM_MAIL_ID)));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
 			message.setSubject(subject);
 			message.setText(body);

@@ -19,9 +19,6 @@ public class ArticleCompletionQuizPageData extends PageData {
 	private String quizCompletionMessage;
 
 	@JsonInclude
-	private String soundFile;
-
-	@JsonInclude
 	private BadgeDetailsDTO monthlyBadge;
 
 	@JsonInclude

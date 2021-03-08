@@ -1,13 +1,13 @@
 package com.enewschamp.app.student.dto;
 
-import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class StudentActivityDTO extends AbstractDTO {
+public class StudentActivityDTO extends BaseEntity {
 
 	/**
 	 * 

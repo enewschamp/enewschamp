@@ -21,7 +21,7 @@ public class StudentSchoolPageData extends PageData {
 	private List<CityPageData> cityLOV;
 	private List<SchoolData> schoolLOV;
 	private List<SchoolProgramLOV> schoolProgramLOV;
-	private long studentId = 0L;
+	private Long studentId = 0L;
 	private String country;
 	private String countryNotInTheList;
 	private String state;
@@ -33,4 +33,5 @@ public class StudentSchoolPageData extends PageData {
 	private String section;
 	private String grade;
 	private String schoolProgramCode;
+	private String approvalRequired;
 }

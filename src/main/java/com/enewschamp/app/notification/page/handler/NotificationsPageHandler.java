@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,8 +37,6 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.subscription.app.dto.SchoolDetailsRequestData;
-import com.enewschamp.subscription.app.dto.StudentSchoolPageData;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -96,7 +95,8 @@ public class NotificationsPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -134,7 +134,7 @@ public class NotificationsPageHandler implements IPageHandler {
 		NotificationsSearchRequest searchRequest = new NotificationsSearchRequest();
 		searchRequest.setEditionId(editionId);
 		searchRequest.setStudentId(studentId);
-		String limitDate = commonService.getLimitDate(module, PropertyConstants.VIEW_NOTIFICATIONS_LIMIT, emailId)
+		String limitDate = commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_NOTIFICATIONS, emailId)
 				+ " 00:00";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		searchRequest.setOperationDateTime(LocalDateTime.parse(limitDate, formatter));
@@ -194,7 +194,8 @@ public class NotificationsPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();

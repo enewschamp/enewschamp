@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.article.page.handler.NewsArticlePageHandler;
 import com.enewschamp.app.common.CommonService;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -23,7 +25,6 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.recognition.page.data.RecognitionData;
 import com.enewschamp.app.recognition.page.data.RecognitionPageData;
 import com.enewschamp.app.student.badges.business.StudentBadgesBusiness;
-import com.enewschamp.app.student.dto.ChampStudentDTO;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
@@ -90,13 +91,15 @@ public class RecognitionsPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
 	}
 
@@ -123,7 +126,7 @@ public class RecognitionsPageHandler implements IPageHandler {
 			paginationData.setPageSize(pageSize);
 			pageData.setPagination(paginationData);
 		}
-		LocalDate limitDate = commonService.getLimitDate(module, PropertyConstants.VIEW_RECOGNITIONS_LIMIT, emailId);
+		LocalDate limitDate = commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_RECOGNITIONS, emailId);
 		Page<RecognitionData> pageResult = studentBadgesBusiness.getStudentBadges(studentId, editionId, limitDate,
 				pageNo, pageSize);
 		if (pageResult == null || pageResult.isLast()) {

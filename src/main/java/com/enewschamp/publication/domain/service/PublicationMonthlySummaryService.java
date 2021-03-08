@@ -84,7 +84,7 @@ public class PublicationMonthlySummaryService extends AbstractDomainService {
 					.setNewsArticleCount(publicationMonthlySummary.getNewsArticleCount() + articleList.size());
 			publicationMonthlySummary
 					.setQuizCount(publicationMonthlySummary.getQuizCount() + getQuizCount(articleList));
-			publicationMonthlySummary.setOperatorId("SYSTEM");
+			publicationMonthlySummary.setOperatorId(publicationGroup.getOperatorId());
 			repository.save(publicationMonthlySummary);
 		});
 	}

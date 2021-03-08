@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.domain.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-public class ScoresDailyDTO extends AbstractDTO {
+public class ScoresDailyDTO extends BaseEntity {
 
 	/**
 	 * 

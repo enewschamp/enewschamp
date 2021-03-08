@@ -1,15 +1,10 @@
 package com.enewschamp.subscription.domain.business;
 
-import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.PageRequestDTO;
-import com.enewschamp.subscription.app.dto.StudentSubscriptionDTO;
 import com.enewschamp.subscription.app.dto.StudentSubscriptionPeriodDTO;
 import com.enewschamp.subscription.app.dto.StudentSubscriptionPeriodWorkDTO;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;

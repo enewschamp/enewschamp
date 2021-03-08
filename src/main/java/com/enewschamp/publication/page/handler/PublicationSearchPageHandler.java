@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.app.common.ErrorCodeConstants;
-import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PropertyConstants;
@@ -73,7 +71,7 @@ public class PublicationSearchPageHandler implements IPageHandler {
 		}
 
 		PublicationSearchResultData searchResult = new PublicationSearchResultData();
-		Page<PublicationSummaryDTO> pageResult = publicationService.findPublications(searchRequestData,
+		Page<PublicationSummaryDTO> pageResult = publicationService.findPublications(searchRequestData, 1, 10,
 				pageRequest.getHeader());
 		if (pageResult.getNumberOfElements() > Integer.valueOf(propertiesService
 				.getValue(pageRequest.getHeader().getModule(), PropertyConstants.MAX_SEARCH_RESULTS_FOR_PUBLISHER))) {

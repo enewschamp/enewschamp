@@ -37,6 +37,9 @@ public class WelcomePageData extends PageData {
 	private LocalDateTime lastActivityDatetime;
 
 	@JsonInclude
+	private LocalDateTime creationDatetime;
+
+	@JsonInclude
 	private AppearancePageData appearance;
 
 	@JsonInclude

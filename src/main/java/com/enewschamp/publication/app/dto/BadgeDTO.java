@@ -31,14 +31,28 @@ public class BadgeDTO extends MaintenanceDTO {
 
 	private String base64Image;
 
+	private String base64SuccessImage;
+
+	private String base64AudioFile;
+
 	private String imageTypeExt = "jpg";
+
+	private String successImageTypeExt = "jpg";
+
+	private String audioFileTypeExt = "mp4";
 
 	@JsonInclude
 	private String imageName;
 
+	private String imageUpdate;
+
 	@JsonInclude
 	private String successImageName;
 
+	private String successImageUpdate;
+
 	@JsonInclude
 	private String audioFileName;
+
+	private String audioFileUpdate;
 }

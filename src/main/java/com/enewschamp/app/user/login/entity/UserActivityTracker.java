@@ -1,5 +1,6 @@
 package com.enewschamp.app.user.login.entity;
 
+import java.sql.Blob;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -55,5 +56,17 @@ public class UserActivityTracker extends BaseEntity {
 	@Column(name = "actionStatus")
 	@Enumerated(EnumType.STRING)
 	private UserAction actionStatus;
+
+	@Column(name = "errorCode", length = 50)
+	private String errorCode;
+
+	@Column(name = "errorDescription", length = 500)
+	private String errorDescription;
+
+	@Column(name = "requestData")
+	private Blob requestData;
+
+	@Column(name = "errorText")
+	private Blob errorText;
 
 }

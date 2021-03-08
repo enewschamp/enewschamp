@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ import com.enewschamp.app.user.login.entity.UserAction;
 import com.enewschamp.app.user.login.entity.UserActivityTracker;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
+import com.enewschamp.common.domain.service.ErrorCodesService;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
@@ -53,6 +55,9 @@ public class ResetPasswordPageHandler implements IPageHandler {
 
 	@Autowired
 	ObjectMapper objectMapper;
+
+	@Autowired
+	ErrorCodesService errorCodesService;
 
 	@Autowired
 	UserService userService;
@@ -137,13 +142,15 @@ public class ResetPasswordPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
 	}
 
@@ -186,6 +193,19 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
 		pageDto.setHeader(header);
+		String action = header.getAction();
+		String deviceId = header.getDeviceId();
+		UserActivityTracker userActivityTracker = new UserActivityTracker();
+		userActivityTracker.setOperatorId(header.getEmailId());
+		userActivityTracker.setRecordInUse(RecordInUseType.Y);
+		userActivityTracker.setActionPerformed(pageNavigationContext.getPageRequest().getHeader().getPageName() + "-"
+				+ pageNavigationContext.getPageRequest().getHeader().getOperation() + "-" + action);
+		userActivityTracker.setDeviceId(deviceId);
+		userActivityTracker.setUserId(header.getEmailId());
+		userActivityTracker.setUserType(UserType.S);
+		userActivityTracker.setActionTime(LocalDateTime.now());
+		userActivityTracker.setActionStatus(UserAction.SUCCESS);
+		userLoginBusiness.auditUserActivity(userActivityTracker);
 		ResetPasswordPageData resetPasswordPageData = new ResetPasswordPageData();
 		pageDto.setData(resetPasswordPageData);
 		return pageDto;
@@ -218,7 +238,8 @@ public class ResetPasswordPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -231,25 +252,19 @@ public class ResetPasswordPageHandler implements IPageHandler {
 	public PageDTO handleSetPasswordAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDto = new PageDTO();
 		String action = pageRequest.getHeader().getAction();
-		String emailId = pageRequest.getHeader().getEmailId();
+		String deviceId = pageRequest.getHeader().getDeviceId();
 		String module = pageRequest.getHeader().getModule();
+
 		ResetPasswordPageData resetPasswordPageData = new ResetPasswordPageData();
+		String emailId = "";
 		String password = "";
 		String securityCode = null;
 		String verifyPassword = "";
-		String deviceId = "";
-		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId("SYSTEM");
-		userActivityTracker.setRecordInUse(RecordInUseType.Y);
-		userActivityTracker.setActionPerformed(action);
-		userActivityTracker.setDeviceId(deviceId);
-		userActivityTracker.setUserId(emailId);
-		userActivityTracker.setUserType(UserType.P);
-		userActivityTracker.setActionTime(LocalDateTime.now());
 		try {
 			resetPasswordPageData = objectMapper.readValue(pageRequest.getData().toString(),
 					ResetPasswordPageData.class);
 			emailId = resetPasswordPageData.getEmailId();
+			pageRequest.getHeader().setEmailId(emailId);
 			securityCode = resetPasswordPageData.getSecurityCode();
 			password = resetPasswordPageData.getNewPassword();
 			verifyPassword = resetPasswordPageData.getConfirmNewPassword();
@@ -260,48 +275,88 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
+		UserActivityTracker userActivityTracker = new UserActivityTracker();
+		userActivityTracker.setOperatorId(emailId);
+		userActivityTracker.setRecordInUse(RecordInUseType.Y);
+		userActivityTracker.setActionPerformed(
+				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);
+		userActivityTracker.setDeviceId(deviceId);
+		userActivityTracker.setUserId(emailId);
+		userActivityTracker.setUserType(UserType.S);
+		userActivityTracker.setActionTime(LocalDateTime.now());
 		if (password == null && "".equals(password)) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_PASSWORD);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_PASSWORD));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_PASSWORD);
-			// throw exception..
 		}
 		if (verifyPassword == null && "".equals(verifyPassword)) {
-			// throw excecption..
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_VERIFY_PWD);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_VERIFY_PWD));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_VERIFY_PWD);
 		}
 		if (emailId == null && "".equals(emailId)) {
-			// throw exception..
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_EMAIL_ID);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_EMAIL_ID));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_EMAIL_ID);
 		}
 
 		if (securityCode == null) {
-			// throw exception
-			throw new BusinessException(ErrorCodeConstants.INVALID_SECURITY_CODE);
-		}
-		if (!password.equals(verifyPassword)) {
-			// throw exception..
-			throw new BusinessException(ErrorCodeConstants.PWD_VPWD_DONT_MATCH);
-		}
-		if (password.length() > 20 || password.length() < 8) {
-			throw new BusinessException(ErrorCodeConstants.INVALID_PWD_LEN);
-		}
-		StudentRegistration student = regService.getStudentReg(emailId);
-		if ("N".equals(student.getIsActive())) {
-			throw new BusinessException(ErrorCodeConstants.STUD_IS_INACTIVE);
-		}
-		if (password.equals(student.getPassword()) || password.equals(student.getPassword1())
-				|| password.equals(student.getPassword2())) {
-			throw new BusinessException(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO);
-		}
-		userActivityTracker.setActionStatus(UserAction.SUCCESS);
-		userLoginBusiness.auditUserActivity(userActivityTracker);
-		boolean validOtp = studentRegBusiness.validateOtp(module, securityCode, emailId);
-		if (!validOtp) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_SECURITY_CODE);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_SECURITY_CODE));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_SECURITY_CODE);
 		}
-		studentRegBusiness.resetPassword(emailId, password);
+		if (!password.equals(verifyPassword)) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.PWD_VPWD_DONT_MATCH);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.PWD_VPWD_DONT_MATCH));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
+			throw new BusinessException(ErrorCodeConstants.PWD_VPWD_DONT_MATCH);
+		}
+		if (password.length() > 20 || password.length() < 8) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_PWD_LEN);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_PWD_LEN));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
+			throw new BusinessException(ErrorCodeConstants.INVALID_PWD_LEN);
+		}
+		StudentRegistration student = regService.getStudentReg(emailId);
+		if ("N".equals(student.getIsActive())) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.STUD_IS_INACTIVE);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.STUD_IS_INACTIVE));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
+			throw new BusinessException(ErrorCodeConstants.STUD_IS_INACTIVE);
+		}
+		if (password.equals(student.getPassword()) || password.equals(student.getPassword1())
+				|| password.equals(student.getPassword2())) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
+			throw new BusinessException(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO);
+		}
+		boolean validOtp = studentRegBusiness.validateOtp(module, securityCode, emailId, userActivityTracker);
+		if (!validOtp) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_SECURITY_CODE);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_SECURITY_CODE));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
+			throw new BusinessException(ErrorCodeConstants.INVALID_SECURITY_CODE);
+		}
+		studentRegBusiness.resetPassword(emailId, password, userActivityTracker);
+		userActivityTracker.setActionStatus(UserAction.SUCCESS);
+		userLoginBusiness.auditUserActivity(userActivityTracker);
 		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
 		studentControlWorkDTO.setEmailIdVerified("Y");
 		studentControlBusiness.saveAsWork(studentControlWorkDTO);
@@ -317,18 +372,17 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		String action = pageRequest.getHeader().getAction();
 		String emailId = pageRequest.getHeader().getEmailId();
 		String module = pageRequest.getHeader().getModule();
+		String deviceId = pageRequest.getHeader().getDeviceId();
 		ResetPasswordPageData resetPasswordPageData = new ResetPasswordPageData();
 		String password = "";
 		String securityCode = null;
 		String verifyPassword = "";
-		String deviceId = "";
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId("SYSTEM");
 		userActivityTracker.setRecordInUse(RecordInUseType.Y);
-		userActivityTracker.setActionPerformed(action);
+		userActivityTracker.setActionPerformed(
+				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);
 		userActivityTracker.setDeviceId(deviceId);
-		userActivityTracker.setUserId(emailId);
-		userActivityTracker.setUserType(UserType.P);
+		userActivityTracker.setUserType(UserType.S);
 		userActivityTracker.setActionTime(LocalDateTime.now());
 		try {
 			resetPasswordPageData = objectMapper.readValue(pageRequest.getData().toString(),
@@ -337,6 +391,8 @@ public class ResetPasswordPageHandler implements IPageHandler {
 			securityCode = resetPasswordPageData.getSecurityCode();
 			password = resetPasswordPageData.getNewPassword();
 			verifyPassword = resetPasswordPageData.getConfirmNewPassword();
+			userActivityTracker.setOperatorId(emailId);
+			userActivityTracker.setUserId(emailId);
 		} catch (JsonParseException e) {
 			throw new RuntimeException(e);
 		} catch (JsonMappingException e) {
@@ -346,39 +402,75 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		}
 
 		if (password == null && "".equals(password)) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_PASSWORD);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_PASSWORD));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_PASSWORD);
-			// throw exception..
 		}
 		if (verifyPassword == null && "".equals(verifyPassword)) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_VERIFY_PWD);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_VERIFY_PWD));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_VERIFY_PWD);
 		}
 		if (emailId == null && "".equals(emailId)) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_EMAIL_ID);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_EMAIL_ID));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_EMAIL_ID);
 		}
 		if (securityCode == null) {
-			throw new BusinessException(ErrorCodeConstants.INVALID_SECURITY_CODE);
-		}
-		if (!password.equals(verifyPassword)) {
-			throw new BusinessException(ErrorCodeConstants.PWD_VPWD_DONT_MATCH);
-		}
-		if (password.length() > 20 || password.length() < 8) {
-			throw new BusinessException(ErrorCodeConstants.INVALID_PWD_LEN);
-		}
-		StudentRegistration student = regService.getStudentReg(emailId);
-		if ("N".equals(student.getIsActive())) {
-			throw new BusinessException(ErrorCodeConstants.STUD_IS_INACTIVE);
-		}
-		if (password.equals(student.getPassword()) || password.equals(student.getPassword1())
-				|| password.equals(student.getPassword2())) {
-			throw new BusinessException(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO);
-		}
-		boolean validOtp = studentRegBusiness.validateOtp(module, securityCode, emailId);
-		if (!validOtp) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_SECURITY_CODE);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_SECURITY_CODE));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_SECURITY_CODE);
 		}
-		studentRegBusiness.resetPassword(emailId, password);
+		if (!password.equals(verifyPassword)) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.PWD_VPWD_DONT_MATCH);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.PWD_VPWD_DONT_MATCH));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
+			throw new BusinessException(ErrorCodeConstants.PWD_VPWD_DONT_MATCH);
+		}
+		if (password.length() > 20 || password.length() < 8) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_PWD_LEN);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_PWD_LEN));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
+			throw new BusinessException(ErrorCodeConstants.INVALID_PWD_LEN);
+		}
+		StudentRegistration student = regService.getStudentReg(emailId);
+		if ("N".equals(student.getIsActive())) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.STUD_IS_INACTIVE);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.STUD_IS_INACTIVE));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
+			throw new BusinessException(ErrorCodeConstants.STUD_IS_INACTIVE);
+		}
+		if (password.equals(student.getPassword()) || password.equals(student.getPassword1())
+				|| password.equals(student.getPassword2())) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
+			throw new BusinessException(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO);
+		}
+		boolean validOtp = studentRegBusiness.validateOtp(module, securityCode, emailId, userActivityTracker);
+		if (!validOtp) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_SECURITY_CODE);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_SECURITY_CODE));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
+			throw new BusinessException(ErrorCodeConstants.INVALID_SECURITY_CODE);
+		}
+		studentRegBusiness.resetPassword(emailId, password, userActivityTracker);
 		resetPasswordPageData.setMessage(propertiesService.getValue(module, PropertyConstants.PASSWORD_RESET_MESSAGE));
 		userActivityTracker.setActionStatus(UserAction.SUCCESS);
 		userLoginBusiness.auditUserActivity(userActivityTracker);
@@ -390,24 +482,29 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageRequest.getHeader());
 		String action = pageRequest.getHeader().getAction();
-		String emailId = pageRequest.getHeader().getEmailId();
+		String emailId = "";
 		String module = pageRequest.getHeader().getModule();
+		String deviceId = pageRequest.getHeader().getDeviceId();
 		ResetPasswordPageData resetPasswordPageData = new ResetPasswordPageData();
-		String deviceId = "";
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId("SYSTEM");
 		userActivityTracker.setRecordInUse(RecordInUseType.Y);
-		userActivityTracker.setActionPerformed(action);
+		userActivityTracker.setActionPerformed(
+				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);
 		userActivityTracker.setDeviceId(deviceId);
-		userActivityTracker.setUserId(emailId);
-		userActivityTracker.setUserType(UserType.P);
+		userActivityTracker.setUserType(UserType.S);
 		userActivityTracker.setActionTime(LocalDateTime.now());
 		try {
 			resetPasswordPageData = objectMapper.readValue(pageRequest.getData().toString(),
 					ResetPasswordPageData.class);
 			emailId = resetPasswordPageData.getEmailId();
+			userActivityTracker.setOperatorId(emailId);
+			userActivityTracker.setUserId(emailId);
 			if (emailId == null && "".equals(emailId)) {
-				// throw exception..
+				userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_EMAIL_ID);
+				userActivityTracker
+						.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_EMAIL_ID));
+				userActivityTracker.setActionStatus(UserAction.FAILURE);
+				userLoginBusiness.auditUserActivity(userActivityTracker);
 				throw new BusinessException(ErrorCodeConstants.INVALID_EMAIL_ID);
 			}
 
@@ -421,6 +518,11 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		List<OTP> otpGenList = otpRepository.getOtpGenListForEmail(emailId, RecordInUseType.Y);
 		if (otpGenList != null && otpGenList.size() >= Integer
 				.valueOf(propertiesService.getValue(module, PropertyConstants.OTP_GEN_MAX_ATTEMPTS))) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.OTP_GEN_MAX_ATTEMPTS_EXHAUSTED);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.OTP_GEN_MAX_ATTEMPTS_EXHAUSTED));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.OTP_GEN_MAX_ATTEMPTS_EXHAUSTED);
 		}
 		resetPasswordPageData.setMessage(propertiesService.getValue(module, PropertyConstants.OTP_MESSAGE));
@@ -442,12 +544,13 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		ResetPasswordPageData resetPasswordPageData = new ResetPasswordPageData();
 
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId("SYSTEM");
+		userActivityTracker.setOperatorId(emailId);
 		userActivityTracker.setRecordInUse(RecordInUseType.Y);
-		userActivityTracker.setActionPerformed(action);
+		userActivityTracker.setActionPerformed(
+				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);
 		userActivityTracker.setDeviceId(deviceId);
 		userActivityTracker.setUserId(emailId);
-		userActivityTracker.setUserType(UserType.P);
+		userActivityTracker.setUserType(UserType.S);
 		userActivityTracker.setActionTime(LocalDateTime.now());
 		String password = "";
 		String passwordNew = "";
@@ -466,38 +569,66 @@ public class ResetPasswordPageHandler implements IPageHandler {
 			throw new RuntimeException(e);
 		}
 		if (password == null || "".equals(password)) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_USER_PASSWORD);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_USER_PASSWORD));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_USER_PASSWORD);
 		} else if (passwordNew == null || "".equals(passwordNew)) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_USER_NEW_PASSWORD);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_USER_NEW_PASSWORD));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_USER_NEW_PASSWORD);
 		} else if (passwordRepeat == null || "".equals(passwordRepeat)) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_USER_NEW_PASSWORD);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_USER_NEW_PASSWORD));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_USER_NEW_PASSWORD);
 		} else if (!passwordNew.equals(passwordRepeat)) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.BOTH_PASSWORD_DO_NOT_MATCH);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.BOTH_PASSWORD_DO_NOT_MATCH));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.BOTH_PASSWORD_DO_NOT_MATCH);
 		} else if (passwordNew.equals(password)) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.OLD_NEW_PASSWORD_SAME);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.OLD_NEW_PASSWORD_SAME));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.OLD_NEW_PASSWORD_SAME);
 		}
-		boolean validPassword = studentRegBusiness.validatePassword(module, emailId, password, deviceId, tokenId);
+		boolean validPassword = studentRegBusiness.validatePassword(module, emailId, password, deviceId, tokenId,
+				userActivityTracker);
 		if (!validPassword) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_USERNAME_OR_PASSWORD);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_USERNAME_OR_PASSWORD));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_USERNAME_OR_PASSWORD, emailId);
 		}
 		StudentRegistration student = regService.getStudentReg(emailId);
 		if ("N".equals(student.getIsActive())) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.STUD_IS_INACTIVE);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.STUD_IS_INACTIVE));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.STUD_IS_INACTIVE);
 		}
 		if (passwordNew.equals(student.getPassword()) || passwordNew.equals(student.getPassword1())
 				|| passwordNew.equals(student.getPassword2())) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO);
 		}
 		studentRegBusiness.changePassword(emailId, passwordRepeat, userActivityTracker);

@@ -3,6 +3,7 @@ package com.enewschamp.subscription.app.dto;
 import java.time.LocalDate;
 
 import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.domain.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
@@ -10,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class StudentDetailsWorkDTO extends AbstractDTO {
+public class StudentDetailsWorkDTO extends BaseEntity {
 
 	/**
 	 * 
@@ -40,4 +41,7 @@ public class StudentDetailsWorkDTO extends AbstractDTO {
 
 	@JsonInclude
 	private String mobileNumber;
+
+	@JsonInclude
+	private String approvalRequired;
 }

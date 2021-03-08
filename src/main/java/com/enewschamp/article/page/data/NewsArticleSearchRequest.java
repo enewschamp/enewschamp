@@ -38,7 +38,6 @@ public class NewsArticleSearchRequest extends PageData {
 	private LocalDate publicationDate;
 	private LocalDate publicationDateFrom;
 	private LocalDate publicationDateTo;
-	private LocalDate publicationDateLimit;
 	private LocalDate intendedPubDateFrom;
 	private LocalDate intendedPubDateTo;
 	private MonthType intendedPubMonth;

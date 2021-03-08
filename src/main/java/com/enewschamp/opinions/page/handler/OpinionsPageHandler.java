@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 import com.enewschamp.app.article.page.dto.ArticlePageData;
 import com.enewschamp.app.common.CommonFilterData;
 import com.enewschamp.app.common.CommonService;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -92,13 +94,15 @@ public class OpinionsPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
 	}
 
@@ -132,7 +136,7 @@ public class OpinionsPageHandler implements IPageHandler {
 		searchRequestData.setEditionId(editionId);
 		searchRequestData.setStudentId(studentId);
 		searchRequestData.setPublicationDateFrom(
-				commonService.getLimitDate(module, PropertyConstants.VIEW_OPINIONS_LIMIT, emailId));
+				commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_OPINIONS, emailId));
 		if (filterData != null) {
 			searchRequestData.setGenre(filterData.getGenre());
 			searchRequestData.setHeadline(filterData.getHeadline());

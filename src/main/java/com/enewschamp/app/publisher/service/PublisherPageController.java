@@ -98,19 +98,21 @@ public class PublisherPageController {
 			String deviceId = pageRequest.getHeader().getDeviceId();
 			String operation = pageRequest.getHeader().getOperation();
 			String editionId = pageRequest.getHeader().getEditionId();
+			String appVersion = pageRequest.getHeader().getAppVersion();
 			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userId, null));
 			if (module == null || pageName == null || operation == null || actionName == null || userId == null
-					|| deviceId == null || loginCredentials == null || editionId == null
+					|| deviceId == null || loginCredentials == null || editionId == null || appVersion == null
 					|| (!propertiesService.getValue(module, PropertyConstants.PUBLISHER_MODULE_NAME).equals(module))
 					|| pageName.trim().isEmpty() || actionName.trim().isEmpty() || deviceId.trim().isEmpty()
-					|| editionId.trim().isEmpty()) {
+					|| editionId.trim().isEmpty() || appVersion.trim().isEmpty()) {
 				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
 			}
 			User user = userService.get(userId);
 			UserActivityTracker userActivityTracker = new UserActivityTracker();
-			userActivityTracker.setOperatorId("SYSTEM");
+			userActivityTracker.setOperatorId(userId);
 			userActivityTracker.setRecordInUse(RecordInUseType.Y);
-			userActivityTracker.setActionPerformed(actionName);
+			userActivityTracker.setActionPerformed(pageRequest.getHeader().getPageName() + "-"
+					+ pageRequest.getHeader().getOperation() + "-" + actionName);
 			userActivityTracker.setDeviceId(deviceId);
 			userActivityTracker.setUserId(userId);
 			userActivityTracker.setUserType(UserType.P);
@@ -141,7 +143,8 @@ public class PublisherPageController {
 				String edition = pageRequest.getHeader().getEditionId();
 				editionService.getEdition(edition);
 				userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.P, userActivityTracker);
-				UserLogin userLogin = userLoginBusiness.login(userId, deviceId, loginCredentials, UserType.P);
+				UserLogin userLogin = userLoginBusiness.login(userId, deviceId, loginCredentials, module, appVersion,
+						UserType.P);
 				userActivityTracker.setActionStatus(UserAction.SUCCESS);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 				pageResponse = new PageDTO();
@@ -151,7 +154,7 @@ public class PublisherPageController {
 				loginPageData.setMessage("Token Refreshed Successfully");
 				loginPageData.setLoginCredentials(userLogin.getTokenId());
 				loginPageData.setTokenValidity(
-						propertiesService.getValue(module, PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));
+						propertiesService.getValue(module, PropertyConstants.LOGIN_SESSION_EXPIRY_SECS));
 				pageResponse.setData(loginPageData);
 				pageResponse.getHeader().setLoginCredentials(null);
 			} else {
@@ -162,8 +165,8 @@ public class PublisherPageController {
 			pageResponse.getHeader().setUserId(null);
 			pageResponse.getHeader().setEditionId(null);
 			pageResponse.getHeader().setTodaysDate(LocalDate.now());
-			String helpText = propertiesService.getProperty(module,
-					"publisher." + pageResponse.getHeader().getPageName().toLowerCase());
+			String helpText = propertiesService.getValue(module,
+					"helpText." + pageResponse.getHeader().getPageName().toLowerCase());
 			pageResponse.getHeader().setHelpText(helpText);
 			response = new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
 		} catch (BusinessException e) {
@@ -177,6 +180,8 @@ public class PublisherPageController {
 			header.setLoginCredentials(null);
 			header.setDeviceId(null);
 			header.setTodaysDate(LocalDate.now());
+			System.out.println(">>>>>>>>" + e);
+			// throw e;
 			throw new Fault(e, header);
 		} catch (Exception e) {
 			HeaderDTO header = pageRequest.getHeader();
@@ -189,6 +194,8 @@ public class PublisherPageController {
 			header.setLoginCredentials(null);
 			header.setDeviceId(null);
 			header.setTodaysDate(LocalDate.now());
+			System.out.println(">>>>>>>>" + e);
+			// throw e;
 			throw new Fault(e.getLocalizedMessage(), header);
 		}
 		return response;
@@ -239,7 +246,7 @@ public class PublisherPageController {
 		page.getHeader().setPageName(nextPageName);
 	}
 
-	@RequestMapping(value = "/publisher/images/article", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+	@RequestMapping(value = "/publisher/images/article", method = RequestMethod.GET, produces = MediaType.ALL_VALUE)
 	public void getArticleImage(HttpServletResponse response, @RequestParam String imagePath,
 			@RequestParam String appKey, @RequestParam String appName, @RequestParam String module,
 			@RequestParam String userId, @RequestParam String deviceId, @RequestParam String loginCredentials)
@@ -262,19 +269,20 @@ public class PublisherPageController {
 				imagePath = imagePath.substring(2, imagePath.length());
 			}
 			String imagesFolderPath = propertiesService.getValue(module,
-					PropertyConstants.ARTICLE_IMAGE_CONFIG_FOLDER_PATH);
+					PropertyConstants.IMAGE_ROOT_FOLDER_PATH_ARTICLE);
 			File imageFile = new File(imagesFolderPath + imagePath);
 			if (imageFile != null && imageFile.exists()) {
 				InputStream imageStream = new FileInputStream(imageFile);
 				response.setContentType(MediaType.IMAGE_JPEG_VALUE);
 				StreamUtils.copy(imageStream, response.getOutputStream());
+				imageStream.close();
 			}
 		} catch (BusinessException e) {
 			throw new Fault(e);
 		}
 	}
 
-	@RequestMapping(value = "/publisher/images/user", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+	@RequestMapping(value = "/publisher/images/user", method = RequestMethod.GET, produces = MediaType.ALL_VALUE)
 	public void getUserImage(HttpServletResponse response, @RequestParam String imagePath, @RequestParam String appKey,
 			@RequestParam String appName, @RequestParam String module, @RequestParam String userId,
 			@RequestParam String deviceId, @RequestParam String loginCredentials) throws IOException {
@@ -295,8 +303,7 @@ public class PublisherPageController {
 			if (imagePath.startsWith("/")) {
 				imagePath = imagePath.substring(2, imagePath.length());
 			}
-			String imagesFolderPath = propertiesService.getValue(module,
-					PropertyConstants.USER_IMAGE_CONFIG_FOLDER_PATH);
+			String imagesFolderPath = propertiesService.getValue(module, PropertyConstants.IMAGE_ROOT_FOLDER_PATH_USER);
 			File imageFile = new File(imagesFolderPath + imagePath);
 			if (imageFile != null && imageFile.exists()) {
 				InputStream imageStream = new FileInputStream(imageFile);
@@ -308,6 +315,7 @@ public class PublisherPageController {
 					response.setContentType(MediaType.IMAGE_GIF_VALUE);
 				}
 				StreamUtils.copy(imageStream, response.getOutputStream());
+				imageStream.close();
 			}
 		} catch (BusinessException e) {
 			throw new Fault(e);

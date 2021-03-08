@@ -14,7 +14,6 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -82,10 +81,6 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 		}
 		if (searchRequest.getPublicationDate() != null) {
 			filterPredicates.add(cb.equal(articleRoot.get("publicationDate"), searchRequest.getPublicationDate()));
-		}
-		if (!"Y".equalsIgnoreCase(searchRequest.getIsTestUser()) && searchRequest.getPublicationDateLimit() != null) {
-			filterPredicates.add(cb.greaterThanOrEqualTo(articleRoot.get("publicationDate"),
-					searchRequest.getPublicationDateLimit()));
 		}
 		if (searchRequest.getPublicationDateFrom() != null) {
 			filterPredicates.add(cb.greaterThanOrEqualTo(articleRoot.get("publicationDate"),
@@ -187,10 +182,6 @@ public class NewsArticleRepositoryImpl extends RepositoryImpl implements NewsArt
 		}
 		if (searchRequest.getIntendedPubDay() != null) {
 			filterPredicates.add(cb.equal(articleGroupRoot.get("intendedPubDay"), searchRequest.getIntendedPubDay()));
-		}
-		if (searchRequest.getPublicationDateLimit() != null) {
-			filterPredicates.add(cb.greaterThanOrEqualTo(articleRoot.get("publicationDate"),
-					searchRequest.getPublicationDateLimit()));
 		}
 		if (searchRequest.getPublicationDateFrom() != null) {
 			filterPredicates.add(cb.greaterThanOrEqualTo(articleRoot.get("publicationDate"),

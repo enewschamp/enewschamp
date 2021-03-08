@@ -17,5 +17,7 @@ public class SignInPageData extends PageData implements java.io.Serializable {
 	@JsonInclude
 	private String password;
 	@JsonInclude
+	private String fcmToken;
+	@JsonInclude
 	private String message;
 }

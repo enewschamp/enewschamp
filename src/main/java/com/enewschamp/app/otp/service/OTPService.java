@@ -20,6 +20,7 @@ import com.enewschamp.app.smtp.service.EmailService;
 import com.enewschamp.app.user.login.entity.UserAction;
 import com.enewschamp.app.user.login.entity.UserActivityTracker;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
+import com.enewschamp.common.domain.service.ErrorCodesService;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
@@ -29,6 +30,9 @@ public class OTPService {
 
 	@Autowired
 	OTPRepository repository;
+
+	@Autowired
+	ErrorCodesService errorCodesService;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -44,18 +48,31 @@ public class OTPService {
 
 	public OTPDTO genOTP(final String appName, final String emailId, UserActivityTracker userActivityTracker) {
 		String uniqueNo = new DecimalFormat("000000").format(new Random().nextInt(999999));
+		LocalDateTime localDate = LocalDateTime.now();
 		OTP otp = new OTP();
 		otp.setEmailId(emailId);
-		otp.setOtpGenTime(LocalDateTime.now());
+		otp.setOtpGenTime(localDate);
 		otp.setOtp(uniqueNo);
 		otp.setRecordInUse(RecordInUseType.Y);
-		otp.setOperatorId("SYSTEM");
-		otp.setOperationDateTime(LocalDateTime.now());
+		otp.setOperatorId(emailId);
+		otp.setVerifyAttempts(0);
+		otp.setOperationDateTime(localDate);
 		otp = repository.save(otp);
+		List<OTP> data = repository.getOtpForEmail(emailId, RecordInUseType.Y);
+		OTP otpEntity = null;
+		for (int i = 0; i < data.size(); i++) {
+			otpEntity = data.get(i);
+			otpEntity.setVerifyAttempts(0);
+			otpEntity.setOperatorId(emailId);
+			otpEntity.setOperationDateTime(localDate);
+			repository.save(otpEntity);
+		}
 		OTPDTO otpDto = modelMapper.map(otp, OTPDTO.class);
 		boolean sendSuccess = emailService.sendOTP(appName, "" + uniqueNo, emailId);
 		if (!sendSuccess) {
 			if (userActivityTracker != null) {
+				userActivityTracker.setErrorCode(ErrorCodeConstants.EMAIL_NOT_SENT);
+				userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.EMAIL_NOT_SENT));
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 			}
@@ -71,6 +88,8 @@ public class OTPService {
 		List<OTP> data = repository.getOtpForEmail(emailId, RecordInUseType.Y);
 		if (data.size() == 0) {
 			if (userActivityTracker != null) {
+				userActivityTracker.setErrorCode(ErrorCodeConstants.NO_RECORD_FOUND);
+				userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.NO_RECORD_FOUND));
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 			}
@@ -82,6 +101,9 @@ public class OTPService {
 				if (Integer.valueOf(propertiesService.getValue(appName,
 						PropertyConstants.OTP_VERIFY_MAX_ATTEMPTS)) <= otpEntity.getVerifyAttempts()) {
 					if (userActivityTracker != null) {
+						userActivityTracker.setErrorCode(ErrorCodeConstants.OTP_VERIFY_MAX_ATTEMPTS_EXHAUSTED);
+						userActivityTracker.setErrorDescription(
+								errorCodesService.getValue(ErrorCodeConstants.OTP_VERIFY_MAX_ATTEMPTS_EXHAUSTED));
 						userActivityTracker.setActionStatus(UserAction.FAILURE);
 						userLoginBusiness.auditUserActivity(userActivityTracker);
 					}
@@ -89,13 +111,17 @@ public class OTPService {
 				}
 				String otpExisting = otpEntity.getOtp();
 				Long otpId = otpEntity.getOtpId();
+				LocalDateTime localTime = LocalDateTime.now();
 				if (otpExisting.equals(otp)) {
 					LocalDateTime currentTime = LocalDateTime.now();
 					LocalDateTime otpGenTime = otpEntity.getOtpGenTime();
 					LocalDateTime otpExpiryTime = otpGenTime.plusSeconds(
-							Integer.valueOf(propertiesService.getValue(appName, PropertyConstants.OTP_EXPIRY_SECS)));
+							Integer.valueOf(propertiesService.getValue(appName, PropertyConstants.OTP_EXPIRY_SECONDS)));
 					if (currentTime.isAfter(otpExpiryTime)) {
 						if (userActivityTracker != null) {
+							userActivityTracker.setErrorCode(ErrorCodeConstants.OTP_EXPIRED);
+							userActivityTracker
+									.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.OTP_EXPIRED));
 							userActivityTracker.setActionStatus(UserAction.FAILURE);
 							userLoginBusiness.auditUserActivity(userActivityTracker);
 						}
@@ -103,16 +129,21 @@ public class OTPService {
 					}
 					validOtp = true;
 					otpEntity.setVerified("Y");
-					otpEntity.setVerificationTime(LocalDateTime.now());
+					otpEntity.setVerifyAttempts((otpEntity.getVerifyAttempts() + 1));
+					otpEntity.setVerificationTime(localTime);
+					otpEntity.setOperationDateTime(localTime);
 					for (int j = 0; j < data.size(); j++) {
 						OTP otpEntityOld = data.get(j);
 						if (otpId != otpEntityOld.getOtpId()) {
+							otpEntityOld.setVerifyAttempts((otpEntity.getVerifyAttempts() + 1));
 							otpEntityOld.setRecordInUse(RecordInUseType.N);
+							otpEntityOld.setOperationDateTime(localTime);
 						}
 					}
 					break;
 				} else {
 					otpEntity.setVerifyAttempts((otpEntity.getVerifyAttempts() + 1));
+					otpEntity.setOperationDateTime(localTime);
 				}
 			}
 		}

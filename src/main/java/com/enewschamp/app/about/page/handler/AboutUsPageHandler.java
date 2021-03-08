@@ -3,10 +3,8 @@ package com.enewschamp.app.about.page.handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.enewschamp.app.about.page.data.AboutUsPageData;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
-import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
@@ -27,10 +25,6 @@ public class AboutUsPageHandler implements IPageHandler {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		AboutUsPageData aboutUsPageData = new AboutUsPageData();
-		aboutUsPageData.setAboutUsText(propertiesService.getValue(
-				pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.ABOUT_US_TEXT));
-		pageDto.setData(aboutUsPageData);
 		return pageDto;
 	}
 

@@ -51,10 +51,12 @@ public class PublisherMenuPageHandler extends AbstractPageHandler {
 			loginPageData.setUserName(user.getName() + " " + user.getSurname());
 			loginPageData.setTodaysDate(LocalDate.now());
 			loginPageData.setTheme(user.getTheme());
+			loginPageData.setImageName(user.getImageName());
 			loginPageData.setUserRole(userLoginBusiness.getUserRole(userId));
 			loginPageData.setLoginCredentials(userLoginService.getOperatorLogin(userId).getTokenId());
-			loginPageData
-					.setTokenValidity(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),PropertyConstants. PUBLISHER_SESSION_EXPIRY_SECS));
+			loginPageData.setTokenValidity(
+					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+							PropertyConstants.LOGIN_SESSION_EXPIRY_SECS));
 		}
 		pageDto.setData(loginPageData);
 		return pageDto;

@@ -40,6 +40,7 @@ public interface ErrorCodeConstants {
 	public static String ERROR_CODE_NOT_FOUND = "PUB_036";
 	public static String PROPERTY_NOT_FOUND = "PUB_037";
 	public static String IMAGE_SAVE_ERROR = "IMG_001";
+	public static String FILE_SAVE_ERROR = "FILE_001";
 	// Error codes for publication APIs end
 
 	public static String STUDENT_DTLS_NOT_FOUND = "STUD_DTLS_001";
@@ -55,6 +56,8 @@ public interface ErrorCodeConstants {
 	public static String INVALID_USER_ID = "USER_006";
 	public static String USER_ACCOUNT_LOCKED = "USER_007";
 	public static String USER_PASSWORD_SAME_OR_PREV_TWO = "USER_008";
+	public static String USER_PASSWORD_FORCE_CHANGE_REQUIRED = "USER_009";
+	public static String USER_ACCOUNT_GET_LOCKED = "USER_010";
 
 	public static String PAGE_NOT_FOUND = "PAGE_001";
 	public static String NEXT_PAGE_NOT_FOUND = "PAGE_002";
@@ -70,9 +73,8 @@ public interface ErrorCodeConstants {
 	public static String SCHOOL_NOT_FOUND = "SPOU_002";
 	public static String REQUESTID_NOT_FOUND = "REQ_001";
 
-	public static String SREVER_ERROR = "SERVER_ERROR";
-
-	public static String RUNTIME_EXCEPTION = "RUNTIME_EXCEPTION";
+	public static String SREVER_ERROR = "OTHR_001";
+	public static String RUNTIME_EXCEPTION = "OTHR_002";
 
 	// Framework error codes start
 	public static String BUS_POLICY_FAILED = "FRW_001";
@@ -119,9 +121,10 @@ public interface ErrorCodeConstants {
 	public static String SEC_CODE_VALIDATION_FAILURE = "OTP_005";
 	public static String STUD_LOGIN_NOT_FOUND = "STUD_LOGIN_001";
 	public static String APP_SEC_KEY_NOT_FOUND = "APP_SEC_01";
+	public static String APP_VERSION_NOT_SUPPORTED = "APP_SEC_02";
 	public static String INVALID_REQUEST = "REQ_001";
 	public static String MISSING_REQUEST_PARAMS = "REQ_002";
 	public static String UNAUTH_ACCESS = "REQ_003";
 	public static String USER_TOKEN_EXPIRED = "REQ_004";
-
+	public static String PAYMENT_NOT_SUCCESSFUL = "PAY_001";
 }

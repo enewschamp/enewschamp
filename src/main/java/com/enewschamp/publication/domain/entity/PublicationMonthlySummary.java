@@ -72,12 +72,12 @@ public class PublicationMonthlySummary extends TransactionEntity {
 	@PrePersist
 	@PreUpdate
 	public void prePersist() {
-		if (operationDateTime == null) {
-			operationDateTime = LocalDateTime.now();
-		}
-		if (lastUpdatedDateTime == null) {
-			lastUpdatedDateTime = LocalDateTime.now();
-		}
+		// if (operationDateTime == null) {
+		operationDateTime = LocalDateTime.now();
+		// }
+		// if (lastUpdatedDateTime == null) {
+		lastUpdatedDateTime = LocalDateTime.now();
+		// }
 		if (recordId == null) {
 			recordId = calculateRecordId();
 		}

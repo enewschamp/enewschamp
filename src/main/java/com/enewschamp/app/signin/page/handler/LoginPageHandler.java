@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -81,7 +82,8 @@ public class LoginPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -91,6 +93,7 @@ public class LoginPageHandler implements IPageHandler {
 		return pageDTO;
 	}
 
+	// method not in use - to be removed
 	public PageDTO handleLoginAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageRequest.getHeader());
@@ -100,6 +103,7 @@ public class LoginPageHandler implements IPageHandler {
 		String deviceId = pageRequest.getHeader().getDeviceId();
 		String tokenId = pageRequest.getHeader().getLoginCredentials();
 		String module = pageRequest.getHeader().getModule();
+		String appVersion = pageRequest.getHeader().getAppVersion();
 		boolean loginSuccess = false;
 		try {
 			loginPageData = objectMapper.readValue(pageRequest.getData().toString(), LoginPageData.class);
@@ -112,11 +116,10 @@ public class LoginPageHandler implements IPageHandler {
 			throw new RuntimeException(e);
 		}
 
-		loginSuccess = studentRegBusiness.validatePassword(module, userId, password, deviceId, tokenId);
+		loginSuccess = studentRegBusiness.validatePassword(module, userId, password, deviceId, tokenId, null);
 		if (loginSuccess) {
-			userLoginBusiess.login(userId, deviceId, "", UserType.S);
+			userLoginBusiess.login(userId, deviceId, "", module, appVersion, UserType.S);
 		} else {
-
 			throw new BusinessException(ErrorCodeConstants.INVALID_EMAILID_OR_PASSWORD);
 		}
 		pageDto.setData(loginPageData);
@@ -124,6 +127,7 @@ public class LoginPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
+	// method not in use - to be removed
 	public PageDTO handleLogoutAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageRequest.getHeader());

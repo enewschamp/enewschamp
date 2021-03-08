@@ -66,6 +66,15 @@ public class AppSecurityService {
 		}
 	}
 
+	public String getCompatibleAppVersions(final String module) {
+		Optional<AppSecurity> existingEntity = appSecurityRepository.getAppSecurityByModule(module);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get().getCompatibleVersions();
+		} else {
+			throw new BusinessException(ErrorCodeConstants.APP_SEC_KEY_NOT_FOUND);
+		}
+	}
+
 	@Cacheable("appSec")
 	public boolean isValidKey(final String appName, final String appKey, final String module) {
 		Optional<AppSecurity> existingEntity = appSecurityRepository.getAppSec(appName, appKey, module);

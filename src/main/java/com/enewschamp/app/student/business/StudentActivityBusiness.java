@@ -28,10 +28,6 @@ public class StudentActivityBusiness {
 
 	public StudentActivityDTO saveActivity(StudentActivityDTO studentActivityDTO) {
 		StudentActivity studentActivity = modelMapper.map(studentActivityDTO, StudentActivity.class);
-
-		// TO DO to be corrected
-		studentActivity.setRecordInUse(RecordInUseType.Y);
-		studentActivity.setOperatorId("SYSTEM");
 		studentActivity = studentActivityService.create(studentActivity);
 		StudentActivityDTO studentActivityNew = modelMapper.map(studentActivity, StudentActivityDTO.class);
 		return studentActivityNew;
@@ -63,8 +59,8 @@ public class StudentActivityBusiness {
 		return studentActivityList;
 	}
 
-	public StudentActivityDTO saveQuizData(Long studentId, String editionId, int readingLevel, Long newsArticleId,
-			Long quizQCorrect) {
+	public StudentActivityDTO saveQuizData(Long studentId, String emailId, String editionId, int readingLevel,
+			Long newsArticleId, Long quizQCorrect) {
 		StudentActivityDTO studentActivityDTO = getActivity(studentId, newsArticleId);
 		if (studentActivityDTO == null) {
 			StudentActivityDTO studentActivityDTONew = new StudentActivityDTO();
@@ -73,19 +69,23 @@ public class StudentActivityBusiness {
 			studentActivityDTONew.setReadingLevel(Long.valueOf(readingLevel));
 			studentActivityDTONew.setNewsArticleId(newsArticleId);
 			studentActivityDTONew.setQuizScore(quizQCorrect);
+			studentActivityDTONew.setOperatorId(emailId);
+			studentActivityDTONew.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTONew);
 		} else {
 			Long quizScore = (studentActivityDTO.getQuizScore() == null) ? 0 : studentActivityDTO.getQuizScore();
 			quizScore = +quizQCorrect;
 			studentActivityDTO.setQuizScore(quizScore);
+			studentActivityDTO.setOperatorId(emailId);
+			studentActivityDTO.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTO);
 
 		}
 		return studentActivityDTO;
 	}
 
-	public StudentActivityDTO saveOpinion(Long studentId, Long newsArticleId, String opinion, int readingLevel,
-			String editionId) {
+	public StudentActivityDTO saveOpinion(Long studentId, String emailId, Long newsArticleId, String opinion,
+			int readingLevel, String editionId) {
 		StudentActivityDTO studentActivityDTO = getActivity(studentId, newsArticleId);
 		if (studentActivityDTO == null) {
 			StudentActivityDTO studentActivityDTONew = new StudentActivityDTO();
@@ -94,16 +94,20 @@ public class StudentActivityBusiness {
 			studentActivityDTONew.setOpinion(opinion);
 			studentActivityDTONew.setReadingLevel(Long.valueOf(readingLevel));
 			studentActivityDTONew.setEditionId(editionId);
+			studentActivityDTONew.setOperatorId(emailId);
+			studentActivityDTONew.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTONew);
 		} else {
 			studentActivityDTO.setOpinion(opinion);
+			studentActivityDTO.setOperatorId(emailId);
+			studentActivityDTO.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTO);
 		}
 		return studentActivityDTO;
 	}
 
-	public StudentActivityDTO likeArticle(Long studentId, Long newsArticleId, String likeFlag, int readingLevel,
-			String editionId) {
+	public StudentActivityDTO likeArticle(Long studentId, String emailId, Long newsArticleId, String likeFlag,
+			int readingLevel, String editionId) {
 		String currentReaction = "";
 		StudentActivityDTO studentActivityDTO = getActivity(studentId, newsArticleId);
 		if (studentActivityDTO == null) {
@@ -113,10 +117,14 @@ public class StudentActivityBusiness {
 			studentActivityDTONew.setReaction(likeFlag);
 			studentActivityDTONew.setReadingLevel(Long.valueOf(readingLevel));
 			studentActivityDTONew.setEditionId(editionId);
+			studentActivityDTONew.setOperatorId(emailId);
+			studentActivityDTONew.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTONew);
 		} else {
 			currentReaction = studentActivityDTO.getReaction();
 			studentActivityDTO.setReaction(likeFlag);
+			studentActivityDTO.setOperatorId(emailId);
+			studentActivityDTO.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTO);
 		}
 		NewsArticle article = newsArticleService.get(newsArticleId);
@@ -146,8 +154,8 @@ public class StudentActivityBusiness {
 		return studentActivityDTO;
 	}
 
-	public StudentActivityDTO saveArticle(Long studentId, Long newsArticleId, String saveFlag, int readingLevel,
-			String editionId) {
+	public StudentActivityDTO saveArticle(Long studentId, String emailId, Long newsArticleId, String saveFlag,
+			int readingLevel, String editionId) {
 		StudentActivityDTO studentActivityDTO = getActivity(studentId, newsArticleId);
 		if (studentActivityDTO == null) {
 			StudentActivityDTO studentActivityDTONew = new StudentActivityDTO();
@@ -156,9 +164,13 @@ public class StudentActivityBusiness {
 			studentActivityDTONew.setSaved(saveFlag);
 			studentActivityDTONew.setReadingLevel(Long.valueOf(readingLevel));
 			studentActivityDTONew.setEditionId(editionId);
+			studentActivityDTONew.setOperatorId(emailId);
+			studentActivityDTONew.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTONew);
 		} else {
 			studentActivityDTO.setSaved(saveFlag);
+			studentActivityDTO.setOperatorId(emailId);
+			studentActivityDTO.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTO);
 		}
 		return studentActivityDTO;

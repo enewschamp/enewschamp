@@ -7,7 +7,6 @@ import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
@@ -39,6 +38,12 @@ public class ChampStudentMYDTO implements Serializable {
 	private String city;
 
 	@JsonInclude
+	private String state;
+
+	@JsonInclude
+	private String country;
+
+	@JsonInclude
 	private Long score;
 
 	@JsonInclude
@@ -49,4 +54,25 @@ public class ChampStudentMYDTO implements Serializable {
 
 	@JsonInclude
 	private String photoName;
+
+	@JsonInclude
+	private String featureProfileInChamps;
+
+	@JsonInclude
+	private String champCity;
+
+	@JsonInclude
+	private String champProfilePic;
+
+	@JsonInclude
+	private String champSchool;
+
+	@JsonInclude
+	private String imageApprovalRequired;
+
+	@JsonInclude
+	private String studentDetailsApprovalRequired;
+
+	@JsonInclude
+	private String schoolDetailsApprovalRequired;
 }

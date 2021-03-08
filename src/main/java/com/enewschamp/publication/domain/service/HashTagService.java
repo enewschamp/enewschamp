@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
-import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.app.dto.HashTagDTO;
 import com.enewschamp.publication.domain.entity.HashTag;
 import com.google.common.reflect.TypeToken;

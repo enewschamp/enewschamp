@@ -1,5 +1,6 @@
 package com.enewschamp.app.student.registration.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -7,11 +8,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.javers.core.metamodel.annotation.DiffIgnore;
+import org.springframework.util.DigestUtils;
 
 import com.enewschamp.domain.common.BaseEntity;
 
@@ -27,13 +31,17 @@ public class StudentRegistration extends BaseEntity {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7063853831579952336L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_id_generator")
 	@SequenceGenerator(name = "student_id_generator", sequenceName = "student_id_seq", allocationSize = 1)
-	@Column(name = "studentId")
-	private long studentId = 0L;
+	@Column(name = "studentId", updatable = false, nullable = false)
+	private Long studentId;
+
+	@NotNull
+	@Column(name = "studentKey", updatable = false, nullable = false)
+	private String studentKey;
 
 	@NotNull
 	@Column(name = "emailId", length = 80)
@@ -80,6 +88,9 @@ public class StudentRegistration extends BaseEntity {
 	@Column(name = "photoName", length = 100)
 	private String photoName;
 
+	@Column(name = "imageApprovalRequired", length = 1)
+	private String imageApprovalRequired;
+
 	@Column(name = "avatarName", length = 100)
 	private String avatarName;
 
@@ -91,4 +102,27 @@ public class StudentRegistration extends BaseEntity {
 
 	@Column(name = "creationDateTime")
 	private LocalDateTime creationDateTime;
+
+	@Column(name = "fcmToken", length = 500)
+	private String fcmToken;
+
+	public String getKeyAsString() {
+		return this.studentKey;
+	}
+
+	@PrePersist
+	@PreUpdate
+	public void prePersist() {
+		// if (operationDateTime == null) {
+		operationDateTime = LocalDateTime.now();
+		// }
+		if (studentKey == null) {
+			studentKey = generateStudentKey();
+		}
+	}
+
+	public String generateStudentKey() {
+		String hashString = LocalDate.now().toString() + emailId;
+		return DigestUtils.md5DigestAsHex(hashString.getBytes());
+	}
 }

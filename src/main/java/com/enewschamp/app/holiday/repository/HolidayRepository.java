@@ -16,6 +16,6 @@ public interface HolidayRepository extends JpaRepository<Holiday, Long> {
 	@Query("select h from Holiday h where h.holidayDate= :holidayDate and h.editionId=:editionId and h.recordInUse='Y'")
 	public Optional<Holiday> getHoliday(@Param("holidayDate") LocalDate date, @Param("editionId") String editionId);
 
-	@Query(value = "select a.holidayDate as holidayDate, a.holiday as holiday from Holiday a where YEAR(a.holidayDate) IN((YEAR(CURDATE())-1),YEAR(CURDATE()),(YEAR(CURDATE())+1))")
+	@Query(value = "select a.holidayDate as holidayDate, a.holiday as holiday, a.publication as publication, a.helpdesk as helpdesk from Holiday a where YEAR(a.holidayDate) IN((YEAR(CURDATE())-1),YEAR(CURDATE()),(YEAR(CURDATE())+1))")
 	public List<HolidayList> getHolidayList();
 }

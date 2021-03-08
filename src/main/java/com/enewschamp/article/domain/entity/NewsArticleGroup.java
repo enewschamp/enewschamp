@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.javers.spring.annotation.JaversSpringDataAuditable;
+
 import com.enewschamp.article.domain.common.ArticleGroupStatusType;
 import com.enewschamp.article.domain.common.ArticleType;
 import com.enewschamp.domain.common.BaseEntity;
@@ -32,6 +34,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "NewsArticleGroup")
+@JaversSpringDataAuditable
 public class NewsArticleGroup extends BaseEntity {
 
 	private static final long serialVersionUID = 5585724931483394475L;
@@ -150,6 +153,9 @@ public class NewsArticleGroup extends BaseEntity {
 	@Column(name = "ReadingLevel4")
 	@NotNull
 	private Boolean readingLevel4;
+
+	@Transient
+	private String deleteImage;
 
 	@Transient
 	private List<NewsArticle> newsArticles;

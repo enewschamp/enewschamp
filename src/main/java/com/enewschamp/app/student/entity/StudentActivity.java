@@ -32,7 +32,7 @@ public class StudentActivity extends BaseEntity {
 	private Long studentActivityId;
 
 	@NotNull
-	@Column(name = "studentId", length = 10)
+	@Column(name = "studentId", length = 100)
 	private Long studentId;
 
 	@NotNull

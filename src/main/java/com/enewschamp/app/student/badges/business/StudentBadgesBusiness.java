@@ -43,8 +43,8 @@ public class StudentBadgesBusiness {
 		return studentActivityDTO;
 	}
 
-	public StudentBadges grantGenreBadge(Long studentId, String editionId, int readingLevel, Long yearMonth,
-			String genreId, ScoresMonthlyGenreDTO scoresMonthlyGenreDTO) {
+	public StudentBadges grantGenreBadge(Long studentId, String emailId, String editionId, int readingLevel,
+			Long yearMonth, String genreId, ScoresMonthlyGenreDTO scoresMonthlyGenreDTO) {
 		Badge badge = bagdeService.getBadgeForStudent(editionId, readingLevel, genreId,
 				scoresMonthlyGenreDTO.getQuizCorrect());
 		StudentBadges studBadge = null;
@@ -55,7 +55,7 @@ public class StudentBadgesBusiness {
 				studBadge.setStudentId(studentId);
 				studBadge.setBadgeId(badge.getBadgeId());
 				studBadge.setYearMonth(yearMonth);
-				studBadge.setOperatorId("SYSTEM");
+				studBadge.setOperatorId(emailId);
 				studBadge.setRecordInUse(RecordInUseType.Y);
 				studentBadgesService.create(studBadge);
 			}
@@ -63,8 +63,8 @@ public class StudentBadgesBusiness {
 		return studBadge;
 	}
 
-	public StudentBadges grantBadge(Long studentId, String editionId, int readingLevel, Long yearMonth, String genreId,
-			ScoresMonthlyTotalDTO scoresMonthlyTotalDTO) {
+	public StudentBadges grantBadge(Long studentId, String emailId, String editionId, int readingLevel, Long yearMonth,
+			String genreId, ScoresMonthlyTotalDTO scoresMonthlyTotalDTO) {
 		Badge badge = bagdeService.getBadgeForStudent(editionId, readingLevel, genreId,
 				scoresMonthlyTotalDTO.getQuizCorrect());
 		StudentBadges studBadge = null;
@@ -75,7 +75,7 @@ public class StudentBadgesBusiness {
 				studBadge.setStudentId(studentId);
 				studBadge.setBadgeId(badge.getBadgeId());
 				studBadge.setYearMonth(yearMonth);
-				studBadge.setOperatorId("SYSTEM");
+				studBadge.setOperatorId(emailId);
 				studBadge.setRecordInUse(RecordInUseType.Y);
 				studentBadgesService.create(studBadge);
 			}

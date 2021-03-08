@@ -23,12 +23,19 @@ public class StudentPreferencesWork extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@NotNull
-	@Column(name = "StudentId", length = 10)
+	@Column(name = "studentId", length = 100)
 	private Long studentId;
 
 	@NotNull
 	@Column(name = "ReadingLevel", length = 1)
 	private String readingLevel;
+
+	@NotNull
+	@Column(name = "featureProfileInChamps", length = 1)
+	private String featureProfileInChamps;
+
+	@Embedded
+	private ChampPermissionsWork champPermissions;
 
 	@Embedded
 	private StudentPreferenceCommWork commsOverEmail;

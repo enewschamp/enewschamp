@@ -20,7 +20,7 @@ public class NewsArticleSummaryRepositoryImpl implements NewsArticleSummaryRepos
 	public List<NewsArticleSummaryDTO> getArticleDetails(Long newsArticleId, Long studentId) {
 		Query query = entityManager.createNativeQuery(
 				"SELECT n.news_article_id,n.news_article_group_id,n.publication_date,n.reading_level,g.genre_id AS genre,\n"
-						+ "g.headline,n.content,u.name||' '||u.surname AS author,g.credits,(CASE WHEN (g.no_quiz=1 OR g.image_only=1) THEN 'N' ELSE 'Y' END) AS quiz_available,(CASE WHEN s.quiz_score is null THEN 'N' ELSE 'Y' END) AS quiz_completed,\n"
+						+ "g.headline,n.content,u.name||' '||u.surname AS author,g.credits,(CASE WHEN (g.no_quiz='Y' OR g.image_only='Y') THEN 'N' ELSE 'Y' END) AS quiz_available,(CASE WHEN s.quiz_score is null THEN 'N' ELSE 'Y' END) AS quiz_completed,\n"
 						+ "s.quiz_score AS quiz_score,s.saved,s.opinion AS opinion_text,s.reaction AS reaction,n.likehcount AS reactionHCount,\n"
 						+ "n.likelcount AS reactionLCount,n.likeocount AS reactionOCount,n.likescount AS reactionSCount,\n"
 						+ "n.likewcount AS reactionWCount,g.city_id AS city,g.image_name FROM news_article n \n"

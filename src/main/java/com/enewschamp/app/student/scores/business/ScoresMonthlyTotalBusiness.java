@@ -11,7 +11,6 @@ import com.enewschamp.app.student.scores.entity.ScoresMonthlyTotal;
 import com.enewschamp.app.student.scores.service.ScoresMonthlyTotalService;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.service.NewsArticleService;
-import com.enewschamp.domain.common.RecordInUseType;
 
 @Service
 public class ScoresMonthlyTotalBusiness {
@@ -27,21 +26,18 @@ public class ScoresMonthlyTotalBusiness {
 
 	public ScoresMonthlyTotalDTO saveScoresMonthly(ScoresMonthlyTotalDTO scoresMonthlyTotalDTO) {
 		ScoresMonthlyTotal scoresMonthlyTotal = modelMapper.map(scoresMonthlyTotalDTO, ScoresMonthlyTotal.class);
-
-		// TO DO to be corrected
-		scoresMonthlyTotal.setRecordInUse(RecordInUseType.Y);
-		scoresMonthlyTotal.setOperatorId("SYSTEM");
 		scoresMonthlyTotal = scoresMonthlyTotalService.create(scoresMonthlyTotal);
-		ScoresMonthlyTotalDTO scoresMonthlyTotalDTONew = modelMapper.map(scoresMonthlyTotal, ScoresMonthlyTotalDTO.class);
-
+		ScoresMonthlyTotalDTO scoresMonthlyTotalDTONew = modelMapper.map(scoresMonthlyTotal,
+				ScoresMonthlyTotalDTO.class);
 		return scoresMonthlyTotalDTONew;
 	}
 
-	public ScoresMonthlyTotalDTO getScoresMonthly(Long studentId, String editionId, int readingLevel, String yearMonth) {
+	public ScoresMonthlyTotalDTO getScoresMonthly(Long studentId, String editionId, int readingLevel,
+			String yearMonth) {
 		ScoresMonthlyTotal scoresMonthlyTotal = null;
-
 		try {
-			scoresMonthlyTotal = scoresMonthlyTotalService.getScoresMonthly(studentId, editionId, readingLevel, yearMonth);
+			scoresMonthlyTotal = scoresMonthlyTotalService.getScoresMonthly(studentId, editionId, readingLevel,
+					yearMonth);
 		} catch (Exception e) {
 			return null;
 		}

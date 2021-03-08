@@ -13,8 +13,6 @@ import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.otp.entity.OTP;
 import com.enewschamp.app.otp.repository.OTPRepository;
 import com.enewschamp.app.otp.service.OTPService;
-import com.enewschamp.app.student.registration.dto.StudentRegistrationDTO;
-import com.enewschamp.app.student.registration.entity.RegistrationStatus;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.app.student.registration.service.StudentRegistrationService;
 import com.enewschamp.app.user.login.entity.UserAction;
@@ -23,6 +21,7 @@ import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.app.user.login.service.UserLoginService;
+import com.enewschamp.common.domain.service.ErrorCodesService;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.AppConstants;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -41,6 +40,9 @@ public class StudentRegistrationBusiness {
 
 	@Autowired
 	StudentRegistrationService regService;
+
+	@Autowired
+	ErrorCodesService errorCodesService;
 
 	@Autowired
 	UserLoginService loginService;
@@ -73,17 +75,28 @@ public class StudentRegistrationBusiness {
 	PropertiesBackendService propertiesService;
 
 	public boolean validatePassword(final String appName, final String emailId, final String password,
-			final String deviceId, final String tokenId) {
+			final String deviceId, final String tokenId, UserActivityTracker userActivityTracker) {
 		StudentRegistration student = regService.getStudentReg(emailId);
 		if (student == null) {
-			// userActivityTracker.setActionStatus(UserAction.FAILURE);
-			// userLoginBusiness.auditUserActivity(userActivityTracker);
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_USER_ID);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_USER_ID));
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_USER_ID, emailId);
 		}
 		if ("Y".equals(student.getIsDeleted())) {
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_EMAILID_OR_PASSWORD);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_EMAILID_OR_PASSWORD));
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_EMAILID_OR_PASSWORD);
 		}
 		if ("N".equals(student.getIsActive())) {
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userActivityTracker.setErrorCode(ErrorCodeConstants.STUD_IS_INACTIVE);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.STUD_IS_INACTIVE));
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.STUD_IS_INACTIVE);
 		}
 		if ("Y".equals(student.getIsAccountLocked()) && (student.getLastUnsuccessfulLoginAttempt() != null)) {
@@ -95,8 +108,10 @@ public class StudentRegistrationBusiness {
 			}
 		}
 		if ("Y".equals(student.getIsAccountLocked())) {
-			// userActivityTracker.setActionStatus(UserAction.FAILURE);
-			// userLoginBusiness.auditUserActivity(userActivityTracker);
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userActivityTracker.setErrorCode(ErrorCodeConstants.USER_ACCOUNT_LOCKED);
+			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.USER_ACCOUNT_LOCKED));
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.USER_ACCOUNT_LOCKED, emailId);
 		}
 		boolean isValid = false;
@@ -105,14 +120,26 @@ public class StudentRegistrationBusiness {
 			isValid = false;
 			student.setLastUnsuccessfulLoginAttempt(LocalDateTime.now());
 			student.setIncorrectLoginAttempts(student.getIncorrectLoginAttempts() + 1);
+			boolean lockFlag = false;
 			if (student.getIncorrectLoginAttempts() == Integer
-					.valueOf(propertiesService.getValue(appName, PropertyConstants.PUBLISHER_LOGIN_MAX_ATTEMPTS))) {
+					.valueOf(propertiesService.getValue(appName, PropertyConstants.LOGIN_MAX_ATTEMPTS))) {
 				student.setIsAccountLocked("Y");
+				lockFlag = true;
 				UserLogin userLogin = loginService.getDeviceLogin(emailId, deviceId, tokenId, UserType.S);
-				userLogin.setLoginFlag(AppConstants.NO);
-				loginService.update(userLogin);
+				if (userLogin != null) {
+					userLogin.setLoginFlag(AppConstants.NO);
+					loginService.update(userLogin);
+				}
 			}
 			regService.update(student);
+			if (lockFlag) {
+				userActivityTracker.setActionStatus(UserAction.FAILURE);
+				userActivityTracker.setErrorCode(ErrorCodeConstants.USER_ACCOUNT_GET_LOCKED);
+				userActivityTracker
+						.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.USER_ACCOUNT_GET_LOCKED));
+				userLoginBusiness.auditUserActivity(userActivityTracker);
+				throw new BusinessException(ErrorCodeConstants.USER_ACCOUNT_GET_LOCKED, emailId);
+			}
 		} else {
 			isValid = true;
 			student.setLastSuccessfulLoginAttempt(LocalDateTime.now());
@@ -155,16 +182,31 @@ public class StudentRegistrationBusiness {
 		regService.update(student);
 	}
 
-	public void resetPassword(final String emailId, final String password) {
+	public void resetPassword(final String emailId, final String password, UserActivityTracker userActivityTracker) {
 		if (password.length() > 20 || password.length() < 8) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_SECURITY_CODE);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_SECURITY_CODE));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_PWD_LEN);
 		}
 		StudentRegistration student = regService.getStudentReg(emailId);
 		if ("N".equals(student.getIsActive())) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_SECURITY_CODE);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_SECURITY_CODE));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.STUD_IS_INACTIVE);
 		}
 		if (password.equals(student.getPassword()) || password.equals(student.getPassword1())
 				|| password.equals(student.getPassword2())) {
+			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_SECURITY_CODE);
+			userActivityTracker
+					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_SECURITY_CODE));
+			userActivityTracker.setActionStatus(UserAction.FAILURE);
+			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO);
 		}
 		student.setPassword2(student.getPassword1());
@@ -194,8 +236,9 @@ public class StudentRegistrationBusiness {
 
 	}
 
-	public boolean validateOtp(final String appName, final String otp, final String emailId) {
-		return otpService.validateOtp(appName, otp, emailId, null);
+	public boolean validateOtp(final String appName, final String otp, final String emailId,
+			UserActivityTracker userActivityTracker) {
+		return otpService.validateOtp(appName, otp, emailId, userActivityTracker);
 	}
 
 	public void checkAndUpdateIfSubscriptionExpired(String emailId, String editionId) {

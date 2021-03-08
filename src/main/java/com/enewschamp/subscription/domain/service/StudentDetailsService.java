@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
-import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
 import com.enewschamp.subscription.domain.repository.StudentDetailsRepository;
 

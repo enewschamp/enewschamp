@@ -4,9 +4,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -124,7 +126,8 @@ public class MenuPageHandler extends AbstractPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -143,12 +146,13 @@ public class MenuPageHandler extends AbstractPageHandler {
 		String deviceId = pageRequest.getHeader().getDeviceId();
 		String tokenId = pageRequest.getHeader().getLoginCredentials();
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId("SYSTEM");
+		userActivityTracker.setOperatorId(emailId);
 		userActivityTracker.setRecordInUse(RecordInUseType.Y);
-		userActivityTracker.setActionPerformed(action);
+		userActivityTracker.setActionPerformed(
+				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);
 		userActivityTracker.setDeviceId(deviceId);
 		userActivityTracker.setUserId(emailId);
-		userActivityTracker.setUserType(UserType.P);
+		userActivityTracker.setUserType(UserType.S);
 		userActivityTracker.setActionTime(LocalDateTime.now());
 		userLoginBusiness.logout(emailId, deviceId, tokenId, UserType.S);
 		userActivityTracker.setActionStatus(UserAction.SUCCESS);

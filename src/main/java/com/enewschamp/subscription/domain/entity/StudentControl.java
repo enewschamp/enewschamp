@@ -24,7 +24,7 @@ public class StudentControl extends BaseEntity {
 
 	@Id
 	@NotNull
-	@Column(name = "StudentId")
+	@Column(name = "studentId", length = 100)
 	private Long studentId;
 
 	@NotNull

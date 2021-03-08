@@ -2,7 +2,6 @@ package com.enewschamp.app.scores.repository;
 
 import java.util.List;
 
-import com.enewschamp.app.scores.dto.StudentScoresMonthlyDTO;
 import com.enewschamp.app.scores.dto.StudentScoresYearlyGenreDTO;
 import com.enewschamp.app.scores.page.data.ScoresSearchData;
 import com.enewschamp.app.student.scores.dto.StudentScoresDailyDTO;

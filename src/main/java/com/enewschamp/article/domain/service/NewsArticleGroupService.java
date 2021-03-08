@@ -21,7 +21,6 @@ import com.enewschamp.article.page.data.PropertyAuditData;
 import com.enewschamp.audit.domain.AuditBuilder;
 import com.enewschamp.audit.domain.AuditQueryCriteria;
 import com.enewschamp.audit.domain.AuditService;
-import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.user.domain.service.UserRoleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,48 +61,92 @@ public class NewsArticleGroupService {
 
 	public NewsArticleGroup create(NewsArticleGroup articleGroup) {
 		deriveStatus(articleGroup);
+		String imageType = "jpg";
+		if (articleGroup.getImageTypeExt() != null && !"".equalsIgnoreCase(articleGroup.getImageTypeExt())) {
+			imageType = articleGroup.getImageTypeExt();
+		}
+		String base64Image = articleGroup.getBase64Image();
 		articleGroup = repository.save(articleGroup);
+		boolean updateFlag = false;
 		String newImageName = articleGroup.getNewsArticleGroupId() + "_" + System.currentTimeMillis();
-		String imageType = articleGroup.getImageTypeExt();
-		boolean saveFlag = commonService.saveImages("Publisher", "article", imageType, articleGroup.getBase64Image(),
-				newImageName, articleGroup.getImageName());
+		String currentImageName = articleGroup.getImageName();
+		boolean saveFlag = commonService.saveImages("Publisher", "article", imageType, base64Image, newImageName);
 		if (saveFlag) {
 			articleGroup.setImageName(newImageName + "." + imageType);
-			repository.save(articleGroup);
+			updateFlag = true;
+		}
+		if (currentImageName != null && !"".equals(currentImageName)) {
+			commonService.deleteImages("Publisher", "article", currentImageName);
+			updateFlag = true;
+		}
+		if (updateFlag) {
+			articleGroup = repository.save(articleGroup);
 		}
 		return articleGroup;
 	}
 
 	public NewsArticleGroup update(NewsArticleGroup articleGroup) {
 		deriveStatus(articleGroup);
+		String imageType = "jpg";
+		if (articleGroup.getImageTypeExt() != null && !"".equalsIgnoreCase(articleGroup.getImageTypeExt())) {
+			imageType = articleGroup.getImageTypeExt();
+		}
+		String base64Image = articleGroup.getBase64Image();
 		Long articleGroupId = articleGroup.getNewsArticleGroupId();
 		NewsArticleGroup existingEntity = load(articleGroupId);
+		String currentImageName = "";
+		if (existingEntity.getImageName() != null) {
+			articleGroup.setImageName(existingEntity.getImageName());
+			currentImageName = articleGroup.getImageName();
+		}
 		modelMapper.map(articleGroup, existingEntity);
 		articleGroup = repository.save(existingEntity);
+		boolean updateFlag = false;
 		String newImageName = articleGroup.getNewsArticleGroupId() + "_" + System.currentTimeMillis();
-		String imageType = articleGroup.getImageTypeExt();
-		boolean saveFlag = commonService.saveImages("Publisher", "article", imageType, articleGroup.getBase64Image(),
-				newImageName, articleGroup.getImageName());
+		boolean saveFlag = commonService.saveImages("Publisher", "article", imageType, base64Image, newImageName);
 		if (saveFlag) {
 			articleGroup.setImageName(newImageName + "." + imageType);
-			repository.save(articleGroup);
+			updateFlag = true;
+		}
+		if (currentImageName != null && !"".equals(currentImageName)
+				&& (saveFlag || "Y".equals(articleGroup.getDeleteImage()))) {
+			commonService.deleteImages("Publisher", "article", currentImageName);
+			updateFlag = true;
+			if ("Y".equals(articleGroup.getDeleteImage())) {
+				articleGroup.setImageName(null);
+			}
+		}
+		if (updateFlag) {
+			articleGroup = repository.save(articleGroup);
 		}
 		return articleGroup;
 	}
 
 	public NewsArticleGroup patch(NewsArticleGroup articleGroup) {
 		deriveStatus(articleGroup);
+		String imageType = "jpg";
+		if (articleGroup.getImageTypeExt() != null && !"".equalsIgnoreCase(articleGroup.getImageTypeExt())) {
+			imageType = articleGroup.getImageTypeExt();
+		}
+		String base64Image = articleGroup.getBase64Image();
 		Long articleGroupId = articleGroup.getNewsArticleGroupId();
 		NewsArticleGroup existingEntity = load(articleGroupId);
 		modelMapperForPatch.map(articleGroup, existingEntity);
 		articleGroup = repository.save(existingEntity);
+		boolean updateFlag = false;
 		String newImageName = articleGroup.getNewsArticleGroupId() + "_" + System.currentTimeMillis();
-		String imageType = articleGroup.getImageTypeExt();
-		boolean saveFlag = commonService.saveImages("Publisher", "article", imageType, articleGroup.getBase64Image(),
-				newImageName, articleGroup.getImageName());
+		String currentImageName = articleGroup.getImageName();
+		boolean saveFlag = commonService.saveImages("Publisher", "article", imageType, base64Image, newImageName);
 		if (saveFlag) {
 			articleGroup.setImageName(newImageName + "." + imageType);
-			repository.save(articleGroup);
+			updateFlag = true;
+		}
+		if (currentImageName != null && !"".equals(currentImageName)) {
+			commonService.deleteImages("Publisher", "article", currentImageName);
+			updateFlag = true;
+		}
+		if (updateFlag) {
+			articleGroup = repository.save(articleGroup);
 		}
 		return articleGroup;
 	}
@@ -136,7 +179,8 @@ public class NewsArticleGroupService {
 	public String getAudit(Long articleGroupId) {
 		NewsArticleGroup articleGroup = new NewsArticleGroup();
 		articleGroup.setNewsArticleGroupId(articleGroupId);
-		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig)
+		AuditBuilder auditBuilder = AuditBuilder
+				.getInstance(auditService, this, newsArticleService, objectMapper, appConfig)
 				.forParentObject(articleGroup);
 		return auditBuilder.build();
 	}
@@ -333,7 +377,8 @@ public class NewsArticleGroupService {
 	public List<PropertyAuditData> getPreviousComments(Long articleGroupId) {
 		NewsArticleGroup articleGroup = new NewsArticleGroup();
 		articleGroup.setNewsArticleGroupId(articleGroupId);
-		AuditBuilder auditBuilder = AuditBuilder.getInstance(auditService, objectMapper, appConfig)
+		AuditBuilder auditBuilder = AuditBuilder
+				.getInstance(auditService, this, newsArticleService, objectMapper, appConfig)
 				.forParentObject(articleGroup);
 		auditBuilder.forProperty("comments");
 		return auditBuilder.buildPropertyAudit();

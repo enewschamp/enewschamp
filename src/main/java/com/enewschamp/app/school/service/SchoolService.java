@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.school.entity.School;
-import com.enewschamp.app.school.repository.SchoolProgramRepository;
 import com.enewschamp.app.school.repository.SchoolRepository;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.SchoolData;

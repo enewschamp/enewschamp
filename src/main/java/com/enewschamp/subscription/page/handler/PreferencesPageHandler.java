@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,9 +15,9 @@ import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.common.PageSaveTable;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.registration.business.StudentRegistrationBusiness;
-import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.app.dto.StudentControlWorkDTO;
@@ -84,13 +85,15 @@ public class PreferencesPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		return pageDTO;
 	}
 
@@ -174,7 +177,8 @@ public class PreferencesPageHandler implements IPageHandler {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
-					e.printStackTrace();
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+					// e.printStackTrace();
 				}
 			} catch (SecurityException e) {
 				e.printStackTrace();
@@ -197,6 +201,8 @@ public class PreferencesPageHandler implements IPageHandler {
 			StudentPreferencesWorkDTO studentPreferencesWorkDTO = modelMapper.map(studentPreferencePageData,
 					StudentPreferencesWorkDTO.class);
 			studentPreferencesWorkDTO.setStudentId(studentId);
+			studentPreferencesWorkDTO.setOperatorId(emailId);
+			studentPreferencesWorkDTO.setRecordInUse(RecordInUseType.Y);
 			preferenceBusiness.saveAsWork(studentPreferencesWorkDTO);
 			studentControlBusiness.updateAsWork(studentControlWorkDTO);
 		} else {
@@ -206,15 +212,21 @@ public class PreferencesPageHandler implements IPageHandler {
 			StudentPreferencesDTO studentPreferencesDTO = modelMapper.map(studentPreferencePageData,
 					StudentPreferencesDTO.class);
 			studentPreferencesDTO.setStudentId(studentId);
+			studentPreferencesDTO.setOperatorId(emailId);
+			studentPreferencesDTO.setRecordInUse(RecordInUseType.Y);
 			preferenceBusiness.saveAsMaster(studentPreferencesDTO);
+			studentControlDTO.setOperatorId(emailId);
+			studentControlDTO.setRecordInUse(RecordInUseType.Y);
 			studentControlBusiness.saveAsMaster(studentControlDTO);
 			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
 			if (studentControlWorkDTO != null) {
 				studentControlWorkDTO.setPreferences("Y");
+				studentControlWorkDTO.setOperatorId(emailId);
+				studentControlWorkDTO.setRecordInUse(RecordInUseType.Y);
 				studentControlBusiness.updateAsWork(studentControlWorkDTO);
 			}
 		}
-		if (studentId == null || studentId == 0L) {
+		if ("".equals(studentId)) {
 			throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
 		}
 		pageDto.setHeader(pageRequest.getHeader());
@@ -236,6 +248,8 @@ public class PreferencesPageHandler implements IPageHandler {
 			}
 			studentPreferencesWorkDTO = modelMapper.map(studentPreferencePageData, StudentPreferencesWorkDTO.class);
 			studentPreferencesWorkDTO.setStudentId(studentId);
+			studentPreferencesWorkDTO.setOperatorId(emailId);
+			studentPreferencesWorkDTO.setRecordInUse(RecordInUseType.Y);
 			preferenceBusiness.saveAsWork(studentPreferencesWorkDTO);
 		}
 		pageDto.setHeader(pageRequest.getHeader());
