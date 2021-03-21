@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.country.repository.CountryRepositoryCustomImpl;
+import com.enewschamp.app.admin.dashboard.handler.CountryView;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.country.dto.CountryDTO;
 import com.enewschamp.app.common.country.entity.Country;
@@ -152,5 +153,9 @@ public class CountryService extends AbstractDomainService {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return countryList;
+	}
+	
+	public List<CountryView> getAllCountryView(){
+		return countryRepository.findAllProjectedBy();
 	}
 }

@@ -6,6 +6,7 @@ import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.enewschamp.app.admin.dashboard.handler.UserView;
 import com.enewschamp.publication.domain.common.LOVProjection;
 import com.enewschamp.user.domain.entity.User;
 
@@ -23,4 +24,6 @@ interface UserRepository extends JpaRepository<User, String> {
 	@Query(value = "select a.userId as id, concat(a.name, ' ', a.surname) as name,a.isActive as isActive from User a, UserRole b"
 			+ " where a.userId = b.userRoleKey.userId and b.userRoleKey.roleId = 'EDITOR'")
 	public List<LOVProjection> getEditorLOV();
+	
+	public List<UserView> findAllProjectedBy();
 }

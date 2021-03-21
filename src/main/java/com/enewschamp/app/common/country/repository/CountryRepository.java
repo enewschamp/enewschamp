@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.enewschamp.app.admin.dashboard.handler.CountryView;
 import com.enewschamp.app.common.country.entity.Country;
 @JaversSpringDataAuditable
 public interface CountryRepository extends JpaRepository<Country, Long> {
@@ -20,4 +21,6 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 
 	@Query("Select c from Country c where c.recordInUse='Y' and  c.nameId= :nameId")
 	public Optional<Country> getCountry(@Param("nameId") String nameId);
+	
+	public List<CountryView> findAllProjectedBy();
 }

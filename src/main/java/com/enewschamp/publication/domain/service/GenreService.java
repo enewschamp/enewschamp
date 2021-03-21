@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.dashboard.handler.GenreView;
 import com.enewschamp.app.admin.genre.repository.GenreRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
@@ -130,6 +131,10 @@ public class GenreService extends AbstractDomainService {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return genreList;
+	}
+	
+	public List<GenreView> getAllGenreView() {
+		return repository.findAllProjectedBy();
 	}
 
 }

@@ -12,5 +12,6 @@ import lombok.EqualsAndHashCode;
 public class SAReconcilationPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	List<StudentActivityDiscrepancy> listStudentActivityDiscrepancies;
+	List<StudentDailyScoresDiscripancies> listStudentDailyScoresDiscrepancies;
 
 }

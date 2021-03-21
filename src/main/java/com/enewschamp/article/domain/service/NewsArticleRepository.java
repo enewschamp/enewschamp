@@ -2,6 +2,7 @@ package com.enewschamp.article.domain.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -105,4 +106,8 @@ public interface NewsArticleRepository extends JpaRepository<NewsArticle, Long> 
 
 	@Query(value = "SELECT (CASE WHEN (b.noQuiz='Y' OR b.imageOnly='Y') THEN 'N' ELSE 'Y' END) AS quizAvailable from NewsArticle d,NewsArticleGroup b where d.newsArticleId=:newsArticleId and d.newsArticleGroupId=b.newsArticleGroupId")
 	public String isQuizAvailable(@Param("newsArticleId") Long newsArticleId);
+	
+	public Optional<List<NewsArticle>> findByStatusAndPublicationDate(ArticleStatusType status, LocalDate publicationDate);
+
+	public Optional<List<NewsArticle>> findByStatusAndPublicationDateAndReadingLevel(ArticleStatusType status, LocalDate publicationDate, Integer readingLevel);
 }

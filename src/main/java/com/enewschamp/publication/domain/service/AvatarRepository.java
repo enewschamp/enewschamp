@@ -6,6 +6,7 @@ import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.enewschamp.app.admin.dashboard.handler.AvatarView;
 import com.enewschamp.publication.domain.common.LOVProjection;
 import com.enewschamp.publication.domain.entity.Avatar;
 
@@ -17,5 +18,7 @@ interface AvatarRepository extends JpaRepository<Avatar, Long> {
 
 	@Query(value = "select a from Avatar a")
 	public List<Avatar> getAvatarList();
+	
+	public List<AvatarView> findAllProjectedBy();
 
 }

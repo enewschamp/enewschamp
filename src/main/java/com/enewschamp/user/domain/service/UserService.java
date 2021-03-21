@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.dashboard.handler.UserView;
 import com.enewschamp.app.admin.user.repository.UserRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PropertyConstants;
@@ -268,5 +269,9 @@ public class UserService extends AbstractDomainService {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return userList;
+	}
+	
+	public List<UserView> getAllUserView(){
+		return repository.findAllProjectedBy();
 	}
 }

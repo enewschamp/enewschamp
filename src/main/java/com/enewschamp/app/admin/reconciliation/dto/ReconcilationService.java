@@ -13,6 +13,8 @@ import com.enewschamp.app.student.quiz.repository.QuizScoreRepository;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.app.student.registration.repository.StudentRegistrationRepository;
 import com.enewschamp.app.student.repository.StudentActivityRepository;
+import com.enewschamp.app.student.scores.entity.ScoresDaily;
+import com.enewschamp.app.student.scores.repository.ScoresDailyRepository;
 import com.enewschamp.article.domain.common.ArticleStatusType;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleQuiz;
@@ -33,10 +35,22 @@ public class ReconcilationService {
 	private QuizScoreRepository quizScoreRepository;
 	@Autowired
 	private StudentActivityRepository studentActivityRepository;
+	@Autowired
+	private ScoresDailyRepository scoreDailyRepository;
 
 	public List<NewsArticle> getNewsArticleByStatusAndPublicationDate(String status, LocalDate publicationDate) {
-		Optional<List<NewsArticle>> newsArticles = newsArticleRepository.findByStatusAndPublicationDate(ArticleStatusType.Published,
-				publicationDate);
+		Optional<List<NewsArticle>> newsArticles = newsArticleRepository
+				.findByStatusAndPublicationDate(ArticleStatusType.Published, publicationDate);
+		if (newsArticles.isPresent())
+			return newsArticles.get();
+		else
+			throw new BusinessException("NewsArticleNotFound");
+	}
+
+	public List<NewsArticle> getNewsArticleByStatusAndPublicationDateAndReadingLevel(String status,
+			LocalDate publicationDate, Integer readingLevel) {
+		Optional<List<NewsArticle>> newsArticles = newsArticleRepository.findByStatusAndPublicationDateAndReadingLevel(
+				ArticleStatusType.Published, publicationDate, readingLevel);
 		if (newsArticles.isPresent())
 			return newsArticles.get();
 		else
@@ -65,6 +79,16 @@ public class ReconcilationService {
 				newsArticleId);
 		if (studentActivity.isPresent()) {
 			return studentActivity.get();
+		} else {
+			return null;
+		}
+	}
+
+	public ScoresDaily getScoreDaily(Long studentId, int readingLevel, LocalDate publicationDate) {
+		Optional<ScoresDaily> scoresDaily = scoreDailyRepository
+				.findByStudentIdAndReadingLevelAndPublicationDate(studentId, readingLevel, publicationDate);
+		if (scoresDaily.isPresent()) {
+			return scoresDaily.get();
 		} else {
 			return null;
 		}

@@ -14,4 +14,6 @@ public interface ScoresDailyRepository extends JpaRepository<ScoresDaily, Long> 
 	@Query("select d from ScoresDaily d where d.studentId = :studentId and d.editionId= :editionId and d.readingLevel= :readingLevel and d.publicationDate= :publicationDate and d.recordInUse ='Y'")
 	public Optional<ScoresDaily> getScoresDaily(@Param("studentId") Long studentId, @Param("editionId") String editionId,
 			@Param("readingLevel") int readingLevel, @Param("publicationDate") LocalDate publicationDate);
+	
+	public Optional<ScoresDaily> findByStudentIdAndReadingLevelAndPublicationDate(Long studentId, int readingLevel, LocalDate publicationDate);
 }

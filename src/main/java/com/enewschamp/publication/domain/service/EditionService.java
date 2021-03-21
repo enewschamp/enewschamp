@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.dashboard.handler.EditionView;
 import com.enewschamp.app.admin.edition.repository.EditionRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
@@ -135,5 +136,9 @@ public class EditionService extends AbstractDomainService {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return editionList;
+	}
+	
+	public List<EditionView> getAllEditionView(){
+		return repository.findAllProjectedBy();
 	}
 }

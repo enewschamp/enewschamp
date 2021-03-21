@@ -5,9 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class NewsArticleInfo {
+public class DailyNewsArticleInfo {
 	private Long newsArticleId;
-	private Long quizScoreTotal;
-	private Long studentActivityQuizScore;
 	private List<QuizInfo> quizInfoList;
 }
