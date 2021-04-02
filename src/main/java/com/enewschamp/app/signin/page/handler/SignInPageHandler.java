@@ -144,8 +144,13 @@ public class SignInPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		StudentRegistration student = regService.getStudentReg(emailId);
+		Long studentId = 0L;
+		if (student != null) {
+			studentId = student.getStudentId();
+		}
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId(emailId);
+		userActivityTracker.setOperatorId("" + studentId);
 		userActivityTracker.setRecordInUse(RecordInUseType.Y);
 		userActivityTracker.setActionPerformed(
 				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);
@@ -154,7 +159,6 @@ public class SignInPageHandler implements IPageHandler {
 		userActivityTracker.setUserType(UserType.S);
 		userActivityTracker.setActionTime(LocalDateTime.now());
 		userActivityTracker.setActionStatus(UserAction.SUCCESS);
-		StudentRegistration student = regService.getStudentReg(emailId);
 		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
 		if (student != null && "Y".equals(student.getIsDeleted())) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.STUD_ACCOUNT_DELETED);
@@ -184,8 +188,13 @@ public class SignInPageHandler implements IPageHandler {
 		String password = "";
 		String deviceId = pageRequest.getHeader().getDeviceId();
 		String tokenId = pageRequest.getHeader().getLoginCredentials();
+		StudentRegistration student = regService.getStudentReg(emailId);
+		Long studentId = 0L;
+		if (student != null) {
+			studentId = student.getStudentId();
+		}
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId(emailId);
+		userActivityTracker.setOperatorId("" + studentId);
 		userActivityTracker.setRecordInUse(RecordInUseType.Y);
 		userActivityTracker.setActionPerformed(
 				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);
@@ -244,8 +253,13 @@ public class SignInPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		StudentRegistration student = regService.getStudentReg(emailId);
+		Long studentId = 0L;
+		if (student != null) {
+			studentId = student.getStudentId();
+		}
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId(emailId);
+		userActivityTracker.setOperatorId("" + studentId);
 		userActivityTracker.setRecordInUse(RecordInUseType.Y);
 		userActivityTracker.setActionPerformed(
 				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);
@@ -264,7 +278,8 @@ public class SignInPageHandler implements IPageHandler {
 		loginSuccess = studentRegBusiness.validatePassword(module, emailId, password, deviceId, tokenId,
 				userActivityTracker);
 		if (loginSuccess) {
-			UserLogin userLogin = userLoginBusiness.login(emailId, deviceId, tokenId, module, appVersion, UserType.S);
+			UserLogin userLogin = userLoginBusiness.login(emailId, "" + studentId, deviceId, tokenId, module,
+					appVersion, UserType.S);
 			userLogin.setLoginFlag(AppConstants.YES);
 			userLogin.setUserId(emailId);
 			loginService.update(userLogin);
@@ -307,8 +322,13 @@ public class SignInPageHandler implements IPageHandler {
 			throw new RuntimeException(e);
 		}
 		String deviceId = pageRequest.getHeader().getDeviceId();
+		StudentRegistration student = regService.getStudentReg(emailId);
+		Long studentId = 0L;
+		if (student != null) {
+			studentId = student.getStudentId();
+		}
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId(emailId);
+		userActivityTracker.setOperatorId("" + studentId);
 		userActivityTracker.setRecordInUse(RecordInUseType.Y);
 		userActivityTracker.setActionPerformed(
 				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);
@@ -316,7 +336,6 @@ public class SignInPageHandler implements IPageHandler {
 		userActivityTracker.setUserId(emailId);
 		userActivityTracker.setUserType(UserType.S);
 		userActivityTracker.setActionTime(LocalDateTime.now());
-		StudentRegistration student = regService.getStudentReg(emailId);
 		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
 		if ((student != null && "Y".equals(student.getIsDeleted()))
 				|| (studentControlDTO == null || !"Y".equals(studentControlDTO.getEmailIdVerified()))) {
@@ -345,8 +364,13 @@ public class SignInPageHandler implements IPageHandler {
 			throw new RuntimeException(e);
 		}
 		String deviceId = pageRequest.getHeader().getDeviceId();
+		StudentRegistration student = regService.getStudentReg(emailId);
+		Long studentId = 0L;
+		if (student != null) {
+			studentId = student.getStudentId();
+		}
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId(emailId);
+		userActivityTracker.setOperatorId("" + studentId);
 		userActivityTracker.setRecordInUse(RecordInUseType.Y);
 		userActivityTracker.setActionPerformed(
 				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);
@@ -354,7 +378,6 @@ public class SignInPageHandler implements IPageHandler {
 		userActivityTracker.setUserId(emailId);
 		userActivityTracker.setUserType(UserType.S);
 		userActivityTracker.setActionTime(LocalDateTime.now());
-		StudentRegistration student = regService.getStudentReg(emailId);
 		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
 		if ((student != null && "Y".equals(student.getIsDeleted()))
 				|| (studentControlDTO == null || !"Y".equals(studentControlDTO.getEmailIdVerified()))) {

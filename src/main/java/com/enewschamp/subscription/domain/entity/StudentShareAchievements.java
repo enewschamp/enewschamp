@@ -1,11 +1,13 @@
 package com.enewschamp.subscription.domain.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.StringCryptoConverter;
 import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
@@ -94,33 +96,43 @@ public class StudentShareAchievements extends BaseEntity {
 	@Column(name = "recipientGreeting10", length = 99)
 	private String recipientGreeting10;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Column(name = "recipientContact1", length = 99)
 	private String recipientContact1;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Column(name = "recipientContact2", length = 99)
 	private String recipientContact2;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Column(name = "recipientContact3", length = 99)
 	private String recipientContact3;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Column(name = "recipientContact4", length = 99)
 	private String recipientContact4;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Column(name = "recipientContact5", length = 99)
 	private String recipientContact5;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Column(name = "recipientContact6", length = 99)
 	private String recipientContact6;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Column(name = "recipientContact7", length = 99)
 	private String recipientContact7;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Column(name = "recipientContact8", length = 99)
 	private String recipientContact8;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Column(name = "recipientContact9", length = 99)
 	private String recipientContact9;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Column(name = "recipientContact10", length = 99)
 	private String recipientContact10;
 

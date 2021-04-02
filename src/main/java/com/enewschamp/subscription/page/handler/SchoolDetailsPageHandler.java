@@ -394,7 +394,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 			Long studentId = studentControlBusiness.getStudentId(emailId);
 			StudentSchoolDTO studSchool = modelMapper.map(studentSchoolPageData, StudentSchoolDTO.class);
 			studSchool.setStudentId(studentId);
-			studSchool.setOperatorId(emailId);
+			studSchool.setOperatorId(""+studentId);
 			studSchool.setRecordInUse(RecordInUseType.Y);
 			schoolDetailsBusiness.saveAsMaster(studSchool);
 			StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
@@ -408,7 +408,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 			Long studentId = studentControlBusiness.getStudentId(emailId);
 			StudentSchoolWorkDTO studenSchool = modelMapper.map(studentSchoolPageData, StudentSchoolWorkDTO.class);
 			studenSchool.setStudentId(studentId);
-			studenSchool.setOperatorId(emailId);
+			studenSchool.setOperatorId(""+studentId);
 			studenSchool.setRecordInUse(RecordInUseType.Y);
 			schoolDetailsBusiness.saveAsWork(studenSchool);
 			studentControlWorkDTO.setSchoolDetailsW("Y");
@@ -444,6 +444,8 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 			}
 			studentSchoolWorkDTO = modelMapper.map(studentSchoolPageData, StudentSchoolWorkDTO.class);
 			studentSchoolWorkDTO.setStudentId(studentId);
+			studentSchoolWorkDTO.setOperatorId(""+studentId);
+			studentSchoolWorkDTO.setRecordInUse(RecordInUseType.Y);
 			schoolDetailsBusiness.saveAsWork(studentSchoolWorkDTO);
 		}
 		pageDTO.setHeader(pageRequest.getHeader());

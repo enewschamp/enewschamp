@@ -110,7 +110,7 @@ public class ShareAchievementsPageHandler implements IPageHandler {
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		StudentShareAchievementsDTO studAch = mapPageToDTO(studentShareAchievementsPageData);
 		studAch.setStudentId(studentId);
-		studAch.setOperatorId(emailId);
+		studAch.setOperatorId(""+studentId);
 		studAch.setRecordInUse(RecordInUseType.Y);
 		studAch.setPersonalisedMessage(studentShareAchievementsPageData.getPersonalisedMessage());
 		try {

@@ -54,14 +54,14 @@ public class PropertiesBackendService extends AbstractDomainService {
 				// property.getValue());
 				JSONObject json = (JSONObject) parser.parse(property.getValue());
 				if (json.get(arr[1]) != null) {
-					value = json.get(arr[1]).toString();
+					value = json.get(arr[1]).toString().trim();
 				}
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
-			value = property.getValue();
+			value = property.getValue().trim();
 		}
 		return value;
 

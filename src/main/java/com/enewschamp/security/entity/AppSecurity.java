@@ -1,6 +1,7 @@
 package com.enewschamp.security.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import com.enewschamp.app.common.StringCryptoConverter;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,10 +29,12 @@ public class AppSecurity {
 	@Column(name = "appSecurityId", updatable = false, nullable = false)
 	private Long appSecurityId;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@NotNull
 	@Column(name = "appName", length = 130)
 	private String appName;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@NotNull
 	@Column(name = "appKey", length = 256)
 	private String appKey;

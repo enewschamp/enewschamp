@@ -151,7 +151,7 @@ public class HelpdeskPageHandler implements IPageHandler {
 			helpdeskDTO.setCallbackDateTime(callbackDateTime);
 			helpdeskDTO.setStudentId(studentId);
 			helpdeskDTO.setRecordInUse(RecordInUseType.Y);
-			helpdeskDTO.setOperatorId(emailId);
+			helpdeskDTO.setOperatorId(""+studentId);
 			helpdeskDTO.setCreateDateTime(LocalDateTime.now());
 			Helpdesk helpdesk = modelMapper.map(helpdeskDTO, Helpdesk.class);
 			Helpdesk helpDeskExisting = helpdeskService.getByStudentId(studentId);

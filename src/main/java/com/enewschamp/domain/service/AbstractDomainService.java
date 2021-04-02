@@ -13,7 +13,7 @@ public abstract class AbstractDomainService {
 		List<ListOfValuesItem> lovItems = new ArrayList<ListOfValuesItem>();
 		for (LOVProjection item : items) {
 			ListOfValuesItem lovItem = new ListOfValuesItem();
-			lovItem.setName(item.getName());
+			lovItem.setName(item.getName() + " " + item.getSurname());
 			lovItem.setId(item.getId());
 			lovItem.setIsActive(item.getIsActive());
 			lovItems.add(lovItem);

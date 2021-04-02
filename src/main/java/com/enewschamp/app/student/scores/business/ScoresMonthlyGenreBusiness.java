@@ -14,6 +14,7 @@ import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.entity.NewsArticleGroup;
 import com.enewschamp.article.domain.service.NewsArticleGroupService;
 import com.enewschamp.article.domain.service.NewsArticleService;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 
 @Service
@@ -79,6 +80,8 @@ public class ScoresMonthlyGenreBusiness {
 			scoresMonthlyGenreDTONew.setQuizAttempted(quizQAttempted);
 			scoresMonthlyGenreDTONew.setQuizCorrect(quizQCorrect);
 			scoresMonthlyGenreDTONew.setYearMonth(Long.valueOf(yearMonth));
+			scoresMonthlyGenreDTONew.setRecordInUse(RecordInUseType.Y);
+			scoresMonthlyGenreDTONew.setOperatorId("" + studentId);
 			scoresMonthlyGenreDTO = saveScoresMonthly(scoresMonthlyGenreDTONew);
 
 		} else {
@@ -95,7 +98,8 @@ public class ScoresMonthlyGenreBusiness {
 					: scoresMonthlyGenreDTO.getQuizCorrect();
 			quizQCorrectTmp = quizQCorrectTmp + quizQCorrect;
 			scoresMonthlyGenreDTO.setQuizCorrect(quizQCorrectTmp);
-
+			scoresMonthlyGenreDTO.setRecordInUse(RecordInUseType.Y);
+			scoresMonthlyGenreDTO.setOperatorId("" + studentId);
 			scoresMonthlyGenreDTO = saveScoresMonthly(scoresMonthlyGenreDTO);
 		}
 		return scoresMonthlyGenreDTO;

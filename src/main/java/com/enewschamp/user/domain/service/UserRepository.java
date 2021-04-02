@@ -13,15 +13,15 @@ import com.enewschamp.user.domain.entity.User;
 @JaversSpringDataAuditable
 interface UserRepository extends JpaRepository<User, String> {
 
-	@Query(value = "select a.userId as id, concat(a.name, ' ', a.surname) as name,a.isActive as isActive from User a, UserRole b"
+	@Query(value = "select a.userId as id, a.name as name, a.surname as surname,a.isActive as isActive from User a, UserRole b"
 			+ " where a.userId = b.userRoleKey.userId and b.userRoleKey.roleId = 'PUBLISHER'")
 	public List<LOVProjection> getPublisherLOV();
 
-	@Query(value = "select a.userId as id, concat(a.name, ' ', a.surname) as name,a.isActive as isActive from User a, UserRole b"
+	@Query(value = "select a.userId as id, a.name as name,a.surname as surname,a.isActive as isActive from User a, UserRole b"
 			+ " where a.userId = b.userRoleKey.userId and b.userRoleKey.roleId = 'AUTHOR'")
 	public List<LOVProjection> getAuthorLOV();
 
-	@Query(value = "select a.userId as id, concat(a.name, ' ', a.surname) as name,a.isActive as isActive from User a, UserRole b"
+	@Query(value = "select a.userId as id, a.name as name, a.surname as surname,a.isActive as isActive from User a, UserRole b"
 			+ " where a.userId = b.userRoleKey.userId and b.userRoleKey.roleId = 'EDITOR'")
 	public List<LOVProjection> getEditorLOV();
 

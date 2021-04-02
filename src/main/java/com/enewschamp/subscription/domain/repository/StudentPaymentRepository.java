@@ -13,4 +13,8 @@ public interface StudentPaymentRepository extends JpaRepository<StudentPayment, 
 	public List<StudentPayment> getByStudentIdAndEdition(@Param("studentId") Long studentId,
 			@Param("editionId") String editionId);
 
+	@Query("Select s from StudentPayment s where s.orderId = :orderId and s.paytmTxnId= :paytmTxnId")
+	public List<StudentPayment> getByOrderIdAndTxnId(@Param("orderId") String orderId,
+			@Param("paytmTxnId") String paytmTxnId);
+
 }

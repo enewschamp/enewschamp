@@ -146,8 +146,8 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			paytmParams.put("body", body);
 			paytmParams.put("head", head);
 			String post_data = paytmParams.toString();
-			URL url = new URL(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-					PropertyConstants.PAYTM_INITIATE_TRANSACTION_URL) + "?mid=" + mid + "&orderId=" + orderId);
+			URL url = new URL("https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=" + mid
+					+ "&orderId=" + orderId);
 
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");

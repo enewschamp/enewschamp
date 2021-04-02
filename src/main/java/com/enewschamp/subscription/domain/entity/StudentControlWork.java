@@ -1,11 +1,13 @@
 package com.enewschamp.subscription.domain.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.StringCryptoConverter;
 import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
@@ -38,6 +40,7 @@ public class StudentControlWork extends BaseEntity {
 	@Column(name = "nextPageLoadMethod", length = 99)
 	private String nextPageLoadMethod;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@NotNull
 	@Column(name = "emailId", length = 99)
 	private String emailId;

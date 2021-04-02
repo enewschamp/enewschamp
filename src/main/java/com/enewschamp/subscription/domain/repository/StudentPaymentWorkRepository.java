@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.enewschamp.subscription.domain.entity.StudentPayment;
 import com.enewschamp.subscription.domain.entity.StudentPaymentWork;
 
 public interface StudentPaymentWorkRepository extends JpaRepository<StudentPaymentWork, Long> {
@@ -24,5 +25,9 @@ public interface StudentPaymentWorkRepository extends JpaRepository<StudentPayme
 
 	@Query("Delete from StudentPaymentWork s where s.studentId = :studentId")
 	public Optional<StudentPaymentWork> deleteByStudentId(@Param("studentId") Long studentId);
+
+	@Query("Select s from StudentPaymentWork s where s.orderId = :orderId and s.paytmTxnId= :paytmTxnId")
+	public List<StudentPaymentWork> getByOrderIdAndTxnId(@Param("orderId") String orderId,
+			@Param("paytmTxnId") String paytmTxnId);
 
 }

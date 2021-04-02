@@ -201,7 +201,7 @@ public class PreferencesPageHandler implements IPageHandler {
 			StudentPreferencesWorkDTO studentPreferencesWorkDTO = modelMapper.map(studentPreferencePageData,
 					StudentPreferencesWorkDTO.class);
 			studentPreferencesWorkDTO.setStudentId(studentId);
-			studentPreferencesWorkDTO.setOperatorId(emailId);
+			studentPreferencesWorkDTO.setOperatorId(""+studentId);
 			studentPreferencesWorkDTO.setRecordInUse(RecordInUseType.Y);
 			preferenceBusiness.saveAsWork(studentPreferencesWorkDTO);
 			studentControlBusiness.updateAsWork(studentControlWorkDTO);
@@ -212,16 +212,16 @@ public class PreferencesPageHandler implements IPageHandler {
 			StudentPreferencesDTO studentPreferencesDTO = modelMapper.map(studentPreferencePageData,
 					StudentPreferencesDTO.class);
 			studentPreferencesDTO.setStudentId(studentId);
-			studentPreferencesDTO.setOperatorId(emailId);
+			studentPreferencesDTO.setOperatorId(""+studentId);
 			studentPreferencesDTO.setRecordInUse(RecordInUseType.Y);
 			preferenceBusiness.saveAsMaster(studentPreferencesDTO);
-			studentControlDTO.setOperatorId(emailId);
+			studentControlDTO.setOperatorId(""+studentId);
 			studentControlDTO.setRecordInUse(RecordInUseType.Y);
 			studentControlBusiness.saveAsMaster(studentControlDTO);
 			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
 			if (studentControlWorkDTO != null) {
 				studentControlWorkDTO.setPreferences("Y");
-				studentControlWorkDTO.setOperatorId(emailId);
+				studentControlWorkDTO.setOperatorId(""+studentId);
 				studentControlWorkDTO.setRecordInUse(RecordInUseType.Y);
 				studentControlBusiness.updateAsWork(studentControlWorkDTO);
 			}
@@ -248,7 +248,7 @@ public class PreferencesPageHandler implements IPageHandler {
 			}
 			studentPreferencesWorkDTO = modelMapper.map(studentPreferencePageData, StudentPreferencesWorkDTO.class);
 			studentPreferencesWorkDTO.setStudentId(studentId);
-			studentPreferencesWorkDTO.setOperatorId(emailId);
+			studentPreferencesWorkDTO.setOperatorId(""+studentId);
 			studentPreferencesWorkDTO.setRecordInUse(RecordInUseType.Y);
 			preferenceBusiness.saveAsWork(studentPreferencesWorkDTO);
 		}

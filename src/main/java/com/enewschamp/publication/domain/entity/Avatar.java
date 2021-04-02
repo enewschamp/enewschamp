@@ -41,7 +41,7 @@ public class Avatar extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	@NotNull
-	@Column(name = "gender", length = 10)
+	@Column(name = "gender", length = 20)
 	private Gender gender;
 
 	@NotNull

@@ -107,7 +107,7 @@ public class SubscriptionBusiness {
 			subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 		}
 		subscripionDto.setRecordInUse(RecordInUseType.Y);
-		subscripionDto.setOperatorId(emailId);
+		subscripionDto.setOperatorId(""+studentId);
 		StudentSubscriptionWork subsWork = modelMapper.map(subscripionDto, StudentSubscriptionWork.class);
 		subsWork.setStudentId(studentId);
 		studentWorkSubscription.create(subsWork);
@@ -155,7 +155,7 @@ public class SubscriptionBusiness {
 			subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 		}
 		subscripionDto.setRecordInUse(RecordInUseType.Y);
-		subscripionDto.setOperatorId(emailId);
+		subscripionDto.setOperatorId(""+studentId);
 		StudentSubscription subsmast = modelMapper.map(subscripionDto, StudentSubscription.class);
 		subsmast.setStudentId(studentId);
 		studentSubscriptionService.create(subsmast);

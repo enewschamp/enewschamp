@@ -14,6 +14,8 @@ import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.registration.business.StudentRegistrationBusiness;
+import com.enewschamp.app.student.registration.entity.StudentRegistration;
+import com.enewschamp.app.student.registration.service.StudentRegistrationService;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.domain.common.IPageHandler;
@@ -31,6 +33,9 @@ public class LoginPageHandler implements IPageHandler {
 
 	@Autowired
 	StudentRegistrationBusiness studentRegBusiness;
+
+	@Autowired
+	StudentRegistrationService regService;
 
 	@Autowired
 	UserLoginBusiness userLoginBusiess;
@@ -104,10 +109,12 @@ public class LoginPageHandler implements IPageHandler {
 		String tokenId = pageRequest.getHeader().getLoginCredentials();
 		String module = pageRequest.getHeader().getModule();
 		String appVersion = pageRequest.getHeader().getAppVersion();
+		String emailId = "";
 		boolean loginSuccess = false;
 		try {
 			loginPageData = objectMapper.readValue(pageRequest.getData().toString(), LoginPageData.class);
 			password = loginPageData.getPassword();
+			emailId = loginPageData.getEmailId();
 		} catch (JsonParseException e) {
 			throw new RuntimeException(e);
 		} catch (JsonMappingException e) {
@@ -115,10 +122,14 @@ public class LoginPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
+		StudentRegistration student = regService.getStudentReg(emailId);
+		Long studentId = 0L;
+		if (student != null) {
+			studentId = student.getStudentId();
+		}
 		loginSuccess = studentRegBusiness.validatePassword(module, userId, password, deviceId, tokenId, null);
 		if (loginSuccess) {
-			userLoginBusiess.login(userId, deviceId, "", module, appVersion, UserType.S);
+			userLoginBusiess.login(userId, "" + studentId, deviceId, "", module, appVersion, UserType.S);
 		} else {
 			throw new BusinessException(ErrorCodeConstants.INVALID_EMAILID_OR_PASSWORD);
 		}

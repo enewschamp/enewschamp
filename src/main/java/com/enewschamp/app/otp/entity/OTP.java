@@ -3,6 +3,7 @@ package com.enewschamp.app.otp.entity;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.StringCryptoConverter;
 import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
@@ -34,6 +36,7 @@ public class OTP extends BaseEntity {
 	@Column(name = "otpId", updatable = false, nullable = false)
 	private Long otpId;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Column(name = "emailId", length = 80)
 	private String emailId;
 

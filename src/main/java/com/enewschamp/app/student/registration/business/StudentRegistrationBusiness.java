@@ -220,8 +220,11 @@ public class StudentRegistrationBusiness {
 
 	public void sendOtp(final String appName, final String emailId) {
 		StudentRegistration student = regService.getStudentReg(emailId);
+		Long studentId = 0L;
 		if (student == null) {
 			throw new BusinessException(ErrorCodeConstants.STUD_REG_NOT_FOUND, emailId);
+		} else {
+			studentId = student.getStudentId();
 		}
 		if ("N".equals(student.getIsActive())) {
 			throw new BusinessException(ErrorCodeConstants.STUD_IS_INACTIVE, emailId);
@@ -231,7 +234,7 @@ public class StudentRegistrationBusiness {
 				.valueOf(propertiesService.getValue(appName, PropertyConstants.OTP_GEN_MAX_ATTEMPTS))) {
 			throw new BusinessException(ErrorCodeConstants.OTP_GEN_MAX_ATTEMPTS_EXHAUSTED, emailId);
 		} else {
-			otpService.genOTP(appName, emailId, null);
+			otpService.genOTP(appName, "" + studentId, emailId, null);
 		}
 
 	}

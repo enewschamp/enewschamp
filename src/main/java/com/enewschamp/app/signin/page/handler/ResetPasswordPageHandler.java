@@ -275,8 +275,13 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		StudentRegistration student = regService.getStudentReg(emailId);
+		Long studentId = 0L;
+		if (student != null) {
+			studentId = student.getStudentId();
+		}
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId(emailId);
+		userActivityTracker.setOperatorId("" + studentId);
 		userActivityTracker.setRecordInUse(RecordInUseType.Y);
 		userActivityTracker.setActionPerformed(
 				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);
@@ -328,7 +333,6 @@ public class ResetPasswordPageHandler implements IPageHandler {
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_PWD_LEN);
 		}
-		StudentRegistration student = regService.getStudentReg(emailId);
 		if ("N".equals(student.getIsActive())) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.STUD_IS_INACTIVE);
 			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.STUD_IS_INACTIVE));
@@ -358,8 +362,10 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		userActivityTracker.setActionStatus(UserAction.SUCCESS);
 		userLoginBusiness.auditUserActivity(userActivityTracker);
 		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
-		studentControlWorkDTO.setEmailIdVerified("Y");
-		studentControlBusiness.saveAsWork(studentControlWorkDTO);
+		if (studentControlWorkDTO != null) {
+			studentControlWorkDTO.setEmailIdVerified("Y");
+			studentControlBusiness.saveAsWork(studentControlWorkDTO);
+		}
 		resetPasswordPageData.setMessage(propertiesService.getValue(module, PropertyConstants.PASSWORD_RESET_MESSAGE));
 		pageDto.setData(resetPasswordPageData);
 		pageDto.setHeader(pageRequest.getHeader());
@@ -391,8 +397,6 @@ public class ResetPasswordPageHandler implements IPageHandler {
 			securityCode = resetPasswordPageData.getSecurityCode();
 			password = resetPasswordPageData.getNewPassword();
 			verifyPassword = resetPasswordPageData.getConfirmNewPassword();
-			userActivityTracker.setOperatorId(emailId);
-			userActivityTracker.setUserId(emailId);
 		} catch (JsonParseException e) {
 			throw new RuntimeException(e);
 		} catch (JsonMappingException e) {
@@ -400,7 +404,13 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
+		StudentRegistration student = regService.getStudentReg(emailId);
+		Long studentId = 0L;
+		if (student != null) {
+			studentId = student.getStudentId();
+		}
+		userActivityTracker.setOperatorId("" + studentId);
+		userActivityTracker.setUserId(emailId);
 		if (password == null && "".equals(password)) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_PASSWORD);
 			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_PASSWORD));
@@ -444,7 +454,6 @@ public class ResetPasswordPageHandler implements IPageHandler {
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_PWD_LEN);
 		}
-		StudentRegistration student = regService.getStudentReg(emailId);
 		if ("N".equals(student.getIsActive())) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.STUD_IS_INACTIVE);
 			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.STUD_IS_INACTIVE));
@@ -497,7 +506,12 @@ public class ResetPasswordPageHandler implements IPageHandler {
 			resetPasswordPageData = objectMapper.readValue(pageRequest.getData().toString(),
 					ResetPasswordPageData.class);
 			emailId = resetPasswordPageData.getEmailId();
-			userActivityTracker.setOperatorId(emailId);
+			StudentRegistration student = regService.getStudentReg(emailId);
+			Long studentId = 0L;
+			if (student != null) {
+				studentId = student.getStudentId();
+			}
+			userActivityTracker.setOperatorId("" + studentId);
 			userActivityTracker.setUserId(emailId);
 			if (emailId == null && "".equals(emailId)) {
 				userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_EMAIL_ID);
@@ -542,9 +556,13 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		String deviceId = pageRequest.getHeader().getDeviceId();
 		String module = pageRequest.getHeader().getModule();
 		ResetPasswordPageData resetPasswordPageData = new ResetPasswordPageData();
-
+		StudentRegistration student = regService.getStudentReg(emailId);
+		Long studentId = 0L;
+		if (student != null) {
+			studentId = student.getStudentId();
+		}
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId(emailId);
+		userActivityTracker.setOperatorId("" + studentId);
 		userActivityTracker.setRecordInUse(RecordInUseType.Y);
 		userActivityTracker.setActionPerformed(
 				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);
@@ -614,7 +632,6 @@ public class ResetPasswordPageHandler implements IPageHandler {
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_USERNAME_OR_PASSWORD, emailId);
 		}
-		StudentRegistration student = regService.getStudentReg(emailId);
 		if ("N".equals(student.getIsActive())) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.STUD_IS_INACTIVE);
 			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.STUD_IS_INACTIVE));

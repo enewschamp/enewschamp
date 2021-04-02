@@ -46,7 +46,8 @@ public class OTPService {
 	@Autowired
 	PropertiesBackendService propertiesService;
 
-	public OTPDTO genOTP(final String appName, final String emailId, UserActivityTracker userActivityTracker) {
+	public OTPDTO genOTP(final String appName, final String userId, final String emailId,
+			UserActivityTracker userActivityTracker) {
 		String uniqueNo = new DecimalFormat("000000").format(new Random().nextInt(999999));
 		LocalDateTime localDate = LocalDateTime.now();
 		OTP otp = new OTP();
@@ -54,7 +55,7 @@ public class OTPService {
 		otp.setOtpGenTime(localDate);
 		otp.setOtp(uniqueNo);
 		otp.setRecordInUse(RecordInUseType.Y);
-		otp.setOperatorId(emailId);
+		otp.setOperatorId(userId);
 		otp.setVerifyAttempts(0);
 		otp.setOperationDateTime(localDate);
 		otp = repository.save(otp);
@@ -63,7 +64,7 @@ public class OTPService {
 		for (int i = 0; i < data.size(); i++) {
 			otpEntity = data.get(i);
 			otpEntity.setVerifyAttempts(0);
-			otpEntity.setOperatorId(emailId);
+			otpEntity.setOperatorId(userId);
 			otpEntity.setOperationDateTime(localDate);
 			repository.save(otpEntity);
 		}

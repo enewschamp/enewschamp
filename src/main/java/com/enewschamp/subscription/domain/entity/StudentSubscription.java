@@ -30,21 +30,38 @@ public class StudentSubscription extends BaseEntity {
 	private Long studentId;
 
 	@NotNull
-	@Column(name = "EditionId", length = 6)
+	@Column(name = "editionId", length = 6)
 	private String editionId;
 
 	@NotNull
-	@Column(name = "SubscriptionType", length = 1)
+	@Column(name = "subscriptionType", length = 1)
 	private String subscriptionSelected;
 
+	@Column(name = "subscriptionPeriod")
+	private String subscriptionPeriod;
+
 	@NotNull
-	@Column(name = "StartDate")
+	@Column(name = "startDate")
 	private LocalDate startDate;
 
-	@Column(name = "EndDate")
+	@Column(name = "endDate")
 	private LocalDate endDate;
 
-	@Column(name = "AutoRenewal", length = 1)
+	@Column(name = "autoRenewal", length = 1)
 	private String autoRenewal;
 
+	@Column(name = "subscriptionId", length = 1)
+	private String subscriptionId;
+
+	@Column(name = "subscriptionAmountType", length = 10)
+	private String subscriptionAmountType;
+
+	@Column(name = "subscriptionFrequency", length = 10)
+	private String subscriptionFrequency;
+
+	@Column(name = "subscriptionFrequencyUnit", length = 10)
+	private String subscriptionFrequencyUnit;
+
+	@Column(name = "subscriptionExpiryDate", length = 10)
+	private String subscriptionExpiryDate;
 }

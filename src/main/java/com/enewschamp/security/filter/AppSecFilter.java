@@ -51,10 +51,9 @@ public class AppSecFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		String callbackURL = propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_CALLBACK_URL);
-		System.out.println(">>>>>URL>>>>>>>>" + request.getRequestURL());
 		final MultiReadHttpServletRequest requestWrapper = new MultiReadHttpServletRequest(request);
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
-		if (callbackURL.equalsIgnoreCase(request.getRequestURL().toString())) {
+		if (request.getRequestURL().toString().equalsIgnoreCase(callbackURL)) {
 			filterChain.doFilter(request, response);
 			return;
 		}
@@ -72,6 +71,7 @@ public class AppSecFilter extends GenericFilterBean {
 			try {
 				requestPage = objectMapper.readValue(payLoad, PageRequestDTO.class);
 			} catch (Exception e) {
+				System.out.println(">>>>>>>>>>>>>>>" + e);
 				response.setContentType("application/json");
 				PrintWriter writer = response.getWriter();
 				HeaderDTO header = new HeaderDTO();

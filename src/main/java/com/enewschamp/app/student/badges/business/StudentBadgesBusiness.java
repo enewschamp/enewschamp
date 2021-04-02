@@ -55,7 +55,7 @@ public class StudentBadgesBusiness {
 				studBadge.setStudentId(studentId);
 				studBadge.setBadgeId(badge.getBadgeId());
 				studBadge.setYearMonth(yearMonth);
-				studBadge.setOperatorId(emailId);
+				studBadge.setOperatorId(""+studentId);
 				studBadge.setRecordInUse(RecordInUseType.Y);
 				studentBadgesService.create(studBadge);
 			}
@@ -75,7 +75,7 @@ public class StudentBadgesBusiness {
 				studBadge.setStudentId(studentId);
 				studBadge.setBadgeId(badge.getBadgeId());
 				studBadge.setYearMonth(yearMonth);
-				studBadge.setOperatorId(emailId);
+				studBadge.setOperatorId(""+studentId);
 				studBadge.setRecordInUse(RecordInUseType.Y);
 				studentBadgesService.create(studBadge);
 			}

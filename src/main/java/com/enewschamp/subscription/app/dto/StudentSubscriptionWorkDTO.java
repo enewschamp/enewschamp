@@ -1,5 +1,8 @@
 package com.enewschamp.subscription.app.dto;
 
+import java.time.LocalDate;
+
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -31,8 +34,19 @@ public class StudentSubscriptionWorkDTO extends BaseEntity {
 
 	private String subscriptionPeriod;
 
-	@NotNull
-	@Size(max = 1)
+	private LocalDate startDate;
+
+	private LocalDate endDate;
+
 	private String autoRenewal;
 
+	private String subscriptionId;
+
+	private String subscriptionAmountType;
+
+	private String subscriptionFrequency;
+
+	private String subscriptionFrequencyUnit;
+
+	private String subscriptionExpiryDate;
 }

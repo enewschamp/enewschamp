@@ -75,7 +75,7 @@ public class AppSecurityService {
 		}
 	}
 
-	@Cacheable("appSec")
+	@Cacheable
 	public boolean isValidKey(final String appName, final String appKey, final String module) {
 		Optional<AppSecurity> existingEntity = appSecurityRepository.getAppSec(appName, appKey, module);
 		if (existingEntity.isPresent()) {

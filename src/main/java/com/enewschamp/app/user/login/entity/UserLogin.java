@@ -3,6 +3,7 @@ package com.enewschamp.app.user.login.entity;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -13,6 +14,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.StringCryptoConverter;
 import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
@@ -35,6 +37,7 @@ public class UserLogin extends BaseEntity {
 	@Column(name = "userLoginId", updatable = false, nullable = false)
 	private Long userLoginId;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@NotNull
 	@Column(name = "userId", length = 80)
 	private String userId;

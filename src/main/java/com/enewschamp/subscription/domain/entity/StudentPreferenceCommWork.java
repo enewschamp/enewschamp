@@ -1,7 +1,10 @@
 package com.enewschamp.subscription.domain.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embeddable;
+
+import com.enewschamp.app.common.StringCryptoConverter;
 
 import lombok.Data;
 
@@ -22,6 +25,7 @@ public class StudentPreferenceCommWork {
 	@Column(name = "alertsNotifications", length = 1)
 	private String alertsNotifications;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Column(name = "commsEmailId", length = 100)
 	private String commsEmailId;
 

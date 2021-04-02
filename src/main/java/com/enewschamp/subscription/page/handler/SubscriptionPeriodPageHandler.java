@@ -252,7 +252,7 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 			String feeCurrency = subscriptionPeriodPageData.getSubscriptionFeeCurrency();
 			studentSubscpritionWorkDTO.setAutoRenewal(autoRenew);
 			studentSubscpritionWorkDTO.setSubscriptionPeriod(subscriptionPeriod);
-			studentSubscpritionWorkDTO.setOperatorId(emailId);
+			studentSubscpritionWorkDTO.setOperatorId(""+studentId);
 			studentSubscpritionWorkDTO.setRecordInUse(RecordInUseType.Y);
 			StudentPaymentWork studentPaymentWork = new StudentPaymentWork();
 			studentPaymentWork.setStudentId(studentId);
@@ -260,7 +260,7 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 			studentPaymentWork.setPaymentAmount(feeAmount);
 			studentPaymentWork.setPaymentCurrency(feeCurrency);
 			studentPaymentWork.setSubscriptionPeriod(subscriptionPeriod);
-			studentPaymentWork.setOperatorId(emailId);
+			studentPaymentWork.setOperatorId(""+studentId);
 			studentPaymentWork.setRecordInUse(RecordInUseType.Y);
 			studentPaymentWork.setSubscriptionType(studentSubscpritionWorkDTO.getSubscriptionSelected());
 			studentPaymentWork
@@ -294,13 +294,15 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 			String feeCurrency = subscriptionPeriodPageData.getSubscriptionFeeCurrency();
 			studentSubscpritionWorkDTO.setAutoRenewal(autoRenew);
 			studentSubscpritionWorkDTO.setSubscriptionPeriod(subscriptionPeriod);
+			studentSubscpritionWorkDTO.setOperatorId(""+studentId);
+			studentSubscpritionWorkDTO.setRecordInUse(RecordInUseType.Y);
 			StudentPaymentWork studentPaymentWork = new StudentPaymentWork();
 			studentPaymentWork.setStudentId(studentId);
 			studentPaymentWork.setEditionId(editionId);
 			studentPaymentWork.setPaymentAmount(feeAmount);
 			studentPaymentWork.setSubscriptionPeriod(subscriptionPeriod);
 			studentPaymentWork.setPaymentCurrency(feeCurrency);
-			studentPaymentWork.setOperatorId(emailId);
+			studentPaymentWork.setOperatorId(""+studentId);
 			studentPaymentWork.setRecordInUse(RecordInUseType.Y);
 			studentPaymentWork.setSubscriptionType(studentSubscpritionWorkDTO.getSubscriptionSelected());
 			studentPaymentWork

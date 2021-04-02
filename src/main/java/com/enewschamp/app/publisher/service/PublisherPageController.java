@@ -143,8 +143,8 @@ public class PublisherPageController {
 				String edition = pageRequest.getHeader().getEditionId();
 				editionService.getEdition(edition);
 				userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.P, userActivityTracker);
-				UserLogin userLogin = userLoginBusiness.login(userId, deviceId, loginCredentials, module, appVersion,
-						UserType.P);
+				UserLogin userLogin = userLoginBusiness.login(userId, userId, deviceId, loginCredentials, module,
+						appVersion, UserType.P);
 				userActivityTracker.setActionStatus(UserAction.SUCCESS);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 				pageResponse = new PageDTO();
@@ -246,79 +246,64 @@ public class PublisherPageController {
 		page.getHeader().setPageName(nextPageName);
 	}
 
-	@RequestMapping(value = "/publisher/images/article", method = RequestMethod.GET, produces = MediaType.ALL_VALUE)
-	public void getArticleImage(HttpServletResponse response, @RequestParam String imagePath,
+	@RequestMapping(value = "/publisher/images", method = RequestMethod.GET, produces = MediaType.ALL_VALUE)
+	public void getImage(HttpServletResponse response, @RequestParam String imageType, @RequestParam String imagePath,
 			@RequestParam String appKey, @RequestParam String appName, @RequestParam String module,
 			@RequestParam String userId, @RequestParam String deviceId, @RequestParam String loginCredentials)
 			throws IOException {
-		try {
-			if (imagePath == null || appKey == null || appName == null || userId == null || deviceId == null
-					|| loginCredentials == null) {
-				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
-
-			} else if (imagePath.trim().isEmpty() || appKey.trim().isEmpty() || appName.trim().isEmpty()
-					|| userId.trim().isEmpty() || deviceId.trim().isEmpty() || loginCredentials.trim().isEmpty()) {
-				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
-			}
-			if (!userService.validateUser(userId)) {
-				throw new BusinessException(ErrorCodeConstants.INVALID_USER_ID, userId);
-			} else {
-				userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.P);
-			}
-			if (imagePath.startsWith("/")) {
-				imagePath = imagePath.substring(2, imagePath.length());
-			}
-			String imagesFolderPath = propertiesService.getValue(module,
-					PropertyConstants.IMAGE_ROOT_FOLDER_PATH_ARTICLE);
-			File imageFile = new File(imagesFolderPath + imagePath);
-			if (imageFile != null && imageFile.exists()) {
-				InputStream imageStream = new FileInputStream(imageFile);
-				response.setContentType(MediaType.IMAGE_JPEG_VALUE);
-				StreamUtils.copy(imageStream, response.getOutputStream());
-				imageStream.close();
-			}
-		} catch (BusinessException e) {
-			throw new Fault(e);
-		}
-	}
-
-	@RequestMapping(value = "/publisher/images/user", method = RequestMethod.GET, produces = MediaType.ALL_VALUE)
-	public void getUserImage(HttpServletResponse response, @RequestParam String imagePath, @RequestParam String appKey,
-			@RequestParam String appName, @RequestParam String module, @RequestParam String userId,
-			@RequestParam String deviceId, @RequestParam String loginCredentials) throws IOException {
-		try {
-			if (imagePath == null || appKey == null || appName == null || userId == null || deviceId == null
-					|| loginCredentials == null) {
-				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
-
-			} else if (imagePath.trim().isEmpty() || appKey.trim().isEmpty() || appName.trim().isEmpty()
-					|| userId.trim().isEmpty() || deviceId.trim().isEmpty() || loginCredentials.trim().isEmpty()) {
-				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
-			}
-			if (!userService.validateUser(userId)) {
-				throw new BusinessException(ErrorCodeConstants.INVALID_USER_ID, userId);
-			} else {
-				userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.P);
-			}
-			if (imagePath.startsWith("/")) {
-				imagePath = imagePath.substring(2, imagePath.length());
-			}
-			String imagesFolderPath = propertiesService.getValue(module, PropertyConstants.IMAGE_ROOT_FOLDER_PATH_USER);
-			File imageFile = new File(imagesFolderPath + imagePath);
-			if (imageFile != null && imageFile.exists()) {
-				InputStream imageStream = new FileInputStream(imageFile);
-				if (imagePath.toUpperCase().endsWith(".JPG") || imagePath.toUpperCase().endsWith(".JEPG")) {
-					response.setContentType(MediaType.IMAGE_JPEG_VALUE);
-				} else if (imagePath.toUpperCase().endsWith(".PNG")) {
-					response.setContentType(MediaType.IMAGE_PNG_VALUE);
-				} else if (imagePath.toUpperCase().endsWith(".GIF")) {
-					response.setContentType(MediaType.IMAGE_GIF_VALUE);
+		if (imageType == null || imagePath == null || appKey == null || appName == null || deviceId == null
+				|| loginCredentials == null || imageType.trim().isEmpty() || imagePath.trim().isEmpty()
+				|| appKey.trim().isEmpty() || appName.trim().isEmpty() || deviceId.trim().isEmpty()
+				|| loginCredentials.trim().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
+		} else {
+			boolean loginCheckFlag = false;
+			String validateLogin = propertiesService.getValue(module, PropertyConstants.VALIDATE_LOGIN);
+			String loginRequired[] = validateLogin.split("\\|");
+			for (int i = 0; i < loginRequired.length; i++) {
+				if (imageType.equalsIgnoreCase(loginRequired[i])) {
+					loginCheckFlag = true;
+					break;
 				}
-				StreamUtils.copy(imageStream, response.getOutputStream());
-				imageStream.close();
 			}
-		} catch (BusinessException e) {
-			throw new Fault(e);
+			try {
+				if (loginCheckFlag) {
+					if (userId == null || userId.trim().isEmpty()) {
+						throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
+					}
+					;
+					User user = userService.get(userId);
+					if (user == null) {
+						throw new BusinessException(ErrorCodeConstants.INVALID_USER_ID, userId);
+					} else {
+						userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.P);
+					}
+				} else {
+					UserLogin deviceLogin = userLoginBusiness.getBODeviceLogin(deviceId, loginCredentials);
+					if (deviceLogin == null) {
+						throw new BusinessException(ErrorCodeConstants.UNAUTH_ACCESS);
+					}
+				}
+				if (imagePath.startsWith("/")) {
+					imagePath = imagePath.substring(2, imagePath.length());
+				}
+				String imageFolderPath = propertiesService.getValue(module, "imageRootFolderPath." + imageType);
+				File imageFile = new File(imageFolderPath + imagePath);
+				if (imageFile != null && imageFile.exists()) {
+					InputStream imageStream = new FileInputStream(imageFile);
+					if (imagePath.toUpperCase().endsWith(".JPG") || imagePath.toUpperCase().endsWith(".JEPG")) {
+						response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+					} else if (imagePath.toUpperCase().endsWith(".PNG")) {
+						response.setContentType(MediaType.IMAGE_PNG_VALUE);
+					} else if (imagePath.toUpperCase().endsWith(".GIF")) {
+						response.setContentType(MediaType.IMAGE_GIF_VALUE);
+					}
+					StreamUtils.copy(imageStream, response.getOutputStream());
+					imageStream.close();
+				}
+			} catch (BusinessException e) {
+				throw new Fault(e);
+			}
 		}
 	}
 

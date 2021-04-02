@@ -31,14 +31,20 @@ public class StudentSubscriptionDTO extends AbstractDTO {
 	@Size(max = 1)
 	private String subscriptionSelected;
 
-	@NotNull
 	private LocalDate startDate;
 
-	@NotNull
 	private LocalDate endDate;
 
-	@NotNull
-	@Size(max = 1)
 	private String autoRenewal;
+
+	private String subscriptionId;
+
+	private String subscriptionAmountType;
+
+	private String subscriptionFrequency;
+
+	private String subscriptionFrequencyUnit;
+
+	private String subscriptionExpiryDate;
 
 }

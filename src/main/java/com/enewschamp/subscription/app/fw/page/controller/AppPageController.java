@@ -190,6 +190,7 @@ public class AppPageController {
 		String deviceId = "";
 		String actionName = "";
 		String operation = "";
+		Long studentId = 0L;
 		try {
 			module = pageRequest.getHeader().getModule();
 			deviceId = pageRequest.getHeader().getDeviceId();
@@ -207,12 +208,15 @@ public class AppPageController {
 					|| pageName.trim().isEmpty() || actionName.trim().isEmpty() || operation.trim().isEmpty()
 					|| deviceId.trim().isEmpty() || appVersion.trim().isEmpty()) {
 				throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
-
 			}
 			if (studentKey != null && !"".equals(studentKey)) {
 				emailId = regService.getStudentEmailByKey(studentKey);
 				if (emailId != null && !"".equals(emailId)) {
 					pageRequest.getHeader().setEmailId(emailId);
+					StudentRegistration student = regService.getStudentReg(emailId);
+					if (student != null) {
+						studentId = student.getStudentId();
+					}
 				}
 			}
 			UserLogin userLogin = null;
@@ -248,8 +252,8 @@ public class AppPageController {
 								&& studentControlDTO != null && "Y".equals(studentControlDTO.getEmailIdVerified())) {
 							LocalDateTime tokenRefershTime = userLogin.getTokenExpirationTime().minusSeconds(60);
 							if (tokenRefershTime.isBefore(LocalDateTime.now())) {
-								userLogin = userLoginBusiness.login(emailId, deviceId, loginCredentials, module,
-										appVersion, UserType.S);
+								userLogin = userLoginBusiness.login(emailId, "" + studentId, deviceId, loginCredentials,
+										module, appVersion, UserType.S);
 								pageRequest.getHeader().setLoginCredentials(userLogin.getTokenId());
 							}
 						} else if (userLogin == null || !"Y".equals(userLogin.getLoginFlag().toString())) {
@@ -259,20 +263,22 @@ public class AppPageController {
 								userLogin = userLoginBusiness.getNonLoginDetails(emailId, deviceId, loginCredentials,
 										UserType.S);
 								if (userLogin == null) {
-									userLogin = userLoginBusiness.newDeviceLogin(emailId, deviceId, UserType.S);
+									userLogin = userLoginBusiness.newDeviceLogin(emailId, "" + studentId, deviceId,
+											UserType.S);
 									pageRequest.getHeader().setLoginCredentials(userLogin.getTokenId());
 								} else {
 									LocalDateTime tokenRefershTime = userLogin.getTokenExpirationTime()
 											.minusSeconds(60);
 									if (tokenRefershTime.isBefore(LocalDateTime.now())) {
-										userLogin = userLoginBusiness.login(emailId, deviceId, loginCredentials, module,
-												appVersion, UserType.S);
+										userLogin = userLoginBusiness.login(emailId, "" + studentId, deviceId,
+												loginCredentials, module, appVersion, UserType.S);
 										pageRequest.getHeader().setLoginCredentials(userLogin.getTokenId());
 									}
 								}
 							}
 							if (userLogin == null) {
-								userLogin = userLoginBusiness.newDeviceLogin(emailId, deviceId, UserType.S);
+								userLogin = userLoginBusiness.newDeviceLogin(emailId, "" + studentId, deviceId,
+										UserType.S);
 								pageRequest.getHeader().setLoginCredentials(userLogin.getTokenId());
 							}
 							String unknownUserPageName = propertiesService.getValue(module,
@@ -298,18 +304,18 @@ public class AppPageController {
 					if (userLogin != null && (userLogin.getUserId() == null || "".equals(userLogin.getUserId()))) {
 						LocalDateTime tokenRefershTime = userLogin.getTokenExpirationTime().minusSeconds(60);
 						if (tokenRefershTime.isBefore(LocalDateTime.now())) {
-							userLogin = userLoginBusiness.login(emailId, deviceId, loginCredentials, module, appVersion,
-									UserType.S);
+							userLogin = userLoginBusiness.login(emailId, "" + studentId, deviceId, loginCredentials,
+									module, appVersion, UserType.S);
 							pageRequest.getHeader().setLoginCredentials(userLogin.getTokenId());
 						}
 					} else {
-						userLogin = userLoginBusiness.login(emailId, deviceId, loginCredentials, module, appVersion,
-								UserType.S);
+						userLogin = userLoginBusiness.login(emailId, "" + studentId, deviceId, loginCredentials, module,
+								appVersion, UserType.S);
 						pageRequest.getHeader().setLoginCredentials(userLogin.getTokenId());
 					}
 				} else {
-					userLogin = userLoginBusiness.login(emailId, deviceId, loginCredentials, module, appVersion,
-							UserType.S);
+					userLogin = userLoginBusiness.login(emailId, "" + studentId, deviceId, loginCredentials, module,
+							appVersion, UserType.S);
 					pageRequest.getHeader().setLoginCredentials(userLogin.getTokenId());
 				}
 			} else {
@@ -433,7 +439,7 @@ public class AppPageController {
 			// save data in master Tables (including the previous unsaved data
 			String workToMaster = pageNavDto.getWorkToMaster();
 			if (workToMaster != null && !"".equals(workToMaster)) {
-				String pageArr[] = workToMaster.split(",");
+				String pageArr[] = workToMaster.trim().split(",");
 				for (String workPageName : pageArr) {
 					pageHandlerFactory.getPageHandler(workPageName, context).saveAsMaster(pageRequest);
 				}
@@ -517,7 +523,7 @@ public class AppPageController {
 			studentControlWorkDTO.setNextPageName(nextPageName);
 			studentControlWorkDTO.setNextPageOperation(nextPageOperation);
 			studentControlWorkDTO.setNextPageLoadMethod(nextPageLoadMethod);
-			studentControlWorkDTO.setOperatorId(emailId);
+			studentControlWorkDTO.setOperatorId("" + studentControlWorkDTO.getStudentId());
 			studentControlWorkDTO.setRecordInUse(RecordInUseType.Y);
 			studentControlBusiness.saveAsWork(studentControlWorkDTO);
 		}
@@ -593,7 +599,7 @@ public class AppPageController {
 			studentControlWorkDTO.setNextPageName(pageDTO.getHeader().getPageName());
 			studentControlWorkDTO.setNextPageOperation(pageDTO.getHeader().getOperation());
 			studentControlWorkDTO.setNextPageLoadMethod(nextPageLoadMethod);
-			studentControlWorkDTO.setOperatorId(emailId);
+			studentControlWorkDTO.setOperatorId("" + studentId);
 			studentControlWorkDTO.setRecordInUse(RecordInUseType.Y);
 			studentControlBusiness.saveAsWork(studentControlWorkDTO);
 		} else if (studentControlWorkDTO != null) {
@@ -602,7 +608,7 @@ public class AppPageController {
 			studentControlWorkDTO.setNextPageOperation(pageDTO.getHeader().getOperation());
 			studentControlWorkDTO.setNextPageLoadMethod(nextPageLoadMethod);
 			studentControlWorkDTO.setStudentId(studentId);
-			studentControlWorkDTO.setOperatorId(emailId);
+			studentControlWorkDTO.setOperatorId("" + studentId);
 			studentControlWorkDTO.setRecordInUse(RecordInUseType.Y);
 			studentControlBusiness.saveAsWork(studentControlWorkDTO);
 		} else {
@@ -612,7 +618,7 @@ public class AppPageController {
 				studReg.setEmailId(emailId);
 			}
 			studReg.setRecordInUse(RecordInUseType.Y);
-			studReg.setOperatorId(emailId);
+			studReg.setOperatorId("" + studentId);
 			studReg.setIsDeleted("N");
 			studReg = regService.create(studReg);
 			studentControlWorkDTO = new StudentControlWorkDTO();
@@ -621,7 +627,7 @@ public class AppPageController {
 			studentControlWorkDTO.setNextPageLoadMethod(nextPageLoadMethod);
 			studentControlWorkDTO.setEmailId(emailId);
 			studentControlWorkDTO.setStudentId(studReg.getStudentId());
-			studentControlWorkDTO.setOperatorId(emailId);
+			studentControlWorkDTO.setOperatorId("" + studentId);
 			studentControlWorkDTO.setRecordInUse(RecordInUseType.Y);
 			studentControlBusiness.saveAsWork(studentControlWorkDTO);
 			pageDTO.getHeader().setStudentKey(studReg.getStudentKey());

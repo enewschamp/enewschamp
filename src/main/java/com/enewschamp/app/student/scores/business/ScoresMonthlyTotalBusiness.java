@@ -11,6 +11,7 @@ import com.enewschamp.app.student.scores.entity.ScoresMonthlyTotal;
 import com.enewschamp.app.student.scores.service.ScoresMonthlyTotalService;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.service.NewsArticleService;
+import com.enewschamp.domain.common.RecordInUseType;
 
 @Service
 public class ScoresMonthlyTotalBusiness {
@@ -67,6 +68,8 @@ public class ScoresMonthlyTotalBusiness {
 			scoresMonthlyTotalDTONew.setYearMonth(yearMonth);
 			scoresMonthlyTotalDTONew.setQuizAttempted(quizQAttempted);
 			scoresMonthlyTotalDTONew.setQuizCorrect(quizQCorrect);
+			scoresMonthlyTotalDTONew.setRecordInUse(RecordInUseType.Y);
+			scoresMonthlyTotalDTONew.setOperatorId("" + studentId);
 			scoresMonthlyTotalDTO = saveScoresMonthly(scoresMonthlyTotalDTONew);
 		} else {
 			Long quizQAttemptedTmp = (scoresMonthlyTotalDTO.getQuizAttempted() == null) ? 0
@@ -81,6 +84,8 @@ public class ScoresMonthlyTotalBusiness {
 			Long quizQCorrectTmp = (scoresMonthlyTotalDTO.getQuizCorrect() == null) ? 0
 					: scoresMonthlyTotalDTO.getQuizCorrect();
 			quizQCorrectTmp = quizQCorrectTmp + quizQCorrect;
+			scoresMonthlyTotalDTO.setRecordInUse(RecordInUseType.Y);
+			scoresMonthlyTotalDTO.setOperatorId("" + studentId);
 			scoresMonthlyTotalDTO.setQuizCorrect(quizQCorrectTmp);
 			scoresMonthlyTotalDTO = saveScoresMonthly(scoresMonthlyTotalDTO);
 		}

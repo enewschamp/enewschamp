@@ -1,11 +1,13 @@
 package com.enewschamp.subscription.domain.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.enewschamp.app.common.StringCryptoConverter;
 import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
@@ -27,6 +29,7 @@ public class StudentControl extends BaseEntity {
 	@Column(name = "studentId", length = 100)
 	private Long studentId;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@NotNull
 	@Column(name = "emailId", length = 99)
 	private String emailId;

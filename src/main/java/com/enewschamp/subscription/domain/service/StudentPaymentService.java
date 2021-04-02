@@ -12,7 +12,9 @@ import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentPayment;
+import com.enewschamp.subscription.domain.entity.StudentPaymentWork;
 import com.enewschamp.subscription.domain.repository.StudentPaymentRepository;
+import com.enewschamp.subscription.domain.repository.StudentPaymentWorkRepository;
 
 @Service
 public class StudentPaymentService {
@@ -24,6 +26,9 @@ public class StudentPaymentService {
 
 	@Autowired
 	StudentPaymentRepository repository;
+
+	@Autowired
+	StudentPaymentWorkRepository workRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -71,6 +76,20 @@ public class StudentPaymentService {
 			return existingEntities.get(0);
 		} else {
 			return null;
+		}
+	}
+
+	public Long getStudentByOrderIdAndTxnId(String orderId, String paytmTxnId) {
+		List<StudentPayment> existingEntities = repository.getByOrderIdAndTxnId(orderId, paytmTxnId);
+		if (existingEntities != null && existingEntities.size() > 0) {
+			return existingEntities.get(0).getStudentId();
+		} else {
+			List<StudentPaymentWork> existingEntitiesWork = workRepository.getByOrderIdAndTxnId(orderId, paytmTxnId);
+			if (existingEntitiesWork != null && existingEntitiesWork.size() > 0) {
+				return existingEntitiesWork.get(0).getStudentId();
+			} else {
+				return null;
+			}
 		}
 	}
 

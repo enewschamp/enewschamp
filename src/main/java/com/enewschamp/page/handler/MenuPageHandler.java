@@ -55,7 +55,7 @@ public class MenuPageHandler extends AbstractPageHandler {
 	StudentDetailsService studentDetailsService;
 
 	@Autowired
-	StudentRegistrationService studentRegistrationService;
+	StudentRegistrationService regService;
 
 	@Override
 	public PageDTO handlePageAction(PageRequestDTO pageRequest) {
@@ -83,7 +83,7 @@ public class MenuPageHandler extends AbstractPageHandler {
 			pageData.setSurname(student.getSurname());
 		}
 		MyPicturePageData myPicturePageData = new MyPicturePageData();
-		StudentRegistration studentRegistration = studentRegistrationService.getStudentReg(emailId);
+		StudentRegistration studentRegistration = regService.getStudentReg(emailId);
 		if (studentRegistration != null) {
 			myPicturePageData.setAvatarName(studentRegistration.getAvatarName());
 			myPicturePageData.setPhotoName(studentRegistration.getPhotoName());
@@ -145,8 +145,13 @@ public class MenuPageHandler extends AbstractPageHandler {
 		String emailId = pageRequest.getHeader().getEmailId();
 		String deviceId = pageRequest.getHeader().getDeviceId();
 		String tokenId = pageRequest.getHeader().getLoginCredentials();
+		StudentRegistration student = regService.getStudentReg(emailId);
+		Long studentId = 0L;
+		if (student != null) {
+			studentId = student.getStudentId();
+		}
 		UserActivityTracker userActivityTracker = new UserActivityTracker();
-		userActivityTracker.setOperatorId(emailId);
+		userActivityTracker.setOperatorId("" + studentId);
 		userActivityTracker.setRecordInUse(RecordInUseType.Y);
 		userActivityTracker.setActionPerformed(
 				pageRequest.getHeader().getPageName() + "-" + pageRequest.getHeader().getOperation() + "-" + action);

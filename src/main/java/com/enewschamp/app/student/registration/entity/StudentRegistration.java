@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.springframework.util.DigestUtils;
 
+import com.enewschamp.app.common.StringCryptoConverter;
 import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
@@ -43,17 +45,21 @@ public class StudentRegistration extends BaseEntity {
 	@Column(name = "studentKey", updatable = false, nullable = false)
 	private String studentKey;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@NotNull
-	@Column(name = "emailId", length = 80)
+	@Column(name = "emailId", length = 200)
 	private String emailId;
 
-	@Column(name = "password", length = 80)
+	@Convert(converter = StringCryptoConverter.class)
+	@Column(name = "password", length = 200)
 	private String password;
 
-	@Column(name = "password1", length = 80)
+	@Convert(converter = StringCryptoConverter.class)
+	@Column(name = "password1", length = 200)
 	private String password1;
 
-	@Column(name = "password2", length = 80)
+	@Convert(converter = StringCryptoConverter.class)
+	@Column(name = "password2", length = 200)
 	private String password2;
 
 	@Column(name = "isDeleted", length = 1)

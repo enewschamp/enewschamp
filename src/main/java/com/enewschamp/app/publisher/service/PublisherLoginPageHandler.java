@@ -158,7 +158,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			}
 			loginPageData.setMessage(
 					propertiesService.getValue(pageRequest.getHeader().getModule(), PropertyConstants.OTP_MESSAGE));
-			otpService.genOTP(pageRequest.getHeader().getModule(), emailId, userActivityTracker);
+			otpService.genOTP(pageRequest.getHeader().getModule(), userId, emailId, userActivityTracker);
 			userActivityTracker.setActionStatus(UserAction.SUCCESS);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			loginPageData = new PublisherLoginPageData();
@@ -180,7 +180,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 					.getValue(pageRequest.getHeader().getModule(), PropertyConstants.OTP_GEN_MAX_ATTEMPTS))) {
 				throw new BusinessException(ErrorCodeConstants.OTP_GEN_MAX_ATTEMPTS_EXHAUSTED);
 			}
-			otpService.genOTP(pageRequest.getHeader().getModule(), emailId, userActivityTracker);
+			otpService.genOTP(pageRequest.getHeader().getModule(), userId, emailId, userActivityTracker);
 			userActivityTracker.setActionStatus(UserAction.SUCCESS);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			loginPageData = new PublisherLoginPageData();

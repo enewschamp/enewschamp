@@ -23,10 +23,13 @@ import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.app.dto.StudentControlWorkDTO;
+import com.enewschamp.subscription.app.dto.StudentSubscriptionDTO;
 import com.enewschamp.subscription.app.dto.StudentSubscriptionPageData;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 import com.enewschamp.subscription.domain.entity.StudentControlWork;
+import com.enewschamp.subscription.domain.entity.StudentSubscription;
+import com.enewschamp.subscription.domain.service.StudentSubscriptionService;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionWorkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -44,6 +47,9 @@ public class SubscriptionPageHandler implements IPageHandler {
 
 	@Autowired
 	StudentSubscriptionWorkService studentSubscriptionWorkService;
+
+	@Autowired
+	StudentSubscriptionService studentSubscriptionService;
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -180,6 +186,22 @@ public class SubscriptionPageHandler implements IPageHandler {
 		return pageDTO;
 	}
 
+	public PageDTO handleCancelSubscription(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
+		PageDTO pageDTO = new PageDTO();
+		String operation = pageRequest.getHeader().getOperation();
+		String editionId = pageRequest.getHeader().getEditionId();
+		String emailId = pageRequest.getHeader().getEmailId();
+		String saveIn = pageNavigatorDTO.getUpdationTable();
+		String evalAvailed = "";
+		Long studentId = studentControlBusiness.getStudentId(emailId);
+		StudentSubscription studentSubscription = studentSubscriptionService.get(studentId, editionId);
+		studentSubscription.setAutoRenewal("N");
+		studentSubscriptionService.update(studentSubscription);
+		// cancel subscription API call
+		pageDTO.setHeader(pageRequest.getHeader());
+		return pageDTO;
+	}
+
 	public PageDTO handleNextAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
 		String operation = pageRequest.getHeader().getOperation();
@@ -206,7 +228,7 @@ public class SubscriptionPageHandler implements IPageHandler {
 					&& "S".equalsIgnoreCase(subscripionPagedata.getSubscriptionSelected())) {
 				studentControlWorkDTO.setNextPageOperation("SchoolSubs");
 			}
-			studentControlWorkDTO.setOperatorId(emailId);
+			studentControlWorkDTO.setOperatorId("" + studentId);
 			studentControlWorkDTO.setRecordInUse(RecordInUseType.Y);
 			StudentControlWork studentControlWork = studentControlBusiness.saveAsWork(studentControlWorkDTO);
 			studentId = studentControlWork.getStudentId();

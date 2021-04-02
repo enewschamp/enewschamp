@@ -148,9 +148,6 @@ public class PaytmCallbackController {
 
 		boolean isValidChecksum = false;
 		try {
-			if (checksumHash == null) {
-				checksumHash = "dummy";
-			}
 			isValidChecksum = PaytmChecksum.verifySignature(paytmParams,
 					propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY), checksumHash);
 		} catch (Exception e) {
@@ -168,6 +165,9 @@ public class PaytmCallbackController {
 							|| "PENDING".equals(transactionStatus.get("TRAN_STATUS"))) {
 						orderStatus = propertiesService.getValue("StudentApp",
 								PropertyConstants.PAYTM_CALLBACK_TRAN_STATUS_TXN_FAILURE_OR_PENDING);
+					} else if ("CHECKSUM_MISMATCH".equals(transactionStatus.get("TRAN_STATUS"))) {
+						orderStatus = propertiesService.getValue("StudentApp",
+								PropertyConstants.PAYTM_CALLBACK_CHECKSUM_MISMATCH);
 					} else if (Double.valueOf(txnAmount) != Double.valueOf(transactionStatus.get("TRAN_AMT"))) {
 						orderStatus = propertiesService.getValue("StudentApp",
 								PropertyConstants.PAYTM_CALLBACK_AMOUNT_MISMATCH);
@@ -196,23 +196,25 @@ public class PaytmCallbackController {
 			studentPaymentWork.setPaytmTxnDate(txnDate);
 			studentPaymentWork.setFinalOrderStatus(orderStatus);
 			studentPaymentWorkService.update(studentPaymentWork);
+			if (!"01".equals(respCode)) {
+				studentPaymentBusiness.workToFailed(orderId);
+			}
+			responseData = "RESPCODE###" + respCode + "|$|RESPMSG###" + respMsg + "|$|GATEWAYNAME###" + gatewayName
+					+ "|$|BANKNAME###" + bankName + "|$|PAYMENTMODE###" + paymentMode + "|$|ORDERID###" + orderId
+					+ "|$|TXNID###" + txnId + "|$|TXNAMOUNT###" + txnAmount + "|$|CURRENCY###" + currency
+					+ "|$|STATUS###" + status + "|$|BANKTXNID###" + bankTxnId + "|$|TXNDATE###" + txnDate
+					+ "|$|CALLBACK_STATUS###" + orderStatus;
+			response.setContentType("text/html");
+			PrintWriter out = response.getWriter();
+			out.println(
+					"<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\"><title>"
+							+ responseData + "</title></head>");
+			out.println(
+					"<body><table align='center'><tr><td><STRONG>Transaction is being processed,</STRONG></td></tr>");
+			out.println("<tr><td><font color='blue'>Please wait ...</font></td></tr>");
+			out.println("<tr><td>(Please do not press 'Refresh' or 'Back' button</td></tr>");
+			out.println("</table></body></html>");
 		}
-		if (!"01".equals(respCode)) {
-			studentPaymentBusiness.workToFailed(orderId);
-		}
-		responseData = "RESPCODE###" + respCode + "|$|RESPMSG###" + respMsg + "|$|GATEWAYNAME###" + gatewayName
-				+ "|$|BANKNAME###" + bankName + "|$|PAYMENTMODE###" + paymentMode + "|$|ORDERID###" + orderId
-				+ "|$|TXNID###" + txnId + "|$|TXNAMOUNT###" + txnAmount + "|$|CURRENCY###" + currency + "|$|STATUS###"
-				+ status + "|$|BANKTXNID###" + bankTxnId + "|$|TXNDATE###" + txnDate + "|$|CALLBACK_STATUS###"
-				+ orderStatus;
-		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
-		out.println("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\"><title>"
-				+ responseData + "</title></head>");
-		out.println("<body><table align='center'><tr><td><STRONG>Transaction is being processed,</STRONG></td></tr>");
-		out.println("<tr><td><font color='blue'>Please wait ...</font></td></tr>");
-		out.println("<tr><td>(Please do not press 'Refresh' or 'Back' button</td></tr>");
-		out.println("</table></body></html>");
 	}
 
 	private HashMap<String, String> getTransactionStatus(String module, String orderId) {
@@ -256,12 +258,28 @@ public class PaytmCallbackController {
 				String tranAmt = null;
 				String tranStatus = null;
 				try {
+					boolean isValidChecksum = false;
 					JSONObject json = (JSONObject) parser.parse(responseData);
-					if (json.get("body") != null) {
+					if (json.get("head") != null) {
+						JSONObject jsonBody = (JSONObject) parser.parse(json.get("head").toString());
+						String checksumHash = jsonBody.get("signature").toString();
+						try {
+							isValidChecksum = PaytmChecksum.verifySignature(responseData.toString(),
+									propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY),
+									checksumHash);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					if (isValidChecksum == true && json.get("body") != null) {
 						JSONObject jsonBody = (JSONObject) parser.parse(json.get("body").toString());
 						JSONObject tranDetails = (JSONObject) jsonBody.get("resultInfo");
 						tranStatus = tranDetails.get("resultStatus").toString();
 						tranAmt = (jsonBody.get("txnAmount") != null ? jsonBody.get("txnAmount").toString() : "");
+					} else {
+						if (!isValidChecksum) {
+							tranStatus = "CHECKSUM_MISMATCH";
+						}
 					}
 				} catch (ParseException e) {
 					e.printStackTrace();
@@ -269,7 +287,6 @@ public class PaytmCallbackController {
 				}
 				tranData.put("TRAN_STATUS", tranStatus);
 				tranData.put("TRAN_AMT", tranAmt);
-				tranData.put("TRAN_STATUS_API_RESPONSE", responseData.toString());
 			}
 			responseReader.close();
 		} catch (Exception exception) {
@@ -279,5 +296,27 @@ public class PaytmCallbackController {
 			studentPaymentWorkService.update(studentPaymentWork);
 		}
 		return tranData;
+	}
+
+	public static void main(String[] args) throws Exception {
+		JSONObject body = new JSONObject();
+		body.put("bankName", "WALLET");
+		body.put("bankTxnId", "64345354");
+		body.put("gatewayName", "WALLET");
+		body.put("mid", "ErzAtT88266326392189");
+		body.put("orderId", "P1617367212094_47");
+		body.put("paymentMode", "PPI");
+		body.put("refundAmt", "0.00");
+		JSONObject resultInfo = new JSONObject();
+		resultInfo.put("resultCode", "01");
+		resultInfo.put("resultMsg", "Txn Success");
+		resultInfo.put("resultStatus", "TXN_SUCCESS");
+		body.put("resultInfo", resultInfo);
+		body.put("txnAmount", "250.00");
+		body.put("txnDate", "2021-04-02 18:10:14.0");
+		body.put("txnId", "20210402111212800110168479502480332");
+		body.put("txnType", "SALE");
+		String checksum = PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR");
+		System.out.println(">>>>>>>>>>>>>>" + checksum);
 	}
 }

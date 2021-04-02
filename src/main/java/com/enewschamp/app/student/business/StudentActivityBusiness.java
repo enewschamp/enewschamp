@@ -69,14 +69,14 @@ public class StudentActivityBusiness {
 			studentActivityDTONew.setReadingLevel(Long.valueOf(readingLevel));
 			studentActivityDTONew.setNewsArticleId(newsArticleId);
 			studentActivityDTONew.setQuizScore(quizQCorrect);
-			studentActivityDTONew.setOperatorId(emailId);
+			studentActivityDTONew.setOperatorId(""+studentId);
 			studentActivityDTONew.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTONew);
 		} else {
 			Long quizScore = (studentActivityDTO.getQuizScore() == null) ? 0 : studentActivityDTO.getQuizScore();
 			quizScore = +quizQCorrect;
 			studentActivityDTO.setQuizScore(quizScore);
-			studentActivityDTO.setOperatorId(emailId);
+			studentActivityDTO.setOperatorId(""+studentId);
 			studentActivityDTO.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTO);
 
@@ -94,12 +94,12 @@ public class StudentActivityBusiness {
 			studentActivityDTONew.setOpinion(opinion);
 			studentActivityDTONew.setReadingLevel(Long.valueOf(readingLevel));
 			studentActivityDTONew.setEditionId(editionId);
-			studentActivityDTONew.setOperatorId(emailId);
+			studentActivityDTONew.setOperatorId(""+studentId);
 			studentActivityDTONew.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTONew);
 		} else {
 			studentActivityDTO.setOpinion(opinion);
-			studentActivityDTO.setOperatorId(emailId);
+			studentActivityDTO.setOperatorId(""+studentId);
 			studentActivityDTO.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTO);
 		}
@@ -117,13 +117,13 @@ public class StudentActivityBusiness {
 			studentActivityDTONew.setReaction(likeFlag);
 			studentActivityDTONew.setReadingLevel(Long.valueOf(readingLevel));
 			studentActivityDTONew.setEditionId(editionId);
-			studentActivityDTONew.setOperatorId(emailId);
+			studentActivityDTONew.setOperatorId(""+studentId);
 			studentActivityDTONew.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTONew);
 		} else {
 			currentReaction = studentActivityDTO.getReaction();
 			studentActivityDTO.setReaction(likeFlag);
-			studentActivityDTO.setOperatorId(emailId);
+			studentActivityDTO.setOperatorId(""+studentId);
 			studentActivityDTO.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTO);
 		}
@@ -164,12 +164,12 @@ public class StudentActivityBusiness {
 			studentActivityDTONew.setSaved(saveFlag);
 			studentActivityDTONew.setReadingLevel(Long.valueOf(readingLevel));
 			studentActivityDTONew.setEditionId(editionId);
-			studentActivityDTONew.setOperatorId(emailId);
+			studentActivityDTONew.setOperatorId(""+studentId);
 			studentActivityDTONew.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTONew);
 		} else {
 			studentActivityDTO.setSaved(saveFlag);
-			studentActivityDTO.setOperatorId(emailId);
+			studentActivityDTO.setOperatorId(""+studentId);
 			studentActivityDTO.setRecordInUse(RecordInUseType.Y);
 			studentActivityDTO = saveActivity(studentActivityDTO);
 		}

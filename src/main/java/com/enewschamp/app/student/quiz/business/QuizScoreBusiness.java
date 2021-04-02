@@ -77,7 +77,7 @@ public class QuizScoreBusiness {
 			quizscore.setResponseCorrect(isCorrectAns);
 			QuizScore quizScore = modelMapper.map(quizscore, QuizScore.class);
 			quizScore.setRecordInUse(RecordInUseType.Y);
-			quizScore.setOperatorId(emailId);
+			quizScore.setOperatorId(""+studentId);
 			quizScore = quizScoreService.create(quizScore);
 		}
 

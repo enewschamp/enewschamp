@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -14,6 +15,8 @@ import javax.validation.constraints.NotNull;
 
 import org.javers.core.metamodel.annotation.DiffIgnore;
 
+import com.enewschamp.app.common.LocalDateCryptoConverter;
+import com.enewschamp.app.common.StringCryptoConverter;
 import com.enewschamp.domain.common.BaseEntity;
 import com.enewschamp.domain.common.Gender;
 
@@ -37,22 +40,27 @@ public class User extends BaseEntity {
 	@Column(name = "title")
 	private String title;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@NotNull
-	@Column(name = "name", length = 50)
+	@Column(name = "name", length = 100)
 	private String name;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@NotNull
-	@Column(name = "surname", length = 50)
+	@Column(name = "surname", length = 100)
 	private String surname;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Column(name = "otherNames", length = 100)
 	private String otherNames;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@Enumerated(EnumType.STRING)
 	@DiffIgnore
-	@Column(name = "gender", length = 1)
+	@Column(name = "gender", length = 50)
 	private Gender gender;
 
+	@Convert(converter = LocalDateCryptoConverter.class)
 	@Column(name = "DoB")
 	private LocalDate doB;
 
@@ -64,24 +72,30 @@ public class User extends BaseEntity {
 	@Column(name = "contractEndDate")
 	private LocalDate contractEndDate;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@NotNull
-	@Column(name = "mobileNumber1", length = 15)
+	@Column(name = "mobileNumber1", length = 100)
 	private String mobileNumber1;
 
-	@Column(name = "mobileNumber2", length = 15)
+	@Convert(converter = StringCryptoConverter.class)
+	@Column(name = "mobileNumber2", length = 100)
 	private String mobileNumber2;
 
-	@Column(name = "landline1", length = 12)
+	@Convert(converter = StringCryptoConverter.class)
+	@Column(name = "landline1", length = 100)
 	private String landline1;
 
-	@Column(name = "landline2", length = 12)
+	@Convert(converter = StringCryptoConverter.class)
+	@Column(name = "landline2", length = 100)
 	private String landline2;
 
+	@Convert(converter = StringCryptoConverter.class)
 	@NotNull
-	@Column(name = "emailId1", length = 99)
+	@Column(name = "emailId1", length = 200)
 	private String emailId1;
 
-	@Column(name = "emailId2", length = 99)
+	@Convert(converter = StringCryptoConverter.class)
+	@Column(name = "emailId2", length = 200)
 	private String emailId2;
 
 	@Column(name = "comments", length = 999)
@@ -93,13 +107,16 @@ public class User extends BaseEntity {
 	@Transient
 	private String imageTypeExt;
 
-	@Column(name = "password", length = 80)
+	@Convert(converter = StringCryptoConverter.class)
+	@Column(name = "password", length = 200)
 	private String password;
 
-	@Column(name = "password1", length = 80)
+	@Convert(converter = StringCryptoConverter.class)
+	@Column(name = "password1", length = 200)
 	private String password1;
 
-	@Column(name = "password2", length = 80)
+	@Convert(converter = StringCryptoConverter.class)
+	@Column(name = "password2", length = 200)
 	private String password2;
 
 	@NotNull

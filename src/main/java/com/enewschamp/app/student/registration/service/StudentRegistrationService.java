@@ -39,6 +39,9 @@ public class StudentRegistrationService {
 		Long studentId = studentRegistration.getStudentId();
 		StudentRegistration existingStudentRegistration = get(studentId);
 		modelMapper.map(studentRegistration, existingStudentRegistration);
+		if ("0".equals(existingStudentRegistration.getOperatorId())) {
+			existingStudentRegistration.setOperatorId("" + studentId);
+		}
 		StudentRegistration student = repository.save(existingStudentRegistration);
 		StudentRegistrationDTO studentDto = modelMapper.map(student, StudentRegistrationDTO.class);
 		return studentDto;
@@ -54,12 +57,17 @@ public class StudentRegistrationService {
 	}
 
 	public StudentRegistration getStudentReg(String emailId) {
-		Optional<StudentRegistration> existingEntity = repository.getStudent(emailId);
-		if (existingEntity.isPresent()) {
-			return existingEntity.get();
-		} else {
-			return null;
+		try {
+			Optional<StudentRegistration> existingEntity = repository.getStudent(emailId);
+			if (existingEntity.isPresent()) {
+				return existingEntity.get();
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
 		}
+		return null;
 	}
 
 	public String getStudentEmailByKey(String studentKey) {
