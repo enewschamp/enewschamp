@@ -259,27 +259,29 @@ public class PaytmCallbackController {
 				String tranStatus = null;
 				try {
 					boolean isValidChecksum = false;
+					String checksumHash = "";
 					JSONObject json = (JSONObject) parser.parse(responseData);
 					if (json.get("head") != null) {
 						JSONObject jsonBody = (JSONObject) parser.parse(json.get("head").toString());
-						String checksumHash = jsonBody.get("signature").toString();
+						checksumHash = jsonBody.get("signature").toString();
+					}
+					JSONObject jsonBody = null;
+					if (json.get("body") != null) {
+						jsonBody = (JSONObject) parser.parse(json.get("body").toString());
 						try {
-							isValidChecksum = PaytmChecksum.verifySignature(responseData.toString(),
+							isValidChecksum = PaytmChecksum.verifySignature(jsonBody.toString(),
 									propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY),
 									checksumHash);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					}
-					if (isValidChecksum == true && json.get("body") != null) {
-						JSONObject jsonBody = (JSONObject) parser.parse(json.get("body").toString());
+					if (!isValidChecksum) {
+						tranStatus = "CHECKSUM_MISMATCH";
+					} else {
 						JSONObject tranDetails = (JSONObject) jsonBody.get("resultInfo");
 						tranStatus = tranDetails.get("resultStatus").toString();
 						tranAmt = (jsonBody.get("txnAmount") != null ? jsonBody.get("txnAmount").toString() : "");
-					} else {
-						if (!isValidChecksum) {
-							tranStatus = "CHECKSUM_MISMATCH";
-						}
 					}
 				} catch (ParseException e) {
 					e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.enewschamp.subscription.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;
+import com.enewschamp.user.domain.entity.StudentRefund;
 
 @Service
 public class StudentSubscriptionService {
@@ -59,9 +61,12 @@ public class StudentSubscriptionService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			// throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
 			return null;
 		}
+	}
+
+	public List<StudentSubscription> getSubscriptionRenewalList() {
+		return repository.getSubscriptionRenewalList();
 	}
 
 	public String getAudit(Long studentId) {

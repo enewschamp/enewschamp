@@ -1,6 +1,7 @@
 package com.enewschamp.subscription.domain.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,8 +14,7 @@ public interface StudentPaymentRepository extends JpaRepository<StudentPayment, 
 	public List<StudentPayment> getByStudentIdAndEdition(@Param("studentId") Long studentId,
 			@Param("editionId") String editionId);
 
-	@Query("Select s from StudentPayment s where s.orderId = :orderId and s.paytmTxnId= :paytmTxnId")
-	public List<StudentPayment> getByOrderIdAndTxnId(@Param("orderId") String orderId,
-			@Param("paytmTxnId") String paytmTxnId);
+	@Query("Select s from StudentPayment s where s.orderId = :orderId")
+	public Optional<StudentPayment> getByOrderId(@Param("orderId") String orderId);
 
 }

@@ -1,5 +1,6 @@
 package com.enewschamp.user.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -16,10 +17,10 @@ import com.enewschamp.problem.BusinessException;
 import com.enewschamp.user.domain.entity.StudentRefund;
 
 @Service
-public class RefundService extends AbstractDomainService {
+public class StudentRefundService extends AbstractDomainService {
 
 	@Autowired
-	RefundRepository repository;
+	StudentRefundRepository repository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -75,5 +76,9 @@ public class RefundService extends AbstractDomainService {
 			return existingEntity.get();
 		}
 		return null;
+	}
+
+	public List<StudentRefund> getPendingRefundList() {
+		return repository.getPendingRefundList();
 	}
 }

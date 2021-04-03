@@ -186,22 +186,6 @@ public class SubscriptionPageHandler implements IPageHandler {
 		return pageDTO;
 	}
 
-	public PageDTO handleCancelSubscription(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
-		PageDTO pageDTO = new PageDTO();
-		String operation = pageRequest.getHeader().getOperation();
-		String editionId = pageRequest.getHeader().getEditionId();
-		String emailId = pageRequest.getHeader().getEmailId();
-		String saveIn = pageNavigatorDTO.getUpdationTable();
-		String evalAvailed = "";
-		Long studentId = studentControlBusiness.getStudentId(emailId);
-		StudentSubscription studentSubscription = studentSubscriptionService.get(studentId, editionId);
-		studentSubscription.setAutoRenewal("N");
-		studentSubscriptionService.update(studentSubscription);
-		// cancel subscription API call
-		pageDTO.setHeader(pageRequest.getHeader());
-		return pageDTO;
-	}
-
 	public PageDTO handleNextAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
 		String operation = pageRequest.getHeader().getOperation();

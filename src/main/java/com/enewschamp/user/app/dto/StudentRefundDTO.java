@@ -40,4 +40,6 @@ public class StudentRefundDTO extends MaintenanceDTO {
 	private String paytmStatus;
 
 	private String finalStatus;
+
+	private String message;
 }

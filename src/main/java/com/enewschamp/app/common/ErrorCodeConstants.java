@@ -127,4 +127,5 @@ public interface ErrorCodeConstants {
 	public static String UNAUTH_ACCESS = "REQ_003";
 	public static String USER_TOKEN_EXPIRED = "REQ_004";
 	public static String PAYMENT_NOT_SUCCESSFUL = "PAY_001";
+	public static String UNSUBSCRIBE_NOT_SUCCESSFUL = "SUBSCRIBE_001";
 }
