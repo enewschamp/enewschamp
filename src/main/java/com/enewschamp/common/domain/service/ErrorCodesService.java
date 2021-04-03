@@ -6,11 +6,19 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.errorcode.repository.ErrorCodesRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.common.domain.entity.ErrorCodes;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
@@ -20,6 +28,9 @@ public class ErrorCodesService extends AbstractDomainService {
 
 	@Autowired
 	ErrorCodesRepository repository;
+	
+	@Autowired
+	ErrorCodesRepositoryCustomImpl customRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -42,12 +53,21 @@ public class ErrorCodesService extends AbstractDomainService {
 	}
 
 	public ErrorCodes create(ErrorCodes errorCodes) {
-		return repository.save(errorCodes);
+		ErrorCodes errorCodesEntity = null;
+		try {
+			errorCodesEntity = repository.save(errorCodes);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return errorCodesEntity;
 	}
 
 	public ErrorCodes update(ErrorCodes errorCodes) {
 		Long errorCodeId = errorCodes.getErrorCodeId();
 		ErrorCodes existingErrorCodes = get(errorCodeId);
+		if (existingErrorCodes.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(errorCodes, existingErrorCodes);
 		return repository.save(existingErrorCodes);
 	}
@@ -89,5 +109,64 @@ public class ErrorCodesService extends AbstractDomainService {
 
 	public List<ListOfValuesItem> getLOV() {
 		return toListOfValuesItems(repository.getErrorCodesLOV());
+	}
+	
+	public ErrorCodes read(ErrorCodes errorCodesEntity) {
+		Long errorCodesId = errorCodesEntity.getErrorCodeId();
+		ErrorCodes existingEntity = get(errorCodesId);
+		return existingEntity;
+
+	}
+
+	public ErrorCodes close(ErrorCodes errorCodesEntity) {
+		Long errorCodesId = errorCodesEntity.getErrorCodeId();
+		ErrorCodes errorCodes = get(errorCodesId);
+		if (errorCodes.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		errorCodes.setRecordInUse(RecordInUseType.N);
+		errorCodes.setOperationDateTime(null);
+		return repository.save(errorCodes);
+	}
+
+	public ErrorCodes reinstate(ErrorCodes errorCodesEntity) {
+		Long errorCodesId = errorCodesEntity.getErrorCodeId();
+		ErrorCodes errorCodes = get(errorCodesId);
+		if (errorCodes.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		errorCodes.setRecordInUse(RecordInUseType.Y);
+		errorCodes.setOperationDateTime(null);
+		return repository.save(errorCodes);
+	}
+
+	public Page<ErrorCodes> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<ErrorCodes> errorCodesList = customRepository.findAll(pageable, searchRequest);
+		if (errorCodesList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return errorCodesList;
+	}
+	
+	public int createAll(List<ErrorCodes> errorCodes) {
+		int noOfRecords = 0;
+		try {
+			noOfRecords = repository.saveAll(errorCodes).size();
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return noOfRecords;
+	}
+	
+	public void truncate() {
+		
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void clean() {
+		repository.truncate();
+		repository.deleteSequences();
+		repository.initializeSequence();
 	}
 }

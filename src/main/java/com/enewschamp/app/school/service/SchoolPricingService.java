@@ -9,13 +9,20 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.schoolpricing.repository.SchoolPricingRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.school.entity.School;
 import com.enewschamp.app.school.entity.SchoolPricing;
 import com.enewschamp.app.school.repository.SchoolPricingRepository;
 import com.enewschamp.app.school.repository.SchoolRepository;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 
 @Service
@@ -26,6 +33,9 @@ public class SchoolPricingService {
 
 	@Autowired
 	SchoolRepository schoolRepository;
+	
+	@Autowired
+	private SchoolPricingRepositoryCustomImpl schoolPricingRepositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -34,13 +44,22 @@ public class SchoolPricingService {
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
 
-	public SchoolPricing create(SchoolPricing SchoolPricingEntity) {
-		return schoolPricingRepository.save(SchoolPricingEntity);
+	public SchoolPricing create(SchoolPricing schoolPricingEntity) {
+		SchoolPricing schoolPricing = null;
+		try {
+			schoolPricing = schoolPricingRepository.save(schoolPricingEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return schoolPricing;
 	}
 
 	public SchoolPricing update(SchoolPricing SchoolPricingEntity) {
 		Long SchoolPricingId = SchoolPricingEntity.getSchoolPricingId();
 		SchoolPricing existingSchoolPricing = get(SchoolPricingId);
+		if (existingSchoolPricing.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(SchoolPricingEntity, existingSchoolPricing);
 		return schoolPricingRepository.save(existingSchoolPricing);
 	}
@@ -88,5 +107,41 @@ public class SchoolPricingService {
 				throw new BusinessException(ErrorCodeConstants.SCHOOL_PRICING_NOT_FOUND);
 			}
 		}
+	}
+	public SchoolPricing read(SchoolPricing schoolPricingEntity) {
+		Long stakeHolderId = schoolPricingEntity.getSchoolPricingId();
+		SchoolPricing stakeHolder = get(stakeHolderId);
+		return stakeHolder;
+	}
+
+	public SchoolPricing close(SchoolPricing schoolPricingEntity) {
+		Long stakeHolderId = schoolPricingEntity.getSchoolPricingId();
+		SchoolPricing existingSchoolPricing = get(stakeHolderId);
+		if (existingSchoolPricing.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingSchoolPricing.setRecordInUse(RecordInUseType.N);
+		existingSchoolPricing.setOperationDateTime(null);
+		return schoolPricingRepository.save(existingSchoolPricing);
+	}
+
+	public SchoolPricing reInstate(SchoolPricing schoolPricingEntity) {
+		Long stakeHolderId = schoolPricingEntity.getSchoolPricingId();
+		SchoolPricing existingSchoolPricing = get(stakeHolderId);
+		if (existingSchoolPricing.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingSchoolPricing.setRecordInUse(RecordInUseType.Y);
+		existingSchoolPricing.setOperationDateTime(null);
+		return schoolPricingRepository.save(existingSchoolPricing);
+	}
+
+	public Page<SchoolPricing> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<SchoolPricing> schoolPricingList = schoolPricingRepositoryCustom.findAll(pageable, searchRequest);
+		if (schoolPricingList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return schoolPricingList;
 	}
 }

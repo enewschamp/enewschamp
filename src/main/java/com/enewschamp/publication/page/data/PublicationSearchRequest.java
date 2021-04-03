@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.enewschamp.app.common.PageData;
+import com.enewschamp.publication.domain.common.PublicationGroupStatusType;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
 
 import lombok.Data;

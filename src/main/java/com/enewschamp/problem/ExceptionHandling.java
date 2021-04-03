@@ -85,6 +85,7 @@ public class ExceptionHandling implements ProblemHandling, ApplicationContextAwa
 
 		if (entity.getBody() != null && entity.getBody() instanceof Fault) {
 			Fault fault = (Fault) entity.getBody();
+			fault.getHeader().setLoginCredentials(null);
 			setErrorMessages(fault);
 		}
 		return entity;

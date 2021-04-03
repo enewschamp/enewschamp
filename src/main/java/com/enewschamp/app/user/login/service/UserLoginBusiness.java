@@ -4,10 +4,15 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.user.login.repository.UserActivityTrackerRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.user.login.entity.UserAction;
@@ -33,6 +38,9 @@ public class UserLoginBusiness {
 
 	@Autowired
 	UserActivityTrackerRepository userActivityTrackerRepository;
+	
+	@Autowired
+	private UserActivityTrackerRepositoryCustomImpl userActivityTrackerRepositoryCustom;
 
 	@Autowired
 	private PropertiesBackendService propertiesService;
@@ -265,6 +273,17 @@ public class UserLoginBusiness {
 		} else {
 			return null;
 		}
+	}
+	
+	public Page<UserActivityTracker> listUserActivityTracker(AdminSearchRequest searchRequest, int pageNo,
+			int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<UserActivityTracker> userActivityTrackerList = userActivityTrackerRepositoryCustom.findAll(pageable,
+				searchRequest);
+		if (userActivityTrackerList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return userActivityTrackerList;
 	}
 
 }

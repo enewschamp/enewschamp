@@ -3,14 +3,18 @@ package com.enewschamp.app.otp.service;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.otp.repository.OTPRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.otp.dto.OTPDTO;
@@ -24,12 +28,18 @@ import com.enewschamp.common.domain.service.ErrorCodesService;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class OTPService {
 
 	@Autowired
 	OTPRepository repository;
+	
+	@Autowired
+	OTPRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	ErrorCodesService errorCodesService;
@@ -149,5 +159,71 @@ public class OTPService {
 			}
 		}
 		return validOtp;
+	}
+	
+	public OTP get(Long otpId) {
+		Optional<OTP> existingEntity = repository.findById(otpId);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
+		} else {
+			throw new BusinessException(ErrorCodeConstants.OTP_NOT_FOUND, String.valueOf(otpId));
+		}
+	}
+	
+	public OTP create(OTP otp) {
+		OTP otpEntity = null;
+		try {
+			otpEntity = repository.save(otp);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return otpEntity;
+	}
+
+	public OTP update(OTP otp) {
+		Long OTPId = otp.getOtpId();
+		OTP existingOTP = get(OTPId);
+		if (existingOTP.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		modelMapper.map(otp, existingOTP);
+		return repository.save(existingOTP);
+	}
+	
+	public OTP read(OTP otp) {
+		Long OTPId = otp.getOtpId();
+		OTP existingOTP = get(OTPId);
+		return existingOTP;
+	}
+
+	public OTP close(OTP otp) {
+		Long OTPId = otp.getOtpId();
+		OTP existingOTP = get(OTPId);
+		if (existingOTP.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingOTP.setRecordInUse(RecordInUseType.N);
+		existingOTP.setOperationDateTime(null);
+		return repository.save(existingOTP);
+	}
+
+	public OTP reInstate(OTP otp) {
+		Long OTPId = otp.getOtpId();
+		OTP existingOTP = get(OTPId);
+		if (existingOTP.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingOTP.setRecordInUse(RecordInUseType.Y);
+		existingOTP.setOperationDateTime(null);
+		return repository.save(existingOTP);
+	}
+
+	public Page<OTP> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<OTP> userList = repositoryCustom.findAll(pageable, searchRequest);
+		if (userList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return userList;
 	}
 }

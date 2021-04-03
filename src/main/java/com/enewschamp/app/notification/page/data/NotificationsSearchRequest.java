@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class NotificationsSearchRequest {
-
 	private String editionId;
 	private String isRead;
 	private Long studentId;

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
@@ -14,7 +13,6 @@ import javax.validation.constraints.NotNull;
 
 import org.javers.core.metamodel.annotation.DiffIgnore;
 
-import com.enewschamp.app.common.StringCryptoConverter;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 
 import lombok.Data;

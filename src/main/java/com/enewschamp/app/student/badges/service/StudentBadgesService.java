@@ -7,16 +7,20 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.student.badges.repository.StudentBadgesRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.recognition.page.data.RecognitionData;
 import com.enewschamp.app.student.badges.entity.StudentBadges;
 import com.enewschamp.app.student.badges.repository.StudentBadgesCustomRepository;
 import com.enewschamp.app.student.badges.repository.StudentBadgesRepository;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 
 @Service
@@ -27,6 +31,9 @@ public class StudentBadgesService {
 
 	@Autowired
 	StudentBadgesCustomRepository studentBadgesCustomRepository;
+	
+	@Autowired
+	StudentBadgesRepositoryCustomImpl studentBadgesRepositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -36,12 +43,21 @@ public class StudentBadgesService {
 	ModelMapper modelMapperForPatch;
 
 	public StudentBadges create(StudentBadges studentBadgesEntity) {
-		return studentBadgesRepository.save(studentBadgesEntity);
+		StudentBadges studentBadges = null;
+		try {
+			studentBadges = studentBadgesRepository.save(studentBadgesEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return studentBadges;
 	}
 
 	public StudentBadges update(StudentBadges studentBadgesEntity) {
 		Long scoresDailyId = studentBadgesEntity.getStudentBadgesId();
 		StudentBadges existingStudentBadges = get(scoresDailyId);
+		if (existingStudentBadges.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(studentBadgesEntity, existingStudentBadges);
 		return studentBadgesRepository.save(existingStudentBadges);
 	}
@@ -114,5 +130,43 @@ public class StudentBadgesService {
 			badge = studentBadgeList.get(0);
 		}
 		return badge;
+	}
+	
+	public StudentBadges read(StudentBadges studentBadges) {
+		Long badgesId = studentBadges.getStudentBadgesId();
+		StudentBadges studentBadgesEntity = get(badgesId);
+		return studentBadgesEntity;
+	}
+
+	public StudentBadges close(StudentBadges badgesEntity) {
+		Long badgesId = badgesEntity.getStudentBadgesId();
+		StudentBadges existingBadges = get(badgesId);
+		if (existingBadges.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingBadges.setRecordInUse(RecordInUseType.N);
+		existingBadges.setOperationDateTime(null);
+		return studentBadgesRepository.save(existingBadges);
+	}
+
+	public StudentBadges reInstate(StudentBadges badgesEntity) {
+		Long badgesId = badgesEntity.getStudentBadgesId();
+		StudentBadges existingStudentBadges = get(badgesId);
+		if (existingStudentBadges.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingStudentBadges.setRecordInUse(RecordInUseType.Y);
+		existingStudentBadges.setOperationDateTime(null);
+		return studentBadgesRepository.save(existingStudentBadges);
+	}
+
+	public Page<StudentBadges> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<StudentBadges> studentBadgesList = studentBadgesRepositoryCustom.findAll(pageable,
+				searchRequest);
+		if (studentBadgesList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return studentBadgesList;
 	}
 }

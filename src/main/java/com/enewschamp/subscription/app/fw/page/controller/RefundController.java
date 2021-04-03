@@ -39,7 +39,7 @@ import com.enewschamp.user.app.dto.StudentRefundDTO;
 import com.enewschamp.user.domain.entity.StudentRefund;
 import com.enewschamp.user.domain.service.RefundService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paytm.pg.merchant.PaytmChecksum;
+//import com.paytm.pg.merchant.PaytmChecksum;
 
 import lombok.extern.java.Log;
 
@@ -93,11 +93,11 @@ public class RefundController {
 		body.put("refId", refundDTO.getRefOrderId());
 		body.put("refundAmount", refundDTO.getRefundAmount());
 
-		String checksum = PaytmChecksum.generateSignature(body.toString(),
-				propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY));
+//		String checksum = PaytmChecksum.generateSignature(body.toString(),
+//				propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY));
 
 		JSONObject head = new JSONObject();
-		head.put("signature", checksum);
+		//head.put("signature", checksum);
 
 		paytmParams.put("body", body);
 		paytmParams.put("head", head);
@@ -167,8 +167,8 @@ public class RefundController {
 		body.put("txnId", "20210402111212800110168876802483641");
 		body.put("refId", "REFUNDID_1234566_47");
 		body.put("refundAmount", "100.00");
-		String checksum = PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR");
-		System.out.println(">>>>>>>>>>>>>>" + checksum);
+		//String checksum = PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR");
+		//System.out.println(">>>>>>>>>>>>>>" + checksum);
 		System.out.println(">>>>>>>>>>>>>>" + body.toString());
 	}
 
@@ -181,8 +181,8 @@ public class RefundController {
 		body.put("pageNumber", "1");
 		body.put("orderSearchType", "TRANSACTION");
 		body.put("orderSearchStatus", "SUCCESS");
-		String checksum = PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR");
-		System.out.println(">>>>>>>>>>>>>>" + checksum);
+		//String checksum = PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR");
+		//System.out.println(">>>>>>>>>>>>>>" + checksum);
 		System.out.println(">>>>>>>>>>>>>>" + body.toString());
 	}
 
@@ -194,8 +194,8 @@ public class RefundController {
 		body.put("endDate", "2021-04-03T00:05:24+05:30");
 		body.put("pageSize", 10);
 		body.put("pageNum", 1);
-		String checksum = PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR");
-		System.out.println(">>>>>>>>>>>>>>" + checksum);
+		//String checksum = PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR");
+		//System.out.println(">>>>>>>>>>>>>>" + checksum);
 		System.out.println(">>>>>>>>>>>>>>" + body.toString());
 	}
 
@@ -204,8 +204,8 @@ public class RefundController {
 		body.put("mid", "ErzAtT88266326392189");
 		body.put("orderId", "P1614710190757_33");
 		body.put("refId", "REFUNDID_1234566");
-		String checksum = PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR");
-		System.out.println(">>>>>>>>>>>>>>" + checksum);
+	//	String checksum = PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR");
+	//	System.out.println(">>>>>>>>>>>>>>" + checksum);
 		System.out.println(">>>>>>>>>>>>>>" + body.toString());
 	}
 }

@@ -19,10 +19,11 @@ public class PageRequestDTO implements Serializable {
 	@JsonInclude
 	@NotNull
 	private HeaderDTO header;
-
+	
 	@JsonInclude
 	private JsonNode data;
-
+	
+	private JsonNode filter;
 	public HeaderDTO getHeader() {
 		if (this.header == null) {
 			this.header = new HeaderDTO();

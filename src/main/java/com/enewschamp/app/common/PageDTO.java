@@ -14,6 +14,7 @@ import com.enewschamp.publication.domain.common.BadgeList;
 import com.enewschamp.publication.domain.common.GenreList;
 import com.enewschamp.publication.domain.common.HolidayList;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,6 +22,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class PageDTO implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	@NotNull
 	private HeaderDTO header;
@@ -30,22 +32,16 @@ public class PageDTO implements Serializable {
 
 	@JsonInclude
 	private PageData data;
-
 	private List<UIControlsDTO> screenProperties;
-
 	private List<PropertiesFrontendDTO> globalProperties;
-
 	private List<GenreList> genres;
-
 	private List<BadgeList> badges;
-
 	private List<HolidayList> holidays;
-
 	private List<BOUserList> boUsers;
-
-	private String errorMessage;
-
 	private String exitPrev;
-
 	private String exitNext;
+	private String errorMessage;
+	private JsonNode filter;
+	private List<PageData> records;
+	
 }

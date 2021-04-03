@@ -61,7 +61,7 @@ import com.enewschamp.subscription.domain.service.StudentSchoolWorkService;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionWorkService;
 import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paytm.pg.merchant.PaytmChecksum;
+//import com.paytm.pg.merchant.PaytmChecksum;
 
 import lombok.extern.java.Log;
 
@@ -148,8 +148,8 @@ public class PaytmCallbackController {
 
 		boolean isValidChecksum = false;
 		try {
-			isValidChecksum = PaytmChecksum.verifySignature(paytmParams,
-					propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY), checksumHash);
+//			isValidChecksum = PaytmChecksum.verifySignature(paytmParams,
+//					propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY), checksumHash);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -226,8 +226,8 @@ public class PaytmCallbackController {
 		String signature = "";
 		StudentPaymentWork studentPaymentWork = studentPaymentWorkService.getByOrderId(orderId);
 		try {
-			signature = PaytmChecksum.generateSignature(body.toString(),
-					propertiesService.getValue(module, PropertyConstants.PAYTM_MERCHANT_KEY));
+//			signature = PaytmChecksum.generateSignature(body.toString(),
+//					propertiesService.getValue(module, PropertyConstants.PAYTM_MERCHANT_KEY));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -264,9 +264,9 @@ public class PaytmCallbackController {
 						JSONObject jsonBody = (JSONObject) parser.parse(json.get("head").toString());
 						String checksumHash = jsonBody.get("signature").toString();
 						try {
-							isValidChecksum = PaytmChecksum.verifySignature(responseData.toString(),
-									propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY),
-									checksumHash);
+//							isValidChecksum = PaytmChecksum.verifySignature(responseData.toString(),
+//									propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY),
+//									checksumHash);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -316,7 +316,7 @@ public class PaytmCallbackController {
 		body.put("txnDate", "2021-04-02 18:10:14.0");
 		body.put("txnId", "20210402111212800110168479502480332");
 		body.put("txnType", "SALE");
-		String checksum = PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR");
-		System.out.println(">>>>>>>>>>>>>>" + checksum);
+//		String checksum = PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR");
+//		System.out.println(">>>>>>>>>>>>>>" + checksum);
 	}
 }

@@ -7,7 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import com.enewschamp.app.admin.security.repository.AppSecurityRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.security.entity.AppSecurity;
@@ -19,6 +23,9 @@ public class AppSecurityService {
 	@Autowired
 	AppSecurityRepository appSecurityRepository;
 
+	@Autowired
+	private AppSecurityRepositoryCustomImpl appSecurityRepositoryCustom;
+	
 	@Autowired
 	ModelMapper modelMapper;
 
@@ -83,6 +90,48 @@ public class AppSecurityService {
 		} else {
 			return false;
 		}
+	}
+
+	public AppSecurity read(AppSecurity appSecurity) {
+		Long appSecId = appSecurity.getAppSecurityId();
+		AppSecurity existingAppSecurity = get(appSecId);
+//		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.Y)) {
+//			return existingAppSecurity;
+//		}
+//		existingAppSecurity.setRecordInUse(RecordInUseType.Y);
+//		existingAppSecurity.setOperationDateTime(null);
+		return appSecurityRepository.save(existingAppSecurity);
+	}
+
+	public AppSecurity close(AppSecurity appSecurityEntity) {
+		Long appSecId = appSecurityEntity.getAppSecurityId();
+		AppSecurity existingAppSecurity = get(appSecId);
+//		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.N)) {
+//			return existingAppSecurity;
+//		}
+		//existingAppSecurity.setRecordInUse(RecordInUseType.N);
+		//existingAppSecurity.setOperationDateTime(null);
+		return appSecurityRepository.save(existingAppSecurity);
+	}
+
+	public AppSecurity reinstate(AppSecurity appSecurityEntity) {
+		Long appSecId = appSecurityEntity.getAppSecurityId();
+		AppSecurity existingAppSec = get(appSecId);
+//		if (existingAppSec.getRecordInUse().equals(RecordInUseType.Y)) {
+//			return existingAppSec;
+//		}
+		//existingAppSec.setRecordInUse(RecordInUseType.Y);
+		//existingAppSec.setOperationDateTime(null);
+		return appSecurityRepository.save(existingAppSec);
+	}
+
+	public Page<AppSecurity> list(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<AppSecurity> appSecList = appSecurityRepositoryCustom.findAll(pageable, null);
+		if(appSecList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return appSecList;
 	}
 
 }

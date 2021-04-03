@@ -1,4 +1,3 @@
-
 package com.enewschamp.publication.domain.entity;
 
 import javax.persistence.Column;

@@ -6,10 +6,16 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import com.enewschamp.app.admin.repository.BadgeRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.master.badge.repository.BadgeRepository;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.common.BadgeList;
@@ -20,6 +26,9 @@ public class BadgeService {
 
 	@Autowired
 	BadgeRepository badgeRepository;
+	
+	@Autowired
+	BadgeRepositoryCustomImpl badgeRepositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -32,12 +41,21 @@ public class BadgeService {
 	AuditService auditService;
 
 	public Badge create(Badge badgeEntity) {
-		return badgeRepository.save(badgeEntity);
+		Badge badge = null;
+		try {
+			badge = badgeRepository.save(badgeEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return badge;
 	}
 
 	public Badge update(Badge badgeEntity) {
 		Long badgeId = badgeEntity.getBadgeId();
 		Badge existingBadge = get(badgeId);
+		if(existingBadge.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(badgeEntity, existingBadge);
 		return badgeRepository.save(existingBadge);
 	}
@@ -125,4 +143,43 @@ public class BadgeService {
 		badge.setBadgeId(badgeId);
 		return auditService.getEntityAudit(badge);
 	}
+	
+	public Badge read(Badge badge) {
+		Long badgeId = badge.getBadgeId();
+		Badge badgeEntity = get(badgeId);
+		return badgeEntity;
+
+	}
+
+	public Badge close(Badge badgeEntity) {
+		Long badgeId = badgeEntity.getBadgeId();
+		Badge existingBadge = get(badgeId);
+		if (existingBadge.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingBadge.setRecordInUse(RecordInUseType.N);
+		existingBadge.setOperationDateTime(null);
+		return badgeRepository.save(existingBadge);
+	}
+
+	public Badge reInstate(Badge badgeEntity) {
+		Long badgeId = badgeEntity.getBadgeId();
+		Badge existingCountry = get(badgeId);
+		if (existingCountry.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingCountry.setRecordInUse(RecordInUseType.Y);
+		existingCountry.setOperationDateTime(null);
+		return badgeRepository.save(existingCountry);
+	}
+	
+	public Page<Badge> list(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<Badge> badgeList = badgeRepositoryCustom.findAll(pageable, null);
+		if(badgeList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return badgeList;
+	}
+	
 }

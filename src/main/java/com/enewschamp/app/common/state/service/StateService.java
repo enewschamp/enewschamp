@@ -8,10 +8,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.state.repository.StateRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.app.common.state.repository.StateRepository;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.StatePageData;
@@ -21,6 +27,9 @@ public class StateService extends AbstractDomainService {
 
 	@Autowired
 	StateRepository stateRepository;
+	
+	@Autowired
+	private StateRepositoryCustomImpl customRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -85,6 +94,51 @@ public class StateService extends AbstractDomainService {
 			statePageData.setName(state.getDescription());
 		}
 		return statePageData;
+	}
+	
+	public State getByNameAndCountryId(String nameId, String countryId) {
+		Optional<State> state = stateRepository.findByNameIdAndCountryId(nameId, countryId);
+		if (state.isPresent())
+			return state.get();
+		else
+			return null;
+	}
+
+	public State read(State stateEntity) {
+		Long StateId = stateEntity.getStateId();
+		State state = get(StateId);
+		return state;
+	}
+
+	public State close(State stateEntity) {
+		Long StateId = stateEntity.getStateId();
+		State existingState = get(StateId);
+		if (existingState.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingState.setRecordInUse(RecordInUseType.N);
+		existingState.setOperationDateTime(null);
+		return stateRepository.save(existingState);
+	}
+
+	public State reInstate(State stateEntity) {
+		Long StateId = stateEntity.getStateId();
+		State existingState = get(StateId);
+		if (existingState.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingState.setRecordInUse(RecordInUseType.Y);
+		existingState.setOperationDateTime(null);
+		return stateRepository.save(existingState);
+	}
+
+	public Page<State> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<State> stateList = customRepository.findAll(pageable, searchRequest);
+		if (stateList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return stateList;
 	}
 
 }

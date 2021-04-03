@@ -7,11 +7,18 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.school.repository.SchoolRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.school.entity.School;
 import com.enewschamp.app.school.repository.SchoolRepository;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.SchoolData;
 import com.enewschamp.subscription.app.dto.SchoolProgramLOV;
@@ -21,6 +28,9 @@ public class SchoolService {
 
 	@Autowired
 	SchoolRepository schoolRepository;
+	
+	@Autowired
+	private SchoolRepositoryCustomImpl schoolRepositoryCustom;
 
 	@Autowired
 	SchoolProgramService schoolProgramService;
@@ -32,13 +42,22 @@ public class SchoolService {
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
 
-	public School create(School SchoolEntity) {
-		return schoolRepository.save(SchoolEntity);
+	public School create(School schoolEntity) {
+		School school = null;
+		try {
+			school = schoolRepository.save(schoolEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return school;
 	}
 
 	public School update(School SchoolEntity) {
 		Long SchoolId = SchoolEntity.getSchoolId();
 		School existingSchool = get(SchoolId);
+		if (existingSchool.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(SchoolEntity, existingSchool);
 		return schoolRepository.save(existingSchool);
 	}
@@ -86,5 +105,51 @@ public class SchoolService {
 
 	public List<School> getSchoolFromProgramCode(String schoolProgramCode) {
 		return schoolRepository.getSchoolFromProgramCode(schoolProgramCode);
+	}
+	
+	public School read(School schoolEntity) {
+		Long countryId = schoolEntity.getSchoolId();
+		School school = get(countryId);
+		return school;
+	}
+
+	public School close(School schoolEntity) {
+		Long schoolId = schoolEntity.getSchoolId();
+		School existingSchool = get(schoolId);
+		if (existingSchool.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingSchool.setRecordInUse(RecordInUseType.N);
+		existingSchool.setOperationDateTime(null);
+		return schoolRepository.save(existingSchool);
+	}
+
+	public School reInstate(School schoolEntity) {
+		Long schoolId = schoolEntity.getSchoolId();
+		School existingSchool = get(schoolId);
+		if (existingSchool.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingSchool.setRecordInUse(RecordInUseType.Y);
+		existingSchool.setOperationDateTime(null);
+		return schoolRepository.save(existingSchool);
+	}
+
+	public Page<School> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<School> schoolList = schoolRepositoryCustom.findAll(pageable, searchRequest);
+		if (schoolList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return schoolList;
+	}
+
+	public School getByNameAndCityAndStateAndCountryId(String nameId, String cityId, String stateId, String countryId) {
+		Optional<School> school = schoolRepository.findByNameAndCityIdAndStateIdAndCountryId(nameId, cityId, stateId,
+				countryId);
+		if (school.isPresent()) {
+			return school.get();
+		}
+		return null;
 	}
 }

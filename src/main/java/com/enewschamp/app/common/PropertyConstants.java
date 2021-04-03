@@ -92,4 +92,7 @@ public interface PropertyConstants {
 	public static String DEFAULT_COUNTRY = "defaultCountry";
 
 	public static String VALIDATE_LOGIN = "validateLogin";
+	public static String ABOUT_US_TEXT = "aboutUs.aboutUsText";
+	public static String ADMIN_MODULE_NAME = "adminModuleName";
+	public static String PUBLISHER_SESSION_EXPIRY_SECS = "publisherSessionExpirySecs";
 }

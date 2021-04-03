@@ -10,7 +10,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class PaginationData implements Serializable {
-
 	/**
 	 * 
 	 */

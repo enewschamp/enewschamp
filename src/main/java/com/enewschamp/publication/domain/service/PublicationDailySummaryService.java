@@ -10,6 +10,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.article.daily.ArticlePublicationDaily;
+import com.enewschamp.app.admin.publication.daily.repository.PublicationDailySummaryRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.service.NewsArticleService;
@@ -27,6 +30,9 @@ public class PublicationDailySummaryService extends AbstractDomainService {
 
 	@Autowired
 	private PublicationDailySummaryRepository repository;
+	
+	@Autowired
+	private PublicationDailySummaryRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	private NewsArticleService articleService;
@@ -117,6 +123,16 @@ public class PublicationDailySummaryService extends AbstractDomainService {
 		response.setDailySummary(pageResult.getContent());
 
 		return response;
+	}
+	
+	public Page<ArticlePublicationDaily> listPublicationDailySummary(AdminSearchRequest searchRequest, int pageNo,
+			int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<ArticlePublicationDaily> dailySummaryList = repositoryCustom.findAll(pageable, searchRequest);
+		if (dailySummaryList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return dailySummaryList;
 	}
 
 }

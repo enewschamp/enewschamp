@@ -7,11 +7,17 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.city.repository.CityRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.app.common.city.repository.CityRepository;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
@@ -22,6 +28,10 @@ public class CityService extends AbstractDomainService {
 
 	@Autowired
 	CityRepository cityRepository;
+	
+	@Autowired
+	private CityRepositoryCustomImpl customRepository;
+
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -91,6 +101,52 @@ public class CityService extends AbstractDomainService {
 		if (cityentity.isPresent()) {
 			return cityentity.get();
 		} else
+			return null;
+	}
+
+	public City read(City cityEntity) {
+		Long cityId = cityEntity.getCityId();
+		City city = get(cityId);
+		return city;
+
+	}
+
+	public City close(City cityEntity) {
+		Long cityId = cityEntity.getCityId();
+		City existingCity = get(cityId);
+		if (existingCity.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingCity.setRecordInUse(RecordInUseType.N);
+		existingCity.setOperationDateTime(null);
+		return cityRepository.save(existingCity);
+	}
+
+	public City reInstateCity(City cityEntity) {
+		Long cityId = cityEntity.getCityId();
+		City existingCity = get(cityId);
+		if (existingCity.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingCity.setRecordInUse(RecordInUseType.Y);
+		existingCity.setOperationDateTime(null);
+		return cityRepository.save(existingCity);
+	}
+
+	public Page<City> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<City> cityList = customRepository.findAll(pageable, searchRequest);
+		if (cityList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return cityList;
+	}
+
+	public City getByNameAndCountryId(String nameId, String stateId, String countryId) {
+		Optional<City> city = cityRepository.findByNameIdAndStateIdAndCountryId(nameId, stateId, countryId);
+		if (city.isPresent())
+			return city.get();
+		else
 			return null;
 	}
 

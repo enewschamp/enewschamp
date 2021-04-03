@@ -3,13 +3,14 @@ package com.enewschamp.app.common.city.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.enewschamp.app.common.city.entity.City;
 import com.enewschamp.publication.domain.common.LOVProjection;
-
+@JaversSpringDataAuditable
 public interface CityRepository extends JpaRepository<City, Long> {
 
 	@Query("Select c from City c where c.stateId = :stateId and c.countryId= :countryId and c.recordInUse ='Y' ")
@@ -30,5 +31,7 @@ public interface CityRepository extends JpaRepository<City, Long> {
 
 	@Query("Select c from City c where c.nameId= :nameId and c.recordInUse ='Y' ")
 	public Optional<City> getCity(@Param("nameId") String nameId);
+	
+	public  Optional<City> findByNameIdAndStateIdAndCountryId(String nameId, String stateId, String countryId);
 
 }

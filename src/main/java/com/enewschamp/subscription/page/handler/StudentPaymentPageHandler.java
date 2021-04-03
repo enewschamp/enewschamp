@@ -48,7 +48,7 @@ import com.enewschamp.subscription.domain.service.StudentSchoolWorkService;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionWorkService;
 import com.enewschamp.subscription.pricing.service.IndividualPricingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paytm.pg.merchant.PaytmChecksum;
+//import com.paytm.pg.merchant.PaytmChecksum;
 
 @Component(value = "StudentPaymentPageHandler")
 public class StudentPaymentPageHandler implements IPageHandler {
@@ -138,13 +138,13 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			userInfo.put("custId", studentPaymentWork.getStudentId());
 			body.put("txnAmount", txnAmount);
 			body.put("userInfo", userInfo);
-			String signature = PaytmChecksum.generateSignature(body.toString(),
-					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-							PropertyConstants.PAYTM_MERCHANT_KEY));
-			JSONObject head = new JSONObject();
-			head.put("signature", signature);
+//			String signature = PaytmChecksum.generateSignature(body.toString(),
+//					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+//							PropertyConstants.PAYTM_MERCHANT_KEY));
+//			JSONObject head = new JSONObject();
+//			head.put("signature", signature);
 			paytmParams.put("body", body);
-			paytmParams.put("head", head);
+		//	paytmParams.put("head", head);
 			String post_data = paytmParams.toString();
 			URL url = new URL("https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=" + mid
 					+ "&orderId=" + orderId);

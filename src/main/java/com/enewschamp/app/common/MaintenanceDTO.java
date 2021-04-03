@@ -16,6 +16,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public abstract class MaintenanceDTO extends AbstractDTO {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@Size(max = ForeignKeyColumnLength.UserId)
 	protected String operatorId;
@@ -25,5 +30,4 @@ public abstract class MaintenanceDTO extends AbstractDTO {
 
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private RecordInUseType recordInUse;
-
 }

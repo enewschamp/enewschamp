@@ -7,12 +7,18 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.country.repository.CountryRepositoryCustomImpl;
+import com.enewschamp.app.admin.dashboard.handler.CountryView;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.country.dto.CountryDTO;
 import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.app.common.country.repository.CountryRepository;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.CountryPageData;
@@ -23,6 +29,9 @@ public class CountryService extends AbstractDomainService {
 
 	@Autowired
 	CountryRepository countryRepository;
+	
+	@Autowired
+	private CountryRepositoryCustomImpl countryRepositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -96,5 +105,46 @@ public class CountryService extends AbstractDomainService {
 		}
 
 		return countryData;
+	}
+	
+	public Country read(Country countryEntity) {
+		Long countryId = countryEntity.getCountryId();
+		Country country = get(countryId);
+        return country;
+	}
+
+	public Country close(Country countryEntity) {
+		Long countryId = countryEntity.getCountryId();
+		Country existingCountry = get(countryId);
+		if(existingCountry.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingCountry.setRecordInUse(RecordInUseType.N);
+		existingCountry.setOperationDateTime(null);
+		return countryRepository.save(existingCountry);
+	}
+	
+	public Country reInstate(Country countryEntity) {
+		Long countryId = countryEntity.getCountryId();
+		Country existingCountry = get(countryId);
+		if(existingCountry.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingCountry.setRecordInUse(RecordInUseType.Y);
+		existingCountry.setOperationDateTime(null);
+		return countryRepository.save(existingCountry);
+	}
+
+	public Page<Country> list(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<Country> countryList = countryRepositoryCustom.findAll(pageable, null);
+		if(countryList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return countryList;
+	}
+	
+	public List<CountryView> getAllCountryView(){
+		return countryRepository.findAllProjectedBy();
 	}
 }

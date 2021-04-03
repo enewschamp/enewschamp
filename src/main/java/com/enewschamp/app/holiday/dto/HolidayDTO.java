@@ -10,10 +10,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class HolidayDTO extends BaseEntity {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private Long holidayId;
 	private String editionId;
@@ -21,5 +17,4 @@ public class HolidayDTO extends BaseEntity {
 	private String holiday;
 	private String publication;
 	private String helpdesk;
-
 }

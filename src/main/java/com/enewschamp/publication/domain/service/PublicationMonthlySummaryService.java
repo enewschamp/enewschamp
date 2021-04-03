@@ -12,6 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.article.monthly.ArticlePublicationMonthlyGenre;
+import com.enewschamp.app.admin.article.monthly.total.ArticlePublicationMonthlyTotal;
+import com.enewschamp.app.admin.publication.monthly.repository.PublicationMonthySummaryRepositoryCustomImpl;
+import com.enewschamp.app.admin.publication.monthly.total.repository.PublicationMonthyTotalRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.service.NewsArticleGroupService;
@@ -40,7 +45,13 @@ public class PublicationMonthlySummaryService extends AbstractDomainService {
 
 	@Autowired
 	private PublicationSummaryRepositoryCustom customRepository;
+	
+	@Autowired
+	private PublicationMonthyTotalRepositoryCustomImpl monthlyTotalRepository;
 
+	@Autowired
+	private PublicationMonthySummaryRepositoryCustomImpl repositoryCustom;
+	
 	@Autowired
 	PropertiesBackendService propertiesService;
 
@@ -151,5 +162,25 @@ public class PublicationMonthlySummaryService extends AbstractDomainService {
 
 		return response;
 	}
+	
+	public Page<ArticlePublicationMonthlyGenre> listPublicationMonthlySummary(AdminSearchRequest searchRequest, int pageNo,
+			int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<ArticlePublicationMonthlyGenre> monthlySummaryList = repositoryCustom.findAll(pageable, searchRequest);
+		if (monthlySummaryList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return monthlySummaryList;
+	}
+	
 
+	public Page<ArticlePublicationMonthlyTotal> listPublicationMonthlyTotal(AdminSearchRequest searchRequest, int pageNo,
+			int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<ArticlePublicationMonthlyTotal> monthlySummaryList = monthlyTotalRepository.findAll(pageable, searchRequest);
+		if (monthlySummaryList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return monthlySummaryList;
+	}
 }

@@ -8,10 +8,15 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import com.enewschamp.app.admin.holiday.repository.HolidayRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.holiday.entity.Holiday;
 import com.enewschamp.app.holiday.repository.HolidayRepository;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.common.HolidayList;
 
@@ -20,6 +25,9 @@ public class HolidayService {
 
 	@Autowired
 	HolidayRepository holidayRepository;
+	
+	@Autowired
+	HolidayRepositoryCustomImpl holidayRepositoryCustom;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -71,4 +79,40 @@ public class HolidayService {
 		return holidayRepository.getHolidayList();
 	}
 
+	public Holiday read(Holiday holiday) {
+		Long holidayId = holiday.getHolidayId();
+		Holiday holidayEntity = get(holidayId);
+        return holidayEntity;
+	}
+
+	public Holiday close(Holiday holidayEntity) {
+		Long holidayId = holidayEntity.getHolidayId();
+		Holiday existingEntity = get(holidayId);
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingEntity.setRecordInUse(RecordInUseType.N);
+		existingEntity.setOperationDateTime(null);
+		return holidayRepository.save(existingEntity);
+	}
+
+	public Holiday reinstate(Holiday holdayEntity) {
+		Long holidayId = holdayEntity.getHolidayId();
+		Holiday existingHoliday = get(holidayId);
+		if (existingHoliday.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingHoliday.setRecordInUse(RecordInUseType.Y);
+		existingHoliday.setOperationDateTime(null);
+		return holidayRepository.save(existingHoliday);
+	}
+
+	public Page<Holiday> list(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<Holiday> holidayList = holidayRepositoryCustom.findAll	(pageable, null);
+		if(holidayList.getContent().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+		}
+		return holidayList;
+	}
 }

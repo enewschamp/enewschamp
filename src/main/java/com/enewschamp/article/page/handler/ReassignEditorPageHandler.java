@@ -1,6 +1,5 @@
 package com.enewschamp.article.page.handler;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,16 +14,9 @@ import com.enewschamp.publication.domain.service.PublicationGroupService;
 import com.enewschamp.publication.page.handler.PublicationGroupPageHandler;
 import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "ReassignEditorPageHandler")
 public class ReassignEditorPageHandler implements IPageHandler {
-
-	@Autowired
-	private ModelMapper modelMapper;
-
-	@Autowired
-	private ObjectMapper objectMapper;
 
 	@Autowired
 	private UserService userService;
