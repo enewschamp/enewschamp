@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,10 @@ import com.enewschamp.page.dto.ListOfValuesItem;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.CityPageData;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class CityService extends AbstractDomainService {
 
 	@Autowired
@@ -40,13 +44,23 @@ public class CityService extends AbstractDomainService {
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
 
-	public City create(City CityEntity) {
-		return cityRepository.save(CityEntity);
+	public City create(City cityEntity) {
+		City city = null;
+		try {
+			city = cityRepository.save(cityEntity);
+		} catch (DataIntegrityViolationException e) {
+			log.error(e.getMessage());
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return city;
 	}
 
 	public City update(City CityEntity) {
 		Long CityId = CityEntity.getCityId();
 		City existingCity = get(CityId);
+		if (existingCity.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(CityEntity, existingCity);
 		return cityRepository.save(existingCity);
 	}

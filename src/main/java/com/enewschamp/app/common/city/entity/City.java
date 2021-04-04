@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -17,7 +18,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "City")
+@Table(name = "City",uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "countryId", "nameId", "stateId" }) })
 public class City extends BaseEntity {
 
 	private static final long serialVersionUID = -6268188630471167106L;

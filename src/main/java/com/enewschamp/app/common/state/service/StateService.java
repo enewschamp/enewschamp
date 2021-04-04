@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,12 +40,21 @@ public class StateService extends AbstractDomainService {
 	ModelMapper modelMapperForPatch;
 
 	public State create(State stateEntity) {
-		return stateRepository.save(stateEntity);
+		State state = null;
+		try {
+			state = stateRepository.save(stateEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return state;
 	}
 
 	public State update(State stateEntity) {
 		Long StateId = stateEntity.getStateId();
 		State existingState = get(StateId);
+		if (existingState.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(stateEntity, existingState);
 		return stateRepository.save(existingState);
 	}

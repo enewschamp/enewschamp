@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,12 +42,22 @@ public class CountryService extends AbstractDomainService {
 	ModelMapper modelMapperForPatch;
 
 	public Country create(Country countryEntity) {
-		return countryRepository.save(countryEntity);
+		Country country = null;
+		try {
+			country = countryRepository.save(countryEntity);
+		}
+		catch(DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return country;
 	}
 
 	public Country update(Country countryEntity) {
 		Long countryId = countryEntity.getCountryId();
 		Country existingCountry = get(countryId);
+		if (existingCountry.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(countryEntity, existingCountry);
 		return countryRepository.save(existingCountry);
 	}

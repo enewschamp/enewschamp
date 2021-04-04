@@ -68,7 +68,7 @@ public class UserLoginBusiness {
 			final String appName, final String appVersion, UserType userType) {
 		UserLogin loggedIn = getUserLoginInstance(userId, deviceId, tokenId, userType);
 		if (loggedIn == null) {
-			loggedIn = loginService.getOperatorLogin(userId);
+			loggedIn = loginService.getOperatorLogin(userId, userType);
 		}
 		if (UserType.S.equals(userType) && loggedIn == null) {
 			loggedIn = getStudentLoginByDeviceId(deviceId);
