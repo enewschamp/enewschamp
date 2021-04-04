@@ -26,4 +26,6 @@ public class HolidayPageData extends PageData {
 	@NotNull(message = MessageConstants.HOLIDAY_NOT_NULL)
 	@NotEmpty(message = MessageConstants.HOLIDAY_NOT_EMPTY)
 	private String holiday;
+	private String helpdesk;
+	private String publication;
 }

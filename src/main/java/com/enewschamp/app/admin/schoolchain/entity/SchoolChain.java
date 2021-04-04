@@ -1,7 +1,5 @@
 package com.enewschamp.app.admin.schoolchain.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -18,7 +17,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "SchoolChain")
+@Table(name = "SchoolChain",uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "name", "countryId" }) })
 @EqualsAndHashCode(callSuper = false)
 public class SchoolChain extends BaseEntity {
 

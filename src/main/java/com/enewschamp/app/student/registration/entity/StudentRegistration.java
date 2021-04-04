@@ -13,6 +13,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.javers.core.metamodel.annotation.DiffIgnore;
@@ -27,7 +28,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "StudentRegistration")
+@Table(name = "StudentRegistration",uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "emailId" }) })
 public class StudentRegistration extends BaseEntity {
 
 	/**

@@ -7,6 +7,7 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.LocalDateCryptoConverter;
@@ -19,7 +20,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "StudentDetails")
+@Table(name = "StudentDetails",uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "name", "surname", "doB" }) })
 public class StudentDetails extends BaseEntity {
 
 	/**

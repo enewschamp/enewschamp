@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -18,7 +19,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "Promotions")
+@Table(name = "Promotions",uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "editionId", "dateFrom", "countryId", "stateId", "cityId" }) })
 @EqualsAndHashCode(callSuper = false)
 public class Promotion extends BaseEntity {
 	/**

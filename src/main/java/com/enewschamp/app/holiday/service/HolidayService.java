@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,12 +38,21 @@ public class HolidayService {
 	ModelMapper modelMapperForPatch;
 
 	public Holiday create(Holiday holidayEntity) {
-		return holidayRepository.save(holidayEntity);
+		Holiday holiday = null;
+		try {
+			holiday = holidayRepository.save(holidayEntity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return holiday;
 	}
 
 	public Holiday update(Holiday holidayEntity) {
 		Long holidayId = holidayEntity.getHolidayId();
 		Holiday existingHoliday = get(holidayId);
+		if(existingHoliday.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(holidayEntity, existingHoliday);
 		return holidayRepository.save(existingHoliday);
 	}

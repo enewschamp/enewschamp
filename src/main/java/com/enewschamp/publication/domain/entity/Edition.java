@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -15,7 +16,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "Edition")
+@Table(name = "Edition",uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "editionId", "languageId" }) })
 public class Edition extends BaseEntity {
 
 	private static final long serialVersionUID = 4703046794189386714L;

@@ -33,5 +33,6 @@ public class StudentDetailsPageData extends PageData {
 	private LocalDate doB;
 
 	private String mobileNumber;
+	private String approvalRequired;
 
 }

@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -16,7 +17,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "StudentSubscription")
+@Table(name = "StudentSubscription",uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "studentId", "editionId", "subscriptionType", "startDate", }) })
 public class StudentSubscription extends BaseEntity {
 
 	/**
