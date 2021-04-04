@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
+import com.enewschamp.domain.common.WeekDayType;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,6 +26,7 @@ public class UserRolePageData extends PageData {
 	private String contribution;
 	
 	private String comments;
+	private WeekDayType dayOfTheWeek;
 
 
 }

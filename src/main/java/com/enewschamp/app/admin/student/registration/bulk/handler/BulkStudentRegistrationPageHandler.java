@@ -298,6 +298,7 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 		studentPreferences.setStudentId(studentId);
 		StudentPreferenceComm commsOverEmail = buildCommsOverEmail(pageData);
 		studentPreferences.setCommsOverEmail(commsOverEmail);
+		studentPreferences.setFeatureProfileInChamps(pageData.getStudentPreferences().getFeatureProfileInChamps());
 		studentPreferences = studentPreferencesService.create(studentPreferences);
 		return studentPreferences;
 	}

@@ -135,6 +135,7 @@ public class UserRolePageHandler implements IPageHandler {
 		UserRoleKey roleKey = new UserRoleKey();
 		roleKey.setRoleId(pageData.getRoleId());
 		roleKey.setUserId(pageData.getUserId());
+		roleKey.setDayOfTheWeek(pageData.getDayOfTheWeek());
 		userRole.setUserRoleKey(roleKey);
 	}
 
@@ -154,6 +155,7 @@ public class UserRolePageHandler implements IPageHandler {
 		UserRolePageData pageData = modelMapper.map(userRole, UserRolePageData.class);
 		pageData.setRoleId(userRole.getUserRoleKey().getRoleId());
 		pageData.setUserId(userRole.getUserRoleKey().getUserId());
+		pageData.setDayOfTheWeek(userRole.getUserRoleKey().getDayOfTheWeek());
 		pageData.setLastUpdate(userRole.getOperationDateTime());
 		return pageData;
 	}
