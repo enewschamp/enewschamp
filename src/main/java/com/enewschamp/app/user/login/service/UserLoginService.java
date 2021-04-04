@@ -130,6 +130,15 @@ public class UserLoginService {
 		}
 	}
 	
+	public UserLogin getOperatorLogin(final String userId, UserType userType) {
+		Optional<UserLogin> existingEntity = repository.getOperatorLogin(userId, userType);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
+		} else {
+			return null;
+		}
+	}
+	
 	public UserLogin read(UserLogin userLogin) {
 		Long UserLoginId = userLogin.getUserLoginId();
 		UserLogin existingUserLogin = get(UserLoginId);
@@ -165,6 +174,16 @@ public class UserLoginService {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return userList;
+	}
+	
+	public UserLogin getOperatorLogin(final String userId, final String deviceId, final String tokenId,
+			final UserType userType) {
+		Optional<UserLogin> existingEntity = repository.getOperatorLogin(userId, deviceId, tokenId, userType);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
+		} else {
+			return null;
+		}
 	}
 	
 

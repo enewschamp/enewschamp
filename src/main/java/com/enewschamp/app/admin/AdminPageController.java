@@ -62,7 +62,7 @@ public class AdminPageController {
 				pageResponse.getHeader().setLoginCredentials(null);
 			}
 			if(pageName.equals("Login"))
-			pageResponse.setData(commonModuleService.getLoginPageData(module, userId, UserType.A));
+			pageResponse.setData(commonModuleService.getLoginPageData(module, userId, UserType.A, deviceId, loginCredentials));
 			response = new ResponseEntity<PageDTO>(pageResponse, HttpStatus.OK);
 		} catch (BusinessException e) {
 			HeaderDTO header = pageRequest.getHeader();

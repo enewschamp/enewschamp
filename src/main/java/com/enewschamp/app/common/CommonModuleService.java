@@ -116,7 +116,7 @@ public class CommonModuleService {
 		return userActivityTracker;
 	}
 	
-	public LoginPageData getLoginPageData(String module, String userId, UserType userType) {
+	public LoginPageData getLoginPageData(String module, String userId, UserType userType, String deviceId, String loginCredentials) {
 		User user = userService.get(userId);
 		LoginPageData loginPageData = new LoginPageData();
 		if (user != null) {
@@ -124,7 +124,7 @@ public class CommonModuleService {
 			loginPageData.setTodaysDate(LocalDate.now());
 			loginPageData.setTheme(user.getTheme());
 			loginPageData.setUserRole(userLoginBusiness.getUserRole(userId));
-			//loginPageData.setLoginCredentials(userLoginService.getOperatorLogin(userId, userType).getTokenId());
+			loginPageData.setLoginCredentials(userLoginService.getOperatorLogin(userId, userType).getTokenId());
 			loginPageData.setTokenValidity(
 					propertiesService.getValue(module, PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));		}
 		return loginPageData;
@@ -133,7 +133,7 @@ public class CommonModuleService {
 	public void doEntitlementCheck(HeaderDTO pageData) {
 		Boolean validEntitlement = entitlementService.isValidUser(pageData.getUserId(), pageData.getModule());
 		if(validEntitlement) {
-			//userRoleService.isValidRole(pageData.getUserId(), pageData.getModule());
+			userRoleService.isValidRole(pageData.getUserId(), pageData.getModule());
 		}
 	}
 	

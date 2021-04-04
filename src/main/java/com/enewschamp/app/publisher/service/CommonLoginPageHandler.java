@@ -92,6 +92,8 @@ public class CommonLoginPageHandler implements IPageHandler {
 		String userId = pageRequest.getHeader().getUserId();
 		String deviceId = pageRequest.getHeader().getDeviceId();
 		String tokenId = pageRequest.getHeader().getLoginCredentials();
+		String appVersion = pageRequest.getHeader().getAppVersion();
+		String module = pageRequest.getHeader().getModule();
 		String password = "";
 		UserType userType = pageRequest.getHeader().getModule().equals("Admin") ? UserType.A : UserType.P;
 		boolean loginSuccess = false;
@@ -122,8 +124,8 @@ public class CommonLoginPageHandler implements IPageHandler {
 			}
 			loginSuccess = userService.validatePassword(userId, password, userActivityTracker);
 			if (loginSuccess) {
-				//UserLogin userLogin = userLoginBusiness.login(userId, deviceId, tokenId, userType, null, null, null);
-				UserLogin userLogin = null;
+				UserLogin userLogin = userLoginBusiness.login(userId, userId, deviceId, tokenId, module,
+						appVersion, UserType.A);				
 				userLogin.setLoginFlag(AppConstants.YES);
 				loginService.update(userLogin);
 				userActivityTracker.setActionStatus(UserAction.SUCCESS);

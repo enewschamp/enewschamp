@@ -50,8 +50,8 @@ import com.enewschamp.subscription.pricing.service.IndividualPricingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.paytm.pg.merchant.PaytmChecksum;
 
-@Component(value = "StudentPaymentPageHandler")
-public class StudentPaymentPageHandler implements IPageHandler {
+@Component(value = "StudentPaymentAdminPageHandler")
+public class StudentPaymentAdminPageHandler implements IPageHandler {
 
 	@Autowired
 	ObjectMapper objectMapper;

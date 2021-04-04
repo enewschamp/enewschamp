@@ -27,4 +27,6 @@ public class AppSecurityPageData extends PageData {
 	@NotNull(message = MessageConstants.MODULE_NAME_NOT_NULL)
 	@NotEmpty(message = MessageConstants.MODULE_NAME_NOT_EMPTY)
 	private String module;
+	private String isAppAvailable;
+	private String compatibleVersions;	
 }

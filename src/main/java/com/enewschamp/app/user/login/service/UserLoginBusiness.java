@@ -242,7 +242,11 @@ public class UserLoginBusiness {
 		UserLogin loggedIn = null;
 		if (UserType.S.toString().equals(userType.toString())) {
 			loggedIn = loginService.getUserLogin(userId, deviceId, tokenId, userType);
-		} else {
+		} 
+		else if (UserType.A.toString().equals(userType.toString())) {
+			loggedIn = loginService.getOperatorLogin(userId, deviceId, tokenId, userType);
+		}
+		else {
 			loggedIn = loginService.getOperatorLogin(userId, deviceId, tokenId);
 		}
 		return loggedIn;

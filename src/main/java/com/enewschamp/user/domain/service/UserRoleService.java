@@ -152,4 +152,13 @@ public class UserRoleService extends AbstractDomainService {
 		}
 		return userList;
 	}
+	
+	public Boolean isValidRole(String userId, String roleId) {
+		UserRole userRole = getByUserIdAndRole(userId, roleId);
+		if (userRole != null)
+			return true;
+		else
+			throw new BusinessException(ErrorCodeConstants.USER_ROLE_NOT_FOUND, roleId, userId);
+
+	}
 }
