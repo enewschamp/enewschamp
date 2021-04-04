@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.enewschamp.domain.common.BaseEntity;
 
@@ -17,7 +18,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "ScoresMonthlyTotal")
+@Table(name = "ScoresMonthlyTotal",uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "studentId", "editionId", "readingLevel", "scoreYearMonth" }) })
 @EqualsAndHashCode(callSuper = false)
 public class StudentScoresMonthlyTotal extends BaseEntity {
 	private static final long serialVersionUID = 1L;
