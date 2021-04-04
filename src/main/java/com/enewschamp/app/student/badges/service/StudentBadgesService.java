@@ -83,7 +83,7 @@ public class StudentBadgesService {
 		return studentBadges;
 	}
 
-	public Page<RecognitionData> getStudentbadges(Long studentId, String editionId, LocalDate limitDate, int pageNo,
+	public Page<RecognitionData> getStudentBadges(Long studentId, String editionId, LocalDate limitDate, int pageNo,
 			int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<RecognitionData> studentPage = studentBadgesCustomRepository.getStudentBadges(studentId, editionId,
@@ -91,7 +91,7 @@ public class StudentBadgesService {
 		return studentPage;
 	}
 
-	public RecognitionData getLastestbadge(Long studentId, String editionId, int readingLevel) {
+	public RecognitionData getLatestBadge(Long studentId, String editionId, int readingLevel) {
 		List<RecognitionData> studentBadgeList = studentBadgesCustomRepository.getLatestBadges(studentId, editionId,
 				readingLevel);
 		RecognitionData badge = null;

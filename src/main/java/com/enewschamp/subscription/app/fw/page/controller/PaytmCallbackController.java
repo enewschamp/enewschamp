@@ -168,7 +168,9 @@ public class PaytmCallbackController {
 					} else if ("CHECKSUM_MISMATCH".equals(transactionStatus.get("TRAN_STATUS"))) {
 						orderStatus = propertiesService.getValue("StudentApp",
 								PropertyConstants.PAYTM_CALLBACK_CHECKSUM_MISMATCH);
-					} else if (Double.valueOf(txnAmount) != Double.valueOf(transactionStatus.get("TRAN_AMT"))) {
+					} else if (txnAmount != null && transactionStatus.get("TRAN_AMT") != null
+							&& (Double.compare(Double.valueOf(txnAmount),
+									Double.valueOf(transactionStatus.get("TRAN_AMT"))) != 0)) {
 						orderStatus = propertiesService.getValue("StudentApp",
 								PropertyConstants.PAYTM_CALLBACK_AMOUNT_MISMATCH);
 					}

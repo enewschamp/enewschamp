@@ -257,9 +257,11 @@ public class GifDecoder {
 		} else {
 			status = STATUS_OPEN_ERROR;
 		}
-		try {
-			is.close();
-		} catch (IOException e) {
+		if (is != null) {
+			try {
+				is.close();
+			} catch (IOException e) {
+			}
 		}
 		return status;
 	}
@@ -286,9 +288,11 @@ public class GifDecoder {
 		} else {
 			status = STATUS_OPEN_ERROR;
 		}
-		try {
-			is.close();
-		} catch (IOException e) {
+		if (is != null) {
+			try {
+				is.close();
+			} catch (IOException e) {
+			}
 		}
 		return status;
 	}

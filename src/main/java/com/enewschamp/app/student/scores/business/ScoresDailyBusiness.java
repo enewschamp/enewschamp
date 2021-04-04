@@ -61,7 +61,7 @@ public class ScoresDailyBusiness {
 			scoresDailyDTONew.setArticlesRead(Long.valueOf(1));
 			scoresDailyDTONew.setQuizAttempted(quizQAttempted);
 			scoresDailyDTONew.setQuizCorrect(quizQCorrect);
-			scoresDailyDTONew.setOperatorId(""+studentId);
+			scoresDailyDTONew.setOperatorId("" + studentId);
 			scoresDailyDTONew.setRecordInUse(RecordInUseType.Y);
 			scoresDailyDTO = saveScoresDaily(scoresDailyDTONew);
 		} else {
@@ -75,7 +75,7 @@ public class ScoresDailyBusiness {
 			Long quizQCorrectTmp = (scoresDailyDTO.getQuizCorrect() == null) ? 0 : scoresDailyDTO.getQuizCorrect();
 			quizQCorrectTmp = quizQCorrectTmp + quizQCorrect;
 			scoresDailyDTO.setQuizCorrect(quizQCorrectTmp);
-			scoresDailyDTO.setOperatorId(""+studentId);
+			scoresDailyDTO.setOperatorId("" + studentId);
 			scoresDailyDTO.setRecordInUse(RecordInUseType.Y);
 			scoresDailyDTO = saveScoresDaily(scoresDailyDTO);
 		}

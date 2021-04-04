@@ -153,7 +153,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			pageDto.setData(loginPageData);
 		} else if ("forgotpassword".equalsIgnoreCase(action)) {
 			String emailId = userService.get(userId).getEmailId1();
-			if (emailId == null && "".equals(emailId)) {
+			if (emailId == null || "".equals(emailId)) {
 				throw new BusinessException(ErrorCodeConstants.INVALID_EMAIL_ID, emailId);
 			}
 			loginPageData.setMessage(
@@ -168,7 +168,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			pageDto.setData(loginPageData);
 		} else if ("resendsecuritycode".equalsIgnoreCase(action)) {
 			String emailId = userService.get(userId).getEmailId1();
-			if (emailId == null && "".equals(emailId)) {
+			if (emailId == null || "".equals(emailId)) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 				throw new BusinessException(ErrorCodeConstants.INVALID_EMAIL_ID);
@@ -202,11 +202,11 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			if (passwordNew == null && "".equals(passwordNew)) {
+			if (passwordNew == null || "".equals(passwordNew)) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 				throw new BusinessException(ErrorCodeConstants.INVALID_USER_NEW_PASSWORD);
-			} else if (passwordRepeat == null && "".equals(passwordRepeat)) {
+			} else if (passwordRepeat == null || "".equals(passwordRepeat)) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 				throw new BusinessException(ErrorCodeConstants.INVALID_USER_NEW_PASSWORD);
@@ -221,7 +221,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 				throw new BusinessException(ErrorCodeConstants.INVALID_SECURITY_CODE);
 			}
 			String emailId = userService.get(userId).getEmailId1();
-			if (emailId == null && "".equals(emailId)) {
+			if (emailId == null || "".equals(emailId)) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 				throw new BusinessException(ErrorCodeConstants.INVALID_EMAIL_ID);
@@ -254,17 +254,15 @@ public class PublisherLoginPageHandler implements IPageHandler {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			// userLoginBusiness.isUserLoggedIn(deviceId, tokenId, userId, UserType.P,
-			// userActivityTracker);
-			if (password == null && "".equals(password)) {
+			if (password == null || "".equals(password)) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 				throw new BusinessException(ErrorCodeConstants.INVALID_USER_PASSWORD);
-			} else if (passwordNew == null && "".equals(passwordNew)) {
+			} else if (passwordNew == null || "".equals(passwordNew)) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 				throw new BusinessException(ErrorCodeConstants.INVALID_USER_NEW_PASSWORD);
-			} else if (passwordRepeat == null && "".equals(passwordRepeat)) {
+			} else if (passwordRepeat == null || "".equals(passwordRepeat)) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 				throw new BusinessException(ErrorCodeConstants.INVALID_USER_NEW_PASSWORD);
@@ -302,7 +300,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 				throw new RuntimeException(e);
 			}
 			userLoginBusiness.isUserLoggedIn(deviceId, tokenId, userId, UserType.P, userActivityTracker);
-			if (theme == null && "".equals(theme)) {
+			if (theme == null || "".equals(theme)) {
 				userActivityTracker.setActionStatus(UserAction.FAILURE);
 				userLoginBusiness.auditUserActivity(userActivityTracker);
 				throw new BusinessException(ErrorCodeConstants.INVALID_THEME);
@@ -323,7 +321,7 @@ public class PublisherLoginPageHandler implements IPageHandler {
 		int totalLength = emailAddress.length();
 		int maskLength = 0;
 		if (totalLength > 2) {
-			maskLength = (int) Math.floor((totalLength - 2) * 60 / 100) + 1;
+			maskLength = ((int) Math.floor((double) (totalLength - 2) * 60 / 100)) + 1;
 		}
 		if (maskLength > 0) {
 			String maskStr = "";

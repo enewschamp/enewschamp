@@ -57,9 +57,8 @@ public class SubscriptionBusiness {
 	@Autowired
 	private PropertiesBackendService propertiesService;
 
-	public void createNewStudentScription(Long studentId, PageRequestDTO PageRequestDTO) {
-
-		// studentSubscription.create(subscripionDto);
+	public void createNewStudentSubscription(Long studentId, PageRequestDTO PageRequestDTO) {
+		// to be removed during code cleanup..
 	}
 
 	public StudentSubscriptionWork updateSubscriptionPeriodInWork(
@@ -72,23 +71,20 @@ public class SubscriptionBusiness {
 
 	public void saveAsWork(Long studentId, String evalAvailed, PageRequestDTO pageRequestDTO) {
 		HeaderDTO header = pageRequestDTO.getHeader();
-		StudentSubscription subscripionDto = null;
+		String subscriptionType = "";
+		String editionId = header.getEditionId();
+		String module = header.getModule();
+		StudentSubscription subscripionDto = new StudentSubscription();
 		try {
 			subscripionDto = objectMapper.readValue(pageRequestDTO.getData().toString(), StudentSubscription.class);
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String subscriptionType = subscripionDto.getSubscriptionSelected();
-		String editionId = header.getEditionId();
-		String module = header.getModule();
-		String emailId = header.getEmailId();
+		subscriptionType = subscripionDto.getSubscriptionSelected();
 		subscripionDto.setEditionId(editionId);
 		subscripionDto.setStudentId(studentId);
 		Date startDate = new Date();
@@ -107,7 +103,7 @@ public class SubscriptionBusiness {
 			subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 		}
 		subscripionDto.setRecordInUse(RecordInUseType.Y);
-		subscripionDto.setOperatorId(""+studentId);
+		subscripionDto.setOperatorId("" + studentId);
 		StudentSubscriptionWork subsWork = modelMapper.map(subscripionDto, StudentSubscriptionWork.class);
 		subsWork.setStudentId(studentId);
 		studentWorkSubscription.create(subsWork);
@@ -115,27 +111,22 @@ public class SubscriptionBusiness {
 
 	public void saveAsMaster(Long studentId, String evalAvailed, PageRequestDTO pageRequestDTO) {
 		HeaderDTO header = pageRequestDTO.getHeader();
-		StudentSubscription subscripionDto = null;
+		StudentSubscription subscripionDto = new StudentSubscription();
+		String editionId = header.getEditionId();
+		String module = header.getModule();
+		String subscriptionType = "";
 		try {
 			subscripionDto = objectMapper.readValue(pageRequestDTO.getData().toString(), StudentSubscription.class);
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String subscriptionType = subscripionDto.getSubscriptionSelected();
-		String editionId = header.getEditionId();
-		String module = header.getModule();
-		String emailId = header.getEmailId();
+		subscriptionType = subscripionDto.getSubscriptionSelected();
 		subscripionDto.setEditionId(editionId);
 		boolean studentExist = studentControlBusiness.isStudentExist(studentId);
-
-		// if student exists already
 		if (studentExist) {
 			if ("F".equals(subscriptionType)) {
 				if (!"Y".equalsIgnoreCase(evalAvailed)) {
@@ -155,7 +146,7 @@ public class SubscriptionBusiness {
 			subscripionDto.setStartDate(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 		}
 		subscripionDto.setRecordInUse(RecordInUseType.Y);
-		subscripionDto.setOperatorId(""+studentId);
+		subscripionDto.setOperatorId("" + studentId);
 		StudentSubscription subsmast = modelMapper.map(subscripionDto, StudentSubscription.class);
 		subsmast.setStudentId(studentId);
 		studentSubscriptionService.create(subsmast);
@@ -213,17 +204,21 @@ public class SubscriptionBusiness {
 							&& "S".equalsIgnoreCase(subscriptionSelected))) {
 						StudentSchoolWorkDTO studentSchoolWork = schoolDetailsBusiness.getStudentFromWork(studentId);
 						StudentSchoolDTO studentSchoolMaster = schoolDetailsBusiness.getStudentFromMaster(studentId);
-						currentEndDate = studentSubscription.getEndDate();
+						if (studentSubscription != null) {
+							currentEndDate = studentSubscription.getEndDate();
+						}
 						if (!studentSchoolMaster.getSchool().toString()
 								.equals(studentSchoolWork.getSchool().toString())) {
 							currentEndDate = LocalDate.now();
 						}
-						if (currentEndDate.isBefore(LocalDate.now())) {
+						if (currentEndDate == null || currentEndDate.isBefore(LocalDate.now())) {
 							currentEndDate = LocalDate.now();
 						}
 					} else {
-						currentEndDate = studentSubscription.getEndDate();
-						if (currentEndDate.isBefore(LocalDate.now())) {
+						if (studentSubscription != null) {
+							currentEndDate = studentSubscription.getEndDate();
+						}
+						if (currentEndDate == null || currentEndDate.isBefore(LocalDate.now())) {
 							currentEndDate = LocalDate.now();
 						}
 					}

@@ -1,6 +1,5 @@
 package com.enewschamp.opinions.page.handler;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import com.enewschamp.app.article.page.dto.ArticlePageData;
 import com.enewschamp.app.common.CommonFilterData;
 import com.enewschamp.app.common.CommonService;
 import com.enewschamp.app.common.ErrorCodeConstants;
@@ -38,8 +36,6 @@ import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.service.GenreService;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "OpinionsPageHandler")
@@ -83,22 +79,17 @@ public class OpinionsPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageNavigationContext);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -113,8 +104,8 @@ public class OpinionsPageHandler implements IPageHandler {
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
-		OpinionsPageData pageData = new OpinionsPageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		OpinionsPageData pageData = (OpinionsPageData) commonService.mapPageData(OpinionsPageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
@@ -185,8 +176,7 @@ public class OpinionsPageHandler implements IPageHandler {
 
 	@Override
 	public PageDTO saveAsMaster(PageRequestDTO pageRequest) {
-		PageDTO pageDto = new PageDTO();
-		return pageDto;
+		return null;
 	}
 
 	@Override
@@ -207,31 +197,5 @@ public class OpinionsPageHandler implements IPageHandler {
 			}
 		}
 		return opinionPageDataList;
-	}
-
-	private ArticlePageData mapPageData(ArticlePageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), ArticlePageData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return pageData;
-	}
-
-	private OpinionsPageData mapPageData(OpinionsPageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), OpinionsPageData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return pageData;
 	}
 }

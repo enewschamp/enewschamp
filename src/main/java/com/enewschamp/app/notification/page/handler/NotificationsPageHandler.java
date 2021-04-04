@@ -84,22 +84,17 @@ public class NotificationsPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageNavigationContext);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -113,8 +108,8 @@ public class NotificationsPageHandler implements IPageHandler {
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
-		NotificationsPageData pageData = new NotificationsPageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		NotificationsPageData pageData = (NotificationsPageData) commonService.mapPageData(NotificationsPageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
@@ -183,22 +178,17 @@ public class NotificationsPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageRequest, pageNavigatorDTO);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -208,8 +198,8 @@ public class NotificationsPageHandler implements IPageHandler {
 
 	public PageDTO handleReadAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
-		NotificationPageData notificationPageData = new NotificationPageData();
-		notificationPageData = mapPageData(notificationPageData, pageRequest);
+		NotificationPageData notificationPageData = (NotificationPageData) commonService
+				.mapPageData(NotificationPageData.class, pageRequest);
 		Long studentNotificationId = notificationPageData.getStudentNotificationId();
 		StudentNotification studentNotification = studentNotificationService.get(studentNotificationId);
 		if (studentNotification != null) {
@@ -227,8 +217,8 @@ public class NotificationsPageHandler implements IPageHandler {
 
 	public PageDTO handleDeleteAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
-		NotificationPageData notificationPageData = new NotificationPageData();
-		notificationPageData = mapPageData(notificationPageData, pageRequest);
+		NotificationPageData notificationPageData = (NotificationPageData) commonService
+				.mapPageData(NotificationPageData.class, pageRequest);
 		Long studentNotificationId = notificationPageData.getStudentNotificationId();
 		StudentNotification studentNotification = studentNotificationService.get(studentNotificationId);
 		if (studentNotification != null) {
@@ -241,32 +231,6 @@ public class NotificationsPageHandler implements IPageHandler {
 		pageDTO.setData(notificationPageData);
 		pageDTO.setHeader(pageRequest.getHeader());
 		return pageDTO;
-	}
-
-	private NotificationsPageData mapPageData(NotificationsPageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), NotificationsPageData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return pageData;
-	}
-
-	private NotificationPageData mapPageData(NotificationPageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), NotificationPageData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return pageData;
 	}
 
 	public List<StudentNotificationData> mapData(Page<StudentNotificationDTO> page) {

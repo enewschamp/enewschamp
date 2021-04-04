@@ -73,22 +73,17 @@ public class ChampsPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageNavigationContext);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -98,10 +93,9 @@ public class ChampsPageHandler implements IPageHandler {
 
 	public PageDTO loadChampsPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		ChampsPageData pageData = new ChampsPageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		ChampsPageData pageData = (ChampsPageData) commonService.mapPageData(ChampsPageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
@@ -140,7 +134,7 @@ public class ChampsPageHandler implements IPageHandler {
 			pageData.getPagination().setIsLastPage("N");
 		}
 		List<ChampStudentDTO> champList = new ArrayList<ChampStudentDTO>();
-		if (!pageResult.isEmpty()) {
+		if (pageResult != null && !pageResult.isEmpty()) {
 			champList = pageResult.getContent();
 		}
 		if (champList == null || champList.size() == 0) {
@@ -154,7 +148,6 @@ public class ChampsPageHandler implements IPageHandler {
 
 	@Override
 	public PageDTO saveAsMaster(PageRequestDTO pageRequest) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -163,18 +156,4 @@ public class ChampsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		return pageDto;
 	}
-
-	private ChampsPageData mapPageData(ChampsPageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), ChampsPageData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return pageData;
-	}
-
 }

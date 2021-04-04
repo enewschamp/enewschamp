@@ -1,6 +1,5 @@
 package com.enewschamp.app.article.page.handler;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
@@ -49,8 +48,6 @@ import com.enewschamp.subscription.app.dto.StudentPreferencesDTO;
 import com.enewschamp.subscription.domain.business.PreferenceBusiness;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "NewsArticlePageHandler")
@@ -109,22 +106,17 @@ public class NewsArticlePageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageNavigationContext);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -144,8 +136,8 @@ public class NewsArticlePageHandler implements IPageHandler {
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
-		PublicationPageData pageData = new PublicationPageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		PublicationPageData pageData = (PublicationPageData) commonService.mapPageData(PublicationPageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
@@ -196,8 +188,8 @@ public class NewsArticlePageHandler implements IPageHandler {
 		if (studReg != null) {
 			isTestUser = studReg.getIsTestUser();
 		}
-		NewsArticlePageData pageData = new NewsArticlePageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		NewsArticlePageData pageData = (NewsArticlePageData) commonService.mapPageData(NewsArticlePageData.class,
+				pageNavigationContext.getPageRequest());
 		int readingLevel = pageData.getReadingLevel();
 		LocalDate publicationDate = pageData.getPublicationDate();
 		Long nextNewsArticleId = newsArticleService.getNextNewsArticleAvailable(publicationDate, isTestUser, editionId,
@@ -228,8 +220,8 @@ public class NewsArticlePageHandler implements IPageHandler {
 		if (studReg != null) {
 			isTestUser = studReg.getIsTestUser();
 		}
-		NewsArticlePageData pageData = new NewsArticlePageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		NewsArticlePageData pageData = (NewsArticlePageData) commonService.mapPageData(NewsArticlePageData.class,
+				pageNavigationContext.getPageRequest());
 		int readingLevel = pageData.getReadingLevel();
 		LocalDate publicationDate = pageData.getPublicationDate();
 		Long nextNewsArticleId = newsArticleService.getPreviousNewsArticleAvailable(publicationDate, isTestUser,
@@ -254,8 +246,8 @@ public class NewsArticlePageHandler implements IPageHandler {
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		NewsArticlePageData pageData = new NewsArticlePageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		NewsArticlePageData pageData = (NewsArticlePageData) commonService.mapPageData(NewsArticlePageData.class,
+				pageNavigationContext.getPageRequest());
 		List<NewsArticleSummaryDTO> pageResult = customImpl.getArticleDetails(pageData.getNewsArticleId(), studentId);
 		if (pageResult != null && pageResult.size() > 0) {
 			pageData = modelMapper.map(pageResult.get(0), NewsArticlePageData.class);
@@ -275,9 +267,8 @@ public class NewsArticlePageHandler implements IPageHandler {
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
-
-		SavedArticlePageData pageData = new SavedArticlePageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		SavedArticlePageData pageData = (SavedArticlePageData) commonService.mapPageData(SavedArticlePageData.class,
+				pageNavigationContext.getPageRequest());
 		CommonFilterData filterData = new CommonFilterData();
 		filterData = commonService.mapPageData(filterData, pageNavigationContext.getPageRequest());
 		SavedNewsArticleSearchRequest searchRequestData = new SavedNewsArticleSearchRequest();
@@ -310,8 +301,10 @@ public class NewsArticlePageHandler implements IPageHandler {
 		}
 		HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
 		pageDto.setHeader(header);
-
-		List<NewsArticleSummaryDTO> savedArticleSummaryList = pageResult.getContent();
+		List<NewsArticleSummaryDTO> savedArticleSummaryList = new ArrayList<NewsArticleSummaryDTO>();
+		if (pageResult != null && !pageResult.getContent().isEmpty()) {
+			savedArticleSummaryList = pageResult.getContent();
+		}
 		SavedArticlePageData savedPageData = new SavedArticlePageData();
 		List<SavedArticleData> savedArticleList = new ArrayList<SavedArticleData>();
 		List<StudentActivityDTO> savedArticlesList = studentActivityBusiness.getSavedArticles(studentId);
@@ -354,8 +347,8 @@ public class NewsArticlePageHandler implements IPageHandler {
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		NewsArticleSearchRequest searchRequestData = new NewsArticleSearchRequest();
-		PublicationPageData pageData = new PublicationPageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		PublicationPageData pageData = (PublicationPageData) commonService.mapPageData(PublicationPageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
@@ -410,22 +403,17 @@ public class NewsArticlePageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageRequest, pageNavigatorDTO);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -438,8 +426,8 @@ public class NewsArticlePageHandler implements IPageHandler {
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		ArticlePageData articlePageData = new ArticlePageData();
-		articlePageData = mapPageData(articlePageData, pageRequest);
+		ArticlePageData articlePageData = (ArticlePageData) commonService.mapPageData(ArticlePageData.class,
+				pageRequest);
 		Long newsArticleId = articlePageData.getNewsArticleId();
 		StudentPreferencesDTO studPref = preferenceBusiness.getPreferenceFromMaster(studentId);
 		int readingLevel = 3;
@@ -468,8 +456,8 @@ public class NewsArticlePageHandler implements IPageHandler {
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		ArticlePageData articlePageData = new ArticlePageData();
-		articlePageData = mapPageData(articlePageData, pageRequest);
+		ArticlePageData articlePageData = (ArticlePageData) commonService.mapPageData(ArticlePageData.class,
+				pageRequest);
 		Long newsArticleId = articlePageData.getNewsArticleId();
 		StudentPreferencesDTO studPref = preferenceBusiness.getPreferenceFromMaster(studentId);
 		int readingLevel = 3;
@@ -498,8 +486,8 @@ public class NewsArticlePageHandler implements IPageHandler {
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		ArticlePageData articlePageData = new ArticlePageData();
-		articlePageData = mapPageData(articlePageData, pageRequest);
+		ArticlePageData articlePageData = (ArticlePageData) commonService.mapPageData(ArticlePageData.class,
+				pageRequest);
 		Long newsArticleId = articlePageData.getNewsArticleId();
 		StudentPreferencesDTO studPref = preferenceBusiness.getPreferenceFromMaster(studentId);
 		int readingLevel = 3;
@@ -521,54 +509,5 @@ public class NewsArticlePageHandler implements IPageHandler {
 		}
 		pageDTO.setHeader(pageRequest.getHeader());
 		return pageDTO;
-	}
-
-	private ArticlePageData mapPageData(ArticlePageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), ArticlePageData.class);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return pageData;
-	}
-
-	private NewsArticlePageData mapPageData(NewsArticlePageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), NewsArticlePageData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return pageData;
-	}
-
-	private SavedArticlePageData mapPageData(SavedArticlePageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), SavedArticlePageData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return pageData;
-	}
-
-	private PublicationPageData mapPageData(PublicationPageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), PublicationPageData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return pageData;
 	}
 }

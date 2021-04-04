@@ -185,7 +185,7 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 			Map<String, String> dataMap) {
 		String emailId = pageRequest.getHeader().getEmailId();
 		String operation = "";
-		if (emailId != "" && emailId != null) {
+		if (emailId != null && !"".equals(emailId)) {
 			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
 			if ((studentControlWorkDTO != null)) {
 				operation = studentControlWorkDTO.getNextPageOperation();
@@ -199,7 +199,7 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 			Map<String, String> dataMap) {
 		String emailId = pageRequest.getHeader().getEmailId();
 		String pageName = "";
-		if (emailId != "" && emailId != null) {
+		if (emailId != null && !"".equals(emailId)) {
 			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
 			if ((studentControlWorkDTO != null)) {
 				pageName = studentControlWorkDTO.getNextPageName();
