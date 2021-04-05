@@ -2,7 +2,6 @@ package com.enewschamp.subscription.page.handler;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
@@ -10,6 +9,7 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Blob;
+import java.time.LocalDate;
 import java.util.TreeMap;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -42,6 +42,7 @@ import com.enewschamp.subscription.domain.business.StudentPaymentBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionPeriodBusiness;
 import com.enewschamp.subscription.domain.entity.StudentPaymentWork;
+import com.enewschamp.subscription.domain.entity.StudentSubscriptionWork;
 import com.enewschamp.subscription.domain.service.StudentDetailsWorkService;
 import com.enewschamp.subscription.domain.service.StudentPaymentWorkService;
 import com.enewschamp.subscription.domain.service.StudentSchoolWorkService;
@@ -103,97 +104,35 @@ public class StudentPaymentPageHandler implements IPageHandler {
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
+		TreeMap<String, String> paramMap = new TreeMap<String, String>();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		PaymentPageData pageData = new PaymentPageData();
+		Long studentId = 0L;
 		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
-		StudentPaymentWork studentPaymentWork = studentPaymentWorkService
-				.getByStudentIdAndEdition(studentControlWorkDTO.getStudentId(), editionId);
-		TreeMap<String, String> paramMap = new TreeMap<String, String>();
-		try {
-			String mid = propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-					PropertyConstants.PAYTM_MID);
-			String orderId = studentPaymentWork.getOrderId();
-			JSONObject paytmParams = new JSONObject();
-			JSONObject body = new JSONObject();
-			body.put("requestType", "Payment");
-			body.put("mid", mid);
-			body.put("websiteName", "WEBSTAGING");
-			body.put("orderId", orderId);
-			body.put("callbackUrl",
-					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-							PropertyConstants.PAYTM_CALLBACK_URL));
-			JSONObject txnAmount = new JSONObject();
-			txnAmount.put("value", studentPaymentWork.getPaymentAmount());
-			txnAmount.put("currency", studentPaymentWork.getPaymentCurrency());
-			JSONObject userInfo = new JSONObject();
-			userInfo.put("custId", studentPaymentWork.getStudentId());
-			body.put("txnAmount", txnAmount);
-			body.put("userInfo", userInfo);
-			String signature = PaytmChecksum.generateSignature(body.toString(),
-					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-							PropertyConstants.PAYTM_MERCHANT_KEY));
-			JSONObject head = new JSONObject();
-			head.put("signature", signature);
-			paytmParams.put("body", body);
-			paytmParams.put("head", head);
-			String post_data = paytmParams.toString();
-			URL url = new URL("https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=" + mid
-					+ "&orderId=" + orderId);
+		if (studentControlWorkDTO != null) {
+			studentId = studentControlWorkDTO.getStudentId();
+		}
+		StudentPaymentWork studentPaymentWork = studentPaymentWorkService.getByStudentIdAndEdition(studentId,
+				editionId);
+		StudentSubscriptionWork studentSubscriptionWork = studentSubscriptionWorkService.get(studentId, editionId);
+		if ("Y".equals(studentSubscriptionWork.getAutoRenewal())) {
+			paramMap = initiateSubscription(pageNavigationContext, studentPaymentWork,
+					studentSubscriptionWork.getSubscriptionPeriod());
+			studentSubscriptionWork.setSubscriptionId(paramMap.get("subscriptionId"));
+			studentSubscriptionWorkService.update(studentSubscriptionWork);
+		} else {
+			paramMap = initiateTransaction(pageNavigationContext, studentPaymentWork);
 
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Content-Type", "application/json");
-			connection.setDoOutput(true);
-			DataOutputStream requestWriter = new DataOutputStream(connection.getOutputStream());
-			requestWriter.writeBytes(post_data);
-			Blob initTransReqPayload = null;
-			initTransReqPayload = new SerialBlob(post_data.getBytes());
-			studentPaymentWork.setInitTranApiRequest(initTransReqPayload);
-			requestWriter.close();
-			String responseData = "";
-			InputStream is = connection.getInputStream();
-			BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
-			if ((responseData = responseReader.readLine()) != null) {
-				Blob initTranResPayload = null;
-				initTranResPayload = new SerialBlob(responseData.getBytes());
-				studentPaymentWork.setInitTranApiResponse(initTranResPayload);
-				JSONParser parser = new JSONParser();
-				try {
-					JSONObject json = (JSONObject) parser.parse(responseData);
-					if (json.get("body") != null) {
-						JSONObject jsonBody = (JSONObject) parser.parse(json.get("body").toString());
-						String txnToken = jsonBody.get("txnToken").toString();
-						paramMap.put("url",
-								propertiesService.getValue(
-										pageNavigationContext.getPageRequest().getHeader().getModule(),
-										PropertyConstants.PAYTM_SHOW_PAYMENTS_PAGE_URL) + "?mid=" + mid + "&orderId="
-										+ orderId);
-						paramMap.put("mid", mid);
-						paramMap.put("orderId", orderId);
-						paramMap.put("txnToken", txnToken);
-					}
-					pageData.setParamMap(paramMap);
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			responseReader.close();
-		} catch (Exception exception) {
-			exception.printStackTrace();
 		}
-		if (studentPaymentWork != null) {
-			studentPaymentWorkService.update(studentPaymentWork);
-		}
+		pageData.setParamMap(paramMap);
 		pageDto.setData(pageData);
 		return pageDto;
 	}
@@ -260,14 +199,202 @@ public class StudentPaymentPageHandler implements IPageHandler {
 		return pageDTO;
 	}
 
-	public PaymentPageData mapPagedata(PageRequestDTO pageRequest) {
-		PaymentPageData paymentPageData = null;
+	private TreeMap<String, String> initiateSubscription(PageNavigationContext pageNavigationContext,
+			StudentPaymentWork studentPaymentWork, String subscriptionPeriod) {
+		TreeMap<String, String> paramMap = new TreeMap<String, String>();
 		try {
-			paymentPageData = objectMapper.readValue(pageRequest.getData().toString(), PaymentPageData.class);
-		} catch (IOException e) {
-			throw new BusinessException(ErrorCodeConstants.SREVER_ERROR);
+			String subscriptionFrequency = subscriptionPeriod.substring(0, subscriptionPeriod.length() - 1);
+			String subscriptionFrequencyUnit = subscriptionPeriod.substring(subscriptionPeriod.length() - 1,
+					subscriptionPeriod.length());
+			if ("M".equals(subscriptionFrequencyUnit)) {
+				subscriptionFrequencyUnit = "MONTH";
+			} else if ("Y".equals(subscriptionFrequencyUnit)) {
+				subscriptionFrequencyUnit = "YEAR";
+			}
+			LocalDate subscriptionExpiryDate = LocalDate.now();
+			subscriptionExpiryDate = subscriptionExpiryDate.plusYears(Long
+					.valueOf(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+							PropertyConstants.PAYTM_SUBSCRIPTION_EXPIRY_YEARS)));
+			subscriptionExpiryDate = subscriptionExpiryDate.plusDays(3);
+			String subscriptionExpiryDateStr = subscriptionExpiryDate.getYear() + "-"
+					+ ((subscriptionExpiryDate.getMonthValue() > 9) ? subscriptionExpiryDate.getMonthValue()
+							: "0" + subscriptionExpiryDate.getMonthValue())
+					+ "-" + ((subscriptionExpiryDate.getDayOfMonth() > 9) ? subscriptionExpiryDate.getDayOfMonth()
+							: "0" + subscriptionExpiryDate.getDayOfMonth());
+			LocalDate subscriptionStartDate = LocalDate.now();
+			String subscriptionStartDateStr = subscriptionStartDate.getYear() + "-"
+					+ ((subscriptionStartDate.getMonthValue() > 9) ? subscriptionStartDate.getMonthValue()
+							: "0" + subscriptionStartDate.getMonthValue())
+					+ "-" + ((subscriptionStartDate.getDayOfMonth() > 9) ? subscriptionStartDate.getDayOfMonth()
+							: "0" + subscriptionStartDate.getDayOfMonth());
+			String mid = propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+					PropertyConstants.PAYTM_MID);
+			String orderId = studentPaymentWork.getOrderId();
+			JSONObject paytmParams = new JSONObject();
+			JSONObject body = new JSONObject();
+			body.put("requestType", "NATIVE_SUBSCRIPTION");
+			body.put("mid", mid);
+			body.put("websiteName", "WEBSTAGING");
+			body.put("orderId", orderId);
+			body.put("callbackUrl",
+					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+							PropertyConstants.PAYTM_CALLBACK_URL));
+			body.put("subscriptionAmountType",
+					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+							PropertyConstants.PAYTM_SUBSCRIPTION_AMOUNT_TYPE));
+			body.put("subscriptionFrequency", subscriptionFrequency);
+			body.put("subscriptionFrequencyUnit", subscriptionFrequencyUnit);
+			body.put("subscriptionExpiryDate", subscriptionExpiryDateStr);
+			body.put("subscriptionEnableRetry", "1");
+			body.put("subscriptionStartDate", subscriptionStartDateStr);
+			body.put("subscriptionGraceDays", "3");
+
+			JSONObject txnAmount = new JSONObject();
+			txnAmount.put("value", "" + studentPaymentWork.getPaymentAmount() + "0");
+			txnAmount.put("currency", studentPaymentWork.getPaymentCurrency());
+			JSONObject userInfo = new JSONObject();
+			userInfo.put("custId", "" + studentPaymentWork.getStudentId());
+			body.put("txnAmount", txnAmount);
+			body.put("userInfo", userInfo);
+			String signature = PaytmChecksum.generateSignature(body.toString(),
+					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+							PropertyConstants.PAYTM_MERCHANT_KEY));
+			JSONObject head = new JSONObject();
+			head.put("signature", signature);
+			paytmParams.put("body", body);
+			paytmParams.put("head", head);
+			String post_data = paytmParams.toString();
+			System.out.println(">>>>>>>post_data>>>>>>>>" + post_data);
+			URL url = new URL(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+					PropertyConstants.PAYTM_INITIATE_SUBSCRIPTION_URL) + "?mid=" + mid + "&orderId=" + orderId);
+
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setDoOutput(true);
+			DataOutputStream requestWriter = new DataOutputStream(connection.getOutputStream());
+			requestWriter.writeBytes(post_data);
+			Blob initTransReqPayload = null;
+			initTransReqPayload = new SerialBlob(post_data.getBytes());
+			studentPaymentWork.setInitTranApiRequest(initTransReqPayload);
+			requestWriter.close();
+			String responseData = "";
+			InputStream is = connection.getInputStream();
+			BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
+			if ((responseData = responseReader.readLine()) != null) {
+				Blob initTranResPayload = null;
+				initTranResPayload = new SerialBlob(responseData.getBytes());
+				studentPaymentWork.setInitTranApiResponse(initTranResPayload);
+				JSONParser parser = new JSONParser();
+				try {
+					JSONObject json = (JSONObject) parser.parse(responseData);
+					System.out.println(">>>>>>>>>>>responseData>>>>>>>>>>>" + responseData);
+					if (json.get("body") != null) {
+						JSONObject jsonBody = (JSONObject) parser.parse(json.get("body").toString());
+						String txnToken = jsonBody.get("txnToken").toString();
+						String subscriptionId = jsonBody.get("subscriptionId").toString();
+						studentPaymentWork.setSubscriptionId(subscriptionId);
+						paramMap.put("url",
+								propertiesService.getValue(
+										pageNavigationContext.getPageRequest().getHeader().getModule(),
+										PropertyConstants.PAYTM_SHOW_PAYMENTS_PAGE_URL) + "?mid=" + mid + "&orderId="
+										+ orderId);
+						paramMap.put("mid", mid);
+						paramMap.put("orderId", orderId);
+						paramMap.put("txnToken", txnToken);
+						paramMap.put("subscriptionId", subscriptionId);
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			responseReader.close();
+		} catch (Exception exception) {
+			exception.printStackTrace();
 		}
-		return paymentPageData;
+		if (studentPaymentWork != null) {
+			studentPaymentWorkService.update(studentPaymentWork);
+		}
+		return paramMap;
 	}
 
+	private TreeMap<String, String> initiateTransaction(PageNavigationContext pageNavigationContext,
+			StudentPaymentWork studentPaymentWork) {
+		TreeMap<String, String> paramMap = new TreeMap<String, String>();
+		try {
+			String mid = propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+					PropertyConstants.PAYTM_MID);
+			String orderId = studentPaymentWork.getOrderId();
+			JSONObject paytmParams = new JSONObject();
+			JSONObject body = new JSONObject();
+			body.put("requestType", "Payment");
+			body.put("mid", mid);
+			body.put("websiteName", "WEBSTAGING");
+			body.put("orderId", orderId);
+			body.put("callbackUrl",
+					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+							PropertyConstants.PAYTM_CALLBACK_URL));
+			JSONObject txnAmount = new JSONObject();
+			txnAmount.put("value", studentPaymentWork.getPaymentAmount());
+			txnAmount.put("currency", studentPaymentWork.getPaymentCurrency());
+			JSONObject userInfo = new JSONObject();
+			userInfo.put("custId", studentPaymentWork.getStudentId());
+			body.put("txnAmount", txnAmount);
+			body.put("userInfo", userInfo);
+			String signature = PaytmChecksum.generateSignature(body.toString(),
+					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+							PropertyConstants.PAYTM_MERCHANT_KEY));
+			JSONObject head = new JSONObject();
+			head.put("signature", signature);
+			paytmParams.put("body", body);
+			paytmParams.put("head", head);
+			String post_data = paytmParams.toString();
+			URL url = new URL(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+					PropertyConstants.PAYTM_INITIATE_TRANSACTION_URL) + "?mid=" + mid + "&orderId=" + orderId);
+
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setDoOutput(true);
+			DataOutputStream requestWriter = new DataOutputStream(connection.getOutputStream());
+			requestWriter.writeBytes(post_data);
+			Blob initTransReqPayload = null;
+			initTransReqPayload = new SerialBlob(post_data.getBytes());
+			studentPaymentWork.setInitTranApiRequest(initTransReqPayload);
+			requestWriter.close();
+			String responseData = "";
+			InputStream is = connection.getInputStream();
+			BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
+			if ((responseData = responseReader.readLine()) != null) {
+				Blob initTranResPayload = null;
+				initTranResPayload = new SerialBlob(responseData.getBytes());
+				studentPaymentWork.setInitTranApiResponse(initTranResPayload);
+				JSONParser parser = new JSONParser();
+				try {
+					JSONObject json = (JSONObject) parser.parse(responseData);
+					if (json.get("body") != null) {
+						JSONObject jsonBody = (JSONObject) parser.parse(json.get("body").toString());
+						String txnToken = jsonBody.get("txnToken").toString();
+						paramMap.put("url",
+								propertiesService.getValue(
+										pageNavigationContext.getPageRequest().getHeader().getModule(),
+										PropertyConstants.PAYTM_SHOW_PAYMENTS_PAGE_URL) + "?mid=" + mid + "&orderId="
+										+ orderId);
+						paramMap.put("mid", mid);
+						paramMap.put("orderId", orderId);
+						paramMap.put("txnToken", txnToken);
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			responseReader.close();
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+		if (studentPaymentWork != null) {
+			studentPaymentWorkService.update(studentPaymentWork);
+		}
+		return paramMap;
+	}
 }

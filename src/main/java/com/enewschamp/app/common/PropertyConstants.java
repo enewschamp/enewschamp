@@ -47,6 +47,7 @@ public interface PropertyConstants {
 	public static String PAYTM_WEBSITE = "paytm.website";
 	public static String PAYTM_INDUSTRY_TYPE_ID = "paytm.industryTypeId";
 	public static String PAYTM_CALLBACK_URL = "paytm.callbackURL";
+	public static String PAYTM_INITIATE_TRANSACTION_URL = "paytm.initiateTransactionURL";
 	public static String PAYTM_INITIATE_SUBSCRIPTION_URL = "paytm.initiateSubscriptionURL";
 	public static String PAYTM_RENEW_SUBSCRIPTION_URL = "paytm.renewSubscriptionURL";
 	public static String PAYTM_CANCEL_SUBSCRIPTION_URL = "paytm.cancelSubscriptionURL";

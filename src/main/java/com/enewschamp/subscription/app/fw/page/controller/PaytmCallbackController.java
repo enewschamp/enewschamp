@@ -304,23 +304,8 @@ public class PaytmCallbackController {
 
 	public static void main(String[] args) throws Exception {
 		JSONObject body = new JSONObject();
-		body.put("bankName", "WALLET");
-		body.put("bankTxnId", "64345354");
-		body.put("gatewayName", "WALLET");
 		body.put("mid", "ErzAtT88266326392189");
 		body.put("orderId", "P1617367212094_47");
-		body.put("paymentMode", "PPI");
-		body.put("refundAmt", "0.00");
-		JSONObject resultInfo = new JSONObject();
-		resultInfo.put("resultCode", "01");
-		resultInfo.put("resultMsg", "Txn Success");
-		resultInfo.put("resultStatus", "TXN_SUCCESS");
-		body.put("resultInfo", resultInfo);
-		body.put("txnAmount", "250.00");
-		body.put("txnDate", "2021-04-02 18:10:14.0");
-		body.put("txnId", "20210402111212800110168479502480332");
-		body.put("txnType", "SALE");
-		String checksum = PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR");
-		System.out.println(">>>>>>>>>>>>>>" + checksum);
+		System.out.println(">>>>>>>>>>>>>>" + PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR"));
 	}
 }
