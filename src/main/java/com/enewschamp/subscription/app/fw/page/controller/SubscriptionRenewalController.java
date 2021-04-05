@@ -99,6 +99,9 @@ public class SubscriptionRenewalController {
 				paytmParams.put("head", head);
 
 				String post_data = paytmParams.toString();
+				System.out.println(">>>>>>>>>>>>body>>>>>>>>>>>" + post_data);
+				System.out.println(">>>>>>>>>>>URL>>>>>>>>>>>>"
+						+ propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_SUBSCRIPTION_STATUS_URL));
 				URL url = new URL(
 						propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_SUBSCRIPTION_STATUS_URL));
 				try {
@@ -115,13 +118,15 @@ public class SubscriptionRenewalController {
 					BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
 					if ((responseData = responseReader.readLine()) != null) {
 						JSONParser parser = new JSONParser();
+						System.out.println(">>>>>>>>>responseData>>>>>>" + responseData);
 						JSONObject json = (JSONObject) parser.parse(responseData);
 						if (json.get("body") != null) {
 							JSONObject jsonBody = (JSONObject) parser.parse(json.get("body").toString());
 							JSONObject resultInfo = (JSONObject) parser.parse(jsonBody.get("resultInfo").toString());
 							String response = resultInfo.get("status").toString();
 							if ("SUCCESS".equals(response)) {
-								if ("ACTIVE".equals(jsonBody.get("status"))) {
+								if (jsonBody.get("status") != null
+										&& "ACTIVE".equals(jsonBody.get("status").toString())) {
 									renewSubscription(jsonBody.get("upfrontTxnAmount").toString(), studentSubscription);
 								}
 							}
@@ -149,29 +154,37 @@ public class SubscriptionRenewalController {
 			studentPaymentWork.setPaymentCurrency("INR");
 			studentPaymentWork.setStudentId(studentSubscription.getStudentId());
 			studentPaymentWork.setSubscriptionId(studentSubscription.getSubscriptionId());
+			String renewalOrderId = generateOrderId(studentSubscription.getStudentId(),
+					studentSubscription.getSubscriptionSelected());
 			JSONObject paytmParams = new JSONObject();
 			JSONObject body = new JSONObject();
 			body.put("mid", propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MID));
-			body.put("orderId",
-					generateOrderId(studentSubscription.getStudentId(), studentSubscription.getSubscriptionSelected()));
+			body.put("orderId", renewalOrderId);
 			body.put("subscriptionId", studentSubscription.getSubscriptionId());
-			String checksum = PaytmChecksum.generateSignature(body.toString(),
-					propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY));
+
 			JSONObject txnAmount = new JSONObject();
 			txnAmount.put("value", subscriptionAmount);
 			txnAmount.put("currency", "INR");
 
 			body.put("txnAmount", txnAmount);
 
+			String checksum = PaytmChecksum.generateSignature(body.toString(),
+					propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY));
+
 			JSONObject head = new JSONObject();
 			head.put("signature", checksum);
-			head.put("tokenType", "AES");
+			// head.put("tokenType", "AES");
 
 			paytmParams.put("body", body);
 			paytmParams.put("head", head);
 
 			String post_data = paytmParams.toString();
-			URL url = new URL(propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_RENEW_SUBSCRIPTION_URL));
+			System.out.println(">>>>>>>renewal json>>>>>>>>>>>>>" + post_data);
+			System.out.println(">>>>>>>URL>>>>>>>>>>>>>"
+					+ propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_RENEW_SUBSCRIPTION_URL));
+			URL url = new URL(propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_RENEW_SUBSCRIPTION_URL)
+					+ "?mid=" + propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MID) + "&orderId="
+					+ renewalOrderId);
 
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
@@ -193,23 +206,22 @@ public class SubscriptionRenewalController {
 				studentPaymentWork.setInitTranApiResponse(initTranResPayload);
 				JSONParser parser = new JSONParser();
 				JSONObject json = (JSONObject) parser.parse(responseData);
+				System.out.println(">>>>>>>>>>>>>renewal api response>>>>>>>>>>>>" + responseData);
 				if (json.get("body") != null) {
 					JSONObject jsonBody = (JSONObject) parser.parse(json.get("body").toString());
 					JSONObject resultInfo = (JSONObject) parser.parse(jsonBody.get("resultInfo").toString());
 					String response = resultInfo.get("resultStatus").toString();
 					if ("S".equals(response)) {
-						if ("ACTIVE".equals(jsonBody.get("status"))) {
-							String paytmTxnId = jsonBody.get("txnId").toString();
-							studentPaymentWork.setPaytmTxnId(paytmTxnId);
-							studentPaymentWork = studentPaymentWorkService.create(studentPaymentWork);
-							String subscriptionPeriod = studentSubscription.getSubscriptionPeriod();
-							studentSubscription.setEndDate(
-									getNextRenewalDate(subscriptionPeriod, studentSubscription.getEndDate()));
-							studentSubscriptionService.update(studentSubscription);
-							studentPaymentBusiness.workToMaster(studentSubscription.getStudentId(),
-									studentSubscription.getEditionId());
-							studentPaymentWorkService.delete(studentPaymentWork.getPaymentId());
-						}
+						String paytmTxnId = jsonBody.get("txnId").toString();
+						studentPaymentWork.setPaytmTxnId(paytmTxnId);
+						studentPaymentWork = studentPaymentWorkService.create(studentPaymentWork);
+						String subscriptionPeriod = studentSubscription.getSubscriptionPeriod();
+						studentSubscription
+								.setEndDate(getNextRenewalDate(subscriptionPeriod, studentSubscription.getEndDate()));
+						studentSubscriptionService.update(studentSubscription);
+						studentPaymentBusiness.workToMaster(studentSubscription.getStudentId(),
+								studentSubscription.getEditionId());
+						studentPaymentWorkService.delete(studentPaymentWork.getPaymentId());
 					}
 				}
 			}

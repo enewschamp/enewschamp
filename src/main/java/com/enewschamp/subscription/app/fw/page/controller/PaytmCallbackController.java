@@ -301,11 +301,4 @@ public class PaytmCallbackController {
 		}
 		return tranData;
 	}
-
-	public static void main(String[] args) throws Exception {
-		JSONObject body = new JSONObject();
-		body.put("mid", "ErzAtT88266326392189");
-		body.put("orderId", "P1617367212094_47");
-		System.out.println(">>>>>>>>>>>>>>" + PaytmChecksum.generateSignature(body.toString(), "kk3pYLy_DD4uk9NR"));
-	}
 }
