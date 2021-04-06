@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.app.common.KeyProperty;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.common.domain.service.ErrorCodesService;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
@@ -103,15 +104,14 @@ public class StudentRefundController {
 		refund = studentRefundService.create(refund);
 		JSONObject paytmParams = new JSONObject();
 		JSONObject body = new JSONObject();
-		body.put("mid", propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MID));
+		body.put("mid", KeyProperty.MID);
 		body.put("txnType", "REFUND");
 		body.put("orderId", refundDTO.getOrderId());
 		body.put("txnId", refundDTO.getPaytmTxnId());
 		body.put("refId", refundDTO.getRefOrderId());
 		body.put("refundAmount", refundDTO.getRefundAmount());
 
-		String checksum = PaytmChecksum.generateSignature(body.toString(),
-				propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY));
+		String checksum = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
 
 		JSONObject head = new JSONObject();
 		head.put("signature", checksum);
@@ -170,11 +170,10 @@ public class StudentRefundController {
 				StudentRefund studentRefund = studentRefundList.get(i);
 				JSONObject paytmParams = new JSONObject();
 				JSONObject body = new JSONObject();
-				body.put("mid", propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MID));
+				body.put("mid", KeyProperty.MID);
 				body.put("orderId", studentRefund.getOrderId());
 				body.put("refId", studentRefund.getRefOrderId());
-				String checksum = PaytmChecksum.generateSignature(body.toString(),
-						propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY));
+				String checksum = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
 				JSONObject head = new JSONObject();
 				head.put("signature", checksum);
 
@@ -242,11 +241,10 @@ public class StudentRefundController {
 			body.put("pageNum", searchData.getPageNumber());
 		}
 
-		body.put("mid", propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MID));
+		body.put("mid", KeyProperty.MID);
 		body.put("startDate", searchData.getStartDate() + "T00:00:00+05:30");
 		body.put("endDate", searchData.getEndDate() + "T23:59:59+05:30");
-		String checksum = PaytmChecksum.generateSignature(body.toString(),
-				propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY));
+		String checksum = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
 		JSONObject head = new JSONObject();
 		head.put("tokenType", "CHECKSUM");
 		head.put("clientId", "C11");

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enewschamp.app.common.KeyProperty;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.common.domain.service.ErrorCodesService;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
@@ -87,10 +88,9 @@ public class SubscriptionRenewalController {
 				StudentSubscription studentSubscription = subscriptionRenewalList.get(i);
 				JSONObject paytmParams = new JSONObject();
 				JSONObject body = new JSONObject();
-				body.put("mid", propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MID));
+				body.put("mid", KeyProperty.MID);
 				body.put("subsId", studentSubscription.getSubscriptionId());
-				String checksum = PaytmChecksum.generateSignature(body.toString(),
-						propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY));
+				String checksum = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
 				JSONObject head = new JSONObject();
 				head.put("signature", checksum);
 				head.put("tokenType", "AES");
@@ -158,7 +158,7 @@ public class SubscriptionRenewalController {
 					studentSubscription.getSubscriptionSelected());
 			JSONObject paytmParams = new JSONObject();
 			JSONObject body = new JSONObject();
-			body.put("mid", propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MID));
+			body.put("mid", KeyProperty.MID);
 			body.put("orderId", renewalOrderId);
 			body.put("subscriptionId", studentSubscription.getSubscriptionId());
 
@@ -168,8 +168,7 @@ public class SubscriptionRenewalController {
 
 			body.put("txnAmount", txnAmount);
 
-			String checksum = PaytmChecksum.generateSignature(body.toString(),
-					propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY));
+			String checksum = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
 
 			JSONObject head = new JSONObject();
 			head.put("signature", checksum);
@@ -183,8 +182,7 @@ public class SubscriptionRenewalController {
 			System.out.println(">>>>>>>URL>>>>>>>>>>>>>"
 					+ propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_RENEW_SUBSCRIPTION_URL));
 			URL url = new URL(propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_RENEW_SUBSCRIPTION_URL)
-					+ "?mid=" + propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MID) + "&orderId="
-					+ renewalOrderId);
+					+ "?mid=" + KeyProperty.MID + "&orderId=" + renewalOrderId);
 
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");

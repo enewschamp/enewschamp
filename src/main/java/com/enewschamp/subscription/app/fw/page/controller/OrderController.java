@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enewschamp.app.common.KeyProperty;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.common.domain.service.ErrorCodesService;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
@@ -101,9 +102,8 @@ public class OrderController {
 		if (searchData.getPayMode() != null && !"".equals(searchData.getPayMode())) {
 			body.put("payMode", searchData.getPayMode());
 		}
-		body.put("mid", propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MID));
-		String checksum = PaytmChecksum.generateSignature(body.toString(),
-				propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY));
+		body.put("mid", KeyProperty.MID);
+		String checksum = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
 		JSONObject head = new JSONObject();
 		head.put("tokenType", "CHECKSUM");
 		head.put("signature", checksum);
@@ -149,6 +149,7 @@ public class OrderController {
 			responseReader.close();
 		} catch (Exception exception) {
 			exception.printStackTrace();
+			orderListDTO.setMessage("Unable to fetch list at the moment. Please try again.");
 		}
 		return new ResponseEntity<OrderListDTO>(orderListDTO, HttpStatus.OK);
 	}

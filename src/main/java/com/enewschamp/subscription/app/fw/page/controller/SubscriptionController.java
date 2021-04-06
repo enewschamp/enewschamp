@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enewschamp.app.common.KeyProperty;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.common.domain.service.ErrorCodesService;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
@@ -87,9 +88,8 @@ public class SubscriptionController {
 			body.put("subsStatusFilter", searchData.getSubsStatusFilter());
 		}
 		body.put("custId", searchData.getCustId());
-		body.put("mid", propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MID));
-		String checksum = PaytmChecksum.generateSignature(body.toString(),
-				propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY));
+		body.put("mid", KeyProperty.MID);
+		String checksum = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
 		JSONObject head = new JSONObject();
 		head.put("tokenType", "AES");
 		head.put("signature", checksum);
@@ -123,7 +123,7 @@ public class SubscriptionController {
 					JSONObject resultInfo = (JSONObject) parser.parse(jsonBody.get("resultInfo").toString());
 					if ("SUCCESS".equals(resultInfo.get("status").toString())) {
 						JSONArray subscriptionDetailsList = (JSONArray) jsonBody.get("subscriptionDetails");
-						if (subscriptionDetailsList.size() > 0) {
+						if (subscriptionDetailsList != null && subscriptionDetailsList.size() > 0) {
 							subscriptionListDTO.setSubscriptionDetails(subscriptionDetailsList);
 						} else {
 							subscriptionListDTO.setMessage(resultInfo.get("message").toString());
@@ -138,6 +138,7 @@ public class SubscriptionController {
 			responseReader.close();
 		} catch (Exception exception) {
 			exception.printStackTrace();
+			subscriptionListDTO.setMessage("Unable to fetch list at the moment. Please try again.");
 		}
 		return new ResponseEntity<SubscriptionListDTO>(subscriptionListDTO, HttpStatus.OK);
 	}

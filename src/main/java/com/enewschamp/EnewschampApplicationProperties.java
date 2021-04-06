@@ -15,9 +15,6 @@ import lombok.Data;
 @ConfigurationProperties("enewschamp.config")
 public class EnewschampApplicationProperties {
 
-	private String encryptionAlgorithm;
-	private String encryptionKey;
-
 	@Data
 	public static class PageHandlerMapping {
 		@NotNull

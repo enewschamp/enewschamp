@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.app.common.KeyProperty;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PropertyConstants;
@@ -203,6 +204,7 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			StudentPaymentWork studentPaymentWork, String subscriptionPeriod) {
 		TreeMap<String, String> paramMap = new TreeMap<String, String>();
 		try {
+			String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 			String subscriptionFrequency = subscriptionPeriod.substring(0, subscriptionPeriod.length() - 1);
 			String subscriptionFrequencyUnit = subscriptionPeriod.substring(subscriptionPeriod.length() - 1,
 					subscriptionPeriod.length());
@@ -213,8 +215,7 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			}
 			LocalDate subscriptionExpiryDate = LocalDate.now();
 			subscriptionExpiryDate = subscriptionExpiryDate.plusYears(Long
-					.valueOf(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-							PropertyConstants.PAYTM_SUBSCRIPTION_EXPIRY_YEARS)));
+					.valueOf(propertiesService.getValue(module, PropertyConstants.PAYTM_SUBSCRIPTION_EXPIRY_YEARS)));
 			subscriptionExpiryDate = subscriptionExpiryDate.plusDays(3);
 			String subscriptionExpiryDateStr = subscriptionExpiryDate.getYear() + "-"
 					+ ((subscriptionExpiryDate.getMonthValue() > 9) ? subscriptionExpiryDate.getMonthValue()
@@ -227,21 +228,16 @@ public class StudentPaymentPageHandler implements IPageHandler {
 							: "0" + subscriptionStartDate.getMonthValue())
 					+ "-" + ((subscriptionStartDate.getDayOfMonth() > 9) ? subscriptionStartDate.getDayOfMonth()
 							: "0" + subscriptionStartDate.getDayOfMonth());
-			String mid = propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-					PropertyConstants.PAYTM_MID);
 			String orderId = studentPaymentWork.getOrderId();
 			JSONObject paytmParams = new JSONObject();
 			JSONObject body = new JSONObject();
 			body.put("requestType", "NATIVE_SUBSCRIPTION");
-			body.put("mid", mid);
+			body.put("mid", KeyProperty.MID);
 			body.put("websiteName", "WEBSTAGING");
 			body.put("orderId", orderId);
-			body.put("callbackUrl",
-					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-							PropertyConstants.PAYTM_CALLBACK_URL));
+			body.put("callbackUrl", propertiesService.getValue(module, PropertyConstants.PAYTM_CALLBACK_URL));
 			body.put("subscriptionAmountType",
-					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-							PropertyConstants.PAYTM_SUBSCRIPTION_AMOUNT_TYPE));
+					propertiesService.getValue(module, PropertyConstants.PAYTM_SUBSCRIPTION_AMOUNT_TYPE));
 			body.put("subscriptionFrequency", subscriptionFrequency);
 			body.put("subscriptionFrequencyUnit", subscriptionFrequencyUnit);
 			body.put("subscriptionExpiryDate", subscriptionExpiryDateStr);
@@ -256,17 +252,15 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			userInfo.put("custId", "" + studentPaymentWork.getStudentId());
 			body.put("txnAmount", txnAmount);
 			body.put("userInfo", userInfo);
-			String signature = PaytmChecksum.generateSignature(body.toString(),
-					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-							PropertyConstants.PAYTM_MERCHANT_KEY));
+			String signature = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
 			JSONObject head = new JSONObject();
 			head.put("signature", signature);
 			paytmParams.put("body", body);
 			paytmParams.put("head", head);
 			String post_data = paytmParams.toString();
 			System.out.println(">>>>>>>post_data>>>>>>>>" + post_data);
-			URL url = new URL(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-					PropertyConstants.PAYTM_INITIATE_SUBSCRIPTION_URL) + "?mid=" + mid + "&orderId=" + orderId);
+			URL url = new URL(propertiesService.getValue(module, PropertyConstants.PAYTM_INITIATE_SUBSCRIPTION_URL)
+					+ "?mid=" + KeyProperty.MID + "&orderId=" + orderId);
 
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
@@ -295,11 +289,9 @@ public class StudentPaymentPageHandler implements IPageHandler {
 						String subscriptionId = jsonBody.get("subscriptionId").toString();
 						studentPaymentWork.setSubscriptionId(subscriptionId);
 						paramMap.put("url",
-								propertiesService.getValue(
-										pageNavigationContext.getPageRequest().getHeader().getModule(),
-										PropertyConstants.PAYTM_SHOW_PAYMENTS_PAGE_URL) + "?mid=" + mid + "&orderId="
-										+ orderId);
-						paramMap.put("mid", mid);
+								propertiesService.getValue(module, PropertyConstants.PAYTM_SHOW_PAYMENTS_PAGE_URL)
+										+ "?mid=" + KeyProperty.MID + "&orderId=" + orderId);
+						paramMap.put("mid", KeyProperty.MID);
 						paramMap.put("orderId", orderId);
 						paramMap.put("txnToken", txnToken);
 						paramMap.put("subscriptionId", subscriptionId);
@@ -322,18 +314,15 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			StudentPaymentWork studentPaymentWork) {
 		TreeMap<String, String> paramMap = new TreeMap<String, String>();
 		try {
-			String mid = propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-					PropertyConstants.PAYTM_MID);
 			String orderId = studentPaymentWork.getOrderId();
+			String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 			JSONObject paytmParams = new JSONObject();
 			JSONObject body = new JSONObject();
 			body.put("requestType", "Payment");
-			body.put("mid", mid);
+			body.put("mid", KeyProperty.MID);
 			body.put("websiteName", "WEBSTAGING");
 			body.put("orderId", orderId);
-			body.put("callbackUrl",
-					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-							PropertyConstants.PAYTM_CALLBACK_URL));
+			body.put("callbackUrl", propertiesService.getValue(module, PropertyConstants.PAYTM_CALLBACK_URL));
 			JSONObject txnAmount = new JSONObject();
 			txnAmount.put("value", studentPaymentWork.getPaymentAmount());
 			txnAmount.put("currency", studentPaymentWork.getPaymentCurrency());
@@ -341,16 +330,14 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			userInfo.put("custId", studentPaymentWork.getStudentId());
 			body.put("txnAmount", txnAmount);
 			body.put("userInfo", userInfo);
-			String signature = PaytmChecksum.generateSignature(body.toString(),
-					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-							PropertyConstants.PAYTM_MERCHANT_KEY));
+			String signature = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
 			JSONObject head = new JSONObject();
 			head.put("signature", signature);
 			paytmParams.put("body", body);
 			paytmParams.put("head", head);
 			String post_data = paytmParams.toString();
-			URL url = new URL(propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
-					PropertyConstants.PAYTM_INITIATE_TRANSACTION_URL) + "?mid=" + mid + "&orderId=" + orderId);
+			URL url = new URL(propertiesService.getValue(module, PropertyConstants.PAYTM_INITIATE_TRANSACTION_URL)
+					+ "?mid=" + KeyProperty.MID + "&orderId=" + orderId);
 
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
@@ -376,11 +363,9 @@ public class StudentPaymentPageHandler implements IPageHandler {
 						JSONObject jsonBody = (JSONObject) parser.parse(json.get("body").toString());
 						String txnToken = jsonBody.get("txnToken").toString();
 						paramMap.put("url",
-								propertiesService.getValue(
-										pageNavigationContext.getPageRequest().getHeader().getModule(),
-										PropertyConstants.PAYTM_SHOW_PAYMENTS_PAGE_URL) + "?mid=" + mid + "&orderId="
-										+ orderId);
-						paramMap.put("mid", mid);
+								propertiesService.getValue(module, PropertyConstants.PAYTM_SHOW_PAYMENTS_PAGE_URL)
+										+ "?mid=" + KeyProperty.MID + "&orderId=" + orderId);
+						paramMap.put("mid", KeyProperty.MID);
 						paramMap.put("orderId", orderId);
 						paramMap.put("txnToken", txnToken);
 					}

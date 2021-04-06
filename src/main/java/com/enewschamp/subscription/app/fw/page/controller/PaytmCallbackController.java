@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enewschamp.app.common.KeyProperty;
 import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.common.uicontrols.rules.UIControlsRuleExecutionService;
 import com.enewschamp.app.common.uicontrols.service.UIControlsGlobalService;
@@ -148,8 +149,7 @@ public class PaytmCallbackController {
 
 		boolean isValidChecksum = false;
 		try {
-			isValidChecksum = PaytmChecksum.verifySignature(paytmParams,
-					propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY), checksumHash);
+			isValidChecksum = PaytmChecksum.verifySignature(paytmParams, KeyProperty.MID, checksumHash);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -223,13 +223,12 @@ public class PaytmCallbackController {
 		HashMap<String, String> tranData = new HashMap<String, String>();
 		JSONObject paytmParams = new JSONObject();
 		JSONObject body = new JSONObject();
-		body.put("mid", propertiesService.getValue(module, PropertyConstants.PAYTM_MID));
+		body.put("mid", KeyProperty.MID);
 		body.put("orderId", orderId);
 		String signature = "";
 		StudentPaymentWork studentPaymentWork = studentPaymentWorkService.getByOrderId(orderId);
 		try {
-			signature = PaytmChecksum.generateSignature(body.toString(),
-					propertiesService.getValue(module, PropertyConstants.PAYTM_MERCHANT_KEY));
+			signature = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -272,8 +271,7 @@ public class PaytmCallbackController {
 						jsonBody = (JSONObject) parser.parse(json.get("body").toString());
 						try {
 							isValidChecksum = PaytmChecksum.verifySignature(jsonBody.toString(),
-									propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_MERCHANT_KEY),
-									checksumHash);
+									KeyProperty.MERCHANT_KEY, checksumHash);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

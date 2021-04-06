@@ -41,8 +41,6 @@ public interface PropertyConstants {
 	public static String OTP_GEN_MAX_ATTEMPTS = "otp.genMaxAttempts";
 	public static String OTP_VERIFY_MAX_ATTEMPTS = "otp.verifyMaxAttempts";
 	public static String OTP_EXPIRY_SECONDS = "otp.expirySeconds";
-	public static String PAYTM_MID = "paytm.mid";
-	public static String PAYTM_MERCHANT_KEY = "paytm.merchantkey";
 	public static String PAYTM_CHANNEL_ID = "paytm.channelId";
 	public static String PAYTM_WEBSITE = "paytm.website";
 	public static String PAYTM_INDUSTRY_TYPE_ID = "paytm.industryTypeId";
