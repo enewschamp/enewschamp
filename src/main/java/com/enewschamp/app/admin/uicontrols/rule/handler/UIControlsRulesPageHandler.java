@@ -114,7 +114,7 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 				UIControlsRulesPageData.class);
 		validate(pageData, this.getClass().getName());
 		UIControlsRules uiControlesRules = mapUIControlsRulesData(pageRequest, pageData);
-		uiControlesRules = uiControlsRuleService.update(uiControlesRules);
+		uiControlesRules = uiControlsRuleService.updateOne(uiControlesRules);
 		mapUIControlsRules(pageRequest, pageDto, uiControlesRules);
 		return pageDto;
 	}

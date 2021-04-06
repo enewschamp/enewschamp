@@ -44,8 +44,24 @@ public class UIControlsRulesService {
 	@Autowired
 	AuditService auditService;
 
-	public UIControlsRules create(UIControlsRules UIControlsRulesEntity) {
-		return UIControlsRulesRepository.save(UIControlsRulesEntity);
+	public UIControlsRules create(UIControlsRules entity) {
+		UIControlsRules uiControlsRules = null;
+		try {
+			uiControlsRules = UIControlsRulesRepository.save(entity);
+		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return uiControlsRules;
+	}
+	
+	public UIControlsRules updateOne(UIControlsRules UIControlsRules) {
+		Long uiControlId = UIControlsRules.getRuleId();
+		UIControlsRules existingUIControlsRules = get(uiControlId);
+		if (existingUIControlsRules.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		modelMapper.map(UIControlsRules, existingUIControlsRules);
+		return UIControlsRulesRepository.save(existingUIControlsRules);
 	}
 
 	public UIControlsRules update(UIControlsRules UIControlsRules) {
@@ -71,7 +87,7 @@ public class UIControlsRulesService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.PAGE_NOT_FOUND);
+			throw new BusinessException(ErrorCodeConstants.UICONTROLS_NOT_FOUND);
 
 		}
 	}

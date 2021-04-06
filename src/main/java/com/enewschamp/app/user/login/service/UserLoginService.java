@@ -73,7 +73,7 @@ public class UserLoginService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.STUD_LOGIN_NOT_FOUND, String.valueOf(userLoginId));
+			throw new BusinessException(ErrorCodeConstants.USER_NOT_FOUND, String.valueOf(userLoginId));
 		}
 	}
 

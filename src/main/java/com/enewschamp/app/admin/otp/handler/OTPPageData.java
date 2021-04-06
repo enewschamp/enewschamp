@@ -37,5 +37,5 @@ public class OTPPageData extends PageData {
 	private LocalDateTime verificationTime;
 
 	@NotNull(message = MessageConstants.VERIFY_ATTEMPTS_NOT_NULL)
-	private int verifyAttempts = 0;
+	private int verifyAttempts;
 }

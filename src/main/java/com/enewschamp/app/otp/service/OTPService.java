@@ -203,7 +203,7 @@ public class OTPService {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingOTP.setRecordInUse(RecordInUseType.N);
-		existingOTP.setOperationDateTime(null);
+		existingOTP.setOperationDateTime(LocalDateTime.now());
 		return repository.save(existingOTP);
 	}
 
@@ -214,7 +214,7 @@ public class OTPService {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingOTP.setRecordInUse(RecordInUseType.Y);
-		existingOTP.setOperationDateTime(null);
+		existingOTP.setOperationDateTime(LocalDateTime.now());
 		return repository.save(existingOTP);
 	}
 
