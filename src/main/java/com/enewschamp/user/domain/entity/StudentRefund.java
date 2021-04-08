@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.StringCryptoConverter;
 import com.enewschamp.domain.common.BaseEntity;
@@ -36,6 +37,10 @@ public class StudentRefund extends BaseEntity {
 
 	@Column(name = "studentId")
 	private Long studentId;
+
+	@NotNull
+	@Column(name = "editionId", length = 6)
+	private String editionId;
 
 	@Column(name = "orderId")
 	private String orderId;

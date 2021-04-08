@@ -2,6 +2,7 @@ package com.enewschamp.subscription.app.dto;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -36,6 +37,8 @@ public class StudentSubscriptionDTO extends AbstractDTO {
 	private LocalDate endDate;
 
 	private String autoRenewal;
+
+	private String orderId;
 
 	private String subscriptionId;
 

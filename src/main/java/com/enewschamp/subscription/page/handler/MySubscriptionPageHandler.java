@@ -42,8 +42,12 @@ import com.enewschamp.subscription.domain.business.StudentShareAchievementsBusin
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 import com.enewschamp.subscription.domain.entity.StudentPayment;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;
+import com.enewschamp.subscription.domain.entity.StudentSubscriptionHistory;
 import com.enewschamp.subscription.domain.service.StudentPaymentService;
+import com.enewschamp.subscription.domain.service.StudentSubscriptionHistoryService;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionService;
+import com.enewschamp.user.domain.entity.StudentRefund;
+import com.enewschamp.user.domain.service.StudentRefundService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paytm.pg.merchant.PaytmChecksum;
 
@@ -58,6 +62,9 @@ public class MySubscriptionPageHandler implements IPageHandler {
 
 	@Autowired
 	StudentRegistrationService studentRegistrationService;
+
+	@Autowired
+	StudentRefundService studentRefundService;
 
 	@Autowired
 	PreferenceBusiness preferenceBusiness;
@@ -76,6 +83,9 @@ public class MySubscriptionPageHandler implements IPageHandler {
 
 	@Autowired
 	StudentSubscriptionService studentSubscriptionService;
+
+	@Autowired
+	StudentSubscriptionHistoryService studentSubscriptionHistoryService;
 
 	@Autowired
 	StudentPaymentService studentPaymentService;
@@ -114,8 +124,14 @@ public class MySubscriptionPageHandler implements IPageHandler {
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		StudentSubscriptionDTO studentSubscriptionDTO = studentSubscriptionBusiness
 				.getStudentSubscriptionFromMaster(studentId, editionId);
-		List<StudentPayment> studentPayment = studentPaymentService.getAllByStudentIdAndEdition(studentId, editionId);
-		mySubscriptionPageData.setPaymentHistory(studentPayment);
+		List<StudentPayment> studentPaymentList = studentPaymentService.getAllByStudentIdAndEdition(studentId,
+				editionId);
+		List<StudentRefund> studentRefundList = studentRefundService.getAllByStudentIdAndEdition(studentId, editionId);
+		List<StudentSubscriptionHistory> studentSubscriptionList = studentSubscriptionHistoryService
+				.getAllByStudentIdAndEdition(studentId, editionId);
+		mySubscriptionPageData.setPaymentHistory(studentPaymentList);
+		mySubscriptionPageData.setRefundHistory(studentRefundList);
+		mySubscriptionPageData.setSubscriptionHistory(studentSubscriptionList);
 		mySubscriptionPageData.setSubscription(studentSubscriptionDTO);
 		pageDto.setData(mySubscriptionPageData);
 		return pageDto;
@@ -161,18 +177,16 @@ public class MySubscriptionPageHandler implements IPageHandler {
 		String editionId = pageRequest.getHeader().getEditionId();
 		String emailId = pageRequest.getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		StudentSubscription studentSubscription = studentSubscriptionService.get(studentId, editionId);
+		StudentSubscriptionDTO studentSubscriptionDTO = modelMapper
+				.map(studentSubscriptionService.get(studentId, editionId), StudentSubscriptionDTO.class);
 		try {
 			JSONObject paytmParams = new JSONObject();
 			JSONObject body = new JSONObject();
 			body.put("mid", KeyProperty.MID);
-			body.put("subsId", studentSubscription.getSubscriptionId());
-
+			body.put("subsId", studentSubscriptionDTO.getSubscriptionId());
 			String checksum = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
-
 			JSONObject head = new JSONObject();
 			head.put("signature", checksum);
-
 			paytmParams.put("body", body);
 			paytmParams.put("head", head);
 
@@ -199,7 +213,9 @@ public class MySubscriptionPageHandler implements IPageHandler {
 					JSONObject resultInfo = (JSONObject) parser.parse(jsonBody.get("resultInfo").toString());
 					String status = resultInfo.get("message").toString();
 					if ("SUCCESS".equals(status)) {
-						studentSubscription.setAutoRenewal("N");
+						studentSubscriptionDTO.setAutoRenewal("N");
+						StudentSubscription studentSubscription = modelMapper.map(studentSubscriptionDTO,
+								StudentSubscription.class);
 						studentSubscriptionService.update(studentSubscription);
 					} else {
 						responseReader.close();

@@ -64,7 +64,7 @@ public class StudentPaymentService {
 	}
 
 	public StudentPayment getByStudentIdAndEdition(Long studentId, String editionId) {
-		List<StudentPayment> existingEntities = repository.getByStudentIdAndEdition(studentId, editionId);
+		List<StudentPayment> existingEntities = repository.getAllByStudentIdAndEdition(studentId, editionId);
 		if (existingEntities != null && existingEntities.size() > 0) {
 			return existingEntities.get(0);
 		} else {
@@ -73,7 +73,7 @@ public class StudentPaymentService {
 	}
 
 	public List<StudentPayment> getAllByStudentIdAndEdition(Long studentId, String editionId) {
-		return repository.getByStudentIdAndEdition(studentId, editionId);
+		return repository.getAllByStudentIdAndEdition(studentId, editionId);
 	}
 
 	public StudentPayment getByOrderId(String orderId) {

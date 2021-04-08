@@ -43,6 +43,8 @@ public interface PropertyConstants {
 	public static String OTP_EXPIRY_SECONDS = "otp.expirySeconds";
 	public static String PAYTM_CHANNEL_ID = "paytm.channelId";
 	public static String PAYTM_WEBSITE = "paytm.website";
+	public static String PAYTM_REQUEST_TYPE_PAYMENT = "paytm.paymentRequestType";
+	public static String PAYTM_REQUEST_TYPE_SUBSCRIPTION = "paytm.subscriptionRequestType";
 	public static String PAYTM_INDUSTRY_TYPE_ID = "paytm.industryTypeId";
 	public static String PAYTM_CALLBACK_URL = "paytm.callbackURL";
 	public static String PAYTM_INITIATE_TRANSACTION_URL = "paytm.initiateTransactionURL";
@@ -57,6 +59,8 @@ public interface PropertyConstants {
 	public static String PAYTM_ORDER_LIST_URL = "paytm.orderListURL";
 	public static String PAYTM_SUBSCRIPTION_AMOUNT_TYPE = "paytm.subscriptionAmountType";
 	public static String PAYTM_SUBSCRIPTION_EXPIRY_YEARS = "paytm.subscriptionExpiryYears";
+	public static String PAYTM_SUBSCRIPTION_ENABLE_RETRY = "paytm.subscriptionEnableRetry";
+	public static String PAYTM_SUBSCRIPTION_GRACE_DAYS = "paytm.subscriptionGraceDays";
 	public static String PAYTM_SHOW_PAYMENTS_PAGE_URL = "paytm.showPaymentsPageURL";
 	public static String PAYTM_TRANSACTION_STATUS_URL = "paytm.transactionStatusURL";
 	public static String PAYTM_CALLBACK_CHECKSUM_MISMATCH = "paytm.callbackCheckSumMismatch";

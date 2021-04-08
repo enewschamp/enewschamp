@@ -203,7 +203,10 @@ public class StudentPaymentPageHandler implements IPageHandler {
 	private TreeMap<String, String> initiateSubscription(PageNavigationContext pageNavigationContext,
 			StudentPaymentWork studentPaymentWork, String subscriptionPeriod) {
 		TreeMap<String, String> paramMap = new TreeMap<String, String>();
+		StudentSubscriptionWork studentSubscriptionWork = null;
 		try {
+			studentSubscriptionWork = studentSubscriptionWorkService.get(studentPaymentWork.getStudentId(),
+					studentPaymentWork.getEditionId());
 			String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 			String subscriptionFrequency = subscriptionPeriod.substring(0, subscriptionPeriod.length() - 1);
 			String subscriptionFrequencyUnit = subscriptionPeriod.substring(subscriptionPeriod.length() - 1,
@@ -229,22 +232,28 @@ public class StudentPaymentPageHandler implements IPageHandler {
 					+ "-" + ((subscriptionStartDate.getDayOfMonth() > 9) ? subscriptionStartDate.getDayOfMonth()
 							: "0" + subscriptionStartDate.getDayOfMonth());
 			String orderId = studentPaymentWork.getOrderId();
+			String amountType = propertiesService.getValue(module, PropertyConstants.PAYTM_SUBSCRIPTION_AMOUNT_TYPE);
 			JSONObject paytmParams = new JSONObject();
 			JSONObject body = new JSONObject();
-			body.put("requestType", "NATIVE_SUBSCRIPTION");
+			body.put("requestType",
+					propertiesService.getValue(module, PropertyConstants.PAYTM_REQUEST_TYPE_SUBSCRIPTION));
 			body.put("mid", KeyProperty.MID);
-			body.put("websiteName", "WEBSTAGING");
+			body.put("websiteName", propertiesService.getValue(module, PropertyConstants.PAYTM_WEBSITE));
 			body.put("orderId", orderId);
 			body.put("callbackUrl", propertiesService.getValue(module, PropertyConstants.PAYTM_CALLBACK_URL));
-			body.put("subscriptionAmountType",
-					propertiesService.getValue(module, PropertyConstants.PAYTM_SUBSCRIPTION_AMOUNT_TYPE));
+			body.put("subscriptionAmountType", amountType);
+			studentSubscriptionWork.setSubscriptionAmountType(amountType);
 			body.put("subscriptionFrequency", subscriptionFrequency);
+			studentSubscriptionWork.setSubscriptionFrequency(subscriptionFrequency);
 			body.put("subscriptionFrequencyUnit", subscriptionFrequencyUnit);
+			studentSubscriptionWork.setSubscriptionFrequencyUnit(subscriptionFrequencyUnit);
 			body.put("subscriptionExpiryDate", subscriptionExpiryDateStr);
-			body.put("subscriptionEnableRetry", "1");
+			studentSubscriptionWork.setSubscriptionExpiryDate(subscriptionExpiryDateStr);
+			body.put("subscriptionEnableRetry",
+					propertiesService.getValue(module, PropertyConstants.PAYTM_SUBSCRIPTION_ENABLE_RETRY));
 			body.put("subscriptionStartDate", subscriptionStartDateStr);
-			body.put("subscriptionGraceDays", "3");
-
+			body.put("subscriptionGraceDays",
+					propertiesService.getValue(module, PropertyConstants.PAYTM_SUBSCRIPTION_GRACE_DAYS));
 			JSONObject txnAmount = new JSONObject();
 			txnAmount.put("value", "" + studentPaymentWork.getPaymentAmount() + "0");
 			txnAmount.put("currency", studentPaymentWork.getPaymentCurrency());
@@ -307,6 +316,9 @@ public class StudentPaymentPageHandler implements IPageHandler {
 		if (studentPaymentWork != null) {
 			studentPaymentWorkService.update(studentPaymentWork);
 		}
+		if (studentSubscriptionWork != null) {
+			studentSubscriptionWorkService.update(studentSubscriptionWork);
+		}
 		return paramMap;
 	}
 
@@ -318,9 +330,9 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 			JSONObject paytmParams = new JSONObject();
 			JSONObject body = new JSONObject();
-			body.put("requestType", "Payment");
+			body.put("requestType", propertiesService.getValue(module, PropertyConstants.PAYTM_REQUEST_TYPE_PAYMENT));
 			body.put("mid", KeyProperty.MID);
-			body.put("websiteName", "WEBSTAGING");
+			body.put("websiteName", propertiesService.getValue(module, PropertyConstants.PAYTM_WEBSITE));
 			body.put("orderId", orderId);
 			body.put("callbackUrl", propertiesService.getValue(module, PropertyConstants.PAYTM_CALLBACK_URL));
 			JSONObject txnAmount = new JSONObject();

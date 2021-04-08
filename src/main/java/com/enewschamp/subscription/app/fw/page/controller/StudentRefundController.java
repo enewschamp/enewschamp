@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Blob;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -97,9 +99,11 @@ public class StudentRefundController {
 		if (studentId == 0L || "".equals(paytmTxnId)) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
+		refundDTO.setEditionId("INDIAN");
 		refundDTO.setStudentId(studentId);
 		refundDTO.setPaytmTxnId(paytmTxnId);
-		refundDTO.setRefOrderId("REF_" + refundDTO.getOrderId());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyymmddHHmmss");
+		refundDTO.setRefOrderId("ENC_" + sdf.format(new Date()) + "_" + refundDTO.getOrderId() + "_REF");
 		StudentRefund refund = modelMapper.map(refundDTO, StudentRefund.class);
 		refund = studentRefundService.create(refund);
 		JSONObject paytmParams = new JSONObject();

@@ -22,8 +22,10 @@ import com.enewschamp.subscription.app.dto.StudentSubscriptionDTO;
 import com.enewschamp.subscription.app.dto.StudentSubscriptionWorkDTO;
 import com.enewschamp.subscription.domain.entity.StudentControlWork;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;
+import com.enewschamp.subscription.domain.entity.StudentSubscriptionHistory;
 import com.enewschamp.subscription.domain.entity.StudentSubscriptionWork;
 import com.enewschamp.subscription.domain.service.StudentControlWorkService;
+import com.enewschamp.subscription.domain.service.StudentSubscriptionHistoryService;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionService;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionWorkService;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -38,6 +40,9 @@ public class SubscriptionBusiness {
 
 	@Autowired
 	StudentSubscriptionService studentSubscriptionService;
+
+	@Autowired
+	StudentSubscriptionHistoryService studentSubscriptionHistoryService;
 
 	@Autowired
 	StudentControlWorkService studentControlWorkService;
@@ -157,6 +162,13 @@ public class SubscriptionBusiness {
 		StudentSubscription studentSubscriptionentity = modelMapper.map(StudentSubscriptionDTO,
 				StudentSubscription.class);
 		StudentSubscription updatedEntity = studentSubscriptionService.create(studentSubscriptionentity);
+		return updatedEntity;
+	}
+
+	public StudentSubscriptionHistory saveAsHistory(StudentSubscription studentSubscription) {
+		StudentSubscriptionHistory studentSubscriptionEntity = modelMapper.map(studentSubscription,
+				StudentSubscriptionHistory.class);
+		StudentSubscriptionHistory updatedEntity = studentSubscriptionHistoryService.create(studentSubscriptionEntity);
 		return updatedEntity;
 	}
 

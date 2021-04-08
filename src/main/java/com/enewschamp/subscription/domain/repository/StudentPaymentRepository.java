@@ -11,7 +11,7 @@ import com.enewschamp.subscription.domain.entity.StudentPayment;
 
 public interface StudentPaymentRepository extends JpaRepository<StudentPayment, Long> {
 	@Query("Select s from StudentPayment s where s.studentId = :studentId and s.editionId= :editionId order by s.operationDateTime desc")
-	public List<StudentPayment> getByStudentIdAndEdition(@Param("studentId") Long studentId,
+	public List<StudentPayment> getAllByStudentIdAndEdition(@Param("studentId") Long studentId,
 			@Param("editionId") String editionId);
 
 	@Query("Select s from StudentPayment s where s.orderId = :orderId")

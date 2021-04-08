@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Blob;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,9 @@ import com.enewschamp.common.domain.service.ErrorCodesService;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.security.service.AppSecurityService;
+import com.enewschamp.subscription.app.dto.StudentSubscriptionDTO;
 import com.enewschamp.subscription.domain.business.StudentPaymentBusiness;
+import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 import com.enewschamp.subscription.domain.entity.StudentPaymentWork;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;
 import com.enewschamp.subscription.domain.service.StudentPaymentService;
@@ -65,6 +68,9 @@ public class SubscriptionRenewalController {
 	StudentPaymentWorkService studentPaymentWorkService;
 
 	@Autowired
+	SubscriptionBusiness subscriptionBusiness;
+
+	@Autowired
 	StudentSubscriptionService studentSubscriptionService;
 
 	@Autowired
@@ -85,11 +91,16 @@ public class SubscriptionRenewalController {
 		List<StudentSubscription> subscriptionRenewalList = studentSubscriptionService.getSubscriptionRenewalList();
 		if (subscriptionRenewalList != null && subscriptionRenewalList.size() > 0) {
 			for (int i = 0; i < subscriptionRenewalList.size(); i++) {
-				StudentSubscription studentSubscription = subscriptionRenewalList.get(i);
+				StudentSubscriptionDTO studentSubscription = modelMapper.map(subscriptionRenewalList.get(i),
+						StudentSubscriptionDTO.class);
 				JSONObject paytmParams = new JSONObject();
 				JSONObject body = new JSONObject();
 				body.put("mid", KeyProperty.MID);
 				body.put("subsId", studentSubscription.getSubscriptionId());
+				SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
+				Date debitDate = new SimpleDateFormat("yyyy-MM-dd").parse(studentSubscription.getEndDate().toString());
+				System.out.println(">>>>>>debitDate>>>>>" + debitDate);
+				body.put("debitDate", sdf.format(debitDate));
 				String checksum = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
 				JSONObject head = new JSONObject();
 				head.put("signature", checksum);
@@ -144,7 +155,7 @@ public class SubscriptionRenewalController {
 		return new ResponseEntity<StudentRefundDTO>(refundDTO, HttpStatus.OK);
 	}
 
-	private void renewSubscription(String subscriptionAmount, StudentSubscription studentSubscription) {
+	private void renewSubscription(String subscriptionAmount, StudentSubscriptionDTO studentSubscription) {
 		try {
 			StudentPaymentWork studentPaymentWork = new StudentPaymentWork();
 			studentPaymentWork.setOperatorId("SYSTEM");
@@ -154,8 +165,11 @@ public class SubscriptionRenewalController {
 			studentPaymentWork.setPaymentCurrency("INR");
 			studentPaymentWork.setStudentId(studentSubscription.getStudentId());
 			studentPaymentWork.setSubscriptionId(studentSubscription.getSubscriptionId());
+			studentPaymentWork.setSubscriptionPeriod(studentSubscription.getSubscriptionSelected());
+			studentPaymentWork.setSubscriptionType(studentSubscription.getSubscriptionSelected());
 			String renewalOrderId = generateOrderId(studentSubscription.getStudentId(),
 					studentSubscription.getSubscriptionSelected());
+			studentPaymentWork.setOrderId(renewalOrderId);
 			JSONObject paytmParams = new JSONObject();
 			JSONObject body = new JSONObject();
 			body.put("mid", KeyProperty.MID);
@@ -211,15 +225,26 @@ public class SubscriptionRenewalController {
 					String response = resultInfo.get("resultStatus").toString();
 					if ("S".equals(response)) {
 						String paytmTxnId = jsonBody.get("txnId").toString();
+						String subscriptionPeriod = studentSubscription.getSubscriptionSelected();
+						LocalDate subscriptionEndDate = getNextRenewalDate(subscriptionPeriod,
+								studentSubscription.getEndDate());
 						studentPaymentWork.setPaytmTxnId(paytmTxnId);
+						studentPaymentWork.setPaytmStatus("TXN_SUCCESS");
+						studentPaymentWork.setFinalOrderStatus("SUCCESS");
+						studentPaymentWork.setSubscriptionEndDate(subscriptionEndDate);
 						studentPaymentWork = studentPaymentWorkService.create(studentPaymentWork);
-						String subscriptionPeriod = studentSubscription.getSubscriptionPeriod();
-						studentSubscription
-								.setEndDate(getNextRenewalDate(subscriptionPeriod, studentSubscription.getEndDate()));
-						studentSubscriptionService.update(studentSubscription);
+						studentSubscription.setEndDate(subscriptionEndDate);
+						StudentSubscription studentSubscriptionDTO = modelMapper.map(studentSubscription,
+								StudentSubscription.class);
+						studentSubscriptionService.update(studentSubscriptionDTO);
 						studentPaymentBusiness.workToMaster(studentSubscription.getStudentId(),
 								studentSubscription.getEditionId());
 						studentPaymentWorkService.delete(studentPaymentWork.getPaymentId());
+					} else {
+						studentPaymentWork.setPaytmStatus("TXN_FAILURE");
+						studentPaymentWork.setFinalOrderStatus("FAILED");
+						studentPaymentWork = studentPaymentWorkService.create(studentPaymentWork);
+						studentPaymentBusiness.workToFailed(renewalOrderId);
 					}
 				}
 			}
@@ -245,8 +270,8 @@ public class SubscriptionRenewalController {
 	}
 
 	private String generateOrderId(Long studentId, String subscriptionType) {
-		String orderId = subscriptionType + "" + new Date().getTime() + "_" + studentId;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyymmddHHmmss");
+		String orderId = "ENC" + "_" + sdf.format(new Date()) + "_" + studentId;
 		return orderId;
-
 	}
 }

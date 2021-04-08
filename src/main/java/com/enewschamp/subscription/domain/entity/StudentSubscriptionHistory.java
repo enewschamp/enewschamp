@@ -4,7 +4,10 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -25,6 +28,10 @@ public class StudentSubscriptionHistory extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_subscription_id_generator")
+	@SequenceGenerator(name = "student_subscription_id_generator", sequenceName = "student_subscription_id_seq", allocationSize = 1)
+	private Long recordId = 0L;
+
 	@NotNull
 	@Column(name = "studentId", length = 100)
 	private Long studentId;
@@ -50,7 +57,10 @@ public class StudentSubscriptionHistory extends BaseEntity {
 	@Column(name = "autoRenewal", length = 1)
 	private String autoRenewal;
 
-	@Column(name = "subscriptionId", length = 1)
+	@Column(name = "orderId")
+	private String orderId;
+
+	@Column(name = "subscriptionId", length = 100)
 	private String subscriptionId;
 
 	@Column(name = "subscriptionAmountType", length = 10)

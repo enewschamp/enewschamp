@@ -3,6 +3,7 @@ package com.enewschamp.subscription.page.handler;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -253,8 +254,9 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 			studentPaymentWork.setOperatorId("" + studentId);
 			studentPaymentWork.setRecordInUse(RecordInUseType.Y);
 			studentPaymentWork.setSubscriptionType(studentSubscpritionWorkDTO.getSubscriptionSelected());
-			studentPaymentWork
-					.setOrderId(generateOrderId(studentId, studentSubscpritionWorkDTO.getSubscriptionSelected()));
+			String orderId = generateOrderId(studentId, studentSubscpritionWorkDTO.getSubscriptionSelected());
+			studentPaymentWork.setOrderId(orderId);
+			studentSubscpritionWorkDTO.setOrderId(orderId);
 			subscriptionBusiness.updateSubscriptionPeriodInWork(studentSubscpritionWorkDTO);
 			studentPaymentWork = studentPaymentWorkService.create(studentPaymentWork);
 			studentPaymentWork.getPaymentId();
@@ -308,9 +310,9 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 	}
 
 	private String generateOrderId(Long studentId, String subscriptionType) {
-		String orderId = subscriptionType + "" + new Date().getTime() + "_" + studentId;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyymmddHHmmss");
+		String orderId = "ENC" + "_" + sdf.format(new Date()) + "_" + studentId;
 		return orderId;
-
 	}
 
 	public SubscriptionPeriodPageData mapPagedata(PageRequestDTO pageRequest) {

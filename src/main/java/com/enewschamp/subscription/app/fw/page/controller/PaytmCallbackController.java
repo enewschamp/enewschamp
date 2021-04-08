@@ -142,6 +142,8 @@ public class PaytmCallbackController {
 					bankTxnId = requestParamsEntry.getValue()[0];
 				} else if ("TXNDATE".equalsIgnoreCase(requestParamsEntry.getKey())) {
 					txnDate = requestParamsEntry.getValue()[0];
+				} else if ("TXNDATE".equalsIgnoreCase(requestParamsEntry.getKey())) {
+					txnDate = requestParamsEntry.getValue()[0];
 				}
 				paytmParams.put(requestParamsEntry.getKey(), requestParamsEntry.getValue()[0]);
 			}
@@ -149,7 +151,7 @@ public class PaytmCallbackController {
 
 		boolean isValidChecksum = false;
 		try {
-			isValidChecksum = PaytmChecksum.verifySignature(paytmParams, KeyProperty.MID, checksumHash);
+			isValidChecksum = PaytmChecksum.verifySignature(paytmParams, KeyProperty.MERCHANT_KEY, checksumHash);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -253,6 +255,7 @@ public class PaytmCallbackController {
 			InputStream is = connection.getInputStream();
 			BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
 			if ((responseData = responseReader.readLine()) != null) {
+				System.out.println(">>>>>>>>>>responseData tran status>>>>>>>>>>" + responseData);
 				Blob tranStatusResPayload = new SerialBlob(responseData.getBytes());
 				studentPaymentWork.setTranStatusApiResponse(tranStatusResPayload);
 				JSONParser parser = new JSONParser();
@@ -270,8 +273,15 @@ public class PaytmCallbackController {
 					if (json.get("body") != null) {
 						jsonBody = (JSONObject) parser.parse(json.get("body").toString());
 						try {
-							isValidChecksum = PaytmChecksum.verifySignature(jsonBody.toString(),
+							isValidChecksum = PaytmChecksum.verifySignature(json.get("body").toString(),
 									KeyProperty.MERCHANT_KEY, checksumHash);
+							System.out.println(">>>>>>>>>checksumHash>>>>>>>>>" + checksumHash);
+							System.out.println(">>>>>>>>>isValidChecksum1>>>>>>>>>" + PaytmChecksum.verifySignature(
+									json.get("body").toString(), KeyProperty.MERCHANT_KEY, checksumHash));
+							System.out.println(">>>>>>>>>isValidChecksum2>>>>>>>>>" + PaytmChecksum
+									.verifySignature(json.toString(), KeyProperty.MERCHANT_KEY, checksumHash));
+							System.out.println(">>>>>>>>>isValidChecksum3>>>>>>>>>" + PaytmChecksum
+									.verifySignature(responseData, KeyProperty.MERCHANT_KEY, checksumHash));
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -298,5 +308,41 @@ public class PaytmCallbackController {
 			studentPaymentWorkService.update(studentPaymentWork);
 		}
 		return tranData;
+	}
+
+	public static void main(String[] args) {
+		JSONObject json = new JSONObject();
+		json.put("bankName", "WALLET");
+		json.put("bankTxnId", "64376087");
+		json.put("gatewayName", "WALLET");
+		json.put("mid", "ErzAtT88266326392189");
+		json.put("orderId", "ENC_20215908225903_57");
+		json.put("paymentMode", "PPI");
+		json.put("refundAmt", "0.00");
+		JSONObject resultInfo = new JSONObject();
+		resultInfo.put("resultCode", "01");
+		resultInfo.put("resultMsg", "Txn Success");
+		resultInfo.put("resultStatus", "TXN_SUCCESS");
+		json.put("resultInfo", resultInfo);
+		json.put("subsId", "167473");
+		json.put("txnAmount", "100.00");
+		json.put("txnDate", "2021-04-08 22:59:04.0");
+		json.put("txnId", "20210408111212800110168508002512108");
+		json.put("txnType", "SALE");
+		try {
+			System.out.println(">>>>>>>>>>" + PaytmChecksum.verifySignature("{\"bankName\" : \"WALLET\","
+					+ "		\"bankTxnId\" : \"64376087\"," + "		\"gatewayName\" : \"WALLET\","
+					+ "		\"mid\" : \"ErzAtT88266326392189\"," + "		\"orderId\" : \"ENC_20215908225903_57\","
+					+ "		\"paymentMode\" : \"PPI\"," + "		\"refundAmt\" : \"0.00\"," + "		\"resultInfo\" : {"
+					+ "			\"resultCode\" : \"01\"," + "			\"resultMsg\" : \"Txn Success\","
+					+ "			\"resultStatus\" : \"TXN_SUCCESS\"" + "		}," + "		\"subsId\" : \"167473\","
+					+ "		\"txnAmount\" : \"100.00\"," + "		\"txnDate\" : \"2021-04-08 22:59:04.0\","
+					+ "		\"txnId\" : \"20210408111212800110168508002512108\"," + "		\"txnType\" : \"SALE\"}",
+					"kk3pYLy_DD4uk9NR",
+					"eL0IMK5fd1dqmq02wEvoVDqCR/mdG+WSuGsYFQmtanP58lLWTKJFlROXeDTr6wphy2HORvs3nB8HZZmsdkbYgereywwLKXh6UFJTZVi4yv8="));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

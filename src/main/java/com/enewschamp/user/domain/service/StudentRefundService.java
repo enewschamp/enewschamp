@@ -14,6 +14,7 @@ import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.subscription.domain.entity.StudentPayment;
 import com.enewschamp.user.domain.entity.StudentRefund;
 
 @Service
@@ -80,5 +81,9 @@ public class StudentRefundService extends AbstractDomainService {
 
 	public List<StudentRefund> getPendingRefundList() {
 		return repository.getPendingRefundList();
+	}
+
+	public List<StudentRefund> getAllByStudentIdAndEdition(Long studentId, String editionId) {
+		return repository.getAllByStudentIdAndEdition(studentId, editionId);
 	}
 }

@@ -25,6 +25,7 @@ import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.entity.StudentControl;
 import com.enewschamp.subscription.domain.entity.StudentControlWork;
 import com.enewschamp.subscription.domain.entity.StudentPaymentWork;
+import com.enewschamp.subscription.domain.entity.StudentSubscription;
 import com.enewschamp.subscription.domain.service.StudentControlService;
 import com.enewschamp.subscription.domain.service.StudentControlWorkService;
 import com.enewschamp.subscription.domain.service.StudentPaymentService;
@@ -129,8 +130,28 @@ public class BusinessRulesPlugin implements IPageNavRuleDataPlugin {
 		if (ruleStr.contains("quizAvailable")) {
 			dataMap = quizAvailable(pageRequest, pageResponse, dataMap);
 		}
+		if (ruleStr.contains("autoRenewal")) {
+			dataMap = autoRenewal(pageRequest, pageResponse, dataMap);
+		}
 		return dataMap;
 
+	}
+
+	private Map<String, String> autoRenewal(PageRequestDTO pageRequest, PageDTO pageResponse,
+			Map<String, String> dataMap) {
+		String autoRenewal = "N";
+		String emailId = pageRequest.getHeader().getEmailId();
+		String editionId = pageRequest.getHeader().getEditionId();
+		StudentControl studentEntity = studentControlService.getStudentByEmail(emailId);
+		if (studentEntity != null) {
+			StudentSubscription studentSubscription = studentSubscriptionService.get(studentEntity.getStudentId(),
+					editionId);
+			if (studentSubscription != null) {
+				autoRenewal = studentSubscription.getAutoRenewal();
+			}
+		}
+		dataMap.put("autoRenewal", autoRenewal);
+		return dataMap;
 	}
 
 	public Map<String, String> validateLoginCredentials(PageRequestDTO pageRequest, PageDTO page,

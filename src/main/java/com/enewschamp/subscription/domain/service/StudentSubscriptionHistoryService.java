@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.enewschamp.audit.domain.AuditService;
-import com.enewschamp.subscription.domain.entity.StudentSubscription;
 import com.enewschamp.subscription.domain.entity.StudentSubscriptionHistory;
 
 @Service
-public class StudentSubscriptionService {
+public class StudentSubscriptionHistoryService {
 
 	/**
 	 * 
@@ -21,10 +20,7 @@ public class StudentSubscriptionService {
 	private static final long serialVersionUID = 1L;
 
 	@Autowired
-	StudentSubscriptionRepository repository;
-
-	@Autowired
-	StudentSubscriptionHistoryService studentSubscriptionHistoryService;
+	StudentSubscriptionHistoryRepository repository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -36,33 +32,30 @@ public class StudentSubscriptionService {
 	@Autowired
 	AuditService auditService;
 
-	public StudentSubscription create(StudentSubscription studentSubscription) {
+	public StudentSubscriptionHistory create(StudentSubscriptionHistory studentSubscription) {
 		return repository.save(studentSubscription);
 
 	}
 
-	public StudentSubscription update(StudentSubscription studentSubscription) {
+	public StudentSubscriptionHistory update(StudentSubscriptionHistory studentSubscription) {
 		Long studentId = studentSubscription.getStudentId();
 		String editionId = studentSubscription.getEditionId();
-		StudentSubscription existingEntity = get(studentId, editionId);
-		StudentSubscriptionHistory studentSubscriptionHistory = modelMapper.map(existingEntity,
-				StudentSubscriptionHistory.class);
-		studentSubscriptionHistoryService.create(studentSubscriptionHistory);
+		StudentSubscriptionHistory existingEntity = get(studentId, editionId);
 		modelMapper.map(studentSubscription, existingEntity);
 		return repository.save(existingEntity);
 	}
 
-	public StudentSubscription patch(StudentSubscription studentSubscription) {
+	public StudentSubscriptionHistory patch(StudentSubscriptionHistory studentSubscription) {
 		Long studentId = studentSubscription.getStudentId();
 		String editionId = studentSubscription.getEditionId();
 
-		StudentSubscription existingEntity = get(studentId, editionId);
+		StudentSubscriptionHistory existingEntity = get(studentId, editionId);
 		modelMapperForPatch.map(studentSubscription, existingEntity);
 		return repository.save(existingEntity);
 	}
 
-	public StudentSubscription get(Long studentId, String editionId) {
-		Optional<StudentSubscription> existingEntity = repository.findById(studentId);
+	public StudentSubscriptionHistory get(Long studentId, String editionId) {
+		Optional<StudentSubscriptionHistory> existingEntity = repository.findById(studentId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
@@ -70,14 +63,14 @@ public class StudentSubscriptionService {
 		}
 	}
 
-	public List<StudentSubscription> getSubscriptionRenewalList() {
-		return repository.getSubscriptionRenewalList();
+	public List<StudentSubscriptionHistory> getAllByStudentIdAndEdition(Long studentId, String editionId) {
+		return repository.getAllByStudentIdAndEdition(studentId, editionId);
 	}
 
 	public String getAudit(Long studentId) {
-		StudentSubscription StudentDetails = new StudentSubscription();
-		StudentDetails.setStudentId(studentId);
-		return auditService.getEntityAudit(StudentDetails);
+		StudentSubscriptionHistory studentDetails = new StudentSubscriptionHistory();
+		studentDetails.setStudentId(studentId);
+		return auditService.getEntityAudit(studentDetails);
 	}
 
 }
