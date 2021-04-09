@@ -135,6 +135,8 @@ public class StudentRefundController {
 			requestWriter.writeBytes(post_data);
 			requestWriter.close();
 			Blob initRefundReqPayload = null;
+			post_data = post_data.replace(KeyProperty.MID, "XXXXXXXXXXXXXX");
+			post_data = post_data.replace("" + refundDTO.getRefundAmount(), "XX.XX");
 			initRefundReqPayload = new SerialBlob(post_data.getBytes());
 			refund.setInitRefundApiRequest(initRefundReqPayload);
 			String responseData = "";
@@ -142,7 +144,9 @@ public class StudentRefundController {
 			BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
 			if ((responseData = responseReader.readLine()) != null) {
 				Blob initRefundResPayload = null;
-				initRefundResPayload = new SerialBlob(responseData.getBytes());
+				String response_data = responseData.replace(KeyProperty.MID, "XXXXXXXXXXXXXX");
+				response_data = response_data.replace("" + refundDTO.getRefundAmount(), "XX.XX");
+				initRefundResPayload = new SerialBlob(response_data.getBytes());
 				refund.setInitRefundApiResponse(initRefundResPayload);
 				JSONParser parser = new JSONParser();
 				JSONObject json = (JSONObject) parser.parse(responseData);
@@ -196,23 +200,51 @@ public class StudentRefundController {
 					requestWriter.writeBytes(post_data);
 					requestWriter.close();
 					Blob refundStatusReqPayload = null;
+					post_data = post_data.replace(KeyProperty.MID, "XXXXXXXXXXXXXX");
 					refundStatusReqPayload = new SerialBlob(post_data.getBytes());
 					studentRefund.setRefundStatusApiRequest(refundStatusReqPayload);
 					String responseData = "";
 					InputStream is = connection.getInputStream();
 					BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
 					if ((responseData = responseReader.readLine()) != null) {
-						Blob refundStatusResPayload = null;
-						refundStatusResPayload = new SerialBlob(responseData.getBytes());
-						studentRefund.setRefundStatusApiResponse(refundStatusResPayload);
 						JSONParser parser = new JSONParser();
+						Blob refundStatusResPayload = null;
+						String response_data = responseData.replace(KeyProperty.MID, "XXXXXXXXXXXXXX");
+						JSONObject tempJSON = (JSONObject) parser.parse(response_data);
+						if (tempJSON.get("body") != null) {
+							JSONObject responseBody = (JSONObject) tempJSON.get("body");
+							if (responseBody.get("refundAmount") != null) {
+								responseBody.put("refundAmount", "XX.XX");
+							}
+							if (responseBody.get("totalRefundAmount") != null) {
+								responseBody.put("totalRefundAmount", "XX.XX");
+							}
+							if (responseBody.get("txnAmount") != null) {
+								responseBody.put("txnAmount", "XX.XX");
+							}
+							if (responseBody.get("refundDetailInfoList") != null) {
+								JSONArray jsonArr = (JSONArray) responseBody.get("refundDetailInfoList");
+								if (jsonArr.size() > 0) {
+									JSONObject obj = (JSONObject) jsonArr.get(0);
+									if (obj.get("refundAmount") != null) {
+										obj.put("refundAmount", "XX.XX");
+									}
+									jsonArr.clear();
+									jsonArr.add(obj);
+									responseBody.put("refundDetailInfoList", jsonArr);
+								}
+							}
+							tempJSON.put("body", responseBody);
+						}
+						refundStatusResPayload = new SerialBlob(tempJSON.toString().getBytes());
+						studentRefund.setRefundStatusApiResponse(refundStatusResPayload);
 						JSONObject json = (JSONObject) parser.parse(responseData);
 						if (json.get("body") != null) {
 							JSONObject jsonBody = (JSONObject) parser.parse(json.get("body").toString());
 							JSONObject resultInfo = (JSONObject) parser.parse(jsonBody.get("resultInfo").toString());
 							studentRefund.setPaytmStatus(resultInfo.get("resultStatus").toString());
 							if ("TXN_SUCCESS".equals(resultInfo.get("resultStatus").toString())) {
-								studentRefund.setFinalStatus("SUCCESS");
+								studentRefund.setFinalOrderStatus("SUCCESS");
 							}
 							studentRefundService.update(studentRefund);
 						}

@@ -3,9 +3,8 @@ package com.enewschamp.subscription.app.dto;
 import java.util.List;
 
 import com.enewschamp.app.common.PageData;
-import com.enewschamp.subscription.domain.entity.StudentPayment;
 import com.enewschamp.subscription.domain.entity.StudentSubscriptionHistory;
-import com.enewschamp.user.domain.entity.StudentRefund;
+import com.enewschamp.user.app.dto.StudentRefundDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
@@ -27,9 +26,12 @@ public class MySubscriptionPageData extends PageData {
 	private List<StudentSubscriptionHistory> subscriptionHistory;
 
 	@JsonInclude
-	private List<StudentRefund> refundHistory;
+	private List<StudentRefundDTO> refundHistory;
 
 	@JsonInclude
-	private List<StudentPayment> paymentHistory;
+	private List<StudentPaymentDTO> paymentHistory;
+
+	@JsonInclude
+	private List<StudentPaymentDTO> failedPaymentHistory;
 
 }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class KeyProperty {
 
-	public static String DATABASE_ENCRYPTION_KEY;
+	public static final String DATABASE_ENCRYPTION_KEY = "3s6v9y$B&E)H@McQ";
 
 	public static String MID;
 
@@ -27,11 +27,6 @@ public class KeyProperty {
 	@Value("${enewschamp.eNewsChamp2}")
 	public void setMerchantKey(String merchantKey) {
 		MERCHANT_KEY = decrypt(merchantKey, DATABASE_ENCRYPTION_KEY);
-	}
-
-	@Value("${enewschamp.eNewsChamp3}")
-	public void setProperties(String databaseEncryptionKey) {
-		DATABASE_ENCRYPTION_KEY = databaseEncryptionKey;
 	}
 
 	private String decrypt(String value, String skey) {

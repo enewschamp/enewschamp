@@ -254,8 +254,9 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			body.put("subscriptionStartDate", subscriptionStartDateStr);
 			body.put("subscriptionGraceDays",
 					propertiesService.getValue(module, PropertyConstants.PAYTM_SUBSCRIPTION_GRACE_DAYS));
+			String txAmtStr = "" + studentPaymentWork.getPaymentAmount() + "0";
 			JSONObject txnAmount = new JSONObject();
-			txnAmount.put("value", "" + studentPaymentWork.getPaymentAmount() + "0");
+			txnAmount.put("value", txAmtStr);
 			txnAmount.put("currency", studentPaymentWork.getPaymentCurrency());
 			JSONObject userInfo = new JSONObject();
 			userInfo.put("custId", "" + studentPaymentWork.getStudentId());
@@ -278,6 +279,8 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			DataOutputStream requestWriter = new DataOutputStream(connection.getOutputStream());
 			requestWriter.writeBytes(post_data);
 			Blob initTransReqPayload = null;
+			post_data = post_data.replace(KeyProperty.MID, "XXXXXXXXXXXXXX");
+			post_data = post_data.replace(txAmtStr, "XX.XX");
 			initTransReqPayload = new SerialBlob(post_data.getBytes());
 			studentPaymentWork.setInitTranApiRequest(initTransReqPayload);
 			requestWriter.close();
@@ -286,7 +289,9 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
 			if ((responseData = responseReader.readLine()) != null) {
 				Blob initTranResPayload = null;
-				initTranResPayload = new SerialBlob(responseData.getBytes());
+				String response_data = responseData.replace(KeyProperty.MID, "XXXXXXXXXXXXXX");
+				response_data = response_data.replace(txAmtStr, "XX.XX");
+				initTranResPayload = new SerialBlob(response_data.getBytes());
 				studentPaymentWork.setInitTranApiResponse(initTranResPayload);
 				JSONParser parser = new JSONParser();
 				try {
@@ -336,7 +341,7 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			body.put("orderId", orderId);
 			body.put("callbackUrl", propertiesService.getValue(module, PropertyConstants.PAYTM_CALLBACK_URL));
 			JSONObject txnAmount = new JSONObject();
-			txnAmount.put("value", studentPaymentWork.getPaymentAmount());
+			txnAmount.put("value", "" + studentPaymentWork.getPaymentAmount());
 			txnAmount.put("currency", studentPaymentWork.getPaymentCurrency());
 			JSONObject userInfo = new JSONObject();
 			userInfo.put("custId", studentPaymentWork.getStudentId());
@@ -358,6 +363,8 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			DataOutputStream requestWriter = new DataOutputStream(connection.getOutputStream());
 			requestWriter.writeBytes(post_data);
 			Blob initTransReqPayload = null;
+			post_data = post_data.replace(KeyProperty.MID, "XXXXXXXXXXXXXX");
+			post_data = post_data.replace("" + txnAmount, "XX.XX");
 			initTransReqPayload = new SerialBlob(post_data.getBytes());
 			studentPaymentWork.setInitTranApiRequest(initTransReqPayload);
 			requestWriter.close();
@@ -366,7 +373,9 @@ public class StudentPaymentPageHandler implements IPageHandler {
 			BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
 			if ((responseData = responseReader.readLine()) != null) {
 				Blob initTranResPayload = null;
-				initTranResPayload = new SerialBlob(responseData.getBytes());
+				String response_data = responseData.replace(KeyProperty.MID, "XXXXXXXXXXXXXX");
+				response_data = response_data.replace("" + txnAmount, "XX.XX");
+				initTranResPayload = new SerialBlob(response_data.getBytes());
 				studentPaymentWork.setInitTranApiResponse(initTranResPayload);
 				JSONParser parser = new JSONParser();
 				try {

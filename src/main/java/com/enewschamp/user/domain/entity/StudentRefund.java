@@ -61,8 +61,8 @@ public class StudentRefund extends BaseEntity {
 	@Column(name = "paytmStatus")
 	private String paytmStatus;
 
-	@Column(name = "finalStatus")
-	private String finalStatus;
+	@Column(name = "finalOrderStatus")
+	private String finalOrderStatus;
 
 	@Column(name = "initRefundApiRequest")
 	private Blob initRefundApiRequest;

@@ -1,5 +1,6 @@
 package com.enewschamp.subscription.domain.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,8 +71,8 @@ public class StudentSubscriptionService {
 		}
 	}
 
-	public List<StudentSubscription> getSubscriptionRenewalList() {
-		return repository.getSubscriptionRenewalList();
+	public List<StudentSubscription> getSubscriptionRenewalList(LocalDate endDate) {
+		return repository.getSubscriptionRenewalList(endDate);
 	}
 
 	public String getAudit(Long studentId) {

@@ -88,7 +88,13 @@ public class SubscriptionRenewalController {
 	@PostMapping(value = "/admin/payment/subscription/renewal")
 	public ResponseEntity<StudentRefundDTO> subscriptionRenewal(@RequestBody @Valid StudentRefundDTO refundDTO)
 			throws Exception {
-		List<StudentSubscription> subscriptionRenewalList = studentSubscriptionService.getSubscriptionRenewalList();
+		LocalDate endDate = LocalDate.now();
+		int days = Integer.valueOf(propertiesService
+				.getValue("StudentApp", PropertyConstants.PAYTM_SUBSCRIPTION_RENEWAL_ADVANCE_DAYS).toString());
+		endDate = endDate.plusDays(days);
+		List<StudentSubscription> subscriptionRenewalList = studentSubscriptionService
+				.getSubscriptionRenewalList(endDate);
+
 		if (subscriptionRenewalList != null && subscriptionRenewalList.size() > 0) {
 			for (int i = 0; i < subscriptionRenewalList.size(); i++) {
 				StudentSubscriptionDTO studentSubscription = modelMapper.map(subscriptionRenewalList.get(i),
@@ -99,7 +105,6 @@ public class SubscriptionRenewalController {
 				body.put("subsId", studentSubscription.getSubscriptionId());
 				SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
 				Date debitDate = new SimpleDateFormat("yyyy-MM-dd").parse(studentSubscription.getEndDate().toString());
-				System.out.println(">>>>>>debitDate>>>>>" + debitDate);
 				body.put("debitDate", sdf.format(debitDate));
 				String checksum = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
 				JSONObject head = new JSONObject();
@@ -155,26 +160,26 @@ public class SubscriptionRenewalController {
 		return new ResponseEntity<StudentRefundDTO>(refundDTO, HttpStatus.OK);
 	}
 
-	private void renewSubscription(String subscriptionAmount, StudentSubscriptionDTO studentSubscription) {
+	private void renewSubscription(String subscriptionAmount, StudentSubscriptionDTO studentSubscriptionDTO) {
 		try {
 			StudentPaymentWork studentPaymentWork = new StudentPaymentWork();
-			studentPaymentWork.setOperatorId("SYSTEM");
+			studentPaymentWork.setOperatorId(PropertyConstants.DEFAULT_OPERATOR_ID);
 			studentPaymentWork.setRecordInUse(RecordInUseType.Y);
-			studentPaymentWork.setEditionId(studentSubscription.getEditionId());
+			studentPaymentWork.setEditionId(studentSubscriptionDTO.getEditionId());
 			studentPaymentWork.setPaymentAmount(Double.valueOf(subscriptionAmount));
 			studentPaymentWork.setPaymentCurrency("INR");
-			studentPaymentWork.setStudentId(studentSubscription.getStudentId());
-			studentPaymentWork.setSubscriptionId(studentSubscription.getSubscriptionId());
-			studentPaymentWork.setSubscriptionPeriod(studentSubscription.getSubscriptionSelected());
-			studentPaymentWork.setSubscriptionType(studentSubscription.getSubscriptionSelected());
-			String renewalOrderId = generateOrderId(studentSubscription.getStudentId(),
-					studentSubscription.getSubscriptionSelected());
+			studentPaymentWork.setStudentId(studentSubscriptionDTO.getStudentId());
+			studentPaymentWork.setSubscriptionId(studentSubscriptionDTO.getSubscriptionId());
+			studentPaymentWork.setSubscriptionPeriod(studentSubscriptionDTO.getSubscriptionPeriod());
+			studentPaymentWork.setSubscriptionType(studentSubscriptionDTO.getSubscriptionSelected());
+			String renewalOrderId = generateOrderId(studentSubscriptionDTO.getStudentId(),
+					studentSubscriptionDTO.getSubscriptionSelected());
 			studentPaymentWork.setOrderId(renewalOrderId);
 			JSONObject paytmParams = new JSONObject();
 			JSONObject body = new JSONObject();
 			body.put("mid", KeyProperty.MID);
 			body.put("orderId", renewalOrderId);
-			body.put("subscriptionId", studentSubscription.getSubscriptionId());
+			body.put("subscriptionId", studentSubscriptionDTO.getSubscriptionId());
 
 			JSONObject txnAmount = new JSONObject();
 			txnAmount.put("value", subscriptionAmount);
@@ -206,6 +211,9 @@ public class SubscriptionRenewalController {
 			DataOutputStream requestWriter = new DataOutputStream(connection.getOutputStream());
 			requestWriter.writeBytes(post_data);
 			Blob initTransReqPayload = null;
+			post_data = post_data.replace(KeyProperty.MID, "XXXXXXXXXXXXXX");
+			post_data = post_data.replace(subscriptionAmount, "XX.XX");
+
 			initTransReqPayload = new SerialBlob(post_data.getBytes());
 			studentPaymentWork.setInitTranApiRequest(initTransReqPayload);
 			requestWriter.close();
@@ -214,7 +222,9 @@ public class SubscriptionRenewalController {
 			BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
 			if ((responseData = responseReader.readLine()) != null) {
 				Blob initTranResPayload = null;
-				initTranResPayload = new SerialBlob(responseData.getBytes());
+				String response_data = responseData.replace(KeyProperty.MID, "XXXXXXXXXXXXXX");
+				response_data = response_data.replace("" + txnAmount, "XX.XX");
+				initTranResPayload = new SerialBlob(response_data.getBytes());
 				studentPaymentWork.setInitTranApiResponse(initTranResPayload);
 				JSONParser parser = new JSONParser();
 				JSONObject json = (JSONObject) parser.parse(responseData);
@@ -225,18 +235,19 @@ public class SubscriptionRenewalController {
 					String response = resultInfo.get("resultStatus").toString();
 					if ("S".equals(response)) {
 						String paytmTxnId = jsonBody.get("txnId").toString();
-						String subscriptionPeriod = studentSubscription.getSubscriptionSelected();
+						String subscriptionPeriod = studentSubscriptionDTO.getSubscriptionPeriod();
 						LocalDate subscriptionEndDate = getNextRenewalDate(subscriptionPeriod,
-								studentSubscription.getEndDate());
+								studentSubscriptionDTO.getEndDate());
 						studentPaymentWork.setPaytmTxnId(paytmTxnId);
 						studentPaymentWork.setPaytmStatus("TXN_SUCCESS");
 						studentPaymentWork.setFinalOrderStatus("SUCCESS");
 						studentPaymentWork.setSubscriptionEndDate(subscriptionEndDate);
 						studentPaymentWork = studentPaymentWorkService.create(studentPaymentWork);
-						studentSubscription.setEndDate(subscriptionEndDate);
-						StudentSubscription studentSubscriptionDTO = modelMapper.map(studentSubscription,
+						studentSubscriptionDTO.setEndDate(subscriptionEndDate);
+						studentSubscriptionDTO.setOperatorId(PropertyConstants.DEFAULT_OPERATOR_ID);
+						StudentSubscription studentSubscription = modelMapper.map(studentSubscriptionDTO,
 								StudentSubscription.class);
-						studentSubscriptionService.update(studentSubscriptionDTO);
+						studentSubscriptionService.update(studentSubscription);
 						studentPaymentBusiness.workToMaster(studentSubscription.getStudentId(),
 								studentSubscription.getEditionId());
 						studentPaymentWorkService.delete(studentPaymentWork.getPaymentId());

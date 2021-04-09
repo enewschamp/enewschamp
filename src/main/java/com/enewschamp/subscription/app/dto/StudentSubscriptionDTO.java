@@ -2,18 +2,17 @@ package com.enewschamp.subscription.app.dto;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class StudentSubscriptionDTO extends AbstractDTO {
+public class StudentSubscriptionDTO extends BaseEntity {
 
 	/**
 	 * 
@@ -31,6 +30,8 @@ public class StudentSubscriptionDTO extends AbstractDTO {
 	@NotNull
 	@Size(max = 1)
 	private String subscriptionSelected;
+
+	private String subscriptionPeriod;
 
 	private LocalDate startDate;
 

@@ -61,6 +61,7 @@ public interface PropertyConstants {
 	public static String PAYTM_SUBSCRIPTION_EXPIRY_YEARS = "paytm.subscriptionExpiryYears";
 	public static String PAYTM_SUBSCRIPTION_ENABLE_RETRY = "paytm.subscriptionEnableRetry";
 	public static String PAYTM_SUBSCRIPTION_GRACE_DAYS = "paytm.subscriptionGraceDays";
+	public static String PAYTM_SUBSCRIPTION_RENEWAL_ADVANCE_DAYS = "paytm.subscriptionRenewalAdvanceDays";
 	public static String PAYTM_SHOW_PAYMENTS_PAGE_URL = "paytm.showPaymentsPageURL";
 	public static String PAYTM_TRANSACTION_STATUS_URL = "paytm.transactionStatusURL";
 	public static String PAYTM_CALLBACK_CHECKSUM_MISMATCH = "paytm.callbackCheckSumMismatch";
@@ -81,6 +82,7 @@ public interface PropertyConstants {
 	public static String AUDIO_ROOT_FOLDER_PATH_MISC = "audioRootFolderPath.misc";
 	public static String AUDIO_ROOT_FOLDER_PATH_BADGE = "audioRootFolderPath.badge";
 
+	public static String DEFAULT_OPERATOR_ID = "SYSTEM";
 	public static String PAGE_SIZE = "pageSize";
 	public static String STUDENT_APP_MODULE_NAME = "studentAppModuleName";
 	public static String PUBLISHER_MODULE_NAME = "publisherModuleName";

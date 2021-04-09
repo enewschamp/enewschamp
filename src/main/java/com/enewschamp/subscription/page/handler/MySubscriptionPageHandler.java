@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -33,6 +34,7 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.MySubscriptionPageData;
+import com.enewschamp.subscription.app.dto.StudentPaymentDTO;
 import com.enewschamp.subscription.app.dto.StudentSubscriptionDTO;
 import com.enewschamp.subscription.domain.business.PreferenceBusiness;
 import com.enewschamp.subscription.domain.business.SchoolDetailsBusiness;
@@ -41,11 +43,14 @@ import com.enewschamp.subscription.domain.business.StudentDetailsBusiness;
 import com.enewschamp.subscription.domain.business.StudentShareAchievementsBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 import com.enewschamp.subscription.domain.entity.StudentPayment;
+import com.enewschamp.subscription.domain.entity.StudentPaymentFailed;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;
 import com.enewschamp.subscription.domain.entity.StudentSubscriptionHistory;
+import com.enewschamp.subscription.domain.service.StudentPaymentFailedService;
 import com.enewschamp.subscription.domain.service.StudentPaymentService;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionHistoryService;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionService;
+import com.enewschamp.user.app.dto.StudentRefundDTO;
 import com.enewschamp.user.domain.entity.StudentRefund;
 import com.enewschamp.user.domain.service.StudentRefundService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -91,6 +96,9 @@ public class MySubscriptionPageHandler implements IPageHandler {
 	StudentPaymentService studentPaymentService;
 
 	@Autowired
+	StudentPaymentFailedService studentPaymentFailedService;
+
+	@Autowired
 	PropertiesBackendService propertiesService;
 
 	@Autowired
@@ -126,11 +134,32 @@ public class MySubscriptionPageHandler implements IPageHandler {
 				.getStudentSubscriptionFromMaster(studentId, editionId);
 		List<StudentPayment> studentPaymentList = studentPaymentService.getAllByStudentIdAndEdition(studentId,
 				editionId);
+		List<StudentPaymentDTO> studentPaymentListDTO = new ArrayList<StudentPaymentDTO>();
+		for (int i = 0; i < studentPaymentList.size(); i++) {
+			StudentPaymentDTO studentPaymentDTO = modelMapper.map(studentPaymentList.get(i), StudentPaymentDTO.class);
+			studentPaymentListDTO.add(studentPaymentDTO);
+		}
+		List<StudentPaymentFailed> studentPaymentFailedList = studentPaymentFailedService
+				.getAllByStudentIdAndEdition(studentId, editionId);
+		List<StudentPaymentDTO> studentPaymentFailedListDTO = new ArrayList<StudentPaymentDTO>();
+		for (int i = 0; i < studentPaymentFailedList.size(); i++) {
+			StudentPaymentDTO studentPaymentDTO = modelMapper.map(studentPaymentFailedList.get(i),
+					StudentPaymentDTO.class);
+			studentPaymentFailedListDTO.add(studentPaymentDTO);
+		}
+
 		List<StudentRefund> studentRefundList = studentRefundService.getAllByStudentIdAndEdition(studentId, editionId);
+		List<StudentRefundDTO> studentRefundDTOList = new ArrayList<StudentRefundDTO>();
+		for (int i = 0; i < studentRefundList.size(); i++) {
+			StudentRefundDTO studentRefundDTO = modelMapper.map(studentRefundList.get(i), StudentRefundDTO.class);
+			studentRefundDTOList.add(studentRefundDTO);
+		}
+
 		List<StudentSubscriptionHistory> studentSubscriptionList = studentSubscriptionHistoryService
 				.getAllByStudentIdAndEdition(studentId, editionId);
-		mySubscriptionPageData.setPaymentHistory(studentPaymentList);
-		mySubscriptionPageData.setRefundHistory(studentRefundList);
+		mySubscriptionPageData.setPaymentHistory(studentPaymentListDTO);
+		mySubscriptionPageData.setFailedPaymentHistory(studentPaymentFailedListDTO);
+		mySubscriptionPageData.setRefundHistory(studentRefundDTOList);
 		mySubscriptionPageData.setSubscriptionHistory(studentSubscriptionList);
 		mySubscriptionPageData.setSubscription(studentSubscriptionDTO);
 		pageDto.setData(mySubscriptionPageData);
@@ -171,7 +200,7 @@ public class MySubscriptionPageHandler implements IPageHandler {
 		return pageDTO;
 	}
 
-	public PageDTO handleCancelSubscription(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
+	public PageDTO handleCancelSubscriptionAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
 		String operation = pageRequest.getHeader().getOperation();
 		String editionId = pageRequest.getHeader().getEditionId();
@@ -187,6 +216,7 @@ public class MySubscriptionPageHandler implements IPageHandler {
 			String checksum = PaytmChecksum.generateSignature(body.toString(), KeyProperty.MERCHANT_KEY);
 			JSONObject head = new JSONObject();
 			head.put("signature", checksum);
+			head.put("tokenType", "AES");
 			paytmParams.put("body", body);
 			paytmParams.put("head", head);
 
@@ -201,17 +231,21 @@ public class MySubscriptionPageHandler implements IPageHandler {
 
 			DataOutputStream requestWriter = new DataOutputStream(connection.getOutputStream());
 			requestWriter.writeBytes(post_data);
+			System.out.println(">>>>>>>>>>>>>>post_data>>>>>>>>>>>>" + post_data);
+			System.out.println(">>>>>>>>>>>>>>URL>>>>>>>>>>>>"
+					+ propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_CANCEL_SUBSCRIPTION_URL));
 			requestWriter.close();
 			String responseData = "";
 			InputStream is = connection.getInputStream();
 			BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
 			if ((responseData = responseReader.readLine()) != null) {
+				System.out.println(">>>>>>>>>>>>>>responseData>>>>>>>>>>>>" + responseData);
 				JSONParser parser = new JSONParser();
 				JSONObject json = (JSONObject) parser.parse(responseData);
 				if (json.get("body") != null) {
 					JSONObject jsonBody = (JSONObject) parser.parse(json.get("body").toString());
 					JSONObject resultInfo = (JSONObject) parser.parse(jsonBody.get("resultInfo").toString());
-					String status = resultInfo.get("message").toString();
+					String status = resultInfo.get("status").toString();
 					if ("SUCCESS".equals(status)) {
 						studentSubscriptionDTO.setAutoRenewal("N");
 						StudentSubscription studentSubscription = modelMapper.map(studentSubscriptionDTO,

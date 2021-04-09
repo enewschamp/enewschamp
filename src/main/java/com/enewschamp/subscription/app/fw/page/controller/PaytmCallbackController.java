@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialException;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -182,7 +183,7 @@ public class PaytmCallbackController {
 						PropertyConstants.PAYTM_CALLBACK_CHECKSUM_MISMATCH);
 			}
 		} else {
-			orderStatus = "FAILURE";
+			orderStatus = "FAILED";
 		}
 		StudentPaymentWork studentPaymentWork = studentPaymentWorkService.getByOrderId(orderId);
 		if (studentPaymentWork != null) {
@@ -201,6 +202,9 @@ public class PaytmCallbackController {
 			studentPaymentWork.setFinalOrderStatus(orderStatus);
 			studentPaymentWorkService.update(studentPaymentWork);
 			if (!"01".equals(respCode)) {
+				if ("141".equals(respCode)) {
+					studentPaymentWork.setFinalOrderStatus("CANCELLED");
+				}
 				studentPaymentBusiness.workToFailed(orderId);
 			}
 			responseData = "RESPCODE###" + respCode + "|$|RESPMSG###" + respMsg + "|$|GATEWAYNAME###" + gatewayName
@@ -249,16 +253,29 @@ public class PaytmCallbackController {
 
 			DataOutputStream requestWriter = new DataOutputStream(connection.getOutputStream());
 			requestWriter.writeBytes(post_data);
+			post_data = post_data.replace(KeyProperty.MID, "XXXXXXXXXXXXXX");
 			Blob tranStatusReqPayload = new SerialBlob(post_data.getBytes());
 			studentPaymentWork.setTranStatusApiRequest(tranStatusReqPayload);
 			requestWriter.close();
 			InputStream is = connection.getInputStream();
 			BufferedReader responseReader = new BufferedReader(new InputStreamReader(is));
 			if ((responseData = responseReader.readLine()) != null) {
-				System.out.println(">>>>>>>>>>responseData tran status>>>>>>>>>>" + responseData);
-				Blob tranStatusResPayload = new SerialBlob(responseData.getBytes());
-				studentPaymentWork.setTranStatusApiResponse(tranStatusResPayload);
 				JSONParser parser = new JSONParser();
+				System.out.println(">>>>>>>>>>responseData tran status>>>>>>>>>>" + responseData);
+				String response_data = responseData.replace(KeyProperty.MID, "XXXXXXXXXXXXXX");
+				JSONObject tempJSON = (JSONObject) parser.parse(response_data);
+				if (tempJSON.get("body") != null) {
+					JSONObject responseBody = (JSONObject) tempJSON.get("body");
+					if (responseBody.get("refundAmt") != null) {
+						responseBody.put("refundAmt", "XX.XX");
+					}
+					if (responseBody.get("txnAmount") != null) {
+						responseBody.put("txnAmount", "XX.XX");
+					}
+					tempJSON.put("body", responseBody);
+				}
+				Blob tranStatusResPayload = new SerialBlob(tempJSON.toString().getBytes());
+				studentPaymentWork.setTranStatusApiResponse(tranStatusResPayload);
 				String tranAmt = null;
 				String tranStatus = null;
 				try {
