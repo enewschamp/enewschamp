@@ -174,3 +174,6 @@ ALTER TABLE uicontrols_rules ADD UNIQUE UC_uicontrols_rules_01 (ui_control_id, e
 ALTER TABLE properties_backend ADD UNIQUE UC_properties_backend_01 (name);
 ALTER TABLE properties_frontend ADD UNIQUE UC_properties_backend_01 (name, app_name);
 ALTER TABLE error_codes ADD UNIQUE UC_error_codes_01 (error_code);
+
+
+INSERT INTO `properties_backend` VALUES (57,'2021-01-01 00:00:00','SYSTEM','Y','StudentApp|Publisher|Admin|Common','publisherSessionExpirySecs','3600'),(56,'2021-01-01 00:00:00','SYSTEM','Y','StudentApp|Publisher|Admin|Common','adminModuleName','Admin');
