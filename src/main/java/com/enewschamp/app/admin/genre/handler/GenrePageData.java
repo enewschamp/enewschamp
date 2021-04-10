@@ -23,4 +23,5 @@ public class GenrePageData extends PageData {
 	private String imageName;
 	private String base64Image;
 	private String imageTypeExt;
+	private String imageUpdate;
 }

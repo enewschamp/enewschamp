@@ -12,9 +12,11 @@ import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.admin.avatar.handler.AvatarPageData;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.CommonService;
@@ -28,6 +30,7 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.publication.domain.entity.Avatar;
 import com.enewschamp.publication.domain.entity.Genre;
 import com.enewschamp.publication.domain.service.GenreService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -100,16 +103,7 @@ public class GenrePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		GenrePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), GenrePageData.class);
 		validate(pageData);
-		Genre genre = mapGenreData(pageRequest, pageData);
-		genre = genreService.create(genre);
-		String newImageName = genre.getGenreId() + "_" + System.currentTimeMillis();
-		String imageType = pageData.getImageTypeExt();
-		boolean saveFlag = commonService.saveImages("Admin", "genre", imageType, pageData.getBase64Image(),
-				newImageName);
-		if (saveFlag) {
-			genre.setImageName(newImageName + "." + imageType);
-			genre = genreService.update(genre);
-		}
+		Genre genre = saveImageAndAudio(pageData);
 		mapGenre(pageRequest, pageDto, genre);
 		return pageDto;
 	}
@@ -119,8 +113,7 @@ public class GenrePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		GenrePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), GenrePageData.class);
 		validate(pageData);
-		Genre genre = mapGenreData(pageRequest, pageData);
-		genre = genreService.update(genre);
+	    Genre genre  = updateImage(pageData, pageData.getGenreId());
 		mapGenre(pageRequest, pageDto, genre);
 		return pageDto;
 	}
@@ -218,5 +211,77 @@ public class GenrePageHandler implements IPageHandler {
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
+	}
+	
+	private Genre updateImage(GenrePageData genreDTO, Long genreId) {
+		genreDTO.setGenreId(genreId);
+		Genre genre = genreService.get(genreId);
+		if (genre.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		String currentImageName = genre.getImageName();
+		genreDTO.setImageName(currentImageName);
+		genre = modelMapper.map(genreDTO, Genre.class);
+		genre.setRecordInUse(RecordInUseType.Y);
+		genre = genreService.update(genre);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(genreDTO.getImageUpdate())) {
+			String newImageName = genre.getGenreId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = genreDTO.getImageTypeExt();
+			boolean saveImageFlag = commonService.saveImages("Admin", "genre", imageType, genreDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				genre.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				genre.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "genre", currentImageName);
+				updateFlag = true;
+			}
+		}
+		
+		if (updateFlag) {
+			genre = genreService.update(genre);
+		}
+		return genre;
+	}
+	
+	private Genre saveImageAndAudio(GenrePageData genreDTO) {
+		Genre genre = modelMapper.map(genreDTO, Genre.class);
+		try {
+			genre.setRecordInUse(RecordInUseType.Y);
+			genre = genreService.create(genre);
+		} catch (DataIntegrityViolationException e) {
+			log.error(e.getMessage());
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(genreDTO.getImageUpdate())) {
+			String newImageName = genre.getGenreId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = genreDTO.getImageTypeExt();
+			String currentImageName = genre.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "genre", imageType, genreDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				genre.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				genre.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "genre", currentImageName);
+				updateFlag = true;
+			}
+		}
+	
+		if (updateFlag) {
+			genre = genreService.update(genre);
+		}
+		genre.setRecordInUse(RecordInUseType.Y);
+		return genre;
 	}
 }

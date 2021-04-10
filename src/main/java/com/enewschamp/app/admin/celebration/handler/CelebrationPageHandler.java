@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import com.enewschamp.app.admin.celebration.service.CelebrationService;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.CommonService;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -23,21 +25,24 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
+import com.enewschamp.problem.BusinessException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 @Component("CelebrationPageHandler")
+@Slf4j
 public class CelebrationPageHandler implements IPageHandler {
 	@Autowired
 	private CelebrationService celebrationService;
-	
+
 	@Autowired
 	CommonService commonService;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	ObjectMapper objectMapper;
 
@@ -90,35 +95,21 @@ public class CelebrationPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createCelebration(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		CelebrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CelebrationPageData.class);
+		CelebrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				CelebrationPageData.class);
 		validate(pageData, this.getClass().getName());
-		Celebration celebration = mapCelebrationData(pageRequest, pageData);
-		celebration = celebrationService.create(celebration);
-		String newImageName = celebration.getCelebrationId() + "_" + System.currentTimeMillis();
-		String imageType = pageData.getImageTypeExt();
-		boolean saveFlag = commonService.saveImages("Admin", "celebration", imageType, pageData.getBase64Image(),
-				newImageName);
-		if (saveFlag) {
-			celebration.setImageName(newImageName + "." + imageType);
-			celebration = celebrationService.update(celebration);
-		}
+		Celebration celebration = saveImageAndAudio(pageData);
 		mapCelebration(pageRequest, pageDto, celebration);
 		return pageDto;
-	}
-
-	private Celebration mapCelebrationData(PageRequestDTO pageRequest, CelebrationPageData pageData) {
-		Celebration celebration = modelMapper.map(pageData, Celebration.class);
-		celebration.setRecordInUse(RecordInUseType.Y);
-		return celebration;
 	}
 
 	@SneakyThrows
 	private PageDTO updateCelebration(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		CelebrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CelebrationPageData.class);
+		CelebrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				CelebrationPageData.class);
 		validate(pageData, this.getClass().getName());
-		Celebration celebration = mapCelebrationData(pageRequest, pageData);
-		celebration = celebrationService.update(celebration);
+		Celebration celebration = updateImageAndAudio(pageData, pageData.getCelebrationId());
 		mapCelebration(pageRequest, pageDto, celebration);
 		return pageDto;
 	}
@@ -126,7 +117,8 @@ public class CelebrationPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readCelebration(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		CelebrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CelebrationPageData.class);
+		CelebrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				CelebrationPageData.class);
 		Celebration celebration = modelMapper.map(pageData, Celebration.class);
 		celebration = celebrationService.read(celebration);
 		mapCelebration(pageRequest, pageDto, celebration);
@@ -136,7 +128,8 @@ public class CelebrationPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closeCelebration(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		CelebrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CelebrationPageData.class);
+		CelebrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				CelebrationPageData.class);
 		Celebration celebration = modelMapper.map(pageData, Celebration.class);
 		celebration = celebrationService.close(celebration);
 		mapCelebration(pageRequest, pageDto, celebration);
@@ -146,7 +139,8 @@ public class CelebrationPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reinstateCelebration(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		CelebrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CelebrationPageData.class);
+		CelebrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				CelebrationPageData.class);
 		Celebration celebration = modelMapper.map(pageData, Celebration.class);
 		celebration = celebrationService.reinstate(celebration);
 		mapCelebration(pageRequest, pageDto, celebration);
@@ -199,6 +193,114 @@ public class CelebrationPageHandler implements IPageHandler {
 			}
 		}
 		return celebrationPageDataList;
+	}
+
+	private Celebration updateImageAndAudio(CelebrationPageData celebrationDTO, Long celebrationId) {
+		celebrationDTO.setCelebrationId(celebrationId);
+		Celebration celebration = celebrationService.get(celebrationId);
+		if (celebration.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		String currentImageName = celebration.getImageName();
+		String currentAudioFileName = celebration.getAudioFileName();
+		celebrationDTO.setAudioFileName(currentAudioFileName);
+		celebrationDTO.setImageName(currentImageName);
+		celebration = modelMapper.map(celebrationDTO, Celebration.class);
+		celebration.setRecordInUse(RecordInUseType.Y);
+		celebration = celebrationService.update(celebration);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(celebrationDTO.getImageUpdate())) {
+			String newImageName = celebration.getCelebrationId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = celebrationDTO.getImageTypeExt();
+			boolean saveImageFlag = commonService.saveImages("Admin", "celebration", imageType,
+					celebrationDTO.getBase64Image(), newImageName);
+			if (saveImageFlag) {
+				celebration.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				celebration.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "celebration", currentImageName);
+				updateFlag = true;
+			}
+		}
+		if ("Y".equalsIgnoreCase(celebrationDTO.getAudioFileUpdate())) {
+			String audioFileName = celebration.getCelebrationId() + "_" + System.currentTimeMillis();
+			String audioFileType = celebrationDTO.getAudioFileTypeExt();
+			boolean saveAudioFileFlag = commonService.saveAudioFile("Admin", "celebration", audioFileType,
+					celebrationDTO.getBase64AudioFile(), audioFileName);
+			if (saveAudioFileFlag) {
+				celebration.setAudioFileName(audioFileName + "." + audioFileType);
+				updateFlag = true;
+			} else {
+				celebration.setAudioFileName(null);
+				updateFlag = true;
+			}
+			if (currentAudioFileName != null && !"".equals(currentAudioFileName)) {
+				commonService.deleteAudios("Admin", "celebration", currentAudioFileName);
+				updateFlag = true;
+			}
+		}
+		if (updateFlag) {
+			celebration = celebrationService.update(celebration);
+		}
+		celebration.setRecordInUse(RecordInUseType.Y);
+		return celebration;
+	}
+
+	private Celebration saveImageAndAudio(CelebrationPageData celebrationDTO) {
+		Celebration celebration = modelMapper.map(celebrationDTO, Celebration.class);
+		try {
+			celebration.setRecordInUse(RecordInUseType.Y);
+			celebration = celebrationService.create(celebration);
+		} catch (DataIntegrityViolationException e) {
+			log.error(e.getMessage());
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(celebrationDTO.getImageUpdate())) {
+			String newImageName = celebration.getCelebrationId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = celebrationDTO.getImageTypeExt();
+			String currentImageName = celebration.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "celebration", imageType,
+					celebrationDTO.getBase64Image(), newImageName);
+			if (saveImageFlag) {
+				celebration.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				celebration.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "celebration", currentImageName);
+				updateFlag = true;
+			}
+		}
+
+		if ("Y".equalsIgnoreCase(celebrationDTO.getAudioFileUpdate())) {
+			String audioFileName = celebration.getCelebrationId() + "_" + System.currentTimeMillis();
+			String audioFileType = celebrationDTO.getAudioFileTypeExt();
+			String currentAudioFileName = celebration.getAudioFileName();
+			boolean saveAudioFileFlag = commonService.saveAudioFile("Admin", "celebration", audioFileType,
+					celebrationDTO.getBase64AudioFile(), audioFileName);
+			if (saveAudioFileFlag) {
+				celebration.setAudioFileName(audioFileName + "." + audioFileType);
+				updateFlag = true;
+			} else {
+				celebration.setAudioFileName(null);
+				updateFlag = true;
+			}
+			if (currentAudioFileName != null && !"".equals(currentAudioFileName)) {
+				commonService.deleteAudios("Admin", "celebration", currentAudioFileName);
+				updateFlag = true;
+			}
+		}
+		if (updateFlag) {
+			celebration = celebrationService.update(celebration);
+		}
+		return celebration;
 	}
 
 }

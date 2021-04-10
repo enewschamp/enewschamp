@@ -35,11 +35,12 @@ public class CelebrationPageData extends PageData {
 	private int readingLevel;
 
 	private String imageName;
-
-	private String audioFileName;
-
+	private String base64AudioFile;
 	private String base64Image;
-
 	private String imageTypeExt;
+	private String imageUpdate;
+	private String audioFileUpdate;
+	private String audioFileTypeExt;
+	private String audioFileName;
 
 }
