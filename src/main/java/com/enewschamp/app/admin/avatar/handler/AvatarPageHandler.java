@@ -12,6 +12,7 @@ import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -103,16 +104,7 @@ public class AvatarPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		AvatarPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), AvatarPageData.class);
 		validate(pageData);
-		Avatar avatar = mapAvatarData(pageRequest, pageData);
-		avatar = avatarService.create(avatar);
-		String newImageName = avatar.getAvatarId() + "_" + System.currentTimeMillis();
-		String imageType = pageData.getImageTypeExt();
-		boolean saveFlag = commonService.saveImages("Admin", "avatar", imageType, pageData.getBase64Image(),
-				newImageName);
-		if (saveFlag) {
-			avatar.setImageName(newImageName + "." + imageType);
-			avatar = avatarService.update(avatar);
-		}
+		Avatar avatar = saveImageAndAudio(pageData);
         mapAvatar(pageRequest, pageDto, avatar);
 		return pageDto;
 	}
@@ -123,8 +115,7 @@ public class AvatarPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		AvatarPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), AvatarPageData.class);
 		validate(pageData);
-		Avatar avatar = mapAvatarData(pageRequest, pageData);
-		avatar = avatarService.update(avatar);
+		Avatar avatar = updateImage(pageData, pageData.getAvatarId());
 		mapAvatar(pageRequest, pageDto, avatar);
 		return pageDto;
 	}
@@ -222,5 +213,78 @@ public class AvatarPageHandler implements IPageHandler {
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
+	}
+	
+	private Avatar updateImage(AvatarPageData avatarDTO, Long AvatarId) {
+		avatarDTO.setAvatarId(AvatarId);
+		Avatar avatar = avatarService.get(AvatarId);
+		if (avatar.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		String currentImageName = avatar.getImageName();
+		avatarDTO.setImageName(currentImageName);
+		avatar = modelMapper.map(avatarDTO, Avatar.class);
+		avatar.setRecordInUse(RecordInUseType.Y);
+		avatar = avatarService.update(avatar);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(avatarDTO.getImageUpdate())) {
+			String newImageName = avatar.getAvatarId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = avatarDTO.getImageTypeExt();
+			boolean saveImageFlag = commonService.saveImages("Admin", "avatar", imageType, avatarDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				avatar.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				avatar.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "avatar", currentImageName);
+				updateFlag = true;
+			}
+		}
+		
+		if (updateFlag) {
+			avatar = avatarService.update(avatar);
+		}
+		avatar.setRecordInUse(RecordInUseType.Y);
+		return avatar;
+	}
+	
+	private Avatar saveImageAndAudio(AvatarPageData avatarDTO) {
+		Avatar avatar = modelMapper.map(avatarDTO, Avatar.class);
+		try {
+			avatar.setRecordInUse(RecordInUseType.Y);
+			avatar = avatarService.create(avatar);
+		} catch (DataIntegrityViolationException e) {
+			log.error(e.getMessage());
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(avatarDTO.getImageUpdate())) {
+			String newImageName = avatar.getAvatarId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = avatarDTO.getImageTypeExt();
+			String currentImageName = avatar.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "avatar", imageType, avatarDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				avatar.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				avatar.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "avatar", currentImageName);
+				updateFlag = true;
+			}
+		}
+	
+		if (updateFlag) {
+			avatar = avatarService.update(avatar);
+		}
+		avatar.setRecordInUse(RecordInUseType.Y);
+		return avatar;
 	}
 }

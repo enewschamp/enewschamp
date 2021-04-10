@@ -109,12 +109,6 @@ public class BadgePageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private Badge mapBadgeData(PageRequestDTO pageRequest, BadgePageData pageData) {
-		Badge badge = modelMapper.map(pageData, Badge.class);
-		badge.setRecordInUse(RecordInUseType.Y);
-		return badge;
-	}
-
 	@SneakyThrows
 	private PageDTO updateBadge(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
