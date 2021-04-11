@@ -1,6 +1,7 @@
 package com.enewschamp.subscription.domain.entity;
 
 import java.sql.Blob;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -53,6 +54,9 @@ public class StudentPaymentWork extends BaseEntity {
 	@NotNull
 	@Column(name = "subscriptionPeriod", length = 100)
 	private String subscriptionPeriod;
+
+	@Column(name = "subscriptionEndDate")
+	private LocalDate subscriptionEndDate;
 
 	@Column(name = "paymentCurrency", length = 4)
 	private String paymentCurrency;

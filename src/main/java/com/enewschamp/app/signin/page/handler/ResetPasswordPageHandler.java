@@ -131,22 +131,17 @@ public class ResetPasswordPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageNavigationContext);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -227,22 +222,17 @@ public class ResetPasswordPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageRequest, pageNavigatorDTO);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -289,21 +279,21 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		userActivityTracker.setUserId(emailId);
 		userActivityTracker.setUserType(UserType.S);
 		userActivityTracker.setActionTime(LocalDateTime.now());
-		if (password == null && "".equals(password)) {
+		if (password == null || "".equals(password)) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_PASSWORD);
 			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_PASSWORD));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_PASSWORD);
 		}
-		if (verifyPassword == null && "".equals(verifyPassword)) {
+		if (verifyPassword == null || "".equals(verifyPassword)) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_VERIFY_PWD);
 			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_VERIFY_PWD));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_VERIFY_PWD);
 		}
-		if (emailId == null && "".equals(emailId)) {
+		if (emailId == null || "".equals(emailId)) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_EMAIL_ID);
 			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_EMAIL_ID));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
@@ -333,15 +323,15 @@ public class ResetPasswordPageHandler implements IPageHandler {
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_PWD_LEN);
 		}
-		if ("N".equals(student.getIsActive())) {
+		if (student != null && "N".equals(student.getIsActive())) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.STUD_IS_INACTIVE);
 			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.STUD_IS_INACTIVE));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.STUD_IS_INACTIVE);
 		}
-		if (password.equals(student.getPassword()) || password.equals(student.getPassword1())
-				|| password.equals(student.getPassword2())) {
+		if (student != null && (password.equals(student.getPassword()) || password.equals(student.getPassword1())
+				|| password.equals(student.getPassword2()))) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO);
 			userActivityTracker
 					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO));
@@ -411,21 +401,21 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		}
 		userActivityTracker.setOperatorId("" + studentId);
 		userActivityTracker.setUserId(emailId);
-		if (password == null && "".equals(password)) {
+		if (password == null || "".equals(password)) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_PASSWORD);
 			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_PASSWORD));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_PASSWORD);
 		}
-		if (verifyPassword == null && "".equals(verifyPassword)) {
+		if (verifyPassword == null || "".equals(verifyPassword)) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_VERIFY_PWD);
 			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_VERIFY_PWD));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_VERIFY_PWD);
 		}
-		if (emailId == null && "".equals(emailId)) {
+		if (emailId == null || "".equals(emailId)) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.INVALID_EMAIL_ID);
 			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.INVALID_EMAIL_ID));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
@@ -454,15 +444,15 @@ public class ResetPasswordPageHandler implements IPageHandler {
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_PWD_LEN);
 		}
-		if ("N".equals(student.getIsActive())) {
+		if (student != null && "N".equals(student.getIsActive())) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.STUD_IS_INACTIVE);
 			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.STUD_IS_INACTIVE));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.STUD_IS_INACTIVE);
 		}
-		if (password.equals(student.getPassword()) || password.equals(student.getPassword1())
-				|| password.equals(student.getPassword2())) {
+		if (student != null && (password.equals(student.getPassword()) || password.equals(student.getPassword1())
+				|| password.equals(student.getPassword2()))) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO);
 			userActivityTracker
 					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO));
@@ -632,15 +622,15 @@ public class ResetPasswordPageHandler implements IPageHandler {
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.INVALID_USERNAME_OR_PASSWORD, emailId);
 		}
-		if ("N".equals(student.getIsActive())) {
+		if (student != null && "N".equals(student.getIsActive())) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.STUD_IS_INACTIVE);
 			userActivityTracker.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.STUD_IS_INACTIVE));
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userLoginBusiness.auditUserActivity(userActivityTracker);
 			throw new BusinessException(ErrorCodeConstants.STUD_IS_INACTIVE);
 		}
-		if (passwordNew.equals(student.getPassword()) || passwordNew.equals(student.getPassword1())
-				|| passwordNew.equals(student.getPassword2())) {
+		if (student != null && (passwordNew.equals(student.getPassword()) || passwordNew.equals(student.getPassword1())
+				|| passwordNew.equals(student.getPassword2()))) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO);
 			userActivityTracker
 					.setErrorDescription(errorCodesService.getValue(ErrorCodeConstants.USER_PASSWORD_SAME_OR_PREV_TWO));

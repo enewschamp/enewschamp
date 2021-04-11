@@ -92,22 +92,17 @@ public class SavedArticlesPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageNavigationContext);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -122,8 +117,8 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
-		SavedArticlePageData pageData = new SavedArticlePageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		SavedArticlePageData pageData = (SavedArticlePageData) commonService.mapPageData(SavedArticlePageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
@@ -207,22 +202,17 @@ public class SavedArticlesPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageRequest, pageNavigatorDTO);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -234,8 +224,8 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		ArticlePageData articlePageData = new ArticlePageData();
-		articlePageData = mapPageData(articlePageData, pageRequest);
+		ArticlePageData articlePageData = (ArticlePageData) commonService.mapPageData(ArticlePageData.class,
+				pageRequest);
 		String likeFlag = articlePageData.getLikeFlag();
 		Long newsArticleId = articlePageData.getNewsArticleId();
 		StudentPreferencesDTO studPref = preferenceBusiness.getPreferenceFromMaster(studentId);
@@ -253,8 +243,8 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		ArticlePageData articlePageData = new ArticlePageData();
-		articlePageData = mapPageData(articlePageData, pageRequest);
+		ArticlePageData articlePageData = (ArticlePageData) commonService.mapPageData(ArticlePageData.class,
+				pageRequest);
 		String opinion = articlePageData.getOpinionText();
 		Long newsArticleId = articlePageData.getNewsArticleId();
 		StudentPreferencesDTO studPref = preferenceBusiness.getPreferenceFromMaster(studentId);
@@ -272,8 +262,7 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		ArticlePageData saveData = new ArticlePageData();
-		saveData = mapPageData(saveData, pageRequest);
+		ArticlePageData saveData = (ArticlePageData) commonService.mapPageData(ArticlePageData.class, pageRequest);
 		String saveFlag = saveData.getSaveFlag();
 		Long newsArticleId = saveData.getNewsArticleId();
 		StudentPreferencesDTO studPref = preferenceBusiness.getPreferenceFromMaster(studentId);
@@ -323,5 +312,5 @@ public class SavedArticlesPageHandler implements IPageHandler {
 			throw new RuntimeException(e);
 		}
 		return pageData;
-	}
+  }
 }

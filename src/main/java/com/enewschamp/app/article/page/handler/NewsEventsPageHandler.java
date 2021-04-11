@@ -103,22 +103,17 @@ public class NewsEventsPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageNavigationContext);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -138,8 +133,8 @@ public class NewsEventsPageHandler implements IPageHandler {
 		}
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
-		NewsEventsPageData pageData = new NewsEventsPageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		NewsEventsPageData pageData = (NewsEventsPageData) commonService.mapPageData(NewsEventsPageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
@@ -157,7 +152,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 		}
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (!"".equals(studentId) && (preferenceBusiness.getPreferenceFromMaster(studentId) != null)) {
+		if ((studentId > 0) && (preferenceBusiness.getPreferenceFromMaster(studentId) != null)) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 			readingLevel = Integer.parseInt(preferenceDto.getReadingLevel());
 		}
@@ -239,7 +234,6 @@ public class NewsEventsPageHandler implements IPageHandler {
 
 	@Override
 	public PageDTO saveAsMaster(PageRequestDTO pageRequest) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

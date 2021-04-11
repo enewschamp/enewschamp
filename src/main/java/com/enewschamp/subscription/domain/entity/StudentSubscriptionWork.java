@@ -50,6 +50,9 @@ public class StudentSubscriptionWork extends BaseEntity {
 	@Column(name = "autoRenewal", length = 1)
 	private String autoRenewal;
 
+	@Column(name = "orderId")
+	private String orderId;
+
 	@Column(name = "subscriptionId", length = 100)
 	private String subscriptionId;
 

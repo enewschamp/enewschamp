@@ -123,11 +123,11 @@
 			<artifactId>firebase-admin</artifactId>
 			<version>6.8.1</version>
 		</dependency>
-	<!-- 	<dependency>
+	 	<dependency>
 			<groupId>com.paytm</groupId>
 			<artifactId>paytm-checksum</artifactId>
 			<version>1.2.0</version>
-		</dependency> -->
+		</dependency> 
 		<dependency>
 			<groupId>com.github.reinert</groupId>
 			<artifactId>jjschema</artifactId>

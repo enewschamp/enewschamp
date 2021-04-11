@@ -6,10 +6,10 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.student.payment.repository.StudentPaymentRepositoryCustomImpl;
@@ -17,9 +17,7 @@ import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentPayment;
-import com.enewschamp.subscription.domain.entity.StudentPaymentWork;
 import com.enewschamp.subscription.domain.repository.StudentPaymentRepository;
-import com.enewschamp.subscription.domain.repository.StudentPaymentWorkRepository;
 
 @Service
 public class StudentPaymentService {
@@ -32,12 +30,8 @@ public class StudentPaymentService {
 	@Autowired
 	StudentPaymentRepository repository;
 	
-
 	@Autowired
 	private StudentPaymentRepositoryCustomImpl repositoryCustom;
-
-	@Autowired
-	StudentPaymentWorkRepository workRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -56,7 +50,6 @@ public class StudentPaymentService {
 
 	public StudentPayment update(StudentPayment StudentPayment) {
 		Long paymentId = StudentPayment.getPaymentId();
-
 		StudentPayment existingEntity = get(paymentId);
 		modelMapper.map(StudentPayment, existingEntity);
 		return repository.save(existingEntity);
@@ -64,7 +57,6 @@ public class StudentPaymentService {
 
 	public StudentPayment patch(StudentPayment StudentPayment) {
 		Long paymentId = StudentPayment.getPaymentId();
-
 		StudentPayment existingEntity = get(paymentId);
 		modelMapperForPatch.map(StudentPayment, existingEntity);
 		return repository.save(existingEntity);
@@ -80,7 +72,7 @@ public class StudentPaymentService {
 	}
 
 	public StudentPayment getByStudentIdAndEdition(Long studentId, String editionId) {
-		List<StudentPayment> existingEntities = repository.getByStudentIdAndEdition(studentId, editionId);
+		List<StudentPayment> existingEntities = repository.getAllByStudentIdAndEdition(studentId, editionId);
 		if (existingEntities != null && existingEntities.size() > 0) {
 			return existingEntities.get(0);
 		} else {
@@ -88,17 +80,16 @@ public class StudentPaymentService {
 		}
 	}
 
-	public Long getStudentByOrderIdAndTxnId(String orderId, String paytmTxnId) {
-		List<StudentPayment> existingEntities = repository.getByOrderIdAndTxnId(orderId, paytmTxnId);
-		if (existingEntities != null && existingEntities.size() > 0) {
-			return existingEntities.get(0).getStudentId();
+	public List<StudentPayment> getAllByStudentIdAndEdition(Long studentId, String editionId) {
+		return repository.getAllByStudentIdAndEdition(studentId, editionId);
+	}
+
+	public StudentPayment getByOrderId(String orderId) {
+		Optional<StudentPayment> existingEntity = repository.getByOrderId(orderId);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
 		} else {
-			List<StudentPaymentWork> existingEntitiesWork = workRepository.getByOrderIdAndTxnId(orderId, paytmTxnId);
-			if (existingEntitiesWork != null && existingEntitiesWork.size() > 0) {
-				return existingEntitiesWork.get(0).getStudentId();
-			} else {
-				return null;
-			}
+			return null;
 		}
 	}
 

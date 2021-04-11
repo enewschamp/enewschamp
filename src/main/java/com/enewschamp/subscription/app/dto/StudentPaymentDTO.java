@@ -20,4 +20,6 @@ public class StudentPaymentDTO extends AbstractDTO {
 	private String subscriptionPeriod;
 	private String paymentCurrency;
 	private Double paymentAmount;
+	private String paytmStatus;
+	private String finalOrderStatus;
 }

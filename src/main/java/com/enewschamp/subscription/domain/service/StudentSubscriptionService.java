@@ -1,5 +1,7 @@
 package com.enewschamp.subscription.domain.service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -18,6 +20,7 @@ import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;
+import com.enewschamp.subscription.domain.entity.StudentSubscriptionHistory;
 
 @Service
 public class StudentSubscriptionService {
@@ -32,6 +35,9 @@ public class StudentSubscriptionService {
 	
 	@Autowired
 	StudentSubscriptionRepositoryCustomImpl repositoryCustom;
+
+	@Autowired
+	StudentSubscriptionHistoryService studentSubscriptionHistoryService;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -61,6 +67,9 @@ public class StudentSubscriptionService {
 		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
+		StudentSubscriptionHistory studentSubscriptionHistory = modelMapper.map(existingEntity,
+				StudentSubscriptionHistory.class);
+		studentSubscriptionHistoryService.create(studentSubscriptionHistory);
 		modelMapper.map(studentSubscription, existingEntity);
 		return repository.save(existingEntity);
 	}
@@ -79,9 +88,12 @@ public class StudentSubscriptionService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			// throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
 			return null;
 		}
+	}
+
+	public List<StudentSubscription> getSubscriptionRenewalList(LocalDate endDate) {
+		return repository.getSubscriptionRenewalList(endDate);
 	}
 
 	public String getAudit(Long studentId) {

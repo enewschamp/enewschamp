@@ -55,7 +55,7 @@ public class StudentBadgesBusiness {
 				studBadge.setStudentId(studentId);
 				studBadge.setBadgeId(badge.getBadgeId());
 				studBadge.setYearMonth(yearMonth);
-				studBadge.setOperatorId(""+studentId);
+				studBadge.setOperatorId("" + studentId);
 				studBadge.setRecordInUse(RecordInUseType.Y);
 				studentBadgesService.create(studBadge);
 			}
@@ -75,7 +75,7 @@ public class StudentBadgesBusiness {
 				studBadge.setStudentId(studentId);
 				studBadge.setBadgeId(badge.getBadgeId());
 				studBadge.setYearMonth(yearMonth);
-				studBadge.setOperatorId(""+studentId);
+				studBadge.setOperatorId("" + studentId);
 				studBadge.setRecordInUse(RecordInUseType.Y);
 				studentBadgesService.create(studBadge);
 			}
@@ -85,13 +85,13 @@ public class StudentBadgesBusiness {
 
 	public Page<RecognitionData> getStudentBadges(Long studentId, String editionId, LocalDate limitDate, int pageNo,
 			int pageSize) {
-		Page<RecognitionData> studentBadges = studentBadgesService.getStudentbadges(studentId, editionId, limitDate,
+		Page<RecognitionData> studentBadges = studentBadgesService.getStudentBadges(studentId, editionId, limitDate,
 				pageNo, pageSize);
 		return studentBadges;
 	}
 
-	public RecognitionData getLastestBadge(Long studentId, String editionId, int readingLevel) {
-		RecognitionData latestBadge = studentBadgesService.getLastestbadge(studentId, editionId, readingLevel);
+	public RecognitionData getLatestBadge(Long studentId, String editionId, int readingLevel) {
+		RecognitionData latestBadge = studentBadgesService.getLatestBadge(studentId, editionId, readingLevel);
 		return latestBadge;
 	}
 

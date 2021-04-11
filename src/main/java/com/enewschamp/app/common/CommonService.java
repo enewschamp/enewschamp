@@ -22,12 +22,18 @@ import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.app.dto.StudentControlDTO;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.utils.SaveFileUtils;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class CommonService {
 
 	@Autowired
 	ModelMapper modelMapper;
+
+	@Autowired
+	ObjectMapper objectMapper;
 
 	@Autowired
 	private PropertiesBackendService propertiesService;
@@ -152,13 +158,21 @@ public class CommonService {
 				String size3OldFileName = imagesFolderPath + "size3/" + currentImageName;
 				String size4OldFileName = imagesFolderPath + "size4/" + currentImageName;
 				File oldFileJPG1 = new File(size1OldFileName);
-				oldFileJPG1.delete();
+				if (oldFileJPG1.exists() && !oldFileJPG1.delete()) {
+					System.out.println("Unable to delete file::" + size1OldFileName);
+				}
 				File oldFileJPG2 = new File(size2OldFileName);
-				oldFileJPG2.delete();
+				if (oldFileJPG2.exists() && !oldFileJPG2.delete()) {
+					System.out.println("Unable to delete file::" + size2OldFileName);
+				}
 				File oldFileJPG3 = new File(size3OldFileName);
-				oldFileJPG3.delete();
+				if (oldFileJPG3.exists() && !oldFileJPG3.delete()) {
+					System.out.println("Unable to delete file::" + size3OldFileName);
+				}
 				File oldFileJPG4 = new File(size4OldFileName);
-				oldFileJPG4.delete();
+				if (oldFileJPG4.exists() && !oldFileJPG4.delete()) {
+					System.out.println("Unable to delete file::" + size4OldFileName);
+				}
 			}
 			return true;
 		} catch (Exception e) {
@@ -174,7 +188,9 @@ public class CommonService {
 			if (currentImageName != null && !"".equals(currentImageName)) {
 				String oldFileName = imagesFolderPath + currentImageName;
 				File oldAudioFile = new File(oldFileName);
-				oldAudioFile.delete();
+				if (oldAudioFile.exists() && !oldAudioFile.delete()) {
+					System.out.println("Unable to delete file::" + oldFileName);
+				}
 			}
 			return true;
 		} catch (Exception e) {
@@ -208,4 +224,25 @@ public class CommonService {
 			file = null;
 		}
 	}
+
+
+	public Object mapPageData(Class clazz, PageRequestDTO pageRequest) {
+		Object pageData = null;
+		try {
+			pageData = clazz.newInstance();
+			pageData = objectMapper.readValue(pageRequest.getData().toString(), clazz);
+		} catch (JsonParseException e) {
+			throw new RuntimeException(e);
+		} catch (JsonMappingException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return pageData;
+	}
+
 }

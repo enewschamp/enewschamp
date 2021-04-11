@@ -45,7 +45,7 @@ public interface UserLoginRepository extends JpaRepository<UserLogin, Long> {
 
 	@Query("Select s from UserLogin s where s.deviceId= :deviceId and s.tokenId=:tokenId and s.userType= 'S' and s.operationDateTime=(Select max(p.operationDateTime) from UserLogin p where p.deviceId= :deviceId and p.tokenId=:tokenId and p.userType= 'S')")
 	public Optional<UserLogin> getDeviceLogin(@Param("deviceId") String deviceId, @Param("tokenId") String tokenId);
-	
+
 	@Query("Select s from UserLogin s where s.deviceId= :deviceId and s.tokenId=:tokenId and s.userType= 'P' and s.operationDateTime=(Select max(p.operationDateTime) from UserLogin p where p.deviceId= :deviceId and p.tokenId=:tokenId and p.userType= 'P')")
 	public Optional<UserLogin> getBODeviceLogin(@Param("deviceId") String deviceId, @Param("tokenId") String tokenId);
 

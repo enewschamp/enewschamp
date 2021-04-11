@@ -113,22 +113,17 @@ public class PublicationPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageNavigationContext);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		} else {
 			pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
@@ -152,7 +147,7 @@ public class PublicationPageHandler implements IPageHandler {
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (!"".equals(studentId)) {
+		if (studentId > 0) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {
@@ -178,8 +173,8 @@ public class PublicationPageHandler implements IPageHandler {
 					ArticleType.NEWSARTICLE);
 		}
 		searchRequestData.setPublicationDate(publicationDate);
-		PublicationPageData pageData = new PublicationPageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		PublicationPageData pageData = (PublicationPageData) commonService.mapPageData(PublicationPageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
@@ -253,7 +248,7 @@ public class PublicationPageHandler implements IPageHandler {
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (!"".equals(studentId)) {
+		if (studentId > 0) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {
@@ -277,8 +272,8 @@ public class PublicationPageHandler implements IPageHandler {
 		LocalDate newDate = newsArticleService.getNextAvailablePublicationDate(publicationDate, isTestUser, editionId,
 				readingLevel, ArticleType.NEWSARTICLE);
 		searchRequestData.setPublicationDate(newDate);
-		PublicationPageData pageData = new PublicationPageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		PublicationPageData pageData = (PublicationPageData) commonService.mapPageData(PublicationPageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
@@ -332,7 +327,7 @@ public class PublicationPageHandler implements IPageHandler {
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (!"".equals(studentId)) {
+		if (studentId > 0) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {
@@ -356,8 +351,8 @@ public class PublicationPageHandler implements IPageHandler {
 		LocalDate newDate = newsArticleService.getPreviousAvailablePublicationDate(publicationDate, isTestUser,
 				editionId, readingLevel, ArticleType.NEWSARTICLE);
 		searchRequestData.setPublicationDate(newDate);
-		PublicationPageData pageData = new PublicationPageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		PublicationPageData pageData = (PublicationPageData) commonService.mapPageData(PublicationPageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
@@ -411,7 +406,7 @@ public class PublicationPageHandler implements IPageHandler {
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (!"".equals(studentId)) {
+		if (studentId > 0) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {
@@ -433,8 +428,8 @@ public class PublicationPageHandler implements IPageHandler {
 			searchRequestData.setReadingLevel4(AppConstants.YES);
 		}
 		searchRequestData.setPublicationDate(publicationDate);
-		PublicationPageData pageData = new PublicationPageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		PublicationPageData pageData = (PublicationPageData) commonService.mapPageData(PublicationPageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
@@ -486,7 +481,7 @@ public class PublicationPageHandler implements IPageHandler {
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (!"".equals(studentId)) {
+		if (studentId > 0) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {
@@ -508,8 +503,8 @@ public class PublicationPageHandler implements IPageHandler {
 			searchRequestData.setReadingLevel4(AppConstants.YES);
 		}
 		searchRequestData.setPublicationDate(publicationDate);
-		PublicationPageData pageData = new PublicationPageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		PublicationPageData pageData = (PublicationPageData) commonService.mapPageData(PublicationPageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));

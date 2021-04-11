@@ -21,7 +21,7 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.user.domain.entity.StudentRefund;
-import com.enewschamp.user.domain.service.RefundService;
+import com.enewschamp.user.domain.service.StudentRefundService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
@@ -29,7 +29,7 @@ import lombok.SneakyThrows;
 @Component("StudentRefundPageHandler")
 public class StudentRefundPageHandler implements IPageHandler {
 	@Autowired
-	private RefundService refundService;
+	private StudentRefundService refundService;
 	@Autowired
 	ModelMapper modelMapper;
 	@Autowired

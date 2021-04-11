@@ -3,6 +3,7 @@ package com.enewschamp.subscription.page.handler;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -91,22 +92,17 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageNavigationContext);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -211,22 +207,17 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageRequest, pageNavigatorDTO);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -252,7 +243,7 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 			String feeCurrency = subscriptionPeriodPageData.getSubscriptionFeeCurrency();
 			studentSubscpritionWorkDTO.setAutoRenewal(autoRenew);
 			studentSubscpritionWorkDTO.setSubscriptionPeriod(subscriptionPeriod);
-			studentSubscpritionWorkDTO.setOperatorId(""+studentId);
+			studentSubscpritionWorkDTO.setOperatorId("" + studentId);
 			studentSubscpritionWorkDTO.setRecordInUse(RecordInUseType.Y);
 			StudentPaymentWork studentPaymentWork = new StudentPaymentWork();
 			studentPaymentWork.setStudentId(studentId);
@@ -260,11 +251,12 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 			studentPaymentWork.setPaymentAmount(feeAmount);
 			studentPaymentWork.setPaymentCurrency(feeCurrency);
 			studentPaymentWork.setSubscriptionPeriod(subscriptionPeriod);
-			studentPaymentWork.setOperatorId(""+studentId);
+			studentPaymentWork.setOperatorId("" + studentId);
 			studentPaymentWork.setRecordInUse(RecordInUseType.Y);
 			studentPaymentWork.setSubscriptionType(studentSubscpritionWorkDTO.getSubscriptionSelected());
-			studentPaymentWork
-					.setOrderId(generateOrderId(studentId, studentSubscpritionWorkDTO.getSubscriptionSelected()));
+			String orderId = generateOrderId(studentId, studentSubscpritionWorkDTO.getSubscriptionSelected());
+			studentPaymentWork.setOrderId(orderId);
+			studentSubscpritionWorkDTO.setOrderId(orderId);
 			subscriptionBusiness.updateSubscriptionPeriodInWork(studentSubscpritionWorkDTO);
 			studentPaymentWork = studentPaymentWorkService.create(studentPaymentWork);
 			studentPaymentWork.getPaymentId();
@@ -294,7 +286,7 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 			String feeCurrency = subscriptionPeriodPageData.getSubscriptionFeeCurrency();
 			studentSubscpritionWorkDTO.setAutoRenewal(autoRenew);
 			studentSubscpritionWorkDTO.setSubscriptionPeriod(subscriptionPeriod);
-			studentSubscpritionWorkDTO.setOperatorId(""+studentId);
+			studentSubscpritionWorkDTO.setOperatorId("" + studentId);
 			studentSubscpritionWorkDTO.setRecordInUse(RecordInUseType.Y);
 			StudentPaymentWork studentPaymentWork = new StudentPaymentWork();
 			studentPaymentWork.setStudentId(studentId);
@@ -302,7 +294,7 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 			studentPaymentWork.setPaymentAmount(feeAmount);
 			studentPaymentWork.setSubscriptionPeriod(subscriptionPeriod);
 			studentPaymentWork.setPaymentCurrency(feeCurrency);
-			studentPaymentWork.setOperatorId(""+studentId);
+			studentPaymentWork.setOperatorId("" + studentId);
 			studentPaymentWork.setRecordInUse(RecordInUseType.Y);
 			studentPaymentWork.setSubscriptionType(studentSubscpritionWorkDTO.getSubscriptionSelected());
 			studentPaymentWork
@@ -318,9 +310,9 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 	}
 
 	private String generateOrderId(Long studentId, String subscriptionType) {
-		String orderId = subscriptionType + "" + new Date().getTime() + "_" + studentId;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyymmddHHmmss");
+		String orderId = "ENC" + "_" + sdf.format(new Date()) + "_" + studentId;
 		return orderId;
-
 	}
 
 	public SubscriptionPeriodPageData mapPagedata(PageRequestDTO pageRequest) {

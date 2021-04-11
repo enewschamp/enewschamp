@@ -18,6 +18,7 @@ import com.enewschamp.app.article.page.dto.ArticleQuizCompletionDTO;
 import com.enewschamp.app.article.page.dto.ArticleQuizDetailsPageData;
 import com.enewschamp.app.article.page.dto.ArticleQuizPageData;
 import com.enewschamp.app.article.page.dto.ArticleQuizQuestionsPageData;
+import com.enewschamp.app.common.CommonService;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -48,6 +49,9 @@ public class QuizPageHandler implements IPageHandler {
 
 	@Autowired
 	ModelMapper modelMapper;
+
+	@Autowired
+	CommonService commonService;
 
 	@Autowired
 	SubscriptionBusiness subscriptionBusiness;
@@ -93,22 +97,17 @@ public class QuizPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageNavigationContext);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -126,11 +125,9 @@ public class QuizPageHandler implements IPageHandler {
 			isTestUser = studReg.getIsTestUser();
 		}
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		ArticleQuizDetailsPageData pageData = new ArticleQuizDetailsPageData();
-		pageData = mapPageDataOnLoad(pageData, pageNavigationContext.getPageRequest());
+		ArticleQuizDetailsPageData pageData = (ArticleQuizDetailsPageData) commonService
+				.mapPageData(ArticleQuizDetailsPageData.class, pageNavigationContext.getPageRequest());
 		Long newsArticleId = pageData.getNewsArticleId();
-
-		// update the quiz indicator flag..
 		StudentActivityDTO stdactivity = studentActivityBusiness.getActivity(studentId, newsArticleId);
 		if (stdactivity != null) {
 			if (stdactivity.getQuizScore() == null) {
@@ -181,22 +178,17 @@ public class QuizPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageRequest, pageNavigatorDTO);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -212,14 +204,14 @@ public class QuizPageHandler implements IPageHandler {
 		ArticleCompletionQuizPageData articleCompletionQuizPageData = new ArticleCompletionQuizPageData();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		int readingLevel = 3;
-		if (!"".equals(studentId)) {
+		if (studentId > 0) {
 			StudentPreferencesDTO preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 			if (preferenceDto != null) {
 				readingLevel = Integer.parseInt(preferenceDto.getReadingLevel());
 			}
 		}
-		ArticleQuizPageData pageData = new ArticleQuizPageData();
-		pageData = mapPageData(pageData, pageRequest);
+		ArticleQuizPageData pageData = (ArticleQuizPageData) commonService.mapPageData(ArticleQuizPageData.class,
+				pageRequest);
 		quizScoreDTOList = populateQuizDto(pageData, studentId);
 		Long newsArticleId = pageData.getNewsArticleId();
 		StudentActivityDTO stdactivity = studentActivityBusiness.getActivity(studentId, newsArticleId);
@@ -236,27 +228,6 @@ public class QuizPageHandler implements IPageHandler {
 		pageDTO.setData(articleCompletionQuizPageData);
 		pageDTO.setHeader(pageRequest.getHeader());
 		return pageDTO;
-	}
-
-	private ArticleQuizPageData mapPageData(ArticleQuizPageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), ArticleQuizPageData.class);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return pageData;
-	}
-
-	private ArticleQuizDetailsPageData mapPageDataOnLoad(ArticleQuizDetailsPageData pageData,
-			PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), ArticleQuizDetailsPageData.class);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return pageData;
 	}
 
 	private List<QuizScoreDTO> populateQuizDto(ArticleQuizPageData pageData, Long studentId) {

@@ -41,12 +41,13 @@ public interface PropertyConstants {
 	public static String OTP_GEN_MAX_ATTEMPTS = "otp.genMaxAttempts";
 	public static String OTP_VERIFY_MAX_ATTEMPTS = "otp.verifyMaxAttempts";
 	public static String OTP_EXPIRY_SECONDS = "otp.expirySeconds";
-	public static String PAYTM_MID = "paytm.mid";
-	public static String PAYTM_MERCHANT_KEY = "paytm.merchantkey";
 	public static String PAYTM_CHANNEL_ID = "paytm.channelId";
 	public static String PAYTM_WEBSITE = "paytm.website";
+	public static String PAYTM_REQUEST_TYPE_PAYMENT = "paytm.paymentRequestType";
+	public static String PAYTM_REQUEST_TYPE_SUBSCRIPTION = "paytm.subscriptionRequestType";
 	public static String PAYTM_INDUSTRY_TYPE_ID = "paytm.industryTypeId";
 	public static String PAYTM_CALLBACK_URL = "paytm.callbackURL";
+	public static String PAYTM_INITIATE_TRANSACTION_URL = "paytm.initiateTransactionURL";
 	public static String PAYTM_INITIATE_SUBSCRIPTION_URL = "paytm.initiateSubscriptionURL";
 	public static String PAYTM_RENEW_SUBSCRIPTION_URL = "paytm.renewSubscriptionURL";
 	public static String PAYTM_CANCEL_SUBSCRIPTION_URL = "paytm.cancelSubscriptionURL";
@@ -58,6 +59,9 @@ public interface PropertyConstants {
 	public static String PAYTM_ORDER_LIST_URL = "paytm.orderListURL";
 	public static String PAYTM_SUBSCRIPTION_AMOUNT_TYPE = "paytm.subscriptionAmountType";
 	public static String PAYTM_SUBSCRIPTION_EXPIRY_YEARS = "paytm.subscriptionExpiryYears";
+	public static String PAYTM_SUBSCRIPTION_ENABLE_RETRY = "paytm.subscriptionEnableRetry";
+	public static String PAYTM_SUBSCRIPTION_GRACE_DAYS = "paytm.subscriptionGraceDays";
+	public static String PAYTM_SUBSCRIPTION_RENEWAL_ADVANCE_DAYS = "paytm.subscriptionRenewalAdvanceDays";
 	public static String PAYTM_SHOW_PAYMENTS_PAGE_URL = "paytm.showPaymentsPageURL";
 	public static String PAYTM_TRANSACTION_STATUS_URL = "paytm.transactionStatusURL";
 	public static String PAYTM_CALLBACK_CHECKSUM_MISMATCH = "paytm.callbackCheckSumMismatch";
@@ -78,6 +82,7 @@ public interface PropertyConstants {
 	public static String AUDIO_ROOT_FOLDER_PATH_MISC = "audioRootFolderPath.misc";
 	public static String AUDIO_ROOT_FOLDER_PATH_BADGE = "audioRootFolderPath.badge";
 
+	public static String DEFAULT_OPERATOR_ID = "SYSTEM";
 	public static String PAGE_SIZE = "pageSize";
 	public static String STUDENT_APP_MODULE_NAME = "studentAppModuleName";
 	public static String PUBLISHER_MODULE_NAME = "publisherModuleName";

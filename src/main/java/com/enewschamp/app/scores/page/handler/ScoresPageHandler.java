@@ -73,22 +73,17 @@ public class ScoresPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageNavigationContext);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -102,12 +97,12 @@ public class ScoresPageHandler implements IPageHandler {
 		ScoresSearchData searchData = new ScoresSearchData();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		if ("".equals(studentId)) {
+		if (studentId == 0L) {
 			throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
 		}
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (!"".equals(studentId)) {
+		if (studentId > 0) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {
@@ -147,12 +142,12 @@ public class ScoresPageHandler implements IPageHandler {
 		ScoresSearchData searchData = new ScoresSearchData();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		if ("".equals(studentId)) {
+		if (studentId == 0L) {
 			throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
 		}
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (!"".equals(studentId)) {
+		if (studentId > 0) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {
@@ -202,12 +197,12 @@ public class ScoresPageHandler implements IPageHandler {
 		ScoresSearchData searchData = new ScoresSearchData();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		if ("".equals(studentId)) {
+		if (studentId == 0L) {
 			throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
 		}
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (!"".equals(studentId)) {
+		if (studentId > 0) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {
@@ -271,12 +266,12 @@ public class ScoresPageHandler implements IPageHandler {
 		ScoresSearchData searchData = new ScoresSearchData();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
-		if ("".equals(studentId)) {
+		if (studentId == 0L) {
 			throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
 		}
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
-		if (!"".equals(studentId)) {
+		if (studentId > 0) {
 			preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);
 		}
 		if (preferenceDto != null) {

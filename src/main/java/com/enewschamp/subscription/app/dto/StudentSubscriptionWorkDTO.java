@@ -39,6 +39,8 @@ public class StudentSubscriptionWorkDTO extends BaseEntity {
 
 	private String autoRenewal;
 
+	private String orderId;
+
 	private String subscriptionId;
 
 	private String subscriptionAmountType;

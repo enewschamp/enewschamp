@@ -1,5 +1,6 @@
 package com.enewschamp.subscription.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.subscription.domain.entity.StudentPayment;
 import com.enewschamp.subscription.domain.entity.StudentPaymentFailed;
 import com.enewschamp.subscription.domain.entity.StudentPaymentWork;
 import com.enewschamp.subscription.domain.repository.StudentPaymentFailedRepository;
@@ -56,6 +58,10 @@ public class StudentPaymentFailedService {
 		} else {
 			return null;
 		}
+	}
+
+	public List<StudentPaymentFailed> getAllByStudentIdAndEdition(Long studentId, String editionId) {
+		return repository.getAllByStudentIdAndEdition(studentId, editionId);
 	}
 
 	public String getAudit(Long paymentId) {

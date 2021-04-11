@@ -83,22 +83,17 @@ public class OpinionsPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageNavigationContext);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -113,8 +108,8 @@ public class OpinionsPageHandler implements IPageHandler {
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
-		OpinionsPageData pageData = new OpinionsPageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		OpinionsPageData pageData = (OpinionsPageData) commonService.mapPageData(OpinionsPageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
@@ -185,8 +180,7 @@ public class OpinionsPageHandler implements IPageHandler {
 
 	@Override
 	public PageDTO saveAsMaster(PageRequestDTO pageRequest) {
-		PageDTO pageDto = new PageDTO();
-		return pageDto;
+		return null;
 	}
 
 	@Override
@@ -212,19 +206,6 @@ public class OpinionsPageHandler implements IPageHandler {
 	private ArticlePageData mapPageData(ArticlePageData pageData, PageRequestDTO pageRequest) {
 		try {
 			pageData = objectMapper.readValue(pageRequest.getData().toString(), ArticlePageData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return pageData;
-	}
-
-	private OpinionsPageData mapPageData(OpinionsPageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), OpinionsPageData.class);
 		} catch (JsonParseException e) {
 			throw new RuntimeException(e);
 		} catch (JsonMappingException e) {

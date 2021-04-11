@@ -80,22 +80,17 @@ public class RecognitionsPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageNavigationContext);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -109,8 +104,8 @@ public class RecognitionsPageHandler implements IPageHandler {
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
-		RecognitionPageData pageData = new RecognitionPageData();
-		pageData = mapPageData(pageData, pageNavigationContext.getPageRequest());
+		RecognitionPageData pageData = (RecognitionPageData) commonService.mapPageData(RecognitionPageData.class,
+				pageNavigationContext.getPageRequest());
 		int pageNo = 1;
 		int pageSize = Integer.valueOf(propertiesService
 				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
@@ -137,7 +132,7 @@ public class RecognitionsPageHandler implements IPageHandler {
 		HeaderDTO header = pageNavigationContext.getPageRequest().getHeader();
 		pageDto.setHeader(header);
 		List<RecognitionData> badgeList = new ArrayList<RecognitionData>();
-		if (!pageResult.isEmpty()) {
+		if (pageResult != null && !pageResult.isEmpty()) {
 			badgeList = pageResult.getContent();
 		}
 		if (badgeList == null || badgeList.size() == 0) {
@@ -150,8 +145,7 @@ public class RecognitionsPageHandler implements IPageHandler {
 
 	@Override
 	public PageDTO saveAsMaster(PageRequestDTO pageRequest) {
-		PageDTO pageDto = new PageDTO();
-		return pageDto;
+		return null;
 	}
 
 	@Override

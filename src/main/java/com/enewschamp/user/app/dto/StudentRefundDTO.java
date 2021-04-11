@@ -1,13 +1,7 @@
 package com.enewschamp.user.app.dto;
 
-import java.sql.Blob;
-
-import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 import com.enewschamp.app.common.MaintenanceDTO;
 import com.enewschamp.app.common.StringCryptoConverter;
@@ -26,6 +20,8 @@ public class StudentRefundDTO extends MaintenanceDTO {
 
 	private Long studentId;
 
+	private String editionId;
+
 	private String orderId;
 
 	private String refOrderId;
@@ -39,5 +35,7 @@ public class StudentRefundDTO extends MaintenanceDTO {
 
 	private String paytmStatus;
 
-	private String finalStatus;
+	private String finalOrderStatus;
+
+	private String message;
 }

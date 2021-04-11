@@ -1,5 +1,6 @@
 package com.enewschamp.user.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -26,10 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class RefundService extends AbstractDomainService {
+public class StudentRefundService extends AbstractDomainService {
 
 	@Autowired
-	RefundRepository repository;
+	StudentRefundRepository repository;
 
 	@Autowired
 	StudentRefundRepositoryCustomImpl customRepository;
@@ -137,5 +138,12 @@ public class RefundService extends AbstractDomainService {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return StudentRefundList;
+	}
+	public List<StudentRefund> getPendingRefundList() {
+		return repository.getPendingRefundList();
+	}
+
+	public List<StudentRefund> getAllByStudentIdAndEdition(Long studentId, String editionId) {
+		return repository.getAllByStudentIdAndEdition(studentId, editionId);
 	}
 }

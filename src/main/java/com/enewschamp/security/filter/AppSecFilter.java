@@ -71,7 +71,6 @@ public class AppSecFilter extends GenericFilterBean {
 			try {
 				requestPage = objectMapper.readValue(payLoad, PageRequestDTO.class);
 			} catch (Exception e) {
-				System.out.println(">>>>>>>>>>>>>>>" + e);
 				response.setContentType("application/json");
 				PrintWriter writer = response.getWriter();
 				HeaderDTO header = new HeaderDTO();
@@ -135,7 +134,9 @@ public class AppSecFilter extends GenericFilterBean {
 		if (!isValid) {
 			response.setContentType("application/json");
 			PrintWriter writer = response.getWriter();
-			header.setRequestStatus(RequestStatusType.F);
+			if (header != null) {
+				header.setRequestStatus(RequestStatusType.F);
+			}
 			BusinessException be = new BusinessException(ErrorCodeConstants.UNAUTH_ACCESS);
 			Fault f = new Fault(be, header);
 			f.getData().setErrorMessageParams(null);

@@ -80,22 +80,17 @@ public class ShareAchievementsPageHandler implements IPageHandler {
 			Method m = null;
 			try {
 				m = this.getClass().getDeclaredMethod(methodName, params);
-			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			}
-			try {
 				return (PageDTO) m.invoke(this, pageRequest, pageNavigatorDTO);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				if (e.getCause() instanceof BusinessException) {
 					throw ((BusinessException) e.getCause());
 				} else {
 					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
-					// e.printStackTrace();
 				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
 			}
 		}
 		PageDTO pageDTO = new PageDTO();
@@ -110,7 +105,7 @@ public class ShareAchievementsPageHandler implements IPageHandler {
 		Long studentId = studentControlBusiness.getStudentId(emailId);
 		StudentShareAchievementsDTO studAch = mapPageToDTO(studentShareAchievementsPageData);
 		studAch.setStudentId(studentId);
-		studAch.setOperatorId(""+studentId);
+		studAch.setOperatorId("" + studentId);
 		studAch.setRecordInUse(RecordInUseType.Y);
 		studAch.setPersonalisedMessage(studentShareAchievementsPageData.getPersonalisedMessage());
 		try {
