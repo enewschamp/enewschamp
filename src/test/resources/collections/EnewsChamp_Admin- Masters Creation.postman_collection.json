@@ -448,7 +448,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nameId\": \"{{text}}\",\n    \"base64Image\": \"{{base64Image}}\",\n    \"imageTypeExt\": \"{{imageTypeExt}}\",\n    \"genreId\": \"{{genreId}}\",\n    \"monthlyPointsToScore\": {{monthlyPointsToScore}},\n    \"editionId\": \"{{editionId}}\",\n    \"readingLevel\": {{readingLevel}},\n    \"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayus\"\n}"
+							"raw": "{\n    \"nameId\": \"{{text}}\",\n    \"base64Image\": \"{{base64Image}}\",\n    \"imageTypeExt\": \"{{imageTypeExt}}\",\n    \"imageUpdate\":\"{{imageUpdate}}\",\n    \"base64SuccessImage\": \"{{base64SuccessImage}}\",\n    \"successImageTypeExt\": \"{{successImageTypeExt}}\",\n    \"successImageUpdate\":\"{{successImageUpdate}}\",\n    \"base64AudioFile\": \"{{base64AudioFile}}\",\n    \"audioFileTypeExt\": \"{{audioFileTypeExt}}\",\n    \"audioFileUpdate\":\"{{audioFileUpdate}}\",\n    \"genreId\": \"{{genreId}}\",\n    \"monthlyPointsToScore\": {{monthlyPointsToScore}},\n    \"editionId\": \"{{editionId}}\",\n    \"readingLevel\": {{readingLevel}},\n    \"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayus\"\n}"
 						},
 						"url": {
 							"raw": "{{admin-endpoint-url}}/badges",
@@ -515,6 +515,275 @@
 							],
 							"path": [
 								"editions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "Order List",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "appName",
+								"value": "{{adminAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "{{adminAppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"searchData\": {\r\n        \"orderSearchType\": \"ALL\",\r\n        \"orderSearchStatus\": \"SUCCESS\",\r\n        \"merchantOrderId\": \"\",\r\n        \"payMode\": \"\",\r\n        \"isSort\": \"true\",\r\n        \"fromDate\": \"2021-04-01\",\r\n        \"toDate\": \"2021-04-03\",\r\n        \"pageNumber\": \"1\",\r\n        \"pageSize\": \"50\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/payment/order/orderList",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"payment",
+								"order",
+								"orderList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subscriber's Subscription List",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "appName",
+								"value": "{{adminAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "{{adminAppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"searchData\": {\r\n        \"custId\": \"47\",\r\n        \"subscriptionId\": \"\",\r\n        \"detailRequired\": true,\r\n        \"frequencyUnit\": \"\",\r\n        \"subsStatusFilter\": \"\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/payment/subscriber/subscriptionList",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"payment",
+								"subscriber",
+								"subscriptionList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Renew Subscriptions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "appName",
+								"value": "{{adminAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "{{adminAppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/payment/subscription/renewal",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"payment",
+								"subscription",
+								"renewal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refund Initiate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "appName",
+								"value": "{{adminAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "{{adminAppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderId\": \"P1614624223872_28\",\r\n    \"refundAmount\": \"25\",\r\n    \"recordInUse\": \"Y\",\r\n    \"operatorId\": \"mesmayu\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/payment/refund/initiate",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"payment",
+								"refund",
+								"initiate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refund Refresh Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "appName",
+								"value": "{{adminAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "{{adminAppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/payment/refund/statusRefresh",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"payment",
+								"refund",
+								"statusRefresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refund List",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "appName",
+								"value": "{{adminAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "{{adminAppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"searchData\": {\r\n        \"isSort\": \"true\",\r\n        \"startDate\": \"2021-04-01\",\r\n        \"endDate\": \"2021-04-03\",\r\n        \"pageNumber\": \"1\",\r\n        \"pageSize\": \"50\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/payment/refund/orderList",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"payment",
+								"refund",
+								"orderList"
 							]
 						}
 					},
