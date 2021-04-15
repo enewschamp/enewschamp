@@ -163,7 +163,7 @@ public class StudentScoresDailyPageHandler implements IPageHandler {
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		pageData.getPagination().setIsLastPage(PageStatus.N);
-		dto.setHeader(pageRequest.getHeader());
+		mapHeaderData(pageRequest, dto);
 		if ((studentScoresDailyList.getNumber() + 1) == studentScoresDailyList.getTotalPages()) {
 			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}

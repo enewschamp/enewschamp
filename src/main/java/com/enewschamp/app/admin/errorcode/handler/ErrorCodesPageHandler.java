@@ -169,7 +169,7 @@ public class ErrorCodesPageHandler implements IPageHandler {
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		pageData.getPagination().setIsLastPage(PageStatus.N);
-		dto.setHeader(pageRequest.getHeader());
+		mapHeaderData(pageRequest, dto);
 		if ((errorCodesList.getNumber() + 1) == errorCodesList.getTotalPages()) {
 			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}

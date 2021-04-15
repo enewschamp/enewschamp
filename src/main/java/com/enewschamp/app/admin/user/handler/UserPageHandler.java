@@ -168,7 +168,7 @@ public class UserPageHandler implements IPageHandler {
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		pageData.getPagination().setIsLastPage(PageStatus.N);
-		dto.setHeader(pageRequest.getHeader());
+		mapHeaderData(pageRequest, dto);
 		if ((userList.getNumber() + 1) == userList.getTotalPages()) {
 			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}

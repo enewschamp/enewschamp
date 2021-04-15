@@ -6,18 +6,23 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.security.repository.AppSecurityRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.security.entity.AppSecurity;
 import com.enewschamp.security.repository.AppSecurityRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class AppSecurityService {
 
 	@Autowired
@@ -34,12 +39,22 @@ public class AppSecurityService {
 	ModelMapper modelMapperForPatch;
 
 	public AppSecurity create(AppSecurity appSecurityEntity) {
-		return appSecurityRepository.save(appSecurityEntity);
+		AppSecurity appSecurity = null;
+		try {
+			appSecurity = appSecurityRepository.save(appSecurityEntity);
+		} catch (DataIntegrityViolationException e) {
+			log.error(e.getMessage());
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		return appSecurity;
 	}
 
 	public AppSecurity update(AppSecurity appSecurityEntity) {
 		Long appSecurityId = appSecurityEntity.getAppSecurityId();
 		AppSecurity existingAppSecurity = get(appSecurityId);
+		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(appSecurityEntity, existingAppSecurity);
 		return appSecurityRepository.save(existingAppSecurity);
 	}
@@ -95,42 +110,42 @@ public class AppSecurityService {
 	public AppSecurity read(AppSecurity appSecurity) {
 		Long appSecId = appSecurity.getAppSecurityId();
 		AppSecurity existingAppSecurity = get(appSecId);
-//		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.Y)) {
-//			return existingAppSecurity;
-//		}
-//		existingAppSecurity.setRecordInUse(RecordInUseType.Y);
-//		existingAppSecurity.setOperationDateTime(null);
+		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.Y)) {
+			return existingAppSecurity;
+		}
+		existingAppSecurity.setRecordInUse(RecordInUseType.Y);
+		existingAppSecurity.setOperationDateTime(null);
 		return appSecurityRepository.save(existingAppSecurity);
 	}
 
 	public AppSecurity close(AppSecurity appSecurityEntity) {
 		Long appSecId = appSecurityEntity.getAppSecurityId();
 		AppSecurity existingAppSecurity = get(appSecId);
-//		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.N)) {
-//			return existingAppSecurity;
-//		}
-		//existingAppSecurity.setRecordInUse(RecordInUseType.N);
-		//existingAppSecurity.setOperationDateTime(null);
+		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingAppSecurity.setRecordInUse(RecordInUseType.N);
+		existingAppSecurity.setOperationDateTime(null);
 		return appSecurityRepository.save(existingAppSecurity);
 	}
 
 	public AppSecurity reinstate(AppSecurity appSecurityEntity) {
 		Long appSecId = appSecurityEntity.getAppSecurityId();
 		AppSecurity existingAppSec = get(appSecId);
-//		if (existingAppSec.getRecordInUse().equals(RecordInUseType.Y)) {
-//			return existingAppSec;
-//		}
-		//existingAppSec.setRecordInUse(RecordInUseType.Y);
-		//existingAppSec.setOperationDateTime(null);
+		if (existingAppSec.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingAppSec.setRecordInUse(RecordInUseType.Y);
+		existingAppSec.setOperationDateTime(null);
 		return appSecurityRepository.save(existingAppSec);
 	}
 
 	public Page<AppSecurity> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<AppSecurity> appSecList = appSecurityRepositoryCustom.findAll(pageable, null);
-		if(appSecList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
+//		if(appSecList.getContent().isEmpty()) {
+//			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
+//		}
 		return appSecList;
 	}
 

@@ -153,7 +153,7 @@ public class StudentShareAchievementsPageHandler implements IPageHandler {
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		pageData.getPagination().setIsLastPage(PageStatus.N);
-		dto.setHeader(pageRequest.getHeader());
+		mapHeaderData(pageRequest, dto);
 		if ((studentAchievementsList.getNumber() + 1) == studentAchievementsList.getTotalPages()) {
 			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}

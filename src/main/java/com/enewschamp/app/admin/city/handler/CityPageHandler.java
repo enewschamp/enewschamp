@@ -153,7 +153,7 @@ public class CityPageHandler implements IPageHandler {
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		pageData.getPagination().setIsLastPage(PageStatus.N);
-		dto.setHeader(pageRequest.getHeader());
+		mapHeaderData(pageRequest, dto);
 		if ((cityList.getNumber() + 1) == cityList.getTotalPages()) {
 			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}

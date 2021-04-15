@@ -150,7 +150,7 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 		List<PageData> records = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		pageData.getPagination().setIsLastPage(PageStatus.N);
-		dto.setHeader(pageRequest.getHeader());
+		mapHeaderData(pageRequest, dto);
 		if ((list.getNumber() + 1) == list.getTotalPages()) {
 			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}

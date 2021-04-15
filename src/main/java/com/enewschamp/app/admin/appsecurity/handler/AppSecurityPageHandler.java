@@ -25,6 +25,7 @@ import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.security.entity.AppSecurity;
 import com.enewschamp.security.service.AppSecurityService;
@@ -104,7 +105,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 
 	private AppSecurity mapAppSecurityData(PageRequestDTO pageRequest, AppSecurityPageData pageData) {
 		AppSecurity appSecurity = modelMapper.map(pageData, AppSecurity.class);
-		//appSecurity.setRecordInUse(RecordInUseType.Y);
+		appSecurity.setRecordInUse(RecordInUseType.Y);
 		return appSecurity;
 	}
 
@@ -140,7 +141,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 	
 	private AppSecurityPageData mapPageData(AppSecurity appSecurity) {
 		AppSecurityPageData pageData = modelMapper.map(appSecurity, AppSecurityPageData.class);
-		//pageData.setLastUpdate(appSecurity.getOperationDateTime());
+		pageData.setLastUpdate(appSecurity.getOperationDateTime());
 		return pageData;
 	}
 
@@ -176,7 +177,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
 		pageData.getPagination().setIsLastPage(PageStatus.N);
-		dto.setHeader(pageRequest.getHeader());
+		mapHeaderData(pageRequest, dto);
 		if ((appSecList.getNumber() + 1) == appSecList.getTotalPages()) {
 			pageData.getPagination().setIsLastPage(PageStatus.Y);
 		}

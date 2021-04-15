@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class AppSecurityPageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	private Long appSecId;
+	private Long appSecurityId;
 	@JsonInclude
 	@NotNull(message = MessageConstants.APP_NAME_NOT_NULL)
 	@NotEmpty(message = MessageConstants.APP_NAME_NOT_EMPTY)
