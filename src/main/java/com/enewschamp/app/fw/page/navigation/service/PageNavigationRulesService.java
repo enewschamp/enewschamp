@@ -131,9 +131,6 @@ public class PageNavigationRulesService {
 	public Page<PageNavigatorRules> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<PageNavigatorRules> pageList = repositoryCustom.findAll(pageable, searchRequest);
-		if (pageList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return pageList;
 	}
 

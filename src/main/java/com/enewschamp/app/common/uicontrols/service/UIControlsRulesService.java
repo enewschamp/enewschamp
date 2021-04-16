@@ -138,9 +138,6 @@ public class UIControlsRulesService {
 	public Page<UIControlsRules> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<UIControlsRules> uiControlRuleList = uiControlsRulesRepositoryCustom.findAll(pageable, searchRequest);
-		if (uiControlRuleList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return uiControlRuleList;
 	}
 

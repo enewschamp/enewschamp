@@ -112,9 +112,6 @@ public class StudentScoresMonthlyGenreService {
 	public Page<StudentScoresMonthlyGenre> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentScoresMonthlyGenre> studentScoresMonthlyList = repositoryCustom.findAll(pageable, searchRequest);
-		if (studentScoresMonthlyList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return studentScoresMonthlyList;
 	}
 }

@@ -179,9 +179,6 @@ public class PropertiesFrontendService extends AbstractDomainService {
 	public Page<PropertiesFrontend> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<PropertiesFrontend> propertiesFrontendList = customRepository.findAll(pageable, searchRequest);
-		if (propertiesFrontendList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return propertiesFrontendList;
 	}
 

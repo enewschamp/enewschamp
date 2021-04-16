@@ -111,9 +111,6 @@ public class StudentScoresDailyService {
 	public Page<StudentScoresDaily> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentScoresDaily> studentScoresDailyList = repositoryCustom.findAll(pageable, searchRequest);
-		if (studentScoresDailyList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return studentScoresDailyList;
 	}
 }

@@ -95,9 +95,6 @@ public class SchoolReportService {
 	public Page<SchoolReport> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<SchoolReport> schoolReportList = repositoryCustom.findAll(pageable, searchRequest);
-		if (schoolReportList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return schoolReportList;
 	}
 

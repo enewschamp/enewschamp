@@ -164,9 +164,6 @@ public class StudentBadgesService {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentBadges> studentBadgesList = studentBadgesRepositoryCustom.findAll(pageable,
 				searchRequest);
-		if (studentBadgesList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return studentBadgesList;
 	}
 }

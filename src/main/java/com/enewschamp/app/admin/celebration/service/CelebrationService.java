@@ -121,9 +121,6 @@ public class CelebrationService {
 	public Page<Celebration> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Celebration> celebrationList = repositoryCustom.findAll(pageable, null);
-		if(celebrationList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return celebrationList;
 	}
 }

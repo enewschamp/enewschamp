@@ -138,9 +138,6 @@ public class SchoolService {
 	public Page<School> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<School> schoolList = schoolRepositoryCustom.findAll(pageable, searchRequest);
-		if (schoolList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return schoolList;
 	}
 

@@ -104,9 +104,6 @@ public class UIControlsService implements IUIControlsService {
 	public Page<UIControls> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<UIControls> cityList = customRepository.findAll(pageable, searchRequest);
-		if (cityList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return cityList;
 	}
 

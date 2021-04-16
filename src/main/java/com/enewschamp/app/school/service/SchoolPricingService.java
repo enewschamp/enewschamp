@@ -139,9 +139,6 @@ public class SchoolPricingService {
 	public Page<SchoolPricing> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<SchoolPricing> schoolPricingList = schoolPricingRepositoryCustom.findAll(pageable, searchRequest);
-		if (schoolPricingList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return schoolPricingList;
 	}
 }

@@ -118,9 +118,6 @@ public class StudentPreferencesService {
 	public Page<StudentPreferences> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentPreferences> studentPreferencesList = repositoryCustom.findAll(pageable, searchRequest);
-		if (studentPreferencesList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return studentPreferencesList;
 	}
 }

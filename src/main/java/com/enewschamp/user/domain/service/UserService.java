@@ -273,9 +273,6 @@ public class UserService extends AbstractDomainService {
 	public Page<User> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<User> userList = customRepository.findAll(pageable, searchRequest);
-		if (userList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return userList;
 	}
 	

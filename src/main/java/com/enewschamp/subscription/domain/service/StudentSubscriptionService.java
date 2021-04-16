@@ -133,9 +133,6 @@ public class StudentSubscriptionService {
 	public Page<StudentSubscription> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentSubscription> studentSubscriptionList = repositoryCustom.findAll(pageable, searchRequest);
-		if (studentSubscriptionList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return studentSubscriptionList;
 	}
 

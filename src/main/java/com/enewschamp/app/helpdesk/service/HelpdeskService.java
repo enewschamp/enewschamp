@@ -112,9 +112,6 @@ public class HelpdeskService {
 	public Page<Helpdesk> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Helpdesk> helpDeskList = helpDeskRespositoryCustom.findAll(pageable, searchRequest);
-		if(helpDeskList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return helpDeskList;
 	}
 

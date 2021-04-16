@@ -178,9 +178,6 @@ public class PropertiesBackendService extends AbstractDomainService {
 	public Page<PropertiesBackend> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<PropertiesBackend> propertiesBackendList = customRepository.findAll(pageable, searchRequest);
-		if (propertiesBackendList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return propertiesBackendList;
 	}
 

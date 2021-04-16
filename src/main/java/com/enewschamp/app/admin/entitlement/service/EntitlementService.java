@@ -95,9 +95,6 @@ public class EntitlementService {
 	public Page<Entitlement> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Entitlement> entitlementList = repositoryCustom.findAll(pageable, searchRequest);
-		if (entitlementList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return entitlementList;
 	}
 

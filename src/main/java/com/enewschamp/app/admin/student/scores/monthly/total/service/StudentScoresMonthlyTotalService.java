@@ -111,9 +111,6 @@ public class StudentScoresMonthlyTotalService {
 	public Page<StudentScoresMonthlyTotal> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentScoresMonthlyTotal> studentScoresMonthlyList = repositoryCustom.findAll(pageable, searchRequest);
-		if (studentScoresMonthlyList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return studentScoresMonthlyList;
 	}
 }

@@ -118,9 +118,6 @@ public class UserLeaveService extends AbstractDomainService {
 	public Page<UserLeave> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<UserLeave> userLeaveList = customRepository.findAll(pageable, searchRequest);
-		if (userLeaveList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return userLeaveList;
 	}
 

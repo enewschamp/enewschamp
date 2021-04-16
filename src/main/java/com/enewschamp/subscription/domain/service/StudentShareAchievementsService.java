@@ -115,9 +115,6 @@ public class StudentShareAchievementsService {
 	public Page<StudentShareAchievements> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentShareAchievements> achievementList = repositoryCustom.findAll(pageable, searchRequest);
-		if (achievementList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return achievementList;
 	}
 }

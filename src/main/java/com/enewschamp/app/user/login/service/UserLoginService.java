@@ -170,9 +170,6 @@ public class UserLoginService {
 	public Page<UserLogin> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<UserLogin> userList = repositoryCustom.findAll(pageable, searchRequest);
-		if (userList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return userList;
 	}
 	

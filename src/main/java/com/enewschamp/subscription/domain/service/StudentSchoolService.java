@@ -117,18 +117,12 @@ public class StudentSchoolService {
 	public Page<StudentSchool> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentSchool> studentSchoolList = repositoryCustom.findAll(pageable, searchRequest);
-		if(studentSchoolList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return studentSchoolList;
 	}
 	
 	public Page<StudentSchool> notInThelist(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentSchool> studentSchoolList = nonListRepositoryCustom.findAll(pageable, searchRequest);
-		if(studentSchoolList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return studentSchoolList;
 	}
 }

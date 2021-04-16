@@ -134,9 +134,6 @@ public class StudentRefundService extends AbstractDomainService {
 	public Page<StudentRefund> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentRefund> StudentRefundList = customRepository.findAll(pageable, searchRequest);
-		if (StudentRefundList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return StudentRefundList;
 	}
 	public List<StudentRefund> getPendingRefundList() {

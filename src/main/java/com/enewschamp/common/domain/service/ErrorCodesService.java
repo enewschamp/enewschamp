@@ -143,9 +143,6 @@ public class ErrorCodesService extends AbstractDomainService {
 	public Page<ErrorCodes> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<ErrorCodes> errorCodesList = customRepository.findAll(pageable, searchRequest);
-		if (errorCodesList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return errorCodesList;
 	}
 	
