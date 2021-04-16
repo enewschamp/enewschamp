@@ -35,7 +35,7 @@ public abstract class BaseEntity implements IEntity, Serializable {
 	@NotNull
 	@Column(name = "recordInUse", length = 1)
 	@Enumerated(EnumType.STRING)
-	@DiffIgnore
+	//@DiffIgnore
 	private RecordInUseType recordInUse;
 
 	@PrePersist

@@ -33,6 +33,6 @@ public class Edition extends BaseEntity {
 
 	@NotNull
 	@Column(name = "LanguageId", length = 3)
-	private Long languageId;
+	private String languageId;
 
 }
