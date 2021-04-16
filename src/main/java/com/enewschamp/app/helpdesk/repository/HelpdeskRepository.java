@@ -12,5 +12,4 @@ public interface HelpdeskRepository extends JpaRepository<Helpdesk, Long> {
 
 	@Query(value = "SELECT a FROM Helpdesk a where a.studentId = :studentId and IFNULL(a.closeFlag,'N')<>'Y' and a.recordInUse='Y' order by a.operationDateTime desc")
 	public List<Helpdesk> findByStudentId(@Param("studentId") Long studentId);
-
 }

@@ -36,12 +36,19 @@ public class HelpdeskService {
 	ModelMapper modelMapperForPatch;
 
 	public Helpdesk create(Helpdesk helpDeskEntity) {
+		Helpdesk existingHelpdesk = getByStudentId(helpDeskEntity.getStudentId());
+        if(existingHelpdesk !=null) {
+        	throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+        }
 		return helpdeskRespository.save(helpDeskEntity);
 	}
 
 	public Helpdesk update(Helpdesk helpDeskEntity) {
 		Long helpdeskId = helpDeskEntity.getHelpdeskId();
 		Helpdesk existingHelpdesk = get(helpdeskId);
+		if (existingHelpdesk.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
 		modelMapper.map(helpDeskEntity, existingHelpdesk);
 		return helpdeskRespository.save(existingHelpdesk);
 	}
