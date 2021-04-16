@@ -81,7 +81,7 @@ public class AdminAuditPageHandler implements IPageHandler {
 			Object clsInstance = (Object) cls.newInstance();
 			Field field = clsInstance.getClass().getDeclaredField(fieldName);
 			ReflectionUtils.setField(field, clsInstance, fieldValue);
-			pageDto.setHeader(pageRequest.getHeader());
+			mapHeaderData(pageRequest, pageDto);
 			String records = auditService.getEntityAudit(clsInstance);
 			pageData.setRecords(mapper.readValue(records, JsonNode.class));
 		} catch (ClassNotFoundException e) {
