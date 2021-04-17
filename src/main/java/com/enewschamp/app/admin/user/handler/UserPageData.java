@@ -44,7 +44,8 @@ public class UserPageData extends PageData {
 	private String emailId1;
 	private String emailId2;
 	private String comments;
-	private String base64Image;
+	private String imageUpdate;
+	private String imageBase64;
 	private String imageTypeExt;
 	private String password;
 	private String password1;

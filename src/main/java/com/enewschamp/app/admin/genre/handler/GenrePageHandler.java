@@ -16,7 +16,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import com.enewschamp.app.admin.avatar.handler.AvatarPageData;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.CommonService;
@@ -30,7 +29,6 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.publication.domain.entity.Avatar;
 import com.enewschamp.publication.domain.entity.Genre;
 import com.enewschamp.publication.domain.service.GenreService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -188,16 +186,10 @@ public class GenrePageHandler implements IPageHandler {
 		pageDto.setData(pageData);
 	}
 
-	private Genre mapGenreData(PageRequestDTO pageRequest, GenrePageData pageData) {
-		Genre genre = modelMapper.map(pageData, Genre.class);
-		genre.setRecordInUse(RecordInUseType.Y);
-		return genre;
-	}
-
 	private GenrePageData mapPageData(Genre genre) {
 		GenrePageData pageData = modelMapper.map(genre, GenrePageData.class);
 		pageData.setLastUpdate(genre.getOperationDateTime());
-		pageData.setBase64Image(null);
+		pageData.setImageBase64(null);
 		return pageData;
 	}
 
@@ -228,7 +220,7 @@ public class GenrePageHandler implements IPageHandler {
 		if ("Y".equalsIgnoreCase(genreDTO.getImageUpdate())) {
 			String newImageName = genre.getGenreId() + "_IMG_" + System.currentTimeMillis();
 			String imageType = genreDTO.getImageTypeExt();
-			boolean saveImageFlag = commonService.saveImages("Admin", "genre", imageType, genreDTO.getBase64Image(),
+			boolean saveImageFlag = commonService.saveImages("Admin", "genre", imageType, genreDTO.getImageBase64(),
 					newImageName);
 			if (saveImageFlag) {
 				genre.setImageName(newImageName + "." + imageType);
@@ -263,7 +255,7 @@ public class GenrePageHandler implements IPageHandler {
 			String newImageName = genre.getGenreId() + "_IMG_" + System.currentTimeMillis();
 			String imageType = genreDTO.getImageTypeExt();
 			String currentImageName = genre.getImageName();
-			boolean saveImageFlag = commonService.saveImages("Admin", "genre", imageType, genreDTO.getBase64Image(),
+			boolean saveImageFlag = commonService.saveImages("Admin", "genre", imageType, genreDTO.getImageBase64(),
 					newImageName);
 			if (saveImageFlag) {
 				genre.setImageName(newImageName + "." + imageType);

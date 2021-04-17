@@ -6,12 +6,15 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.CommonService;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -20,16 +23,21 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
+import com.enewschamp.problem.BusinessException;
 import com.enewschamp.user.domain.entity.User;
 import com.enewschamp.user.domain.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 @Component("UserPageHandler")
+@Slf4j
 public class UserPageHandler implements IPageHandler {
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private CommonService commonService;
 	@Autowired
 	ModelMapper modelMapper;
 	@Autowired
@@ -86,16 +94,9 @@ public class UserPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		UserPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserPageData.class);
 		validate(pageData,  this.getClass().getName());
-		User user = mapUserData(pageRequest, pageData);
-		user = userService.create(user);
+		User user = saveImage(pageData);
 		mapUser(pageRequest, pageDto, user);
 		return pageDto;
-	}
-
-	private User mapUserData(PageRequestDTO pageRequest, UserPageData pageData) {
-		User user = modelMapper.map(pageData, User.class);
-		user.setRecordInUse(RecordInUseType.Y);
-		return user;
 	}
 
 	@SneakyThrows
@@ -103,8 +104,7 @@ public class UserPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		UserPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserPageData.class);
 		validate(pageData,  this.getClass().getName());
-		User user = mapUserData(pageRequest, pageData);
-		user = userService.update(user);
+		User user  = updateImage(pageData, pageData.getUserId());
 		mapUser(pageRequest, pageDto, user);
 		return pageDto;
 	}
@@ -191,6 +191,78 @@ public class UserPageHandler implements IPageHandler {
 			}
 		}
 		return userPageDataList;
+	}
+	
+	private User saveImage(UserPageData userDTO) {
+		User user = modelMapper.map(userDTO, User.class);
+		try {
+			user.setRecordInUse(RecordInUseType.Y);
+			user = userService.create(user);
+		} catch (DataIntegrityViolationException e) {
+			log.error(e.getMessage());
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(userDTO.getImageUpdate())) {
+			String newImageName = user.getUserId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = userDTO.getImageTypeExt();
+			String currentImageName = user.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "User", imageType, userDTO.getImageBase64(),
+					newImageName);
+			if (saveImageFlag) {
+				user.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				user.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "User", currentImageName);
+				updateFlag = true;
+			}
+		}
+	
+		if (updateFlag) {
+			user = userService.update(user);
+		}
+		user.setRecordInUse(RecordInUseType.Y);
+		return user;
+	}
+	
+	private User updateImage(UserPageData userDto, String userId) {
+		userDto.setUserId(userId);
+		User User = userService.get(userId);
+		if (User.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		String currentImageName = User.getImageName();
+		userDto.setImageName(currentImageName);
+		User = modelMapper.map(userDto, User.class);
+		User.setRecordInUse(RecordInUseType.Y);
+		User = userService.update(User);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(userDto.getImageUpdate())) {
+			String newImageName = User.getUserId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = userDto.getImageTypeExt();
+			boolean saveImageFlag = commonService.saveImages("Admin", "User", imageType, userDto.getImageBase64(),
+					newImageName);
+			if (saveImageFlag) {
+				User.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				User.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "User", currentImageName);
+				updateFlag = true;
+			}
+		}
+		
+		if (updateFlag) {
+			User = userService.update(User);
+		}
+		return User;
 	}
 
 }

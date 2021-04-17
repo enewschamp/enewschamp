@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.enewschamp.domain.common.BaseEntity;
 
@@ -16,7 +17,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "PageNavigator")
+@Table(name = "PageNavigator", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "currentPage", "operation", "action" }) })
 public class PageNavigator extends BaseEntity {
 	/**
 	* 
@@ -55,7 +57,7 @@ public class PageNavigator extends BaseEntity {
 
 	@Column(name = "controlWorkEntryOrExit", length = 10)
 	private String controlWorkEntryOrExit;
-	
+
 	@Column(name = "controlWorkEntryExit", length = 10)
 	private String controlWorkEntryExit;
 

@@ -5,9 +5,7 @@ import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,11 +33,11 @@ public class BadgePageData extends PageData {
 	@NotNull(message = MessageConstants.READING_LEVEL_NOT_NULL)
 	private int readingLevel;
 
-	private String base64Image;
+	private String imageBase64;
 
-	private String base64SuccessImage;
+	private String successImageBase64;
 
-	private String base64AudioFile;
+	private String audioFileBase64;
 
 	private String imageTypeExt = "jpg";
 

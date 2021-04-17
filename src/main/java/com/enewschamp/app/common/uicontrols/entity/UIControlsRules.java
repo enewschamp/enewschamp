@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.enewschamp.domain.common.BaseEntity;
 
@@ -16,7 +17,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "UIControlsRules")
+@Table(name = "UIControlsRules",uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "uicontrolId", "execSeq" }) })
 public class UIControlsRules extends BaseEntity {
 	/**
 	* 

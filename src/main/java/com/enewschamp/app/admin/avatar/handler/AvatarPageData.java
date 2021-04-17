@@ -25,17 +25,17 @@ public class AvatarPageData extends PageData {
 	@NotNull(message = MessageConstants.READING_LEVEL_NOT_NULL)
 	private int readingLevel;
 	private String imageName;
-	private String base64Image;
+	private String imageBase64;
 	private String imageTypeExt;
 	private String imageUpdate;
 	
 	@JsonIgnore
-	public String getBase64Image() {
-		return this.base64Image;
+	public String getImageBase64() {
+		return this.imageBase64;
 	}
 
 	@JsonProperty
-	public void setBase64Image(String base64Image) {
-		this.base64Image = base64Image;
+	public void setImageBase64(String imageBase64) {
+		this.imageBase64 = imageBase64;
 	}
 }

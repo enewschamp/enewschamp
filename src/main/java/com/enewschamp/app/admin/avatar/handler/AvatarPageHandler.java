@@ -196,13 +196,6 @@ public class AvatarPageHandler implements IPageHandler {
 		pageDto.setData(pageData);
 	}
 
-	private Avatar mapAvatarData(PageRequestDTO pageRequest, AvatarPageData pageData) {
-		Avatar avatar = modelMapper.map(pageData, Avatar.class);
-		avatar.setRecordInUse(RecordInUseType.Y);
-		return avatar;
-	}
-
-
 	private void validate(AvatarPageData pageData) {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
@@ -230,7 +223,7 @@ public class AvatarPageHandler implements IPageHandler {
 		if ("Y".equalsIgnoreCase(avatarDTO.getImageUpdate())) {
 			String newImageName = avatar.getAvatarId() + "_IMG_" + System.currentTimeMillis();
 			String imageType = avatarDTO.getImageTypeExt();
-			boolean saveImageFlag = commonService.saveImages("Admin", "avatar", imageType, avatarDTO.getBase64Image(),
+			boolean saveImageFlag = commonService.saveImages("Admin", "avatar", imageType, avatarDTO.getImageBase64(),
 					newImageName);
 			if (saveImageFlag) {
 				avatar.setImageName(newImageName + "." + imageType);
@@ -266,7 +259,7 @@ public class AvatarPageHandler implements IPageHandler {
 			String newImageName = avatar.getAvatarId() + "_IMG_" + System.currentTimeMillis();
 			String imageType = avatarDTO.getImageTypeExt();
 			String currentImageName = avatar.getImageName();
-			boolean saveImageFlag = commonService.saveImages("Admin", "avatar", imageType, avatarDTO.getBase64Image(),
+			boolean saveImageFlag = commonService.saveImages("Admin", "avatar", imageType, avatarDTO.getImageBase64(),
 					newImageName);
 			if (saveImageFlag) {
 				avatar.setImageName(newImageName + "." + imageType);

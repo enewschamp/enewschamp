@@ -21,7 +21,7 @@ public class GenrePageData extends PageData {
 	private String nameId;
 	@JsonInclude
 	private String imageName;
-	private String base64Image;
+	private String imageBase64;
 	private String imageTypeExt;
 	private String imageUpdate;
 }

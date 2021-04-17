@@ -174,7 +174,7 @@ public class BadgePageHandler implements IPageHandler {
 	private BadgePageData mapPageData(Badge badge) {
 		BadgePageData pageData = modelMapper.map(badge, BadgePageData.class);
 		pageData.setLastUpdate(badge.getOperationDateTime());
-		pageData.setBase64Image(null);
+		pageData.setImageBase64(null);
 		return pageData;
 	}
 
@@ -228,7 +228,7 @@ public class BadgePageHandler implements IPageHandler {
 		if ("Y".equalsIgnoreCase(badgeDTO.getImageUpdate())) {
 			String newImageName = badge.getBadgeId() + "_IMG_" + System.currentTimeMillis();
 			String imageType = badgeDTO.getImageTypeExt();
-			boolean saveImageFlag = commonService.saveImages("Admin", "badge", imageType, badgeDTO.getBase64Image(),
+			boolean saveImageFlag = commonService.saveImages("Admin", "badge", imageType, badgeDTO.getImageBase64(),
 					newImageName);
 			if (saveImageFlag) {
 				badge.setImageName(newImageName + "." + imageType);
@@ -246,7 +246,7 @@ public class BadgePageHandler implements IPageHandler {
 			String successImageType = badgeDTO.getSuccessImageTypeExt();
 			String newSucessImageName = badge.getBadgeId() + "_SI_" + System.currentTimeMillis();
 			boolean saveSuccessImageFlag = commonService.saveImages("Admin", "badge", successImageType,
-					badgeDTO.getBase64SuccessImage(), newSucessImageName);
+					badgeDTO.getSuccessImageBase64(), newSucessImageName);
 			if (saveSuccessImageFlag) {
 				badge.setSuccessImageName(newSucessImageName + "." + successImageType);
 				updateFlag = true;
@@ -263,7 +263,7 @@ public class BadgePageHandler implements IPageHandler {
 			String audioFileName = badge.getBadgeId() + "_" + System.currentTimeMillis();
 			String audioFileType = badgeDTO.getAudioFileTypeExt();
 			boolean saveAudioFileFlag = commonService.saveAudioFile("Admin", "badge", audioFileType,
-					badgeDTO.getBase64AudioFile(), audioFileName);
+					badgeDTO.getAudioFileBase64(), audioFileName);
 			if (saveAudioFileFlag) {
 				badge.setAudioFileName(audioFileName + "." + audioFileType);
 				updateFlag = true;
@@ -296,7 +296,7 @@ public class BadgePageHandler implements IPageHandler {
 			String newImageName = badge.getBadgeId() + "_IMG_" + System.currentTimeMillis();
 			String imageType = badgeDTO.getImageTypeExt();
 			String currentImageName = badge.getImageName();
-			boolean saveImageFlag = commonService.saveImages("Admin", "badge", imageType, badgeDTO.getBase64Image(),
+			boolean saveImageFlag = commonService.saveImages("Admin", "badge", imageType, badgeDTO.getImageBase64(),
 					newImageName);
 			if (saveImageFlag) {
 				badge.setImageName(newImageName + "." + imageType);
@@ -315,7 +315,7 @@ public class BadgePageHandler implements IPageHandler {
 			String newSucessImageName = badge.getBadgeId() + "_SI_" + System.currentTimeMillis();
 			String currentSuccessImageName = badge.getSuccessImageName();
 			boolean saveSuccessImageFlag = commonService.saveImages("Admin", "badge", successImageType,
-					badgeDTO.getBase64SuccessImage(), newSucessImageName);
+					badgeDTO.getSuccessImageBase64(), newSucessImageName);
 			if (saveSuccessImageFlag) {
 				badge.setSuccessImageName(newSucessImageName + "." + successImageType);
 				updateFlag = true;
@@ -333,7 +333,7 @@ public class BadgePageHandler implements IPageHandler {
 			String audioFileType = badgeDTO.getAudioFileTypeExt();
 			String currentAudioFileName = badge.getAudioFileName();
 			boolean saveAudioFileFlag = commonService.saveAudioFile("Admin", "badge", audioFileType,
-					badgeDTO.getBase64AudioFile(), audioFileName);
+					badgeDTO.getAudioFileBase64(), audioFileName);
 			if (saveAudioFileFlag) {
 				badge.setAudioFileName(audioFileName + "." + audioFileType);
 				updateFlag = true;
