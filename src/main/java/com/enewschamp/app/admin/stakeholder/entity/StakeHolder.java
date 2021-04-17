@@ -18,17 +18,17 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "StakeHolder",uniqueConstraints = {
+@Table(name = "stakeholder",uniqueConstraints = {
 		@UniqueConstraint(columnNames = { "name", "surname" }) })
 public class StakeHolder extends BaseEntity {
 
 	private static final long serialVersionUID = -6268188630471167106L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stake_holder_id_generator")
-	@SequenceGenerator(name = "stake_holder_id_generator", sequenceName = "stake_holder_id_seq", allocationSize = 1)
-	@Column(name = "stakeHolderId", updatable = false, nullable = false)
-	private Long stakeHolderId;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stakeholder_id_generator")
+	@SequenceGenerator(name = "stakeholder_id_generator", sequenceName = "stakeholder_id_seq", allocationSize = 1)
+	@Column(name = "stakeholderId", updatable = false, nullable = false)
+	private Long stakeholderId;
 
 	@Column(name = "title", length = 3)
 	private String title;

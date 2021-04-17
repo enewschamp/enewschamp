@@ -24,7 +24,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @Table(name = "UserLogin",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "usreId", "deviceId", "loginFlag" }) })
+		@UniqueConstraint(columnNames = { "userId", "deviceId", "loginFlag" }) })
 @EqualsAndHashCode(callSuper = false)
 public class UserLogin extends BaseEntity {
 

@@ -41,6 +41,9 @@ public class PropertiesBackendRepositoryCustomImpl extends RepositoryImpl
 		if (!StringUtils.isEmpty(searchRequest.getPropertyId()))
 			filterPredicates.add(cb.equal(propertiesBackendRoot.get(PROPERTY_ID), searchRequest.getPropertyId()));
 
+		if (!StringUtils.isEmpty(searchRequest.getAppName()))
+			filterPredicates.add(cb.like(propertiesBackendRoot.get(APP_NAME), "%" + searchRequest.getAppName() + "%"));
+
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(propertiesBackendRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query

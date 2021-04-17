@@ -155,4 +155,5 @@ public class User extends BaseEntity {
 
 	@Column(name = "creationDateTime")
 	private LocalDateTime creationDateTime;
+
 }

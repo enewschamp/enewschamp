@@ -46,7 +46,7 @@ public class StakeHolderService {
 	}
 
 	public StakeHolder update(StakeHolder stakeHolderEntity) {
-		Long stakeHolderId = stakeHolderEntity.getStakeHolderId();
+		Long stakeHolderId = stakeHolderEntity.getStakeholderId();
 		StakeHolder existingStakeHolder = get(stakeHolderId);
 		if(existingStakeHolder.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
@@ -65,13 +65,13 @@ public class StakeHolderService {
 	}
 
 	public StakeHolder read(StakeHolder stakeHolderEntity) {
-		Long stakeHolderId = stakeHolderEntity.getStakeHolderId();
+		Long stakeHolderId = stakeHolderEntity.getStakeholderId();
 		StakeHolder stakeHolder = get(stakeHolderId);
 		return stakeHolder;
 	}
 
 	public StakeHolder close(StakeHolder stakeHolderEntity) {
-		Long stakeHolderId = stakeHolderEntity.getStakeHolderId();
+		Long stakeHolderId = stakeHolderEntity.getStakeholderId();
 		StakeHolder existingStakeHolder = get(stakeHolderId);
 		if (existingStakeHolder.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
@@ -82,7 +82,7 @@ public class StakeHolderService {
 	}
 
 	public StakeHolder reInstate(StakeHolder stakeHolderEntity) {
-		Long stakeHolderId = stakeHolderEntity.getStakeHolderId();
+		Long stakeHolderId = stakeHolderEntity.getStakeholderId();
 		StakeHolder existingStakeHolder = get(stakeHolderId);
 		if (existingStakeHolder.getRecordInUse().equals(RecordInUseType.Y)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);

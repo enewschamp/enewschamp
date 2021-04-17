@@ -25,9 +25,13 @@ public class InstitutionStakeholder extends BaseEntity {
 	private static final long serialVersionUID = -6268188630471167106L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "inst_stake_holder_id_generator")
-	@SequenceGenerator(name = "inst_stake_holder_id_generator", sequenceName = "inst_stake_holder_id_seq", allocationSize = 1)
-	@Column(name = "stakeHolderId", updatable = false, nullable = false)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "institution_stakeholders_id_generator")
+	@SequenceGenerator(name = "institution_stakeholders_id_generator", sequenceName = "institution_stakeholders_id_seq", allocationSize = 1)
+	@Column(name = "institutionStakeholdersId", updatable = false, nullable = false)
+	private Long institutionStakeholdersId;
+	
+	@NotNull
+	@Column(name = "stakeHolderId")
 	private Long stakeHolderId;
 
 	@NotNull

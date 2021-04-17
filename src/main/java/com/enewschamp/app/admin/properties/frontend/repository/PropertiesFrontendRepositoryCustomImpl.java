@@ -34,17 +34,17 @@ public class PropertiesFrontendRepositoryCustomImpl extends RepositoryImpl imple
 	public Page<PropertiesFrontend> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<PropertiesFrontend> criteriaQuery = cb.createQuery(PropertiesFrontend.class);
-		Root<PropertiesFrontend> propertiesBackendRoot = criteriaQuery.from(PropertiesFrontend.class);
+		Root<PropertiesFrontend> propertiesFrontendRoot = criteriaQuery.from(PropertiesFrontend.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getPropertyId()))
-			filterPredicates.add(cb.equal(propertiesBackendRoot.get(PROPERTY_ID), searchRequest.getPropertyId()));
+			filterPredicates.add(cb.equal(propertiesFrontendRoot.get(PROPERTY_ID), searchRequest.getPropertyId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getAppName()))
-			filterPredicates.add(cb.equal(propertiesBackendRoot.get(APP_NAME), searchRequest.getAppName()));
+			filterPredicates.add(cb.equal(propertiesFrontendRoot.get(APP_NAME), searchRequest.getAppName()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
-		criteriaQuery.orderBy(cb.desc(propertiesBackendRoot.get(CommonConstants.OPERATION_DATE_TIME)));
+		criteriaQuery.orderBy(cb.desc(propertiesFrontendRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<PropertiesFrontend> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -53,7 +53,7 @@ public class PropertiesFrontendRepositoryCustomImpl extends RepositoryImpl imple
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<PropertiesFrontend> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, propertiesBackendRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, propertiesFrontendRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

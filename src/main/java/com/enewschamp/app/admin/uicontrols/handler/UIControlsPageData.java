@@ -30,8 +30,6 @@ public class UIControlsPageData extends PageData {
 
 	private String controlType;
 
-	@NotNull(message = MessageConstants.CONTROL_LABEL_NOT_NULL)
-	@NotEmpty(message = MessageConstants.CONTROL_LABEL_NOT_EMPTY)
 	private String controlLabel;
 
 	private String dataType;

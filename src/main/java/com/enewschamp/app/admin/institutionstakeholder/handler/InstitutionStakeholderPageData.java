@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
 public class InstitutionStakeholderPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 
+	private Long institutionStakeholdersId;
 	private Long stakeHolderId;
 
 	@NotNull(message = MessageConstants.INSTITUTION_ID_NOT_NULL)

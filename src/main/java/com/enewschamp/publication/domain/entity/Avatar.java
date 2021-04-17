@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -20,7 +21,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "Avatar")
+@Table(name = "Avatar",uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "nameId", "gender", "readingLevel"}) })
 @EqualsAndHashCode(callSuper = false)
 public class Avatar extends BaseEntity {
 

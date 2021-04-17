@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.avatar.handler.AvatarPageData;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.CommonService;
@@ -207,7 +208,7 @@ public class UserPageHandler implements IPageHandler {
 			String newImageName = user.getUserId() + "_IMG_" + System.currentTimeMillis();
 			String imageType = userDTO.getImageTypeExt();
 			String currentImageName = user.getImageName();
-			boolean saveImageFlag = commonService.saveImages("Admin", "User", imageType, userDTO.getImageBase64(),
+			boolean saveImageFlag = commonService.saveImages("Admin", "user", imageType, userDTO.getImageBase64(),
 					newImageName);
 			if (saveImageFlag) {
 				user.setImageName(newImageName + "." + imageType);
@@ -217,7 +218,7 @@ public class UserPageHandler implements IPageHandler {
 				updateFlag = true;
 			}
 			if (currentImageName != null && !"".equals(currentImageName)) {
-				commonService.deleteImages("Admin", "User", currentImageName);
+				commonService.deleteImages("Admin", "user", currentImageName);
 				updateFlag = true;
 			}
 		}
@@ -244,7 +245,7 @@ public class UserPageHandler implements IPageHandler {
 		if ("Y".equalsIgnoreCase(userDto.getImageUpdate())) {
 			String newImageName = User.getUserId() + "_IMG_" + System.currentTimeMillis();
 			String imageType = userDto.getImageTypeExt();
-			boolean saveImageFlag = commonService.saveImages("Admin", "User", imageType, userDto.getImageBase64(),
+			boolean saveImageFlag = commonService.saveImages("Admin", "user", imageType, userDto.getImageBase64(),
 					newImageName);
 			if (saveImageFlag) {
 				User.setImageName(newImageName + "." + imageType);
@@ -254,7 +255,7 @@ public class UserPageHandler implements IPageHandler {
 				updateFlag = true;
 			}
 			if (currentImageName != null && !"".equals(currentImageName)) {
-				commonService.deleteImages("Admin", "User", currentImageName);
+				commonService.deleteImages("Admin", "user", currentImageName);
 				updateFlag = true;
 			}
 		}

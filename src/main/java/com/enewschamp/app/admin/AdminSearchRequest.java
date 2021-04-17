@@ -39,8 +39,8 @@ public class AdminSearchRequest {
 	private String editionId;
 	private String subscriptionSelected;
 	private String autoRenewal;
-	private String effectiveDateFrom;
-	private String effectiveDateTo;
+	private LocalDate effectiveDateFrom;
+	private LocalDate effectiveDateTo;
 	private LocalDate startDateFrom;
 	private LocalDate startDateTo;
 	private LocalDate endDateFrom;

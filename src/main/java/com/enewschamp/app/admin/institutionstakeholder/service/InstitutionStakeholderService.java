@@ -46,8 +46,8 @@ public class InstitutionStakeholderService {
 	}
 
 	public InstitutionStakeholder update(InstitutionStakeholder instStakeHolderEntity) {
-		Long stakeHolderId = instStakeHolderEntity.getStakeHolderId();
-		InstitutionStakeholder existingInstitutionStakeholder = get(stakeHolderId);
+		Long instStakeHolderId = instStakeHolderEntity.getInstitutionStakeholdersId();
+		InstitutionStakeholder existingInstitutionStakeholder = get(instStakeHolderId);
 		if (existingInstitutionStakeholder.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
@@ -65,14 +65,14 @@ public class InstitutionStakeholderService {
 	}
 
 	public InstitutionStakeholder read(InstitutionStakeholder instStakeHolderEntity) {
-		Long stakeHolderId = instStakeHolderEntity.getStakeHolderId();
-		InstitutionStakeholder stakeHolder = get(stakeHolderId);
+		Long instStakeHolderId = instStakeHolderEntity.getInstitutionStakeholdersId();
+		InstitutionStakeholder stakeHolder = get(instStakeHolderId);
 		return stakeHolder;
 	}
 
 	public InstitutionStakeholder close(InstitutionStakeholder instStakeHolderEntity) {
-		Long stakeHolderId = instStakeHolderEntity.getStakeHolderId();
-		InstitutionStakeholder existingInstitutionStakeholder = get(stakeHolderId);
+		Long instStakeHolderId = instStakeHolderEntity.getInstitutionStakeholdersId();
+		InstitutionStakeholder existingInstitutionStakeholder = get(instStakeHolderId);
 		if (existingInstitutionStakeholder.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
@@ -82,8 +82,8 @@ public class InstitutionStakeholderService {
 	}
 
 	public InstitutionStakeholder reInstate(InstitutionStakeholder instStakeHolderEntity) {
-		Long stakeHolderId = instStakeHolderEntity.getStakeHolderId();
-		InstitutionStakeholder existingInstitutionStakeholder = get(stakeHolderId);
+		Long instStakeHolderId = instStakeHolderEntity.getInstitutionStakeholdersId();
+		InstitutionStakeholder existingInstitutionStakeholder = get(instStakeHolderId);
 		if (existingInstitutionStakeholder.getRecordInUse().equals(RecordInUseType.Y)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
