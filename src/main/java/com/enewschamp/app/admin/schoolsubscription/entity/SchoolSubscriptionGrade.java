@@ -25,10 +25,10 @@ public class SchoolSubscriptionGrade extends BaseEntity {
 	private static final long serialVersionUID = -6268188630471167106L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "school_subscription_grade_id_generator")
-	@SequenceGenerator(name = "school_subscription_grade_id_generator", sequenceName = "school_subscription_grade_id_seq", allocationSize = 1)
-	@Column(name = "schoolSubsGradeId", updatable = false, nullable = false)
-	private Long schoolSubsGradeId;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "school_subscription_grades_id_generator")
+	@SequenceGenerator(name = "school_subscription_grades_id_generator", sequenceName = "school_subscription_grades_id_seq", allocationSize = 1)
+	@Column(name = "schoolSubscriptionGradeId", updatable = false, nullable = false)
+	private Long schoolSubscriptionGradeId;
 
 	@NotNull
 	@Column(name = "schoolId", length = 20)

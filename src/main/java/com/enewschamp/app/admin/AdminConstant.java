@@ -26,7 +26,7 @@ public interface AdminConstant {
 	public static String SCHOOL_PROGRAM_CODE = "schoolProgramCode";
 	public static String INSTITUTION_ID = "institutionId";
 	public static String INSTITUTION_TYPE = "institutionType";
-	public static String STAKE_HOLDER_ID = "stakeHolderId";
+	public static String STAKE_HOLDER_ID = "stakeholderId";
 	public static String SCHOOL_ID = "schoolId";
 	public static String EDITION_ID = "editionId";
 	public static String EFFECTIVE_DATE = "effectiveDate";

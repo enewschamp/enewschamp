@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class SchoolSubscriptionGradePageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	private Long schoolSubsGradeId;
+	private Long schoolSubscriptionGradeId;
 	private String schoolId;
 	private String editionId;
 	private String grade;

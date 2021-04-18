@@ -143,9 +143,6 @@ public class AppSecurityService {
 	public Page<AppSecurity> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<AppSecurity> appSecList = appSecurityRepositoryCustom.findAll(pageable, null);
-//		if(appSecList.getContent().isEmpty()) {
-//			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-//		}
 		return appSecList;
 	}
 

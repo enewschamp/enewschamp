@@ -31,8 +31,8 @@ public class InstitutionStakeholder extends BaseEntity {
 	private Long institutionStakeholdersId;
 	
 	@NotNull
-	@Column(name = "stakeHolderId")
-	private Long stakeHolderId;
+	@Column(name = "stakeholderId")
+	private Long stakeholderId;
 
 	@NotNull
 	@Column(name = "institutionId", length = 20)

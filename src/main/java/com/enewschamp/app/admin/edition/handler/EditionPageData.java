@@ -23,5 +23,5 @@ public class EditionPageData extends PageData {
 	private String editionName;
 	@NotNull(message = MessageConstants.LANGUAGE_NOT_NULL)
 	@JsonInclude
-	private Long languageId;
+	private String languageId;
 }

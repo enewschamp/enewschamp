@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "1fdfc6c1-01ef-42e0-b7d7-5406b70687a2",
-		"name": "enewschamp_admin",
+		"_postman_id": "0163c421-5dc0-4f8c-9d90-ceaa937b971b",
+		"name": "enewschamp_admin Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -1169,7 +1169,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"AppSecurity\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"appSecurityId\": 16,\n        \"appName\": \"ENEWSCHAMPADMIN\",\n        \"appKey\": \"GODISALMIGHTY\",\n        \"module\": \"Test\",\n        \"isAppAvailable\": \"Y\",\n        \"compatibleVersions\": \"1.0.0\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"AppSecurity\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"appSecurityId\": 22,\n        \"appName\": \"ENEWSCHAMPADMIN\",\n        \"appKey\": \"GODISALMIGHTY\",\n        \"module\": \"Test1\",\n        \"isAppAvailable\": \"Y\",\n        \"compatibleVersions\": \"1.0.0\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2056,7 +2056,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"Edition\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"editionId\": \"INDIAN\",\n        \"editionName\": \"Indian National Edition\",\n        \"languageId\": 1\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"Edition\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"editionId\": \"INDIAN\",\n        \"editionName\": \"Indian National Edition\",\n        \"languageId\": 1\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2682,7 +2682,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"editionId\": \"INDIAN\",\n        \"closeFlag\": \"N\",\n        \"categoryId\": \"AP\",\n        \"callbackDateTime\": \"2020-12-25T13:37:59.136\",\n        \"phoneNumber\": \"9004502606\",\n        \"details\": \"please call me urgently\",\n        \"studentId\": 9,\n        \"supportUserId\": \"mesmayus\",\n        \"supportComments\": \"please call me\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"editionId\": \"INDIAN\",\n        \"closeFlag\": \"N\",\n        \"categoryId\": \"AP\",\n        \"callbackDateTime\": \"2020-12-25T13:37:59.136\",\n        \"phoneNumber\": \"9004502606\",\n        \"details\": \"please call me urgently\",\n        \"studentId\": 10,\n        \"supportUserId\": \"mesmayus\",\n        \"supportComments\": \"please call me\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2722,7 +2722,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"helpdeskId\": 19,\n        \"studentId\": 1,\n        \"editionId\": \"INDIAN\",\n        \"categoryId\": \"AP\",\n        \"details\": \"please call me urgentlyyy\",\n        \"phoneNumber\": \"9004502606\",\n        \"closeFlag\": \"Y\",\n        \"createDateTime\": \"2021-04-04T18:56:24.874\",\n        \"supportUserId\": \"mesmayus\",\n        \"supportComments\": \"please call me\",\n        \"callbackDateTime\": \"2020-12-25T13:37:59.136\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"helpdeskId\": 23,\n        \"studentId\": 10,\n        \"editionId\": \"INDIAN\",\n        \"categoryId\": \"AP\",\n        \"details\": \"please call me urgently\",\n        \"phoneNumber\": \"9004502606\",\n        \"closeFlag\": \"N\",\n        \"createDateTime\": \"2021-04-18T20:00:58.209\",\n        \"supportUserId\": \"mesmayus\",\n        \"supportComments\": \"please call me\",\n        \"callbackDateTime\": \"2020-12-25T13:37:59.136\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2762,7 +2762,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"Read\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"helpdeskId\": 19\n    }\n}",
+									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"Read\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"helpdeskId\": 23\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2814,7 +2814,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"Close\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"helpdeskId\": 19\n    }\n}",
+									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"Close\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n       \"helpdeskId\": 23\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2918,7 +2918,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 2,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"createDateFrom\": null,\n            \"createDateTo\": null,\n            \"categoryId\": \"\",\n            \"closeFlag\": \"\",\n            \"supportUserId\": \"\",\n            \"studentId\": \"213\"\n        }\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"HelpDesk\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"createDateFrom\": null,\n            \"createDateTo\": null,\n            \"categoryId\": \"\",\n            \"closeFlag\": \"\",\n            \"supportUserId\": \"\",\n            \"studentId\": \"10\"\n        }\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4873,7 +4873,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StakeHolder\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"title\": \"Mr\",\n        \"name\": \"rahul\",\n        \"surname\": \"dravid\",\n        \"otherNames\": \"rahul\",\n        \"designation\": \"Cricketer\",\n        \"isATeacher\": \"N\",\n        \"landLine1\": \"9000\",\n        \"landLine2\": \"00000\",\n        \"mobile1\": \"88998\",\n        \"mobile2\": \"2323\",\n        \"email1\": \"2232\",\n        \"email2\": \"2232\",\n        \"comments\": \"text comments\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StakeHolder\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"title\": \"Mr\",\n        \"name\": \"rahull\",\n        \"surname\": \"dravid\",\n        \"otherNames\": \"rahul\",\n        \"designation\": \"Cricketer\",\n        \"isATeacher\": \"N\",\n        \"landLine1\": \"9000\",\n        \"landLine2\": \"00000\",\n        \"mobile1\": \"88998\",\n        \"mobile2\": \"2323\",\n        \"email1\": \"2232\",\n        \"email2\": \"2232\",\n        \"comments\": \"text comments\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4913,7 +4913,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StakeHolder\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"stakeHolderId\": 6,\n        \"title\": \"Mr\",\n        \"name\": \"rahul\",\n        \"surname\": \"dravid\",\n        \"otherNames\": \"rahul\",\n        \"designation\": \"Cricketer\",\n        \"isATeacher\": \"N\",\n        \"landLine1\": \"9000\",\n        \"landLine2\": \"00000\",\n        \"mobile1\": \"88998\",\n        \"mobile2\": \"2323\",\n        \"email1\": \"2232\",\n        \"email2\": \"2232\",\n        \"comments\": \"text comments\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StakeHolder\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"stakeholderId\": 3,\n        \"title\": \"Mr\",\n        \"name\": \"rahul\",\n        \"surname\": \"dravid\",\n        \"otherNames\": \"rahul\",\n        \"designation\": \"Cricketer\",\n        \"isATeacher\": \"N\",\n        \"landLine1\": \"9000\",\n        \"landLine2\": \"00000\",\n        \"mobile1\": \"88998\",\n        \"mobile2\": \"2323\",\n        \"email1\": \"2232\",\n        \"email2\": \"2232\",\n        \"comments\": \"text comments\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4953,7 +4953,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StakeHolder\",\n        \"action\": \"Read\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"stakeHolderId\": 6\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StakeHolder\",\n        \"action\": \"Read\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"stakeholderId\": 3\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5005,7 +5005,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StakeHolder\",\n        \"action\": \"Close\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n      \"stakeHolderId\": 6\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StakeHolder\",\n        \"action\": \"Close\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"stakeholderId\": 3\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5057,7 +5057,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StakeHolder\",\n        \"action\": \"Reinstate\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n      \"stakeHolderId\": 6\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StakeHolder\",\n        \"action\": \"Reinstate\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"stakeholderId\": 3\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5109,7 +5109,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StakeHolder\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"name\": \"h\",\n            \"surname\": \"\"\n        }\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"StakeHolder\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"name\": \"h\",\n            \"surname\": \"\"\n        }\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5186,7 +5186,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"InstitutionStakeholder\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"institutionType\": \"S\",\n        \"institutionId\": 1,\n        \"stakeholderId\": \"\",\n        \"comments\": \"\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"InstitutionStakeholder\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"institutionType\": \"S\",\n        \"institutionId\": 1,\n        \"stakeholderId\": \"12\",\n        \"comments\": \"text me\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5226,7 +5226,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"InstitutionStakeholder\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"stakeHolderId\": 9,\n        \"institutionId\": 1,\n        \"institutionType\": \"S\",\n        \"comments\": \"\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"InstitutionStakeholder\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"institutionStakeholdersId\": 2,\n        \"stakeholderId\": 12,\n        \"institutionId\": 1,\n        \"institutionType\": \"S\",\n        \"comments\": \"text me\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5266,7 +5266,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"InstitutionStakeholder\",\n        \"action\": \"Read\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n       \"stakeHolderId\": 9\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"InstitutionStakeholder\",\n        \"action\": \"Read\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n         \"institutionStakeholdersId\": 2\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5318,7 +5318,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"InstitutionStakeholder\",\n        \"action\": \"Close\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"stakeHolderId\": 9\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"InstitutionStakeholder\",\n        \"action\": \"Close\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"institutionStakeholdersId\": 2\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5370,7 +5370,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"InstitutionStakeholder\",\n        \"action\": \"Reinstate\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"stakeHolderId\": 9\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"InstitutionStakeholder\",\n        \"action\": \"Reinstate\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"institutionStakeholdersId\": 2\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5422,7 +5422,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"InstitutionStakeholder\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"institutionType\": \"\",\n            \"institutionId\": \"\",\n            \"stakeHolderId\": \"\"\n        }\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"InstitutionStakeholder\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"institutionType\": \"\",\n            \"institutionId\": \"\",\n            \"stakeholderId\": \"12\"\n        }\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5499,7 +5499,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolSubscriptionGrade\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolId\": \"1\",\n        \"editionId\": \"1\",\n        \"grade\": \"2\",\n        \"section\": \"4\",\n        \"capacity\": \"1\",\n        \"comments\": \"text comments\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolSubscriptionGrade\",\n        \"action\": \"Create\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolId\": \"1\",\n        \"editionId\": \"1\",\n        \"grade\": \"2\",\n        \"section\": \"4\",\n        \"capacity\": \"1\",\n        \"comments\": \"text comments\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5539,7 +5539,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolSubscriptionGrade\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolSubsGradeId\": 9,\n        \"schoolId\": \"1\",\n        \"editionId\": \"1\",\n        \"grade\": \"2\",\n        \"section\": \"4\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolSubscriptionGrade\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolSubscriptionGradeId\": 2,\n        \"schoolId\": \"1\",\n        \"editionId\": \"1\",\n        \"grade\": \"2\",\n        \"section\": \"4\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5579,7 +5579,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolSubscriptionGrade\",\n        \"action\": \"Read\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n       \"schoolSubsGradeId\": 9\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolSubscriptionGrade\",\n        \"action\": \"Read\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n       \"schoolSubscriptionGradeId\": 2\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5631,7 +5631,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolSubscriptionGrade\",\n        \"action\": \"Close\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolSubsGradeId\": 9\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolSubscriptionGrade\",\n        \"action\": \"Close\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolSubscriptionGradeId\": 2\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5683,7 +5683,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolSubscriptionGrade\",\n        \"action\": \"Reinstate\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolSubsGradeId\": 9\n    }\n}",
+									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolSubscriptionGrade\",\n        \"action\": \"Reinstate\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolSubscriptionGradeId\": 2\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5735,7 +5735,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolSubscriptionGrade\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"schoolId\": \"1\",\n            \"editionId\": \"\"\n        }\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolSubscriptionGrade\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"schoolId\": \"12\",\n            \"editionId\": \"\"\n        }\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5852,7 +5852,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolReport\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolReportId\": 13,\n        \"stakeholderId\": 1,\n        \"schoolId\": 1,\n        \"editionId\": \"1\",\n        \"grade\": \"2\",\n        \"section\": \"2\"\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolReport\",\n        \"action\": \"Update\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolReportId\": 14,\n        \"stakeholderId\": 1,\n        \"schoolId\": 1,\n        \"editionId\": \"1\",\n        \"grade\": \"2\",\n        \"section\": \"2\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5892,7 +5892,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolReport\",\n        \"action\": \"Read\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n       \"schoolReportId\": 13\n    }\n}",
+									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolReport\",\n        \"action\": \"Read\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n       \"schoolReportId\": 14\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5944,7 +5944,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolReport\",\n        \"action\": \"Close\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolReportId\": 13\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolReport\",\n        \"action\": \"Close\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolReportId\": 14\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5996,7 +5996,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolReport\",\n        \"action\": \"Reinstate\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolReportId\": 13\n    }\n}",
+									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolReport\",\n        \"action\": \"Reinstate\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"schoolReportId\": 14\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -6048,7 +6048,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolReport\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"stakeholderId\": 1,\n            \"schoolId\": \"1\",\n            \"editionId\": \"\"\n        }\n    }\n}",
+									"raw": "{\n    \"header\": {\n        \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolReport\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"stakeholderId\": \"11\",\n            \"schoolId\": \"1\",\n            \"editionId\": \"\"\n        }\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -6361,7 +6361,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolPricing\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"institutionId\": \"\",\n            \"institutionType\": \"\",\n            \"effectiveDateFrom\": null,\n            \"effectiveDateTo\": null\n        }\n    }\n}",
+									"raw": "{\n    \"header\": {\n               \"module\": \"{{module}}\",\n        \"loginCredentials\": \"{{loginCredentials}}\",\n        \"pageName\": \"SchoolPricing\",\n        \"action\": \"List\",\n        \"userId\": \"{{userId}}\",\n        \"deviceId\": \"{{deviceId}}\",\n        \"operation\": \"\"\n    },\n    \"data\": {\n        \"pagination\": {\n            \"pageNumber\": 1,\n            \"pageSize\": 3\n        },\n        \"filter\": {\n            \"institutionId\": \"\",\n            \"institutionType\": \"\",\n            \"effectiveDateFrom\": \"2019-10-21\",\n            \"effectiveDateTo\": \"2020-10-21\"\n        }\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"

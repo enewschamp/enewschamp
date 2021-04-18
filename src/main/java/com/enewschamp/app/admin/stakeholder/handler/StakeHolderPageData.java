@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 public class StakeHolderPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	
-	private Long stakeHolderId;
+	private Long stakeholderId;
 	private String title;
 
 	@NotNull(message = MessageConstants.STAKE_HOLDER_NAME_NOT_NULL)

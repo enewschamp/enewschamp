@@ -28,14 +28,11 @@ public class HelpDeskPageData extends PageData {
 	@NotNull(message = MessageConstants.DETAILS_NOT_NULL)
 	@NotEmpty(message = MessageConstants.DETAILS_NOT_EMPTY)
 	private String details;
-	@NotNull(message = MessageConstants.CALLBACK_PHONE_NO_NOT_NULL)
-	@NotEmpty(message = MessageConstants.CALLBACK_PHONE_NO_NOT_EMPTY)
 	private String phoneNumber;
 	private String supportingComments;
 	private String closeFlag;
 	private LocalDateTime createDateTime;
 	private String supportUserId;
 	private String supportComments;
-	@NotNull(message = MessageConstants.CALLBACK_TIME_NOT_NULL)
 	private LocalDateTime callbackDateTime;
 }

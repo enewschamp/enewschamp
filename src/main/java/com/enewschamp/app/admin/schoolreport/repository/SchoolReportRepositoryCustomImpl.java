@@ -37,8 +37,8 @@ public class SchoolReportRepositoryCustomImpl extends RepositoryImpl implements 
 		Root<SchoolReport> schoolReportRoot = criteriaQuery.from(SchoolReport.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 
-		if (!StringUtils.isEmpty(searchRequest.getStakeHolderId()))
-			filterPredicates.add(cb.equal(schoolReportRoot.get(STAKE_HOLDER_ID), searchRequest.getStakeHolderId()));
+		if (!StringUtils.isEmpty(searchRequest.getStakeholderId()))
+			filterPredicates.add(cb.equal(schoolReportRoot.get(STAKE_HOLDER_ID), searchRequest.getStakeholderId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSchoolId()))
 			filterPredicates.add(cb.equal(schoolReportRoot.get(SCHOOL_ID), searchRequest.getSchoolId()));
