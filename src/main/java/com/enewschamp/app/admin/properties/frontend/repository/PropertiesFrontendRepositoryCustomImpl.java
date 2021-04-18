@@ -41,7 +41,7 @@ public class PropertiesFrontendRepositoryCustomImpl extends RepositoryImpl imple
 			filterPredicates.add(cb.equal(propertiesFrontendRoot.get(PROPERTY_ID), searchRequest.getPropertyId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getAppName()))
-			filterPredicates.add(cb.equal(propertiesFrontendRoot.get(APP_NAME), searchRequest.getAppName()));
+			filterPredicates.add(cb.like(propertiesFrontendRoot.get(APP_NAME), "%" + searchRequest.getAppName() + "%"));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(propertiesFrontendRoot.get(CommonConstants.OPERATION_DATE_TIME)));
