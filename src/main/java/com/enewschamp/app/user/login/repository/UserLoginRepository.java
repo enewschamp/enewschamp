@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
 
+
 public interface UserLoginRepository extends JpaRepository<UserLogin, Long> {
 
 	@Query("Select s from UserLogin s where s.userId= :userId and s.deviceId= :deviceId and s.tokenId=:tokenId and s.userType= :userType and s.loginFlag='Y'")
