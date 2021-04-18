@@ -15,11 +15,7 @@ public class ErrorCodesPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 
 	private Long errorCodeId;
-
-	@NotNull(message = MessageConstants.ERROR_CATEGORY_NOT_NULL)
-	@NotEmpty(message = MessageConstants.ERROR_CATEGORY_NOT_EMPTY)
 	private String errorCategory;
-
 	private String errorDescription;
 
 	@NotNull(message = MessageConstants.ERROR_CODE_NOT_NULL)

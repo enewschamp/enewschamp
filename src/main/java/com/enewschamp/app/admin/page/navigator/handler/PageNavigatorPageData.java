@@ -40,6 +40,6 @@ public class PageNavigatorPageData extends PageData {
 	private String nextPageOperation;
 
 	private String nextPageLoadMethod;
-	private String controlWorkEntryExit;
+	private String controlWorkEntryOrExit;
 	private String updationTable;
 }

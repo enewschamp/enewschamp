@@ -191,7 +191,7 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 		int totalRecords = uiControlsGlobalGlobalsService.createAll(uiControlsGlobals);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
 		responseData.setNumberOfRecords(totalRecords);
-		pageDto.setHeader(pageRequest.getHeader());
+		mapHeaderData(pageRequest, pageDto);
 		pageDto.setData(responseData);
 		return pageDto;
 	}
@@ -236,6 +236,10 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 	
 	private List<UIControlsGlobal> mapUIControlsGlobals(PageRequestDTO pageRequest, List<UIControlsGlobalPageData> pageData) {
 		List<UIControlsGlobal> pageNavigators = pageData.stream()
+				.peek(element -> {
+					element.setOperatorId(pageRequest.getHeader().getUserId());
+					element.setRecordInUse(RecordInUseType.Y);
+				})
 				.map(uicontrolglobal -> modelMapper.map(uicontrolglobal, UIControlsGlobal.class)).collect(Collectors.toList());
 		return pageNavigators;
 	}

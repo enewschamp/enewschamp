@@ -189,7 +189,7 @@ public class ErrorCodesPageHandler implements IPageHandler {
 		int totalRecords= errorCodesService.createAll(pageNavigators);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
 		responseData.setNumberOfRecords(totalRecords);
-		pageDto.setHeader(pageRequest.getHeader());
+		mapHeaderData(pageRequest, pageDto);
 		pageDto.setData(responseData);
 		return pageDto;
 	}
@@ -234,6 +234,10 @@ public class ErrorCodesPageHandler implements IPageHandler {
 	
 	private List<ErrorCodes> mapErrorCodes(PageRequestDTO pageRequest, List<ErrorCodesPageData> pageData) {
 		List<ErrorCodes> errorCodes = pageData.stream()
+				.peek(element -> {
+					element.setOperatorId(pageRequest.getHeader().getUserId());
+					element.setRecordInUse(RecordInUseType.Y);
+				})
 				.map(errorcode -> modelMapper.map(errorcode, ErrorCodes.class)).collect(Collectors.toList());
 		return errorCodes;
 	}

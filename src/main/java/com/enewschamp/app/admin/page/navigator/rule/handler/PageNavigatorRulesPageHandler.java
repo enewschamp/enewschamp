@@ -199,7 +199,7 @@ public class PageNavigatorRulesPageHandler implements IPageHandler {
 		int totalRecords = pageNavigationRulesService.createAll(pageNavigators);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
 		responseData.setNumberOfRecords(totalRecords);
-		pageDto.setHeader(pageRequest.getHeader());
+		mapHeaderData(pageRequest, pageDto);
 		pageDto.setData(responseData);
 		return pageDto;
 	}
@@ -221,6 +221,10 @@ public class PageNavigatorRulesPageHandler implements IPageHandler {
 
 	private List<PageNavigatorRules> mapPageNavigatorRules(PageRequestDTO pageRequest, List<PageNavigatorRulesPageData> pageData) {
 		List<PageNavigatorRules> pageNavigators = pageData.stream()
+				.peek(element -> {
+					element.setOperatorId(pageRequest.getHeader().getUserId());
+					element.setRecordInUse(RecordInUseType.Y);
+				})
 				.map(navigator -> modelMapper.map(navigator, PageNavigatorRules.class)).collect(Collectors.toList());
 		return pageNavigators;
 	}

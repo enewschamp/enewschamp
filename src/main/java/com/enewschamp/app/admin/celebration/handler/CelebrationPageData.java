@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,13 +35,15 @@ public class CelebrationPageData extends PageData {
     @NotNull(message = MessageConstants.READING_LEVEL_NOT_NULL)
 	private int readingLevel;
 
+	private String imageBase64;
+	private String imageTypeExt = "jpg";
+	@JsonInclude
 	private String imageName;
-	private String base64AudioFile;
-	private String base64Image;
-	private String imageTypeExt;
 	private String imageUpdate;
-	private String audioFileUpdate;
-	private String audioFileTypeExt;
+	private String audioFileBase64;
+	private String audioFileTypeExt = "mp4";
+	@JsonInclude
 	private String audioFileName;
+	private String audioFileUpdate;
 
 }

@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -20,7 +21,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "Celebration")
+@Table(name = "Celebrations",uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "editionId", "nameId" }) })
 public class Celebration extends BaseEntity {
 
 	/**
@@ -29,8 +31,8 @@ public class Celebration extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "celebration_id_generator")
-	@SequenceGenerator(name = "celebration_id_generator", sequenceName = "celebration_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "celebrations_id_generator")
+	@SequenceGenerator(name = "celebrations_id_generator", sequenceName = "celebrations_id_seq", allocationSize = 1)
 	@Column(name = "celebrationId", length = 3)
 	private Long celebrationId = 0L;
 
@@ -59,9 +61,13 @@ public class Celebration extends BaseEntity {
 	private String audioFileName;
 
 	@Transient
-	private String base64Image;
-
+	private String imageBase64;
+	@Transient
+	private String audioFileBase64;
+	@Transient
+    private String audioFileTypeExt;
 	@Transient
 	private String imageTypeExt;
+	
 
 }

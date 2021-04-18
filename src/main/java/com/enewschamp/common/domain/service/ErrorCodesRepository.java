@@ -25,10 +25,10 @@ interface ErrorCodesRepository extends JpaRepository<ErrorCodes, Long> {
 	public void truncate();
 	
 	@Modifying
-	@Query(value = "truncate table error_code_id_seq", nativeQuery = true)
+	@Query(value = "truncate table error_codes_id_seq", nativeQuery = true)
 	public void deleteSequences();
 	
 	@Modifying
-	@Query(value = "insert into error_code_id_seq values(1)", nativeQuery = true)
+	@Query(value = "insert into error_codes_id_seq values(1)", nativeQuery = true)
 	public void initializeSequence();
 }

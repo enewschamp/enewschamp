@@ -104,7 +104,7 @@ public class User extends BaseEntity {
 	private String comments;
 
 	@Transient
-	private String base64Image;
+	private String imageBase64;
 
 	@Transient
 	private String imageTypeExt;

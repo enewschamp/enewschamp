@@ -213,7 +213,7 @@ public class CelebrationPageHandler implements IPageHandler {
 			String newImageName = celebration.getCelebrationId() + "_IMG_" + System.currentTimeMillis();
 			String imageType = celebrationDTO.getImageTypeExt();
 			boolean saveImageFlag = commonService.saveImages("Admin", "celebration", imageType,
-					celebrationDTO.getBase64Image(), newImageName);
+					celebrationDTO.getImageBase64(), newImageName);
 			if (saveImageFlag) {
 				celebration.setImageName(newImageName + "." + imageType);
 				updateFlag = true;
@@ -230,7 +230,7 @@ public class CelebrationPageHandler implements IPageHandler {
 			String audioFileName = celebration.getCelebrationId() + "_" + System.currentTimeMillis();
 			String audioFileType = celebrationDTO.getAudioFileTypeExt();
 			boolean saveAudioFileFlag = commonService.saveAudioFile("Admin", "celebration", audioFileType,
-					celebrationDTO.getBase64AudioFile(), audioFileName);
+					celebrationDTO.getAudioFileBase64(), audioFileName);
 			if (saveAudioFileFlag) {
 				celebration.setAudioFileName(audioFileName + "." + audioFileType);
 				updateFlag = true;
@@ -265,7 +265,7 @@ public class CelebrationPageHandler implements IPageHandler {
 			String imageType = celebrationDTO.getImageTypeExt();
 			String currentImageName = celebration.getImageName();
 			boolean saveImageFlag = commonService.saveImages("Admin", "celebration", imageType,
-					celebrationDTO.getBase64Image(), newImageName);
+					celebrationDTO.getImageBase64(), newImageName);
 			if (saveImageFlag) {
 				celebration.setImageName(newImageName + "." + imageType);
 				updateFlag = true;
@@ -284,7 +284,7 @@ public class CelebrationPageHandler implements IPageHandler {
 			String audioFileType = celebrationDTO.getAudioFileTypeExt();
 			String currentAudioFileName = celebration.getAudioFileName();
 			boolean saveAudioFileFlag = commonService.saveAudioFile("Admin", "celebration", audioFileType,
-					celebrationDTO.getBase64AudioFile(), audioFileName);
+					celebrationDTO.getAudioFileBase64(), audioFileName);
 			if (saveAudioFileFlag) {
 				celebration.setAudioFileName(audioFileName + "." + audioFileType);
 				updateFlag = true;

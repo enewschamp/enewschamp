@@ -223,6 +223,7 @@ public class BadgePageHandler implements IPageHandler {
 		badgeDTO.setSuccessImageName(currentSuccessImageName);
 		badgeDTO.setImageName(currentImageName);
 		badge = modelMapper.map(badgeDTO, Badge.class);
+		badge.setRecordInUse(RecordInUseType.Y);
 		badge = badgeService.update(badge);
 		boolean updateFlag = false;
 		if ("Y".equalsIgnoreCase(badgeDTO.getImageUpdate())) {
@@ -286,6 +287,7 @@ public class BadgePageHandler implements IPageHandler {
 	private Badge saveImageAndAudio(BadgePageData badgeDTO) {
 		Badge badge = modelMapper.map(badgeDTO, Badge.class);
 		try {
+			badge.setRecordInUse(RecordInUseType.Y);
 			badge = badgeService.create(badge);
 		} catch (DataIntegrityViolationException e) {
 			log.error(e.getMessage());
@@ -349,7 +351,6 @@ public class BadgePageHandler implements IPageHandler {
 		if (updateFlag) {
 			badge = badgeService.update(badge);
 		}
-		badge.setRecordInUse(RecordInUseType.Y);
 		return badge;
 	}
 }

@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.domain.common.Gender;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -44,9 +45,6 @@ public class UserPageData extends PageData {
 	private String emailId1;
 	private String emailId2;
 	private String comments;
-	private String imageUpdate;
-	private String imageBase64;
-	private String imageTypeExt;
 	private String password;
 	private String password1;
 	private String password2;
@@ -65,6 +63,11 @@ public class UserPageData extends PageData {
 	
 	private String theme;
 	private String fontHeight;
-	private String imageName;
 	private LocalDateTime creationDateTime;
+	private String imageBase64;
+	private String imageTypeExt = "jpg";
+	@JsonInclude
+	private String imageName;
+	private String imageUpdate;
+
 }

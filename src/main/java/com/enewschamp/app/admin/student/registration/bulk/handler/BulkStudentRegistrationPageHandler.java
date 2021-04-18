@@ -183,7 +183,7 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 			}
 		}
 		List<PageData> recordList = records.stream().map(e -> (PageData) e).collect(Collectors.toList());
-		dto.setHeader(pageRequest.getHeader());
+		mapHeaderData(pageRequest, dto);
 		dto.setRecords(recordList);
 		return dto;
 	}

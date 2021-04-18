@@ -28,8 +28,5 @@ public class PageNavigatorRulesPageData extends PageData {
 	private String nextPage;
 	private String nextPageOperation;
 	private String nextPageLoadMethod;
-
-	@NotNull(message = MessageConstants.CONTROL_WORK_ENTRY_NOT_NULL)
-	@NotEmpty(message = MessageConstants.CONTROL_WORK_ENTRY_NOT_EMPTY)
 	private String controlWorkEntryOrExit;
 }

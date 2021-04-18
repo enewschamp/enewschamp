@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.avatar.handler.AvatarPageData;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.CommonService;
@@ -226,7 +225,6 @@ public class UserPageHandler implements IPageHandler {
 		if (updateFlag) {
 			user = userService.update(user);
 		}
-		user.setRecordInUse(RecordInUseType.Y);
 		return user;
 	}
 	
