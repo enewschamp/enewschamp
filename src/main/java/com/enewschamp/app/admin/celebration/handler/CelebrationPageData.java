@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
@@ -15,7 +14,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-//@JsonIgnoreProperties(value = { "imageBase64" , "audioFileBase64"})
 public class CelebrationPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	
@@ -48,24 +46,4 @@ public class CelebrationPageData extends PageData {
 	@JsonInclude
 	private String audioFileName;
 	private String audioFileUpdate;
-	
-//	@JsonIgnore
-//	public void setImageBase64(String imageBase64){
-//		 this.imageBase64 = imageBase64;
-//	}
-//
-//	@JsonIgnore
-//	public void setAudioFileBase64(String audioFileBase64){
-//		this.audioFileBase64 = audioFileBase64;
-//	}
-	
-//	@JsonIgnore
-//	public String getImageBase64() {
-//	    return imageBase64;
-//	}
-//	
-//	@JsonIgnore
-//	public String getAudioFileBase64() {
-//	    return audioFileBase64;
-//	}
 }
