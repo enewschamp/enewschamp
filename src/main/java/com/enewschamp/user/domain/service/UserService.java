@@ -83,11 +83,11 @@ public class UserService extends AbstractDomainService {
 	}
 	
 	private void handlePasswords(User user, User existingUser) {
-		if (StringUtils.isEmpty(user.getPassword()))
+		//if (StringUtils.isEmpty(user.getPassword()))
 			user.setPassword(existingUser.getPassword());
-		if (StringUtils.isEmpty(user.getPassword1()))
+		//if (StringUtils.isEmpty(user.getPassword1()))
 			user.setPassword1(existingUser.getPassword1());
-		if (StringUtils.isEmpty(user.getPassword2()))
+		//if (StringUtils.isEmpty(user.getPassword2()))
 			user.setPassword2(existingUser.getPassword2());
 		modelMapper.map(user, existingUser);
 	}

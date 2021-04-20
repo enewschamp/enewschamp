@@ -192,7 +192,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 			List<AppSecurity> pageDataList = page.getContent();
 			for (AppSecurity appSecurity : pageDataList) {
 				AppSecurityPageData appSecPageData = modelMapper.map(appSecurity, AppSecurityPageData.class);
-			//	appSecPageData.setLastUpdate(appSecurity.getOperationDateTime());
+				appSecPageData.setLastUpdate(appSecurity.getOperationDateTime());
 				countryPageDataList.add(appSecPageData);
 			}
 		}
