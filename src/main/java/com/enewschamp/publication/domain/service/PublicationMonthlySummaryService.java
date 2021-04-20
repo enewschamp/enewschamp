@@ -178,9 +178,6 @@ public class PublicationMonthlySummaryService extends AbstractDomainService {
 			int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<ArticlePublicationMonthlyTotal> monthlySummaryList = monthlyTotalRepository.findAll(pageable, searchRequest);
-		if (monthlySummaryList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return monthlySummaryList;
 	}
 }

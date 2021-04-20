@@ -61,6 +61,10 @@ public class UserService extends AbstractDomainService {
 
 	public User create(User user) {
 		User userEntity = null;
+		Optional<User> existingUser =  repository.findById(user.getUserId());
+		if(existingUser.isPresent()) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
 		try {
 			if (user.getCreationDateTime() == null) {
 				user.setCreationDateTime(LocalDateTime.now());

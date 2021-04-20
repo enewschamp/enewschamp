@@ -238,6 +238,7 @@ public class GenrePageHandler implements IPageHandler {
 		if (updateFlag) {
 			genre = genreService.update(genre);
 		}
+		genre.setImageBase64(null);
 		return genre;
 	}
 	
@@ -273,7 +274,7 @@ public class GenrePageHandler implements IPageHandler {
 		if (updateFlag) {
 			genre = genreService.update(genre);
 		}
-		genre.setRecordInUse(RecordInUseType.Y);
+		genre.setImageBase64(null);
 		return genre;
 	}
 }

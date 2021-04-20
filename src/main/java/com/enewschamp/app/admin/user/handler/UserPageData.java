@@ -49,16 +49,12 @@ public class UserPageData extends PageData {
 	private String password1;
 	private String password2;
 	
-	@NotNull(message = MessageConstants.IS_ACCOUNT_LOCKED_NOT_NULL)
-	@NotEmpty(message = MessageConstants.IS_ACCOUNT_LOCKED_NOT_EMPTY)
 	private String isAccountLocked;
 	
 	private LocalDateTime lastSuccessfulLoginAttempt;
 	private LocalDateTime lastUnsuccessfulLoginAttempt;
 	private long incorrectLoginAttempts;
 	
-	@NotNull(message = MessageConstants.IS_ACTIVE_NOT_NULL)
-	@NotEmpty(message = MessageConstants.IS_ACTIVE_NOT_EMPTY)
 	private String isActive;
 	
 	private String theme;

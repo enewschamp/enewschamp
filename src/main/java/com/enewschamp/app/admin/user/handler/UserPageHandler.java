@@ -225,31 +225,32 @@ public class UserPageHandler implements IPageHandler {
 		if (updateFlag) {
 			user = userService.update(user);
 		}
+		user.setImageBase64(null);
 		return user;
 	}
 	
 	private User updateImage(UserPageData userDto, String userId) {
 		userDto.setUserId(userId);
-		User User = userService.get(userId);
-		if (User.getRecordInUse().equals(RecordInUseType.N)) {
+		User user = userService.get(userId);
+		if (user.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
-		String currentImageName = User.getImageName();
+		String currentImageName = user.getImageName();
 		userDto.setImageName(currentImageName);
-		User = modelMapper.map(userDto, User.class);
-		User.setRecordInUse(RecordInUseType.Y);
-		User = userService.update(User);
+		user = modelMapper.map(userDto, User.class);
+		user.setRecordInUse(RecordInUseType.Y);
+		user = userService.update(user);
 		boolean updateFlag = false;
 		if ("Y".equalsIgnoreCase(userDto.getImageUpdate())) {
-			String newImageName = User.getUserId() + "_IMG_" + System.currentTimeMillis();
+			String newImageName = user.getUserId() + "_IMG_" + System.currentTimeMillis();
 			String imageType = userDto.getImageTypeExt();
 			boolean saveImageFlag = commonService.saveImages("Admin", "user", imageType, userDto.getImageBase64(),
 					newImageName);
 			if (saveImageFlag) {
-				User.setImageName(newImageName + "." + imageType);
+				user.setImageName(newImageName + "." + imageType);
 				updateFlag = true;
 			} else {
-				User.setImageName(null);
+				user.setImageName(null);
 				updateFlag = true;
 			}
 			if (currentImageName != null && !"".equals(currentImageName)) {
@@ -259,9 +260,10 @@ public class UserPageHandler implements IPageHandler {
 		}
 		
 		if (updateFlag) {
-			User = userService.update(User);
+			user = userService.update(user);
 		}
-		return User;
+		user.setImageBase64(null);
+		return user;
 	}
 
 }

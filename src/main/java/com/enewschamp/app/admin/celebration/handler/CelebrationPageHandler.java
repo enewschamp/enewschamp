@@ -246,7 +246,8 @@ public class CelebrationPageHandler implements IPageHandler {
 		if (updateFlag) {
 			celebration = celebrationService.update(celebration);
 		}
-		celebration.setRecordInUse(RecordInUseType.Y);
+		celebration.setImageBase64(null);
+		celebration.setAudioFileBase64(null);
 		return celebration;
 	}
 
@@ -300,6 +301,8 @@ public class CelebrationPageHandler implements IPageHandler {
 		if (updateFlag) {
 			celebration = celebrationService.update(celebration);
 		}
+		celebration.setImageBase64(null);
+		celebration.setAudioFileBase64(null);
 		return celebration;
 	}
 

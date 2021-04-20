@@ -54,7 +54,7 @@ public class Avatar extends BaseEntity {
 	private String imageName;
 
 	@Transient
-	private String base64Image;
+	private String imageBase64;
 
 	@Transient
 	private String imageTypeExt;

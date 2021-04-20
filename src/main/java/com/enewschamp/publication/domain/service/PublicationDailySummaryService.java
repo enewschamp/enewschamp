@@ -129,9 +129,6 @@ public class PublicationDailySummaryService extends AbstractDomainService {
 			int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<ArticlePublicationDaily> dailySummaryList = repositoryCustom.findAll(pageable, searchRequest);
-		if (dailySummaryList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return dailySummaryList;
 	}
 

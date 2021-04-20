@@ -45,6 +45,10 @@ public class EditionService extends AbstractDomainService {
 
 	public Edition create(Edition editionEntity) {
 		Edition edition = null;
+		Optional<Edition> existingEdition = repository.findById(editionEntity.getEditionId());
+		if(existingEdition.isPresent()) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
 		try {
 			edition = repository.save(editionEntity);
 		} catch (DataIntegrityViolationException e) {

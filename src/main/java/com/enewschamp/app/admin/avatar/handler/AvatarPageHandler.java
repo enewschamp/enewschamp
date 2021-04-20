@@ -241,7 +241,7 @@ public class AvatarPageHandler implements IPageHandler {
 		if (updateFlag) {
 			avatar = avatarService.update(avatar);
 		}
-		avatar.setRecordInUse(RecordInUseType.Y);
+		avatar.setImageBase64(null);
 		return avatar;
 	}
 	
@@ -277,7 +277,7 @@ public class AvatarPageHandler implements IPageHandler {
 		if (updateFlag) {
 			avatar = avatarService.update(avatar);
 		}
-		avatar.setRecordInUse(RecordInUseType.Y);
+		avatar.setImageBase64(null);
 		return avatar;
 	}
 }

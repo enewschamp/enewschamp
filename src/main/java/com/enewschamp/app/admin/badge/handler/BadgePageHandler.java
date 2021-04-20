@@ -280,7 +280,9 @@ public class BadgePageHandler implements IPageHandler {
 		if (updateFlag) {
 			badge = badgeService.update(badge);
 		}
-		badge.setRecordInUse(RecordInUseType.Y);
+		badge.setImageBase64(null);
+		badge.setSuccessImageBase64(null);
+		badge.setAudioFileBase64(null);
 		return badge;
 	}
 
@@ -351,6 +353,9 @@ public class BadgePageHandler implements IPageHandler {
 		if (updateFlag) {
 			badge = badgeService.update(badge);
 		}
+		badge.setImageBase64(null);
+		badge.setSuccessImageBase64(null);
+		badge.setAudioFileBase64(null);
 		return badge;
 	}
 }

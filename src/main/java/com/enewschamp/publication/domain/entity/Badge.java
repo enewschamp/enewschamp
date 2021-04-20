@@ -63,13 +63,13 @@ public class Badge extends BaseEntity {
 	private String audioFileName;
 
 	@Transient
-	private String base64Image;
+	private String imageBase64;
 
 	@Transient
-	private String base64SuccessImage;
+	private String successImageBase64;
 
 	@Transient
-	private String base64AudioFile;
+	private String audioFileBase64;
 
 	@Transient
 	private String imageTypeExt;
