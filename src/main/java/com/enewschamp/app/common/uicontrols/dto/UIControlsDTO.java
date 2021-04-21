@@ -1,19 +1,36 @@
 package com.enewschamp.app.common.uicontrols.dto;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data
 public class UIControlsDTO {
 
 	private Long uiControlId;
-	private String screenName;
+	private String pageName;
+	private String operation;
 	private String controlName;
-	private String dataSize;
-	private String dataType;
-	private Date creationTime;
 	private String controlType;
-	private String visibleOnScreen;
-	private String enabledOnScreen;
+	private String controlLabel;
+	private String dataType;
+	private String globalControlRef;
+	private String defaultValue;
+	private String placeHolder;
+	private String helpText;
+	private String icon;
+	private String iconType;
+	private String keyboard;
+	private String multiLine;
+	private String minLength;
+	private String maxLength;
+	private String height;
+	private String width;
+	private String action;
+	private String visibility;
+	private String mandatory;
+	private String regex;
+	private String successMessage;
+	private String errorMessage;
+	private String confirmationMessage;
+	private String isPremiumFeature;
+	private String unavailableMessage;
 }

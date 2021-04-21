@@ -15,7 +15,7 @@ public class PublicationSummaryRequest extends PageData {
 	private LocalDate date;
 	private Integer month;
 	private Integer year;
-	
+
 	private String editionId;
 	private String genreId;
 	private Integer readingLevel;

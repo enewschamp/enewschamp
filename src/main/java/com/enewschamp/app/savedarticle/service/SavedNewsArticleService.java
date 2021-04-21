@@ -6,23 +6,27 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.HeaderDTO;
 import com.enewschamp.app.savedarticle.dto.SavedNewsArticleSearchRequest;
-import com.enewschamp.app.savedarticle.dto.SavedNewsArticleSummaryDTO;
 import com.enewschamp.app.savedarticle.repository.SavedNewsArticleCustomRepositoryImpl;
+import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
+import com.enewschamp.opinions.page.dto.OpinionsSearchRequest;
 
 @Service
 public class SavedNewsArticleService {
 
 	@Autowired
 	private SavedNewsArticleCustomRepositoryImpl savedNewsArticleCustomRepository;
-	
-	
-	public Page<SavedNewsArticleSummaryDTO> findSavedArticles(SavedNewsArticleSearchRequest searchRequest, HeaderDTO header) {
-		int pageNumber = header.getPageNo();
-		pageNumber = pageNumber > 0 ? (pageNumber - 1) : 0;
-		Pageable pageable = PageRequest.of(pageNumber, header.getPageSize());
+
+	public Page<NewsArticleSummaryDTO> findSavedArticles(SavedNewsArticleSearchRequest searchRequest, int pageNo,
+			int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		return savedNewsArticleCustomRepository.findArticles(searchRequest, pageable);
 	}
-	
+
+	public Page<NewsArticleSummaryDTO> findArticlesWithOpinions(OpinionsSearchRequest searchRequest, int pageNo,
+			int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		return savedNewsArticleCustomRepository.findArticlesWithOpinions(searchRequest, pageable);
+	}
+
 }

@@ -10,19 +10,19 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class EditionDTO extends MaintenanceDTO {
-	
+
 	private static final long serialVersionUID = 1201220065078913195L;
 
 	@NotNull
-	@Size(max=ForeignKeyColumnLength.EditionId)
+	@Size(max = ForeignKeyColumnLength.EditionId)
 	private String editionId;
-	
+
+	@NotNull
+	@Size(min = 6, max = 255)
+	private String editionName;
+
 	@NotNull
 	private Long languageId;
-	
-	@NotNull
-	@Size(min=6, max=255)
-	private String editionName;
 }

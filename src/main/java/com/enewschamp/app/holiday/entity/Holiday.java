@@ -1,7 +1,6 @@
 package com.enewschamp.app.holiday.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -19,32 +19,36 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name="Holidays")
-@EqualsAndHashCode(callSuper=false)
-public class Holiday extends BaseEntity{
-	
-	/**
-	 * 
-	 */
+@Table(name = "Holidays", uniqueConstraints = { @UniqueConstraint(columnNames = { "editionId", "holidayDate" }) })
+@EqualsAndHashCode(callSuper = false)
+public class Holiday extends BaseEntity {
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "holiday_id_generator")
-	@SequenceGenerator(name="holiday_id_generator", sequenceName = "holiday_id_seq", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "holidays_id_generator")
+	@SequenceGenerator(name = "holidays_id_generator", sequenceName = "holidays_id_seq", allocationSize = 1)
 	@Column(name = "holidayId", updatable = false, nullable = false)
 	private Long holidayId;
-	
-	
+
 	@NotNull
-	@Column(name = "editionId", length=6)
+	@Column(name = "editionId", length = 6)
 	private String editionId;
-	
+
 	@NotNull
 	@Column(name = "holidayDate")
 	private LocalDate holidayDate;
-	
+
 	@NotNull
-	@Column(name = "holiday", length=30)
+	@Column(name = "holiday", length = 30)
 	private String holiday;
-	
+
+	@NotNull
+	@Column(name = "publication", length = 1)
+	private String publication;
+
+	@NotNull
+	@Column(name = "helpdesk", length = 1)
+	private String helpdesk;
+
 }

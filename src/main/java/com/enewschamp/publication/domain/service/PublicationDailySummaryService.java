@@ -10,15 +10,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.article.daily.ArticlePublicationDaily;
+import com.enewschamp.app.admin.publication.daily.repository.PublicationDailySummaryRepositoryCustomImpl;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.article.domain.entity.NewsArticle;
 import com.enewschamp.article.domain.service.NewsArticleService;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.app.dto.PublicationDailySummaryDTO;
 import com.enewschamp.publication.domain.entity.Publication;
-import com.enewschamp.publication.domain.entity.PublicationArticleLinkage;
 import com.enewschamp.publication.domain.entity.PublicationDailySummary;
+import com.enewschamp.publication.domain.entity.PublicationGroup;
 import com.enewschamp.publication.page.data.PublicationSummaryRequest;
 import com.enewschamp.publication.page.data.PublicationSummaryResponse;
 
@@ -27,6 +30,9 @@ public class PublicationDailySummaryService extends AbstractDomainService {
 
 	@Autowired
 	private PublicationDailySummaryRepository repository;
+
+	@Autowired
+	private PublicationDailySummaryRepositoryCustomImpl repositoryCustom;
 
 	@Autowired
 	private NewsArticleService articleService;
@@ -42,7 +48,8 @@ public class PublicationDailySummaryService extends AbstractDomainService {
 		if (existingEntity != null) {
 			return existingEntity;
 		} else {
-			throw new BusinessException(ErrorCodes.PUBLICATION_DAILY_SUMMARY_NOT_FOUND, publicationDate.toString());
+			throw new BusinessException(ErrorCodeConstants.PUBLICATION_DAILY_SUMMARY_NOT_FOUND,
+					publicationDate.toString());
 		}
 	}
 
@@ -55,34 +62,48 @@ public class PublicationDailySummaryService extends AbstractDomainService {
 		}
 	}
 
-	public PublicationDailySummary saveSummary(Publication publication) {
-		PublicationDailySummary publicationDailySummary = get(publication.getPublishDate());
+	public PublicationDailySummary saveSummary(PublicationGroup publicationGroup, Publication publication) {
+		PublicationDailySummary publicationDailySummary = get(publication.getPublicationDate());
 		if (publicationDailySummary != null) {
-			publicationDailySummary.setNewsArticleCount(
-					publicationDailySummary.getNewsArticleCount() + publication.getArticleLinkages().size());
-			publicationDailySummary.setQuizCount(
-					publicationDailySummary.getQuizCount() + getQuizCount(publication.getArticleLinkages()));
+			publicationDailySummary.setNewsArticleCount(publicationDailySummary.getNewsArticleCount()
+					+ getArticleLinkagesCount(publication.getNewsArticles()));
+			publicationDailySummary
+					.setQuizCount(publicationDailySummary.getQuizCount() + getQuizCount(publication.getNewsArticles()));
 		} else {
 			publicationDailySummary = new PublicationDailySummary();
-			publicationDailySummary.setPublicationDate(publication.getPublishDate());
-			publicationDailySummary.setNewsArticleCount(publication.getArticleLinkages().size());
-			publicationDailySummary.setQuizCount(getQuizCount(publication.getArticleLinkages()));
-			publicationDailySummary.setOperatorId("SYSTEM");
+			publicationDailySummary.setPublicationDate(publication.getPublicationDate());
+			if (publication.getNewsArticles() == null) {
+				publicationDailySummary.setNewsArticleCount(0);
+			} else {
+				publicationDailySummary.setNewsArticleCount(getArticleLinkagesCount(publication.getNewsArticles()));
+			}
+			publicationDailySummary.setQuizCount(getQuizCount(publication.getNewsArticles()));
+			publicationDailySummary.setOperatorId(publicationGroup.getOperatorId());
 		}
 		repository.save(publicationDailySummary);
-		monthlySummaryService.saveSummary(publication);
+		monthlySummaryService.saveSummary(publicationGroup, publication);
 		return publicationDailySummary;
 	}
 
-	private int getQuizCount(List<PublicationArticleLinkage> linkages) {
+	private int getQuizCount(List<NewsArticle> linkages) {
 		int count = 0;
-		for (PublicationArticleLinkage linkage : linkages) {
-			if (linkage != null) {
-				NewsArticle article = articleService.get(linkage.getNewsArticleId());
-				if(article != null && article.getNewsArticleQuiz() != null) {
-					count = count + article.getNewsArticleQuiz().size();
+		if (linkages != null) {
+			for (NewsArticle linkage : linkages) {
+				if (linkage != null) {
+					NewsArticle article = articleService.get(linkage.getNewsArticleId());
+					if (article != null && article.getNewsArticleQuiz() != null) {
+						count = count + article.getNewsArticleQuiz().size();
+					}
 				}
 			}
+		}
+		return count;
+	}
+
+	private int getArticleLinkagesCount(List<NewsArticle> linkages) {
+		int count = 0;
+		if (linkages != null) {
+			count = linkages.size();
 		}
 		return count;
 	}
@@ -100,8 +121,15 @@ public class PublicationDailySummaryService extends AbstractDomainService {
 		response.setRecordCount(pageResult.getNumberOfElements());
 		response.setPageNumber(pageResult.getNumber() + 1);
 		response.setDailySummary(pageResult.getContent());
-		
+
 		return response;
+	}
+
+	public Page<ArticlePublicationDaily> listPublicationDailySummary(AdminSearchRequest searchRequest, int pageNo,
+			int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<ArticlePublicationDaily> dailySummaryList = repositoryCustom.findAll(pageable, searchRequest);
+		return dailySummaryList;
 	}
 
 }

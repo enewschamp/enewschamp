@@ -8,29 +8,28 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 
-@Component(value="NewsArticleListPageHandler")
-public class NewsArticleListPageHandler implements IPageHandler  {
-	
+@Component(value = "NewsArticleListPageHandler")
+public class NewsArticleListPageHandler implements IPageHandler {
+
 	@Override
-	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
-		
+	public PageDTO handleAction(PageRequestDTO pageRequest) {
 		return new PageDTO();
 	}
-	
+
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		return pageNavigationContext.getPreviousPageResponse();
 	}
 
 	@Override
-	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
+	public PageDTO saveAsMaster(PageRequestDTO pageRequest) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
-		// TODO Auto-generated method stub
-		return null;
+	public PageDTO handleAppAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
+		PageDTO pageDto = new PageDTO();
+		return pageDto;
 	}
 }

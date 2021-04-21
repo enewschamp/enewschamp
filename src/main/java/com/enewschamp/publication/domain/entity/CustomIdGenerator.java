@@ -15,18 +15,18 @@ import org.hibernate.type.Type;
 
 public class CustomIdGenerator extends IdentityGenerator implements Configurable {
 
-    private IdentifierGenerator defaultGenerator;
+	private IdentifierGenerator defaultGenerator;
 
-    public Serializable generate(SessionImplementor session, Object object) throws HibernateException {
-        Long idValue = (Long)defaultGenerator.generate(session, object);
-        //idValue will be assigned your entity id
-        return idValue;
-    }
+	public Serializable generate(SessionImplementor session, Object object) throws HibernateException {
+		Long idValue = (Long) defaultGenerator.generate(session, object);
+		// idValue will be assigned your entity id
+		return idValue;
+	}
 
-    @Override
-    public void configure(Type type, Properties params, ServiceRegistry serviceRegistry) throws MappingException {
-        DefaultIdentifierGeneratorFactory dd = new DefaultIdentifierGeneratorFactory();
-        //dd.setDialect(d);
-        defaultGenerator = dd.createIdentifierGenerator("sequence", type, params);
-    }
+	@Override
+	public void configure(Type type, Properties params, ServiceRegistry serviceRegistry) throws MappingException {
+		DefaultIdentifierGeneratorFactory dd = new DefaultIdentifierGeneratorFactory();
+		// dd.setDialect(d);
+		defaultGenerator = dd.createIdentifierGenerator("sequence", type, params);
+	}
 }

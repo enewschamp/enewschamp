@@ -20,38 +20,40 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name="StudentNotifications")
-public class StudentNotification extends BaseEntity {	
+@Table(name = "StudentNotifications")
+public class StudentNotification extends BaseEntity {
 
 	private static final long serialVersionUID = 4683001717131495711L;
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_notify_id_generator")
-	@SequenceGenerator(name="notify_action_id_generator", sequenceName = "notify_action_id_seq", allocationSize=1)
-	@Column(name = "NotificationActionId", updatable = false, nullable = false)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_notification_id_generator")
+	@SequenceGenerator(name = "student_notification_id_generator", sequenceName = "student_notification_id_seq", allocationSize = 1)
+	@Column(name = "StudentNotificationId", updatable = false, nullable = false)
 	private Long studentNotificationId;
 
 	@NotNull
-	@Column(name = "StudentId")
+	@Column(name = "studentId", length = 100)
 	private Long studentId;
-	
+
 	@NotNull
 	@Column(name = "EditionId", length = ForeignKeyColumnLength.EditionId)
 	private String editionId;
-	
+
 	@NotNull
 	@Column(name = "NotificationId")
 	private Long notificationId;
-	
-	@Column(name = "ReadFlag", length=1)
+
+	@NotNull
+	@Column(name = "NotificationDate")
+	private LocalDateTime notificationDate;
+
+	@Column(name = "ReadFlag", length = 1)
 	@Enumerated(EnumType.STRING)
 	private ReadFlag readFlag;
-	
-	@NotNull
+
 	@Column(name = "ReadDateTime")
 	protected LocalDateTime readDateTime;
-	
-	
+
 }

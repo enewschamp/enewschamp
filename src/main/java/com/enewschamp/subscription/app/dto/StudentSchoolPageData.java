@@ -8,29 +8,30 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class StudentSchoolPageData  extends PageData {
+@EqualsAndHashCode(callSuper = false)
+public class StudentSchoolPageData extends PageData {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
-	private long studentID = 0L;
-	
-	private long schoolId = 0L;
-	
-	private String grade;
-	private SchoolData school;
-	private String section;
-	private String emailId;
-	
-	private CountryPageData country;
-	private StatePageData state;
-	private String cityID;
-	
 	private List<CountryPageData> countryLOV;
-	private String incompeleteFormText;
-	
+	private List<StatePageData> stateLOV;
+	private List<CityPageData> cityLOV;
+	private List<SchoolData> schoolLOV;
+	private List<SchoolProgramLOV> schoolProgramLOV;
+	private Long studentId = 0L;
+	private String country;
+	private String countryNotInTheList;
+	private String state;
+	private String stateNotInTheList;
+	private String city;
+	private String cityNotInTheList;
+	private String school;
+	private String schoolNotInTheList;
+	private String section;
+	private String grade;
+	private String schoolProgramCode;
+	private String approvalRequired;
 }

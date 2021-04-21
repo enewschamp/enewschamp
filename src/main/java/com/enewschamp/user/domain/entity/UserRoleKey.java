@@ -18,13 +18,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Embeddable
 @MappedSuperclass
 public class UserRoleKey implements Serializable {
 
 	private static final long serialVersionUID = 3813939578047104408L;
-	
+
 	@Id
 	@NotNull
 	@Column(name = "UserId", length = ForeignKeyColumnLength.UserId)
@@ -33,7 +33,7 @@ public class UserRoleKey implements Serializable {
 	@Id
 	@NotNull
 	@Column(name = "RoleId", length = ForeignKeyColumnLength.RoleId)
-	private String roleId;	
+	private String roleId;
 
 	@Id
 	@NotNull

@@ -9,12 +9,13 @@ import org.springframework.data.repository.query.Param;
 
 import com.enewschamp.app.student.entity.StudentActivity;
 
-public interface StudentActivityRepository extends JpaRepository<StudentActivity, Long>{
+public interface StudentActivityRepository extends JpaRepository<StudentActivity, Long> {
 
 	@Query("select s from StudentActivity s where s.studentId = :studentId and s.newsArticleId = :newsArticleId and s.recordInUse = 'Y'")
-	public Optional<StudentActivity>  getStudentActivity(@Param("studentId") Long studentId, @Param("newsArticleId")  Long newsArticleId);
-	
+	public Optional<StudentActivity> getStudentActivity(@Param("studentId") Long studentId,
+			@Param("newsArticleId") Long newsArticleId);
+
 	@Query("select s from StudentActivity s where s.studentId = :studentId and s.saved = 'Y' and s.recordInUse = 'Y'")
-	public List<StudentActivity>  getSavedArticles(@Param("studentId") Long studentId);
-	
+	public List<StudentActivity> getSavedArticles(@Param("studentId") Long studentId);
+
 }

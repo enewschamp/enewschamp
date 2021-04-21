@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Embeddable
 @MappedSuperclass
 public class UserLeaveKey implements Serializable {
@@ -31,7 +31,6 @@ public class UserLeaveKey implements Serializable {
 	@Id
 	@NotNull
 	@Column(name = "StartDate")
-	private LocalDate startDate;	
-	
+	private LocalDate startDate;
 
 }

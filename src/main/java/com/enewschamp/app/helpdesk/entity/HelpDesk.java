@@ -18,57 +18,53 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name="HelpDesk")
-@EqualsAndHashCode(callSuper=false)
-public class HelpDesk extends BaseEntity{
-	
+@Table(name = "Helpdesk")
+@EqualsAndHashCode(callSuper = false)
+public class Helpdesk extends BaseEntity {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "request_id_generator")
-	@SequenceGenerator(name="request_id_generator", sequenceName = "request_id_seq", allocationSize=1)
-	@Column(name = "requestId", updatable = false, nullable = false)
-	private Long requestId;
-	
-	@NotNull
-	@Column(name = "studentId", length=10)
-	private Long studentId;
-	
-	@NotNull
-	@Column(name = "editionId", length=6)
-	private String editionId;
-	
-	
-	@NotNull
-	@Column(name = "categoryId", length=4)
-	private String categoryId;
-	
-	@NotNull
-	@Column(name = "details", length=399)
-	private String details;
-	
-	
-	@Column(name = "callbackRequest", length=1)
-	private String callbackRequest;
-	
-	@Column(name = "phoneNumber", length=15)
-	private String phoneNumber;
-	
-	@Column(name = "supportingComments", length=399)
-	private String supportingComments;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "helpdesk_id_generator")
+	@SequenceGenerator(name = "helpdesk_id_generator", sequenceName = "helpdesk_id_seq", allocationSize = 1)
+	@Column(name = "helpdeskId", updatable = false, nullable = false)
+	private Long helpdeskId;
 
-	@Column(name = "closeFlag", length=1)
+	@NotNull
+	@Column(name = "studentId", length = 100)
+	private Long studentId;
+
+	@NotNull
+	@Column(name = "editionId", length = 6)
+	private String editionId;
+
+	@NotNull
+	@Column(name = "categoryId", length = 4)
+	private String categoryId;
+
+	@NotNull
+	@Column(name = "details", length = 399)
+	private String details;
+
+	@Column(name = "phoneNumber", length = 15)
+	private String phoneNumber;
+
+	@Column(name = "supportUserId", length = 20)
+	private String supportUserId;
+
+	@Column(name = "supportComments", length = 399)
+	private String supportComments;
+
+	@Column(name = "closeFlag", length = 1)
 	private String closeFlag;
 
-	
-	@Column(name = "callBackTime")
-	private LocalDateTime callBackTime;
-	
-	
+	@Column(name = "callbackDateTime")
+	private LocalDateTime callbackDateTime;
+
 	@Column(name = "createDateTime")
 	private LocalDateTime createDateTime;
-	
+
 }

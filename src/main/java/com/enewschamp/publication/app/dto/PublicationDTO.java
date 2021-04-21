@@ -7,10 +7,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.enewschamp.app.common.MaintenanceDTO;
+import com.enewschamp.article.app.dto.NewsArticleDTO;
 import com.enewschamp.publication.domain.common.ForeignKeyColumnLength;
 import com.enewschamp.publication.domain.common.PublicationActionType;
-import com.enewschamp.publication.domain.common.PublicationRatingType;
 import com.enewschamp.publication.domain.common.PublicationStatusType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,53 +22,64 @@ public class PublicationDTO extends MaintenanceDTO {
 
 	private static final long serialVersionUID = -1938738416579485109L;
 
+	@JsonInclude
 	private Long publicationId;
-	
+
+	@JsonInclude
 	@NotNull
 	private Long publicationGroupId;
 
-	@NotNull
-	@Size(max = 6)
-	private String editionId;
-
+	@JsonInclude
 	@NotNull
 	private int readingLevel;
 
+	@JsonInclude
 	@NotNull
-	private LocalDate publishDate;
+	private LocalDate publicationDate;
 
+	@JsonInclude
+	@NotNull
+	private String readyForTest;
+
+	@JsonInclude
 	private PublicationStatusType status;
 
+	@JsonInclude
 	@Size(max = ForeignKeyColumnLength.UserId)
-	private String editorId;
+	private String editorWorked;
 
+	@JsonInclude
 	@Size(max = ForeignKeyColumnLength.UserId)
-	private String publisherId;
+	private String publisherWorked;
 
 	private String comments;
-	
-	private PublicationRatingType rating;
-	
+
+	@JsonInclude
+	private String rating;
+
+	@JsonInclude
 	@NotNull
 	private PublicationActionType currentAction;
 
-	private List<PublicationArticleLinkageDTO> articleLinkages;
-	
+	@JsonInclude
+	private List<NewsArticleDTO> newsArticles;
+
+	private List<NewsArticleDTO> newsArticlesLinked;
+
 	public PublicationDTO() {
 		super();
 	}
 
-	public PublicationDTO(Long publicationId, Long publicationGroupId, String editionId, int readingLevel, LocalDate publishDate,
-			PublicationStatusType status, String editorId, String publisherId) {
+	public PublicationDTO(Long publicationId, Long publicationGroupId, String editionId, int readingLevel,
+			LocalDate publicationDate, PublicationStatusType status, String editorWorked, String publisherWorked) {
 		super();
 		this.publicationId = publicationId;
 		this.publicationGroupId = publicationGroupId;
-		this.editionId = editionId;
 		this.readingLevel = readingLevel;
-		this.publishDate = publishDate;
+		this.publicationDate = publicationDate;
 		this.status = status;
-		this.editorId = editorId;
-		this.publisherId = publisherId;
+		this.editorWorked = editorWorked;
+		this.publisherWorked = publisherWorked;
 	}
 
 }

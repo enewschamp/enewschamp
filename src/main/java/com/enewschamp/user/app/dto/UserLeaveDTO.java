@@ -12,20 +12,20 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class UserLeaveDTO extends MaintenanceDTO {
-	
+
 	private static final long serialVersionUID = 2900828192606817270L;
 
 	private UserLeaveKeyDTO userLeaveKey;
 
 	@NotNull
 	private LocalDate endDate;
-	
+
 	private int numberOfDays;
-	
+
 	private LeaveApprovalStatus approvalStatus;
-	
+
 	@NotNull
 	private LocalDateTime applicationDateTime;
 

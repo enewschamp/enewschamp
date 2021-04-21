@@ -10,8 +10,9 @@ import org.springframework.data.repository.query.Param;
 import com.enewschamp.subscription.domain.entity.StudentSubscriptionWork;
 
 @JaversSpringDataAuditable
-public interface StudentSubscriptionWorkRepository extends JpaRepository<StudentSubscriptionWork, Long>{
+public interface StudentSubscriptionWorkRepository extends JpaRepository<StudentSubscriptionWork, Long> {
 
-	@Query("Select s from StudentSubscriptionWork s where s.studentID = :studentID and s.editionID= :editionID")
-	public Optional<StudentSubscriptionWork> getStudentByIdAndEdition(@Param("studentID") Long studentId, @Param("editionID") String editionID);
+	@Query("Select s from StudentSubscriptionWork s where s.studentId = :studentId and s.editionId= :editionId")
+	public Optional<StudentSubscriptionWork> getStudentByIdAndEdition(@Param("studentId") Long studentId,
+			@Param("editionId") String editionId);
 }

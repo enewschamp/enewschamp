@@ -23,27 +23,28 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "PublicationMonthlySummary", uniqueConstraints={@UniqueConstraint(columnNames = {"year", "month", "editionId", "genreId", "readingLevel"})})
+@Table(name = "PublicationMonthlySummary", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "year", "month", "editionId", "genreId", "readingLevel" }) })
 public class PublicationMonthlySummary extends TransactionEntity {
 
 	private static final long serialVersionUID = -7063853831579952336L;
-	
+
 	@Id
 	@Column(name = "RecordId", updatable = false, nullable = false)
 	private String recordId;
-	
+
 	@NotNull
 	@Column(name = "Year")
 	private int year = 0;
-	
+
 	@NotNull
 	@Column(name = "Month")
 	private int month = 0;
-	
+
 	@NotNull
 	@Column(name = "EditionId", length = ForeignKeyColumnLength.EditionId)
 	private String editionId;
-	
+
 	@NotNull
 	@Column(name = "GenreId", length = ForeignKeyColumnLength.GenreId)
 	private String genreId;
@@ -55,36 +56,37 @@ public class PublicationMonthlySummary extends TransactionEntity {
 	@NotNull
 	@Column(name = "NewsArticleCount")
 	private Long newsArticleCount = 0L;
-	
+
 	@NotNull
 	@Column(name = "QuizCount")
 	private Long quizCount = 0L;
-	
+
 	@NotNull
 	@Column(name = "LastUpdatedDateTime")
 	protected LocalDateTime lastUpdatedDateTime;
-	
+
 	public String getKeyAsString() {
 		return this.recordId;
 	}
-	
+
 	@PrePersist
 	@PreUpdate
 	public void prePersist() {
-		if(operationDateTime == null) {
-			operationDateTime = LocalDateTime.now();
-		}
-		if(lastUpdatedDateTime == null) {
-			lastUpdatedDateTime = LocalDateTime.now();
-		}
-		if(recordId == null) {
+		// if (operationDateTime == null) {
+		operationDateTime = LocalDateTime.now();
+		// }
+		// if (lastUpdatedDateTime == null) {
+		lastUpdatedDateTime = LocalDateTime.now();
+		// }
+		if (recordId == null) {
 			recordId = calculateRecordId();
 		}
 	}
-	
+
 	public String calculateRecordId() {
-		String hashString = year + StringUtils.leftPad(String.valueOf(month), 2, "0") + editionId + genreId + readingLevel;
+		String hashString = year + StringUtils.leftPad(String.valueOf(month), 2, "0") + editionId + genreId
+				+ readingLevel;
 		return DigestUtils.md5DigestAsHex(hashString.getBytes());
 	}
-	
+
 }

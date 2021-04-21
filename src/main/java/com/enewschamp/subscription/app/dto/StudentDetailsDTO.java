@@ -3,32 +3,45 @@ package com.enewschamp.subscription.app.dto;
 import java.time.LocalDate;
 
 import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.domain.common.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class StudentDetailsDTO extends AbstractDTO{
+@EqualsAndHashCode(callSuper = false)
+public class StudentDetailsDTO extends BaseEntity {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Long studentID= 0L;
+	@JsonInclude
+	private Long studentId = 0L;
+
+	@JsonInclude
 	private String emailId;
 
+	@JsonInclude
 	private String name;
+
+	@JsonInclude
 	private String surname;
-	
-	private String otherName;
+
+	@JsonInclude
+	private String otherNames;
+
+	@JsonInclude
 	private String gender;
-	private LocalDate dob;
-	
+
+	@JsonInclude
+	private LocalDate doB;
+
+	@JsonInclude
 	private String mobileNumber;
-	
-	private String photo;
-	
-	private Long avtarID;
+
+	@JsonInclude
+	private String approvalRequired;
 }

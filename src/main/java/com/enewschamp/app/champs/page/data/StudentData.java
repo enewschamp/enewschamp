@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class StudentData implements Serializable{
+public class StudentData implements Serializable {
 
 	/**
 	 * 
@@ -19,6 +19,5 @@ public class StudentData implements Serializable{
 	private String grade;
 	private String school;
 	private String city;
-	
-	
+
 }

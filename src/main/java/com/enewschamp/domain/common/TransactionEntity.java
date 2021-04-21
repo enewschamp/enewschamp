@@ -1,7 +1,5 @@
 package com.enewschamp.domain.common;
 
-
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -19,12 +17,12 @@ import lombok.Data;
 
 @MappedSuperclass
 @Data
-public abstract class TransactionEntity implements IEntity, Serializable{
+public abstract class TransactionEntity implements IEntity, Serializable {
 
 	private static final long serialVersionUID = -3997401196327905892L;
 
 	@NotNull
-	@Column(name = "OperatorId", length=ForeignKeyColumnLength.UserId)
+	@Column(name = "OperatorId", length = ForeignKeyColumnLength.UserId)
 	@DiffIgnore
 	protected String operatorId;
 
@@ -32,15 +30,15 @@ public abstract class TransactionEntity implements IEntity, Serializable{
 	@Column(name = "OperationDateTime")
 	@DiffIgnore
 	protected LocalDateTime operationDateTime;
-	
+
 	@PrePersist
 	@PreUpdate
 	public void prePersist() {
-		if(operationDateTime == null) {
-			operationDateTime = LocalDateTime.now();
-		}
+		// if (operationDateTime == null) {
+		operationDateTime = LocalDateTime.now();
+		// }
 	}
-	
+
 	public String getKeyAsString() {
 		return "";
 	};

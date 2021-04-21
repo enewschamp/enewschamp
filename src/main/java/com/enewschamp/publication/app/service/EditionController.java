@@ -29,11 +29,11 @@ public class EditionController {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	private EditionService editionService;
 
-	@PostMapping(value = "/editions")
+	@PostMapping(value = "/admin/editions")
 	public ResponseEntity<EditionDTO> create(@RequestBody @Valid EditionDTO editionDTO) {
 		Edition edition = modelMapper.map(editionDTO, Edition.class);
 		edition = editionService.create(edition);
@@ -41,16 +41,17 @@ public class EditionController {
 		return new ResponseEntity<EditionDTO>(editionDTO, HttpStatus.CREATED);
 	}
 
-	@PutMapping(value = "/editions/{editionId}")
-	public ResponseEntity<EditionDTO> update(@RequestBody @Valid EditionDTO editionDTO, @PathVariable String editionId) {
+	@PutMapping(value = "/admin/editions/{editionId}")
+	public ResponseEntity<EditionDTO> update(@RequestBody @Valid EditionDTO editionDTO,
+			@PathVariable String editionId) {
 		editionDTO.setEditionId(editionId);
 		Edition edition = modelMapper.map(editionDTO, Edition.class);
 		edition = editionService.update(edition);
 		editionDTO = modelMapper.map(edition, EditionDTO.class);
 		return new ResponseEntity<EditionDTO>(editionDTO, HttpStatus.OK);
 	}
-	
-	@PatchMapping(value = "/editions/{editionId}")
+
+	@PatchMapping(value = "/admin/editions/{editionId}")
 	public ResponseEntity<EditionDTO> patch(@RequestBody EditionDTO editionDTO, @PathVariable String editionId) {
 		editionDTO.setEditionId(editionId);
 		Edition edition = modelMapper.map(editionDTO, Edition.class);
@@ -58,27 +59,25 @@ public class EditionController {
 		editionDTO = modelMapper.map(edition, EditionDTO.class);
 		return new ResponseEntity<EditionDTO>(editionDTO, HttpStatus.OK);
 	}
-	
-	@DeleteMapping(value = "/editions/{editionId}")
+
+	@DeleteMapping(value = "/admin/editions/{editionId}")
 	public ResponseEntity<Void> delete(@PathVariable String editionId) {
 		editionService.delete(editionId);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
-	@GetMapping(value = "/editions/{editionId}")
+
+	@GetMapping(value = "/admin/editions/{editionId}")
 	public ResponseEntity<EditionDTO> get(@PathVariable String editionId) {
 		Edition edition = editionService.get(editionId);
 		EditionDTO editionDTO = modelMapper.map(edition, EditionDTO.class);
 		editionService.get(editionId);
 		return new ResponseEntity<EditionDTO>(editionDTO, HttpStatus.OK);
 	}
-	
-	@GetMapping(value = "/editions/{editionId}/audit")
+
+	@GetMapping(value = "/admin/editions/{editionId}/audit")
 	public ResponseEntity<String> getAudit(@PathVariable String editionId) {
 		String audit = editionService.getAudit(editionId);
 		return new ResponseEntity<String>(audit, HttpStatus.OK);
 	}
-	
-	
 
 }

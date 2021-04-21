@@ -1,30 +1,31 @@
 package com.enewschamp.publication.app.dto;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.enewschamp.app.common.MaintenanceDTO;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class GenreDTO extends MaintenanceDTO {
 
 	private static final long serialVersionUID = -3428291258057090659L;
 
+	private Long genreId;
+
 	@NotNull
-	@Size(min=1, max=12)
-	private String genreId;
-	
-	@NotNull
-	private Long nameId;
-	
-	@NotNull
-	@Size(min=1, max=200)
-	private String imagePath;
-	
-	private String genreName;
-	
+	private String nameId;
+
+	private String base64Image;
+
+	private String imageTypeExt = "jpg";
+
+	@JsonInclude
+	private String imageName;
+
+	private String imageUpdate;
+
 }

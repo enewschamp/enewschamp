@@ -8,15 +8,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class ListOfValuesItem implements Serializable {
-	
+
 	private static final long serialVersionUID = -7125303529322853135L;
 
 	@NotNull
 	private String name;
-	
+
 	@NotNull
 	private String id;
+
+	@NotNull
+	private String isActive;
 
 }

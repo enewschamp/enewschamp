@@ -1,18 +1,18 @@
 package com.enewschamp.subscription.app.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class StudentSubscriptionDTO extends AbstractDTO{
+@EqualsAndHashCode(callSuper = false)
+public class StudentSubscriptionDTO extends BaseEntity {
 
 	/**
 	 * 
@@ -20,28 +20,35 @@ public class StudentSubscriptionDTO extends AbstractDTO{
 	private static final long serialVersionUID = 1L;
 
 	@NotNull
-	@Size(max=10)
-	private long studentID = 0L;
-	
-	@NotNull
-	@Size(max=6)
-	private String editionID ;
-	
-	@NotNull
-	@Size(max=1)
-	private String subscriptionSelected;
-	
-	@NotNull
-	private Date startDate;
-	
-	@NotNull
-	private Date endDate;
-	
-	@NotNull
-	@Size(max=1)
-	private String autoRenewal;
-	
-	
+	@Size(max = 10)
+	private Long studentId = 0L;
 
-	
+	@NotNull
+	@Size(max = 6)
+	private String editionId;
+
+	@NotNull
+	@Size(max = 1)
+	private String subscriptionSelected;
+
+	private String subscriptionPeriod;
+
+	private LocalDate startDate;
+
+	private LocalDate endDate;
+
+	private String autoRenewal;
+
+	private String orderId;
+
+	private String subscriptionId;
+
+	private String subscriptionAmountType;
+
+	private String subscriptionFrequency;
+
+	private String subscriptionFrequencyUnit;
+
+	private String subscriptionExpiryDate;
+
 }

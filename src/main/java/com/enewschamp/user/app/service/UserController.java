@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enewschamp.app.common.CommonService;
+import com.enewschamp.app.common.PropertyConstants;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.user.app.dto.UserDTO;
 import com.enewschamp.user.domain.entity.User;
 import com.enewschamp.user.domain.service.UserService;
@@ -29,28 +32,81 @@ public class UserController {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	private UserService userService;
 
-	@PostMapping(value = "/users")
+	@Autowired
+	CommonService commonService;
+
+	@Autowired
+	private PropertiesBackendService propertiesService;
+
+	@PostMapping(value = "/admin/users")
 	public ResponseEntity<UserDTO> create(@RequestBody @Valid UserDTO userDTO) {
+		if (userDTO.getTheme() == null || "".equals(userDTO.getTheme())) {
+			userDTO.setTheme(propertiesService.getValue("Admin", PropertyConstants.PUBLISHER_DEFAULT_THEME));
+		}
 		User user = modelMapper.map(userDTO, User.class);
 		user = userService.create(user);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(userDTO.getImageUpdate())) {
+			String newImageName = user.getUserId() + "_" + System.currentTimeMillis();
+			String imageType = userDTO.getImageTypeExt();
+			String currentImageName = user.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "user", imageType, userDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				user.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				user.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "user", currentImageName);
+				updateFlag = true;
+			}
+		}
+		if (updateFlag) {
+			user = userService.update(user);
+		}
 		userDTO = modelMapper.map(user, UserDTO.class);
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.CREATED);
 	}
 
-	@PutMapping(value = "/users/{userId}")
+	@PutMapping(value = "/admin/users/{userId}")
 	public ResponseEntity<UserDTO> update(@RequestBody @Valid UserDTO userDTO, @PathVariable String userId) {
 		userDTO.setUserId(userId);
 		User user = modelMapper.map(userDTO, User.class);
 		user = userService.update(user);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(userDTO.getImageUpdate())) {
+			String newImageName = user.getUserId() + "_" + System.currentTimeMillis();
+			String imageType = userDTO.getImageTypeExt();
+			String currentImageName = user.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "user", imageType, userDTO.getBase64Image(),
+					newImageName);
+			if (saveImageFlag) {
+				user.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				user.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "user", currentImageName);
+				updateFlag = true;
+			}
+		}
+		if (updateFlag) {
+			user = userService.update(user);
+		}
 		userDTO = modelMapper.map(user, UserDTO.class);
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
-	
-	@PatchMapping(value = "/users/{userId}")
+
+	@PatchMapping(value = "/admin/users/{userId}")
 	public ResponseEntity<UserDTO> patch(@RequestBody UserDTO userDTO, @PathVariable String userId) {
 		userDTO.setUserId(userId);
 		User user = modelMapper.map(userDTO, User.class);
@@ -58,14 +114,14 @@ public class UserController {
 		userDTO = modelMapper.map(user, UserDTO.class);
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
-	
-	@DeleteMapping(value = "/users/{userId}")
+
+	@DeleteMapping(value = "/admin/users/{userId}")
 	public ResponseEntity<Void> delete(@PathVariable String userId) {
 		userService.delete(userId);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
-	@GetMapping(value = "/users/{userId}")
+
+	@GetMapping(value = "/admin/users/{userId}")
 	public ResponseEntity<UserDTO> get(@PathVariable String userId) {
 		User user = userService.load(userId);
 		UserDTO userDTO = modelMapper.map(user, UserDTO.class);
@@ -73,13 +129,11 @@ public class UserController {
 		userDTO = modelMapper.map(user, UserDTO.class);
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
-	
-	@GetMapping(value = "/users/{userId}/audit")
+
+	@GetMapping(value = "/admin/users/{userId}/audit")
 	public ResponseEntity<String> getAudit(@PathVariable String userId) {
 		String audit = userService.getAudit(userId);
 		return new ResponseEntity<String>(audit, HttpStatus.OK);
 	}
-	
-	
 
 }

@@ -11,13 +11,14 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class CommentsAuditPageData extends PageData {
 
-
 	private static final long serialVersionUID = 8861564911059174596L;
 
 	private Long newsArticleGroupId;
-	
+
+	private Long newsArticleId;
+
 	private Long publicationId;
-	
+
 	private List<PropertyAuditData> previousComments;
-	
+
 }

@@ -10,8 +10,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class IndividualPricingDTO extends BaseEntity{
+@EqualsAndHashCode(callSuper = false)
+public class IndividualPricingDTO extends BaseEntity {
 
 	/**
 	 * 
@@ -22,18 +22,10 @@ public class IndividualPricingDTO extends BaseEntity{
 
 	@NotNull
 	private String editionId;
-	
+
 	@NotNull
 	private LocalDate effectiveDate;
-	
-	private String feeCurrency;
-	
-	private String feeMonthly;
-	
-	private String feeQuarterly;
-	
-	private String feeHalfYearly;
-	
-	private String feeYearly;
-	
+
+	private String pricingDetails;
+
 }

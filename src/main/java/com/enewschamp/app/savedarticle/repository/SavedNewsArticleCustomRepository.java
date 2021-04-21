@@ -4,12 +4,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.enewschamp.app.savedarticle.dto.SavedNewsArticleSearchRequest;
-import com.enewschamp.app.savedarticle.dto.SavedNewsArticleSummaryDTO;
+import com.enewschamp.article.app.dto.NewsArticleSummaryDTO;
+import com.enewschamp.opinions.page.dto.OpinionsSearchRequest;
 
-public interface SavedNewsArticleCustomRepository{
+public interface SavedNewsArticleCustomRepository {
 
-	
-	public Page<SavedNewsArticleSummaryDTO> findArticles(SavedNewsArticleSearchRequest searchRequest, Pageable pageable);
-	public Page<SavedNewsArticleSummaryDTO> findArticlesWithOpinions(SavedNewsArticleSearchRequest searchRequest, Pageable pageable);
+	public Page<NewsArticleSummaryDTO> findArticles(SavedNewsArticleSearchRequest searchRequest, Pageable pageable);
+
+	public Page<NewsArticleSummaryDTO> findArticlesWithOpinions(OpinionsSearchRequest searchRequest, Pageable pageable);
 
 }

@@ -1,26 +1,34 @@
 package com.enewschamp.app.champs.page.handler;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.champs.page.data.ChampsPageData;
 import com.enewschamp.app.champs.page.data.ChampsSearchData;
-import com.enewschamp.app.common.ErrorCodes;
+import com.enewschamp.app.common.CommonFilterData;
+import com.enewschamp.app.common.CommonService;
+import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
-import com.enewschamp.app.fw.page.navigation.common.PageAction;
+import com.enewschamp.app.common.PaginationData;
+import com.enewschamp.app.common.PropertyConstants;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.app.student.dto.ChampStudentDTO;
 import com.enewschamp.app.student.service.StudentChampService;
+import com.enewschamp.common.domain.service.PropertiesBackendService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.subscription.app.dto.StudentPreferencesDTO;
 import com.enewschamp.subscription.domain.business.PreferenceBusiness;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -28,133 +36,124 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "ChampsPageHandler")
-public class ChampsPageHandler implements IPageHandler{
+public class ChampsPageHandler implements IPageHandler {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	ObjectMapper objectMapper;
-	
+
 	@Autowired
 	StudentChampService studentChampService;
-	
+
 	@Autowired
 	StudentControlBusiness studentControlBusiness;
 	@Autowired
 	PreferenceBusiness preferenceBusiness;
-	
+
+	@Autowired
+	CommonService commonService;
+
+	@Autowired
+	private PropertiesBackendService propertiesService;
+
 	@Override
-	public PageDTO handleAction(String actionName, PageRequestDTO pageRequest) {
+	public PageDTO handleAction(PageRequestDTO pageRequest) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
+		String methodName = pageNavigationContext.getLoadMethod();
+		if (methodName != null && !"".equals(methodName)) {
+			Class[] params = new Class[1];
+			params[0] = PageNavigationContext.class;
+			Method m = null;
+			try {
+				m = this.getClass().getDeclaredMethod(methodName, params);
+				return (PageDTO) m.invoke(this, pageNavigationContext);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				if (e.getCause() instanceof BusinessException) {
+					throw ((BusinessException) e.getCause());
+				} else {
+					throw new BusinessException(ErrorCodeConstants.RUNTIME_EXCEPTION, ExceptionUtils.getStackTrace(e));
+				}
+			} catch (NoSuchMethodException nsmEx) {
+				nsmEx.printStackTrace();
+			} catch (SecurityException seEx) {
+				seEx.printStackTrace();
+			}
+		}
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setHeader(pageNavigationContext.getPageRequest().getHeader());
+		return pageDTO;
+	}
 
+	public PageDTO loadChampsPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String action = pageNavigationContext.getActionName();
-		String eMailId = pageNavigationContext.getPageRequest().getHeader().getEmailID();
-		int pageNo = pageNavigationContext.getPageRequest().getHeader().getPageNo();
-		
-		ChampsSearchData searchData = new ChampsSearchData();
-		
-		try {
-			searchData = objectMapper.readValue(pageNavigationContext.getPageRequest().getData().toString(), ChampsSearchData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		ChampsPageData pageData = (ChampsPageData) commonService.mapPageData(ChampsPageData.class,
+				pageNavigationContext.getPageRequest());
+		int pageNo = 1;
+		int pageSize = Integer.valueOf(propertiesService
+				.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(), PropertyConstants.PAGE_SIZE));
+		if (pageData.getPagination() != null) {
+			pageNo = pageData.getPagination().getPageNumber() > 0 ? pageData.getPagination().getPageNumber() : 1;
+			pageSize = pageData.getPagination().getPageSize() > 0 ? pageData.getPagination().getPageSize()
+					: Integer.valueOf(
+							propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),
+									PropertyConstants.PAGE_SIZE));
+		} else {
+			PaginationData paginationData = new PaginationData();
+			paginationData.setPageNumber(pageNo);
+			paginationData.setPageSize(pageSize);
+			pageData.setPagination(paginationData);
 		}
-		
-		if(PageAction.Champs.toString().equalsIgnoreCase(action))
-		{
-			Long studentId = studentControlBusiness.getStudentId(eMailId);
-			if (studentId == null || studentId == 0L) {
-				throw new BusinessException(ErrorCodes.STUDENT_DTLS_NOT_FOUND);
+		ChampsSearchData champsSearchData = new ChampsSearchData();
+		CommonFilterData filterData = pageData.getFilter();
+		if (filterData != null) {
+			if (filterData.getYearMonth() == null || "".equals(filterData.getYearMonth())) {
+				LocalDate currdate = LocalDate.now();
+				int month = currdate.getMonthValue();
+				String monthStr = (month < 10) ? "0" + month : "" + month;
+				int year = currdate.getYear();
+				String newYearMonth = year + monthStr;
+				filterData.setYearMonth(newYearMonth);
 			}
-			StudentPreferencesDTO studPref = preferenceBusiness.getPreferenceFromMaster(studentId);
-			searchData.setReadingLevel(studPref.getReadingLevel());
-			//set month year to last Month..
-			LocalDate currdate = LocalDate.now();
-			LocalDate prevMonth = currdate.minusMonths(1);
-			int month = prevMonth.getMonthValue();
-			String monthStr = (month<10) ? "0"+month :""+month;
-			
-			int year = prevMonth.getYear();
-			String newYearMonth = year+monthStr;
-			searchData.setMonthYear(newYearMonth);
-			
+			champsSearchData.setYearMonth(filterData.getYearMonth());
+			champsSearchData.setReadingLevel(filterData.getReadingLevel());
+		} else {
+			champsSearchData.setReadingLevel("3");
 		}
-		if(PageAction.Level1.toString().equalsIgnoreCase(action))
-		{
-			searchData.setReadingLevel("1");
-			LocalDate currdate = LocalDate.now();
-			int month = currdate.getMonthValue();
-			String monthStr = (month<10) ? "0"+month :""+month;
-			int year = currdate.getYear();
-			String newYearMonth = year+monthStr;
-			searchData.setMonthYear(newYearMonth);
-			
+		Page<ChampStudentDTO> pageResult = studentChampService.findChampStudents(champsSearchData, pageNo, pageSize);
+		if (pageResult == null || pageResult.isLast()) {
+			pageData.getPagination().setIsLastPage("Y");
+		} else {
+			pageData.getPagination().setIsLastPage("N");
 		}
-		if(PageAction.Level2.toString().equalsIgnoreCase(action))
-		{
-			searchData.setReadingLevel("2");
-			LocalDate currdate = LocalDate.now();
-			int month = currdate.getMonthValue();
-			String monthStr = (month<10) ? "0"+month :""+month;
-			int year = currdate.getYear();
-			String newYearMonth = year+monthStr;
-			searchData.setMonthYear(newYearMonth);
-
+		List<ChampStudentDTO> champList = new ArrayList<ChampStudentDTO>();
+		if (pageResult != null && !pageResult.isEmpty()) {
+			champList = pageResult.getContent();
 		}
-		if(PageAction.Level3.toString().equalsIgnoreCase(action))
-		{
-			searchData.setReadingLevel("3");
-			LocalDate currdate = LocalDate.now();
-			int month = currdate.getMonthValue();
-			String monthStr = (month<10) ? "0"+month :""+month;
-			int year = currdate.getYear();
-			String newYearMonth = year+monthStr;
-			searchData.setMonthYear(newYearMonth);
-
+		if (champList == null || champList.size() == 0) {
+			pageData.getPagination().setPageNumber(-1);
 		}
-		if(PageAction.next.toString().equalsIgnoreCase(action) || PageAction.LeftSwipe.toString().equalsIgnoreCase(action))
-		{
-			pageNo ++;
-		}
-		if(PageAction.previous.toString().equalsIgnoreCase(action)  || PageAction.RightSwipe.toString().equalsIgnoreCase(action))
-		{
-			if(pageNo>1)
-			pageNo--;
-		}
-		
-		List<ChampStudentDTO> champList = studentChampService.findChampStudents(searchData,pageNo);
-		//List<ChampStudentDTO> champList = studentChampService.findChampions(searchRequest)(searchData);
-		ChampsPageData pageData = new ChampsPageData();
 		pageData.setChamps(champList);
-		pageData.setMonthYear(searchData.getMonthYear());
-		pageData.setReadingLevel(searchData.getReadingLevel());
-		pageData.setPageNo(pageNo++);
+		pageData.setFilter(filterData);
 		pageDto.setData(pageData);
-		
 		return pageDto;
 	}
 
 	@Override
-	public PageDTO saveAsMaster(String actionName, PageRequestDTO pageRequest) {
-		// TODO Auto-generated method stub
+	public PageDTO saveAsMaster(PageRequestDTO pageRequest) {
 		return null;
 	}
 
 	@Override
-	public PageDTO handleAppAction(String actionName, PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
-		// TODO Auto-generated method stub
-		return null;
+	public PageDTO handleAppAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
+		PageDTO pageDto = new PageDTO();
+		return pageDto;
 	}
-
 }

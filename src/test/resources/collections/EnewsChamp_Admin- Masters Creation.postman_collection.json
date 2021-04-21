@@ -1,0 +1,526 @@
+{
+	"info": {
+		"_postman_id": "af62c9ed-c51e-4d4e-a99e-622850b348ff",
+		"name": "EnewsChamp_Admin- Masters Creation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "appName",
+								"value": "{{adminAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "{{adminAppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{userId}}\",\n    \"title\": \"{{title}}\",\n    \"name\": \"{{name}}\",\n    \"surname\": \"{{surname}}\",\n    \"gender\": \"{{gender}}\",\n    \"doB\": \"{{dob}}\",\n    \"contractStartDate\": \"{{contractStartDate}}\",\n    \"contractEndDate\": \"{{contractEndDate}}\",\n    \"mobileNumber1\": \"{{mobileNumber1}}\",\n    \"emailId1\": \"{{emailId1}}\",\n    \"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayu\",\n    \"password\": \"{{password}}\",\n    \"base64Image\": \"{{base64Image}}\",\n    \"imageTypeExt\": \"{{imageTypeExt}}\",\n    \"theme\": \"{{theme}}\",\n    \"fontHeight\": \"{{fontHeight}}\"\n}"
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/users",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Create Roles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "appName",
+								"value": "{{adminAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "{{adminAppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"userRoleKey\": {\n\t\t\"userId\":\"{{userId}}\",\n\t\t\"roleId\":\"{{roleId}}\",\n\t\t\"dayOfTheWeek\": \"{{day}}\"\n\t},\n\t\"contribution\":10,\n\t\"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayus\"\n}"
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/users/{{userId}}/roles",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Avatars",
+			"item": [
+				{
+					"name": "Create Avatar",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "appName",
+								"value": "{{adminAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "{{adminAppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nameId\": \"{{text}}\",\n    \"gender\": \"{{gender}}\",\n    \"readingLevel\": \"{{readingLevel}}\",\n    \"base64Image\": \"{{base64Image}}\",\n    \"imageTypeExt\": \"{{imageTypeExt}}\",\n    \"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayus\"\n}"
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/avatars",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"avatars"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Genres",
+			"item": [
+				{
+					"name": "Create Genre",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "appName",
+								"value": "{{adminAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "{{adminAppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nameId\": \"{{text}}\",\n    \"base64Image\": \"{{base64Image}}\",\n    \"imageTypeExt\": \"{{imageTypeExt}}\",\n    \"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayus\"\n}"
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/genres",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"genres"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "HashTags",
+			"item": [
+				{
+					"name": "Create HashTag",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "appName",
+								"value": "{{adminAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "{{adminAppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"hashTag\":\"{{text}}\",\n\t\"genreId\":\"{{genreId}}\",\n\t\"languageId\":\"{{languageId}}\",\n\t\"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayus\"\n}"
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/hashTags",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"hashTags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify HashTag",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "appName",
+								"value": "{{adminAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "{{adminAppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"hashTag\":\"test7\",\n\t\"genreId\":\"SCIENCE\",\n\t\"languageId\":\"ENG\",\n\t\"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayus\"\n}"
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/hashTags/test7",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"hashTags",
+								"test7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete HashTag",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "appName",
+								"type": "text",
+								"value": "{{adminAppName}}"
+							},
+							{
+								"key": "appKey",
+								"type": "text",
+								"value": "{{adminAppKey}}"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/hashTags/test7",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"hashTags",
+								"test7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Badges",
+			"item": [
+				{
+					"name": "Create Badge",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "appName",
+								"type": "text",
+								"value": "{{adminAppName}}"
+							},
+							{
+								"key": "appKey",
+								"type": "text",
+								"value": "{{adminAppKey}}"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nameId\": \"{{text}}\",\n    \"base64Image\": \"{{base64Image}}\",\n    \"imageTypeExt\": \"{{imageTypeExt}}\",\n    \"genreId\": \"{{genreId}}\",\n    \"monthlyPointsToScore\": {{monthlyPointsToScore}},\n    \"editionId\": \"{{editionId}}\",\n    \"readingLevel\": {{readingLevel}},\n    \"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayus\"\n}"
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/badges",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"badges"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Editions",
+			"item": [
+				{
+					"name": "Create Edition",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "appName",
+								"value": "{{adminAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "appKey",
+								"value": "{{adminAppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "module",
+								"value": "{{adminModuleName}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"editionId\":\"{{editionId}}\",\n\t\"editionName\":\"{{editionName}}\",\n\t\"languageId\":{{languageId}},\n\t\"recordInUse\": \"Y\",\n    \"operatorId\": \"mesmayus\"\n}"
+						},
+						"url": {
+							"raw": "{{admin-endpoint-url}}/editions",
+							"host": [
+								"{{admin-endpoint-url}}"
+							],
+							"path": [
+								"editions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

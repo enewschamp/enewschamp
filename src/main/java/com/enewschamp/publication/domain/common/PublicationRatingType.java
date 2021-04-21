@@ -2,14 +2,10 @@ package com.enewschamp.publication.domain.common;
 
 public enum PublicationRatingType {
 
-	Rating1(1),
-	Rating2(2),
-	Rating3(3),
-	Rating4(4),
-	Rating5(5);
-	
+	Rating1(1), Rating2(2), Rating3(3), Rating4(4), Rating5(5);
+
 	private Integer value;
-	
+
 	private PublicationRatingType(Integer value) {
 
 		this.value = 0;
@@ -28,7 +24,7 @@ public enum PublicationRatingType {
 
 		PublicationRatingType type = null;
 		for (PublicationRatingType ratingType : PublicationRatingType.values()) {
-			if(ratingType.toString().equals(String.valueOf(value))) {
+			if (ratingType.toString().equals(String.valueOf(value))) {
 				type = ratingType;
 				break;
 			}

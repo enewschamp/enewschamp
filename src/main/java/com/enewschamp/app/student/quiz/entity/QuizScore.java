@@ -16,36 +16,33 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name="QuizScore")
-@EqualsAndHashCode(callSuper=false)
-public class QuizScore extends BaseEntity{
-	
+@Table(name = "QuizScore")
+@EqualsAndHashCode(callSuper = false)
+public class QuizScore extends BaseEntity {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "StudentActivity_id_generator")
-	@SequenceGenerator(name="quizScoreId_id_generator", sequenceName = "studentActivity_seq", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_score_id_generator")
+	@SequenceGenerator(name = "quiz_score_id_generator", sequenceName = "quiz_score_id_seq", allocationSize = 1)
 	@Column(name = "quizScoreId", updatable = false, nullable = false)
 	private Long quizScoreId;
-	
+
 	@NotNull
-	@Column(name = "studentId", length=10)
+	@Column(name = "studentId", length = 100)
 	private Long studentId;
-	
+
 	@NotNull
-	@Column(name = "NewsArticleQuizId", length=10)
+	@Column(name = "newsArticleQuizId", length = 10)
 	private Long newsArticleQuizId;
-	
-	@Column(name = "response", length=1)
+
+	@Column(name = "response", length = 1)
 	private Long response;
-	
-	@Column(name = "responseCorrect", length=1)
+
+	@Column(name = "responseCorrect", length = 1)
 	private String responseCorrect;
-	
-	
-	
-	
+
 }

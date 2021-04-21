@@ -5,11 +5,9 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public final class FaultManager {
 
-
 	private static final long serialVersionUID = 2017344958429707915L;
-	
-	private final String errorCode;
 
+	private final String errorCode;
 
 	public FaultManager(final String errorCode) {
 		this.errorCode = errorCode;
@@ -18,7 +16,5 @@ public final class FaultManager {
 	public String getErrorCode() {
 		return errorCode;
 	}
-	
-
 
 }

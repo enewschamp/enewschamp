@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class UserRoleKeyDTO implements Serializable {
 
 	private static final long serialVersionUID = 833455749882062454L;
@@ -23,7 +23,7 @@ public class UserRoleKeyDTO implements Serializable {
 
 	@NotNull
 	@Size(max = ForeignKeyColumnLength.RoleId)
-	private String roleId;	
+	private String roleId;
 
 	@NotNull
 	private WeekDayType dayOfTheWeek;

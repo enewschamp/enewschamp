@@ -1,20 +1,26 @@
 package com.enewschamp.app.menu.page.data;
 
 import com.enewschamp.app.common.PageData;
+import com.enewschamp.subscription.app.dto.MyPicturePageData;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class MenuPageData extends PageData{/**
-	 * 
-	 */
+@EqualsAndHashCode(callSuper = false)
+public class MenuPageData extends PageData {
+	/**
+	* 
+	*/
 	private static final long serialVersionUID = 1L;
 
-	
-	private String premiumSubsMsg;
+	@JsonInclude
 	private String name;
+
+	@JsonInclude
 	private String surname;
-	private String picImage;
+
+	@JsonInclude
+	private MyPicturePageData myPicture;
 }

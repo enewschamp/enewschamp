@@ -5,7 +5,8 @@ import lombok.Data;
 @Data
 public class SchoolDetailsRequestData {
 
-	private String countryID;
-	private String stateID;
-	private String cityID;
+	private String country;
+	private String state;
+	private String city;
+	private String schoolProgramCode;
 }

@@ -1,34 +1,24 @@
 package com.enewschamp.subscription.app.dto;
 
-import com.enewschamp.app.common.AbstractDTO;
+import com.enewschamp.domain.common.BaseEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class StudentControlDTO extends AbstractDTO {
+@EqualsAndHashCode(callSuper = false)
+public class StudentControlDTO extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
-	private Long studentID= 0L;
-	
-	private String emailID;
-	
+	private Long studentId;
+	private String emailId;
 	private String studentDetails;
-	
-	private String studentPhoto;
 	private String schoolDetails;
-	
 	private String subscriptionType;
-	
 	private String preferences;
-	
-	private String emailVerified;
-	
+	private String emailIdVerified;
 	private String evalAvailed;
-	
 	private Long boUserComments;
-	
 	private Long boAuthComments;
-	
+
 }

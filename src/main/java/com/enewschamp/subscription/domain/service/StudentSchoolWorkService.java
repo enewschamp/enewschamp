@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.enewschamp.app.common.ErrorCodes;
 import com.enewschamp.audit.domain.AuditService;
-import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentSchoolWork;
 import com.enewschamp.subscription.domain.repository.StudentSchoolWorkRepository;
 
@@ -17,50 +15,57 @@ import com.enewschamp.subscription.domain.repository.StudentSchoolWorkRepository
 public class StudentSchoolWorkService {
 	@Autowired
 	StudentSchoolWorkRepository repository;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
-	
+
 	@Autowired
 	AuditService auditService;
-	
-	public StudentSchoolWork create(StudentSchoolWork StudentSchoolWork)
-	{
+
+	public StudentSchoolWork create(StudentSchoolWork StudentSchoolWork) {
 		return repository.save(StudentSchoolWork);
 	}
-	
+
 	public StudentSchoolWork update(StudentSchoolWork StudentSchoolWork) {
-		Long studentId = StudentSchoolWork.getStudentID();
-		
+		Long studentId = StudentSchoolWork.getStudentId();
+
 		StudentSchoolWork existingEntity = get(studentId);
 		modelMapper.map(StudentSchoolWork, existingEntity);
 		return repository.save(existingEntity);
 	}
+
 	public StudentSchoolWork patch(StudentSchoolWork StudentSchoolWork) {
-		Long studentId = StudentSchoolWork.getStudentID();
+		Long studentId = StudentSchoolWork.getStudentId();
 
 		StudentSchoolWork existingEntity = get(studentId);
 		modelMapperForPatch.map(StudentSchoolWork, existingEntity);
 		return repository.save(existingEntity);
 	}
-	
+
 	public StudentSchoolWork get(Long studentId) {
 		Optional<StudentSchoolWork> existingEntity = repository.findById(studentId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodes.STUDENT_DTLS_NOT_FOUND);
+			return null;
 		}
 	}
-	
+
 	public String getAudit(Long studentId) {
 		StudentSchoolWork StudentSchoolWork = new StudentSchoolWork();
-		StudentSchoolWork.setStudentID(studentId);
+		StudentSchoolWork.setStudentId(studentId);
 		return auditService.getEntityAudit(StudentSchoolWork);
 	}
-	
+
+	public void delete(Long studentId) {
+		Optional<StudentSchoolWork> existingEntity = repository.findById(studentId);
+		if (existingEntity.isPresent()) {
+			repository.deleteById(studentId);
+		}
+	}
+
 }

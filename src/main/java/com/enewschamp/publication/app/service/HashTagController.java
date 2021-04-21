@@ -29,11 +29,11 @@ public class HashTagController {
 
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	private HashTagService hashTagService;
 
-	@PostMapping(value = "/hashTags")
+	@PostMapping(value = "/admin/hashTags")
 	public ResponseEntity<HashTagDTO> create(@RequestBody @Valid HashTagDTO hashTagDTO) {
 		HashTag hashTag = modelMapper.map(hashTagDTO, HashTag.class);
 		hashTag = hashTagService.create(hashTag);
@@ -41,16 +41,17 @@ public class HashTagController {
 		return new ResponseEntity<HashTagDTO>(hashTagDTO, HttpStatus.CREATED);
 	}
 
-	@PutMapping(value = "/hashTags/{hashTagId}")
-	public ResponseEntity<HashTagDTO> update(@RequestBody @Valid HashTagDTO hashTagDTO, @PathVariable String hashTagId) {
+	@PutMapping(value = "/admin/hashTags/{hashTagId}")
+	public ResponseEntity<HashTagDTO> update(@RequestBody @Valid HashTagDTO hashTagDTO,
+			@PathVariable String hashTagId) {
 		hashTagDTO.setHashTag(hashTagId);
 		HashTag hashTag = modelMapper.map(hashTagDTO, HashTag.class);
 		hashTag = hashTagService.update(hashTag);
 		hashTagDTO = modelMapper.map(hashTag, HashTagDTO.class);
 		return new ResponseEntity<HashTagDTO>(hashTagDTO, HttpStatus.OK);
 	}
-	
-	@PatchMapping(value = "/hashTags/{hashTagId}")
+
+	@PatchMapping(value = "/admin/hashTags/{hashTagId}")
 	public ResponseEntity<HashTagDTO> patch(@RequestBody HashTagDTO hashTagDTO, @PathVariable String hashTagId) {
 		hashTagDTO.setHashTag(hashTagId);
 		HashTag hashTag = modelMapper.map(hashTagDTO, HashTag.class);
@@ -58,27 +59,24 @@ public class HashTagController {
 		hashTagDTO = modelMapper.map(hashTag, HashTagDTO.class);
 		return new ResponseEntity<HashTagDTO>(hashTagDTO, HttpStatus.OK);
 	}
-	
-	@DeleteMapping(value = "/hashTags/{hashTagId}")
+
+	@DeleteMapping(value = "/admin/hashTags/{hashTagId}")
 	public ResponseEntity<Void> delete(@PathVariable String hashTagId) {
 		hashTagService.delete(hashTagId);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
-	@GetMapping(value = "/hashTags/{hashTagId}")
+
+	@GetMapping(value = "/admin/hashTags/{hashTagId}")
 	public ResponseEntity<HashTagDTO> get(@PathVariable String hashTagId) {
 		HashTag hashTag = hashTagService.get(hashTagId);
 		HashTagDTO hashTagDTO = modelMapper.map(hashTag, HashTagDTO.class);
 		hashTagService.get(hashTagId);
 		return new ResponseEntity<HashTagDTO>(hashTagDTO, HttpStatus.OK);
 	}
-	
-	@GetMapping(value = "/hashTags/{hashTagId}/audit")
+
+	@GetMapping(value = "/admin/hashTags/{hashTagId}/audit")
 	public ResponseEntity<String> getAudit(@PathVariable String hashTagId) {
 		String audit = hashTagService.getAudit(hashTagId);
 		return new ResponseEntity<String>(audit, HttpStatus.OK);
 	}
-	
-	
-
 }

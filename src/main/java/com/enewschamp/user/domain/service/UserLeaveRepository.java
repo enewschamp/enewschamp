@@ -7,6 +7,6 @@ import com.enewschamp.user.domain.entity.UserLeave;
 import com.enewschamp.user.domain.entity.UserLeaveKey;
 
 @JaversSpringDataAuditable
-interface UserLeaveRepository extends JpaRepository<UserLeave, UserLeaveKey>{ 
-	 
-} 
+interface UserLeaveRepository extends JpaRepository<UserLeave, UserLeaveKey> {
+
+}

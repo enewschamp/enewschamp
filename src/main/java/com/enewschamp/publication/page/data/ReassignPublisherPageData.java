@@ -13,10 +13,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ReassignPublisherPageData extends PageData {
 
-
 	private static final long serialVersionUID = 8751809310808873225L;
 
 	private NewsArticleGroupDTO newsArticleGroup;
-	
+
 	private List<ListOfValuesItem> publisherLOV;
 }

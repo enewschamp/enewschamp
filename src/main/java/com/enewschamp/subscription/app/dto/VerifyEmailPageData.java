@@ -6,18 +6,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class VerifyEmailPageData  extends PageData {
+@EqualsAndHashCode(callSuper = false)
+public class VerifyEmailPageData extends PageData {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Long studentID;
-	
+	private Long studentId;
 	private String readingLevel;
-	
-	private StudentPreferenceCommPageData communications;
-
+	private StudentPreferencesCommPageData commsOverEmail;
 }

@@ -8,14 +8,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class StateLOVDTO extends PageData{
+@EqualsAndHashCode(callSuper = false)
+public class StateLOVDTO extends PageData {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String countryID;
+	private String countryId;
 	private List<StatePageData> stateLOV;
-	
+
 }

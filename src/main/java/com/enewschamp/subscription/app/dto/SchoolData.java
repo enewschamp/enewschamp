@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class SchoolData {
-
 	private Long id;
 	private String name;
+	private String schoolProgramCode;
 }

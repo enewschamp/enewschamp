@@ -6,9 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class ChangeDTO extends AbstractDTO{	
-	
+@EqualsAndHashCode(callSuper = false)
+public class ChangeDTO extends AbstractDTO {
 
 	private static final long serialVersionUID = 2712322957426193892L;
 
