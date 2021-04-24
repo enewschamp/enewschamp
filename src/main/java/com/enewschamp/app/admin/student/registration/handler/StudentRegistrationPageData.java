@@ -24,17 +24,11 @@ public class StudentRegistrationPageData extends PageData {
 	private String password;
 	private String password1;
 	private String password2;
-	@NotNull(message = MessageConstants.IS_DELETED_NOT_NULL)
-	@NotEmpty(message = MessageConstants.IS_DELETED_NOT_EMPTY)
 	private String isDeleted;
-	@NotNull(message = MessageConstants.EMAIL_ID_NOT_NULL)
-	@NotEmpty(message = MessageConstants.EMAIL_ID_NOT_EMPTY)
 	private String isAccountLocked;
 	private LocalDateTime lastSuccessfulLoginAttempt;
 	private LocalDateTime lastUnsuccessfulLoginAttempt;
 	private long incorrectLoginAttempts;
-	@NotNull(message = MessageConstants.IS_ACTIVE_NOT_NULL)
-	@NotEmpty(message = MessageConstants.IS_ACTIVE_NOT_EMPTY)
 	private String isActive;
 	private String theme;
 	private String fontHeight;

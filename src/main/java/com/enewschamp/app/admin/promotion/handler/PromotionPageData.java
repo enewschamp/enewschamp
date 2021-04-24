@@ -37,18 +37,12 @@ public class PromotionPageData extends PageData {
 	@JsonInclude
 	private LocalDate dateTo;
 
-	@NotNull(message = MessageConstants.COUNTRY_NOT_NULL)
-	@NotEmpty(message = MessageConstants.COUNTRY_NOT_EMPTY)
 	@JsonInclude
 	private String countryId;
 
-	@NotNull(message = MessageConstants.STATE_NOT_NULL)
-	@NotEmpty(message = MessageConstants.STATE_NOT_EMPTY)
 	@JsonInclude
 	private String stateId;
 
-	@NotNull(message = MessageConstants.CITY_NOT_NULL)
-	@NotEmpty(message = MessageConstants.CITY_NOT_EMPTY)
 	@JsonInclude
 	private String cityId;
 

@@ -25,8 +25,8 @@ public class SchoolReport extends BaseEntity {
 	private static final long serialVersionUID = -6268188630471167106L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "school_report_id_generator")
-	@SequenceGenerator(name = "school_report_id_generator", sequenceName = "school_report_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "school_reports_id_generator")
+	@SequenceGenerator(name = "school_reports_id_generator", sequenceName = "school_reports_id_seq", allocationSize = 1)
 	@Column(name = "schoolReportId", updatable = false, nullable = false)
 	private Long schoolReportId;
 

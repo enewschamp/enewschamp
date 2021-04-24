@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.student.registration.repository.StudentRegistrationRepositoryCustomImpl;
@@ -150,11 +149,11 @@ public class StudentRegistrationService {
 	}
 	
 	private void handlePasswords(StudentRegistration studentRegistraton, StudentRegistration existingStudentRegistration) {
-		if (StringUtils.isEmpty(studentRegistraton.getPassword()))
+	//	if (StringUtils.isEmpty(studentRegistraton.getPassword()))
 			studentRegistraton.setPassword(existingStudentRegistration.getPassword());
-		if (StringUtils.isEmpty(studentRegistraton.getPassword1()))
+	//	if (StringUtils.isEmpty(studentRegistraton.getPassword1()))
 			studentRegistraton.setPassword1(existingStudentRegistration.getPassword1());
-		if (StringUtils.isEmpty(studentRegistraton.getPassword2()))
+//		if (StringUtils.isEmpty(studentRegistraton.getPassword2()))
 			studentRegistraton.setPassword2(existingStudentRegistration.getPassword2());
 		modelMapper.map(studentRegistraton, existingStudentRegistration);
 	}

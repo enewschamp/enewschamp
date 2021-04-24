@@ -21,7 +21,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "StudentRefund")
+@Table(name = "StudentRefunds")
 public class StudentRefund extends BaseEntity {
 
 	/**
@@ -30,8 +30,8 @@ public class StudentRefund extends BaseEntity {
 	private static final long serialVersionUID = -7063853831579952336L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "refund_id_generator")
-	@SequenceGenerator(name = "refund_id_generator", sequenceName = "refund_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_refunds_id_generator")
+	@SequenceGenerator(name = "student_refunds_id_generator", sequenceName = "student_refunds_id_seq", allocationSize = 1)
 	@Column(name = "refundId", updatable = false, nullable = false)
 	private Long refundId;
 

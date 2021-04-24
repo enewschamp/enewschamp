@@ -40,5 +40,7 @@ public class UserLoginPageData extends PageData {
 	@NotNull(message = MessageConstants.USER_TYPE_NOT_NULL)
 	private UserType userType;
 	private String status;
+	private String appName;
+	private String appVersion;
 
 }

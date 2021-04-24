@@ -15,8 +15,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "UserRoles",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "userId", "roleId" }) })
+@Table(name = "UserRoles", uniqueConstraints = { @UniqueConstraint(columnNames = { "userId", "roleId" }) })
 public class UserRole extends BaseEntity {
 
 	private static final long serialVersionUID = 2383120567523981474L;
@@ -27,5 +26,9 @@ public class UserRole extends BaseEntity {
 	@NotNull
 	@Column(name = "Contribution")
 	private int contribution = 0;
+
+	@NotNull
+	@Column(name = "Comments", length = 300)
+	private String comments;
 
 }

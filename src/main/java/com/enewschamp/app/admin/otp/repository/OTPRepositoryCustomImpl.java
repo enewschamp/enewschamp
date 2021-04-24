@@ -38,7 +38,7 @@ public class OTPRepositoryCustomImpl extends RepositoryImpl implements IGenericL
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getEmailId()))
-			filterPredicates.add(cb.equal(otpRoot.get(EMAIL_ID), searchRequest.getEmailId()));
+			filterPredicates.add(cb.like(otpRoot.get(EMAIL_ID), "%" + searchRequest.getEmailId() + "%"));
 
 		if (!StringUtils.isEmpty(searchRequest.getPhoneNumber()))
 			filterPredicates.add(cb.equal(otpRoot.get(PHONE_NUMBER), searchRequest.getPhoneNumber()));

@@ -46,4 +46,5 @@ public class CelebrationPageData extends PageData {
 	@JsonInclude
 	private String audioFileName;
 	private String audioFileUpdate;
+	private String gender;
 }

@@ -38,21 +38,21 @@ public class StudentSchoolRepositoryCustomImplNotInTheList extends RepositoryImp
 		Root<StudentSchool> studentSchoolsRoot = criteriaQuery.from(StudentSchool.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 
-		if (!StringUtils.isEmpty(searchRequest.getCountryNotInTheList()))
+		//if (!StringUtils.isEmpty(searchRequest.getCountryNotInTheList()))
 			filterPredicates.add(
-					cb.equal(studentSchoolsRoot.get(COUNTRY_NOT_IN_THE_LIST), searchRequest.getCountryNotInTheList()));
+					cb.equal(studentSchoolsRoot.get(COUNTRY_NOT_IN_THE_LIST), "Y"));
 
-		if (!StringUtils.isEmpty(searchRequest.getStateNotInTheList()))
+		//if (!StringUtils.isEmpty(searchRequest.getStateNotInTheList()))
 			filterPredicates
-					.add(cb.equal(studentSchoolsRoot.get(STATE_NOT_IN_THE_LIST), searchRequest.getStateNotInTheList()));
+					.add(cb.equal(studentSchoolsRoot.get(STATE_NOT_IN_THE_LIST), "Y"));
 
-		if (!StringUtils.isEmpty(searchRequest.getCityNotInTheList()))
+		//if (!StringUtils.isEmpty(searchRequest.getCityNotInTheList()))
 			filterPredicates
-					.add(cb.equal(studentSchoolsRoot.get(CITY_NOT_IN_THE_LIST), searchRequest.getCityNotInTheList()));
+					.add(cb.equal(studentSchoolsRoot.get(CITY_NOT_IN_THE_LIST), "Y"));
 
-		if (!StringUtils.isEmpty(searchRequest.getSchoolNotInTheList()))
+		//if (!StringUtils.isEmpty(searchRequest.getSchoolNotInTheList()))
 			filterPredicates
-					.add(cb.equal(studentSchoolsRoot.get(SCHOOL_NOT_IN_THE_LIST), searchRequest.getSchoolNotInTheList()));
+					.add(cb.equal(studentSchoolsRoot.get(SCHOOL_NOT_IN_THE_LIST), "Y"));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentSchoolsRoot.get(CommonConstants.OPERATION_DATE_TIME)));

@@ -19,7 +19,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "City",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "countryId", "nameId", "stateId" }) })
+		@UniqueConstraint(columnNames = { "countryId", "stateId", "description" }),
+		@UniqueConstraint(columnNames = { "countryId", "stateId", "nameId" })
+		})
 public class City extends BaseEntity {
 
 	private static final long serialVersionUID = -6268188630471167106L;

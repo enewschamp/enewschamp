@@ -17,15 +17,15 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "SchoolChain",uniqueConstraints = {
+@Table(name = "SchoolChains",uniqueConstraints = {
 		@UniqueConstraint(columnNames = { "name", "countryId" }) })
 @EqualsAndHashCode(callSuper = false)
 public class SchoolChain extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "school_chain_id_generator")
-	@SequenceGenerator(name = "school_chain_id_generator", sequenceName = "school_chain_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "school_chains_id_generator")
+	@SequenceGenerator(name = "school_chains_id_generator", sequenceName = "school_chains_id_seq", allocationSize = 1)
 	@Column(name = "schoolChainId", updatable = false, nullable = false)
 	private Long schoolChainId;
 

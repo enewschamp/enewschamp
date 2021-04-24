@@ -121,4 +121,6 @@ public class AdminSearchRequest {
     private String dailyPublication;
     private String scoresProgressReports;
     private String alertsNotifications;
+    private LocalDateTime actionDateFrom;
+  	private LocalDateTime actionDateTo;
 }

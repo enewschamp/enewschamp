@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @Table(name = "PropertiesFrontend",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "name", "appName" }) })
+		@UniqueConstraint(columnNames = { "name" }) })
 @EqualsAndHashCode(callSuper = false)
 public class PropertiesFrontend extends BaseEntity {
 

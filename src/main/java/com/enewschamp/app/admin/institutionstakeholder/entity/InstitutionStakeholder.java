@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "InstitutionStakeholders",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "institutionType", "institutionId", "stakeHolderId" }) })
+		@UniqueConstraint(columnNames = { "institutionType", "institutionId", "stakeholderId" }) })
 public class InstitutionStakeholder extends BaseEntity {
 
 	private static final long serialVersionUID = -6268188630471167106L;

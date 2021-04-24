@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "UIControlsRules",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "uicontrolId", "execSeq" }) })
+		@UniqueConstraint(columnNames = { "uiControlId", "execSeq" }) })
 public class UIControlsRules extends BaseEntity {
 	/**
 	* 

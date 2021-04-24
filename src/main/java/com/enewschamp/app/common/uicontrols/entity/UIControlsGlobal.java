@@ -18,7 +18,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "UIControlsGlobal", uniqueConstraints = { @UniqueConstraint(columnNames = { "controlName", "globalControlRef" }) })
+@Table(name = "UIControlsGlobal", uniqueConstraints = { @UniqueConstraint(columnNames = { "controlName" }),
+		@UniqueConstraint(columnNames = { "globalControlRef" }) })
 public class UIControlsGlobal extends BaseEntity {
 	/**
 	* 

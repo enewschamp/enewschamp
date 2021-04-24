@@ -87,9 +87,6 @@ public class StudentActivityService {
 	public Page<StudentActivity> listStudentActivity(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentActivity> studentActivityList = studentActivityRepositoryCustom.findAll(pageable, searchRequest);
-		if (studentActivityList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return studentActivityList;
 	}
 

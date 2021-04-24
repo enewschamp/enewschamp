@@ -22,7 +22,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "Celebrations",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "editionId", "nameId" }) })
+		@UniqueConstraint(columnNames = { "editionId", "date", "readingLevel", "gender", "nameId" }) })
 public class Celebration extends BaseEntity {
 
 	/**
@@ -68,6 +68,9 @@ public class Celebration extends BaseEntity {
     private String audioFileTypeExt;
 	@Transient
 	private String imageTypeExt;
+	
+	@Column(name = "gender", length = 1)
+	private String gender;
 	
 
 }

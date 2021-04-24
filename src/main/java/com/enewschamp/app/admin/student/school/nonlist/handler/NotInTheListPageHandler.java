@@ -101,7 +101,7 @@ public class NotInTheListPageHandler implements IPageHandler {
 			State state = createState(pageData, pageRequest);
 			City city = createCity(pageData, pageRequest);
 			School school = createSchool(pageData, pageRequest);
-			StudentSchool studentSchool = updateStudentSchool(city.getCityId(), state.getStateId(),
+			StudentSchool studentSchool = updateStudentSchool(city.getNameId(), state.getNameId(),
 					school.getSchoolId(), pageData);
 			StudentSchoolNotInTheListPageData data = buildPageData(state, city, school, studentSchool, pageData);
 			dto.setHeader(pageRequest.getHeader());
@@ -173,14 +173,14 @@ public class NotInTheListPageHandler implements IPageHandler {
 		return school;
 	}
 
-	private StudentSchool updateStudentSchool(Long cityId, Long stateId, Long schoolId,
+	private StudentSchool updateStudentSchool(String cityName, String stateName, Long schoolId,
 			StudentSchoolNotInTheListPageData pageData) {
 		StudentSchool existingStuSchool = studentSchoolService.get(pageData.getStudentSchool().getStudentId());
 		if (existingStuSchool != null) {
 			StudentSchool studentSchool = modelMapper.map(pageData.getStudentSchool(), StudentSchool.class);
-			studentSchool.setCity(String.valueOf(cityId));
+			studentSchool.setCity(String.valueOf(cityName));
 			studentSchool.setCityNotInTheList("N");
-			studentSchool.setState(String.valueOf(stateId));
+			studentSchool.setState(stateName);
 			studentSchool.setStateNotInTheList("N");
 			studentSchool.setSchool(String.valueOf(schoolId));
 			studentSchool.setSchoolNotInTheList("N");

@@ -17,14 +17,14 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "InstitutionAddress")
+@Table(name = "InstitutionAddresses")
 public class InstitutionAddress extends BaseEntity {
 
 	private static final long serialVersionUID = -6268188630471167106L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "institution_address_id_generator")
-	@SequenceGenerator(name = "institution_address_id_generator", sequenceName = "institution_address_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "institution_addresses_id_generator")
+	@SequenceGenerator(name = "institution_addresses_id_generator", sequenceName = "institution_addresses_id_seq", allocationSize = 1)
 	@Column(name = "addressId", updatable = false, nullable = false)
 	private Long addressId;
 	

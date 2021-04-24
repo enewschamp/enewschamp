@@ -203,6 +203,7 @@ public class UserRolePageHandler implements IPageHandler {
 				userRolePageData.setRoleId(userRole.getUserRoleKey().getRoleId());
 				userRolePageData.setUserId(userRole.getUserRoleKey().getUserId());
 				userRolePageData.setLastUpdate(userRole.getOperationDateTime());
+				userRolePageData.setDayOfTheWeek(userRole.getUserRoleKey().getDayOfTheWeek());
 				userRolePageDataList.add(userRolePageData);
 			}
 		}

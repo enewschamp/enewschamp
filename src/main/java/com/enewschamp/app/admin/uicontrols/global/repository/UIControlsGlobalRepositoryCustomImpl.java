@@ -43,11 +43,10 @@ public class UIControlsGlobalRepositoryCustomImpl extends RepositoryImpl
 					cb.equal(uiControlsGlobalRoot.get(UI_CONTROL_GLOBAL_ID), searchRequest.getUiControlGlobalId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getControlName()))
-			filterPredicates.add(cb.equal(uiControlsGlobalRoot.get(CONTROL_NAME), searchRequest.getControlName()));
+			filterPredicates.add(cb.like(uiControlsGlobalRoot.get(CONTROL_NAME), "%" + searchRequest.getControlName() + "%"));
 
 		if (!StringUtils.isEmpty(searchRequest.getGlobalControlRef()))
-			filterPredicates
-					.add(cb.equal(uiControlsGlobalRoot.get(GLOBAL_CONTROL_REF), searchRequest.getGlobalControlRef()));
+			filterPredicates.add(cb.like(uiControlsGlobalRoot.get(GLOBAL_CONTROL_REF), "%" + searchRequest.getGlobalControlRef() + "%"));
 
 		if (!StringUtils.isEmpty(searchRequest.getIsPremiumFeature()))
 			filterPredicates

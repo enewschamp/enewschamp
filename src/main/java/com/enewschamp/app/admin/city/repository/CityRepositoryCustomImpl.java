@@ -36,15 +36,21 @@ public class CityRepositoryCustomImpl extends RepositoryImpl implements IGeneric
 		CriteriaQuery<City> criteriaQuery = cb.createQuery(City.class);
 		Root<City> cityRoot = criteriaQuery.from(City.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		if (!StringUtils.isEmpty(searchRequest.getCountryId()))
+		if (!StringUtils.isEmpty(searchRequest.getCountryId())) {
 			filterPredicates.add(cb.equal(cityRoot.get(COUNTRY_ID), searchRequest.getCountryId()));
-		if (!StringUtils.isEmpty(searchRequest.getStateId()))
+		}
+		if (!StringUtils.isEmpty(searchRequest.getStateId())) {
 			filterPredicates.add(cb.equal(cityRoot.get(STATE_ID), searchRequest.getStateId()));
-		if (!StringUtils.isEmpty(searchRequest.getName()))
+		}
+		if (!StringUtils.isEmpty(searchRequest.getName())) {
 			filterPredicates.add(cb.like(cityRoot.get(NAME_ID), "%" + searchRequest.getName() + "%"));
-		if (!StringUtils.isEmpty(searchRequest.getNewsEventsApplicable()))
+		}
+		if (!StringUtils.isEmpty(searchRequest.getNewsEventsApplicable())) {
 			filterPredicates
 					.add(cb.equal(cityRoot.get(IS_APPLICABLE_FOR_NEWS_EVENT), searchRequest.getNewsEventsApplicable()));
+		} else {
+			filterPredicates.add(cb.notEqual(cityRoot.get(IS_APPLICABLE_FOR_NEWS_EVENT), "Y"));
+		}
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(cityRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query

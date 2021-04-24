@@ -25,8 +25,8 @@ public class Entitlement extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "entitlement_id_generator")
-	@SequenceGenerator(name = "entitlement_id_generator", sequenceName = "entitlement_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "entitlements_id_generator")
+	@SequenceGenerator(name = "entitlements_id_generator", sequenceName = "entitlements_id_seq", allocationSize = 1)
 	@Column(name = "entitlementId", updatable = false, nullable = false)
 	private Long entitlementId;
 	@NotNull

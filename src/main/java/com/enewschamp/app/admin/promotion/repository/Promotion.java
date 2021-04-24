@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @Table(name = "Promotions",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "editionId", "dateFrom", "countryId", "stateId", "cityId" }) })
+		@UniqueConstraint(columnNames = { "editionId", "dateFrom", "countryId", "stateId", "cityId", "couponCode" }) })
 @EqualsAndHashCode(callSuper = false)
 public class Promotion extends BaseEntity {
 	/**
@@ -28,8 +28,8 @@ public class Promotion extends BaseEntity {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "promotion_id_generator")
-	@SequenceGenerator(name = "promotion_id_generator", sequenceName = "promotion_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "promotions_id_generator")
+	@SequenceGenerator(name = "promotions_id_generator", sequenceName = "promotions_id_seq", allocationSize = 1)
 	@Column(name = "promotionId", updatable = false, nullable = false)
 	private Long promotionId;
 

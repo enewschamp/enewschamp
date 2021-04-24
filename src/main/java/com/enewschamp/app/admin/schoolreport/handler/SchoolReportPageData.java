@@ -29,10 +29,5 @@ public class SchoolReportPageData extends PageData {
 	@NotNull(message = MessageConstants.GRADE_NOT_NULL)
 	@NotEmpty(message = MessageConstants.GRADE_NOT_EMPTY)
 	private String grade;
-	
-	@NotNull(message = MessageConstants.SECTION_NOT_NULL)
-	@NotEmpty(message = MessageConstants.SECTION_NOT_EMPTY)
 	private String section;
-	
-	//private String comments;
 }

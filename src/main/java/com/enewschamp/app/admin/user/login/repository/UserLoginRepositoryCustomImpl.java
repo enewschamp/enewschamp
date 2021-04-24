@@ -37,20 +37,17 @@ public class UserLoginRepositoryCustomImpl extends RepositoryImpl implements IGe
 		Root<UserLogin> studentachievementRoot = criteriaQuery.from(UserLogin.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 
-		if (!StringUtils.isEmpty(searchRequest.getUserLoginId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get(USER_LOGIN_ID), searchRequest.getUserLoginId()));
-
 		if (!StringUtils.isEmpty(searchRequest.getUserId()))
 			filterPredicates.add(cb.equal(studentachievementRoot.get(USER_ID), searchRequest.getUserId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getUserType()))
 			filterPredicates.add(cb.equal(studentachievementRoot.get(USER_TYPE), searchRequest.getUserType()));
 
-		if (!StringUtils.isEmpty(searchRequest.getDeviceId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get(DEVICE_ID), searchRequest.getDeviceId()));
-
 		if (!StringUtils.isEmpty(searchRequest.getLoginFlag()))
 			filterPredicates.add(cb.equal(studentachievementRoot.get(LOGIN_FLAG), searchRequest.getLoginFlag()));
+
+		if (!StringUtils.isEmpty(searchRequest.getAppName()))
+			filterPredicates.add(cb.equal(studentachievementRoot.get(APP_NAME), searchRequest.getAppName()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentachievementRoot.get(CommonConstants.OPERATION_DATE_TIME)));

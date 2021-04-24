@@ -42,13 +42,14 @@ public class PageNavigatorRepositoryCustomImpl extends RepositoryImpl
 			filterPredicates.add(cb.equal(pageNavigatorRoot.get(NAV_ID), searchRequest.getNavId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getCurrentPage()))
-			filterPredicates.add(cb.equal(pageNavigatorRoot.get(CURRENT_PAGE), searchRequest.getCurrentPage()));
+			filterPredicates
+					.add(cb.like(pageNavigatorRoot.get(CURRENT_PAGE), "%" + searchRequest.getCurrentPage() + "%"));
 
 		if (!StringUtils.isEmpty(searchRequest.getOperation()))
-			filterPredicates.add(cb.equal(pageNavigatorRoot.get(OPERATION), searchRequest.getOperation()));
+			filterPredicates.add(cb.like(pageNavigatorRoot.get(OPERATION), "%" + searchRequest.getOperation() + "%"));
 
 		if (!StringUtils.isEmpty(searchRequest.getAction()))
-			filterPredicates.add(cb.equal(pageNavigatorRoot.get(ACTION), searchRequest.getAction()));
+			filterPredicates.add(cb.like(pageNavigatorRoot.get(ACTION), "%" + searchRequest.getAction() + "%"));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(pageNavigatorRoot.get(CommonConstants.OPERATION_DATE_TIME)));
