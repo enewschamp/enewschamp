@@ -6,10 +6,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.student.control.repository.StudentControlRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
@@ -72,21 +72,6 @@ public class StudentControlService {
 		} else {
 			throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
 		}
-	}
-
-	public boolean studentExistsByEmail(String emailId) {
-		StudentControl existingEntity = repository.searchByEmail(emailId);
-		if (existingEntity != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public StudentControl getStudentByEmail(String emailId) {
-		StudentControl existingEntity = repository.searchByEmail(emailId);
-		return existingEntity;
-
 	}
 
 	public boolean studentExist(Long studentId) {

@@ -124,7 +124,7 @@ public class QuizPageHandler implements IPageHandler {
 		if (studReg != null) {
 			isTestUser = studReg.getIsTestUser();
 		}
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		ArticleQuizDetailsPageData pageData = (ArticleQuizDetailsPageData) commonService
 				.mapPageData(ArticleQuizDetailsPageData.class, pageNavigationContext.getPageRequest());
 		Long newsArticleId = pageData.getNewsArticleId();
@@ -200,9 +200,9 @@ public class QuizPageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
+		Long studentId = pageRequest.getHeader().getStudentId();
 		List<QuizScoreDTO> quizScoreDTOList = null;
 		ArticleCompletionQuizPageData articleCompletionQuizPageData = new ArticleCompletionQuizPageData();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
 		int readingLevel = 3;
 		if (studentId > 0) {
 			StudentPreferencesDTO preferenceDto = preferenceBusiness.getPreferenceFromMaster(studentId);

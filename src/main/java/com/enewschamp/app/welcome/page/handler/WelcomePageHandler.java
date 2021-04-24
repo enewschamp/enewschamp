@@ -182,13 +182,13 @@ public class WelcomePageHandler implements IPageHandler {
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
-		studentRegBusiness.checkAndUpdateIfEvalPeriodExpired(emailId, editionId);
-		studentRegBusiness.checkAndUpdateIfSubscriptionExpired(emailId, editionId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
+		studentRegBusiness.checkAndUpdateIfEvalPeriodExpired(studentId, editionId);
+		studentRegBusiness.checkAndUpdateIfSubscriptionExpired(studentId, editionId);
 		String editionName = "";
 		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
 		WelcomePageData pageData = new WelcomePageData();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
-		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 		StudentSubscriptionDTO studentSubscriptionDTO = studentSubscriptionBusiness
 				.getStudentSubscriptionFromMaster(studentId, editionId);
 

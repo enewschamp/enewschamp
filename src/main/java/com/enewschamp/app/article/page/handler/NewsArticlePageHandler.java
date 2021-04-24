@@ -128,12 +128,12 @@ public class NewsArticlePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
 		if (studReg != null) {
 			isTestUser = studReg.getIsTestUser();
 		}
-		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		LocalDate publicationDate = pageNavigationContext.getPageRequest().getHeader().getPublicationDate();
 		PublicationPageData pageData = (PublicationPageData) commonService.mapPageData(PublicationPageData.class,
@@ -181,8 +181,8 @@ public class NewsArticlePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
 		if (studReg != null) {
@@ -214,7 +214,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
 		if (studReg != null) {
@@ -244,8 +244,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 	public PageDTO viewArticlesPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		NewsArticlePageData pageData = (NewsArticlePageData) commonService.mapPageData(NewsArticlePageData.class,
 				pageNavigationContext.getPageRequest());
 		List<NewsArticleSummaryDTO> pageResult = customImpl.getArticleDetails(pageData.getNewsArticleId(), studentId);
@@ -264,8 +263,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 	public PageDTO loadSavedArticlesPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		SavedArticlePageData pageData = (SavedArticlePageData) commonService.mapPageData(SavedArticlePageData.class,
 				pageNavigationContext.getPageRequest());
@@ -338,7 +336,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
 		if (studReg != null) {
@@ -425,7 +423,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageRequest.getHeader().getStudentId();
 		ArticlePageData articlePageData = (ArticlePageData) commonService.mapPageData(ArticlePageData.class,
 				pageRequest);
 		Long newsArticleId = articlePageData.getNewsArticleId();
@@ -455,7 +453,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageRequest.getHeader().getStudentId();
 		ArticlePageData articlePageData = (ArticlePageData) commonService.mapPageData(ArticlePageData.class,
 				pageRequest);
 		Long newsArticleId = articlePageData.getNewsArticleId();
@@ -485,7 +483,7 @@ public class NewsArticlePageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageRequest.getHeader().getStudentId();
 		ArticlePageData articlePageData = (ArticlePageData) commonService.mapPageData(ArticlePageData.class,
 				pageRequest);
 		Long newsArticleId = articlePageData.getNewsArticleId();

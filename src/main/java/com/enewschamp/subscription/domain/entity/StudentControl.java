@@ -29,11 +29,6 @@ public class StudentControl extends BaseEntity {
 	@Column(name = "studentId", length = 100)
 	private Long studentId;
 
-	@Convert(converter = StringCryptoConverter.class)
-	@NotNull
-	@Column(name = "emailId", length = 99)
-	private String emailId;
-
 	@Column(name = "StudentDetails", length = 1)
 	private String studentDetails;
 

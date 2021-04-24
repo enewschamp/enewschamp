@@ -68,7 +68,7 @@ public class MenuPageHandler extends AbstractPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		MenuPageData pageData = new MenuPageData();
 		StudentDetails student = studentDetailsService.get(studentId);
 		StudentDetailsWork studentWork = null;

@@ -48,9 +48,8 @@ public class ScoreToWinPageHandler implements IPageHandler {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		StudentPreferencesDTO studentPreferencesDTO = preferenceBusiness.getPreferenceFromMaster(studentId);
 		int readingLevel = 3;
 		if (studentPreferencesDTO != null) {

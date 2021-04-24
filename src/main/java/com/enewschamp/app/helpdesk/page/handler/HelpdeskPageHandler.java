@@ -60,8 +60,7 @@ public class HelpdeskPageHandler implements IPageHandler {
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		HelpdeskInputPageData helpDeskInputPageData = new HelpdeskInputPageData();
 		Helpdesk helpDesk = helpdeskService.getByStudentId(studentId);
 		if (helpDesk != null) {
@@ -114,8 +113,7 @@ public class HelpdeskPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageRequest.getHeader());
 		String editionId = pageRequest.getHeader().getEditionId();
-		String emailId = pageRequest.getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageRequest.getHeader().getStudentId();
 		if (studentId == 0L) {
 			throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
 		}

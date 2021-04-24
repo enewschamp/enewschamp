@@ -41,6 +41,7 @@ public class HeaderDTO implements Serializable {
 	@NotNull(message = "UserId must not be null")
 	@NotEmpty(message = "UserId must not be empty")
 	private String userId;
+	private Long studentId;
 	private String helpText;
 	private LocalDate todaysDate;
 	private String propertiesLabel;

@@ -244,8 +244,8 @@ public class StudentRegistrationBusiness {
 		return otpService.validateOtp(appName, otp, emailId, userActivityTracker);
 	}
 
-	public void checkAndUpdateIfSubscriptionExpired(String emailId, String editionId) {
-		StudentControl studentControl = studentControlService.getStudentByEmail(emailId);
+	public void checkAndUpdateIfSubscriptionExpired(Long studentId, String editionId) {
+		StudentControl studentControl = studentControlService.get(studentId);
 		if (studentControl != null) {
 			StudentSubscription studentSubscription = studentSubscriptionService.get(studentControl.getStudentId(),
 					editionId);
@@ -255,7 +255,7 @@ public class StudentRegistrationBusiness {
 					studentSubscriptionService.update(studentSubscription);
 					studentControl.setSubscriptionType("F");
 					studentControlService.update(studentControl);
-					StudentControlWork studentEntityWork = studentControlWorkService.getStudentByEmail(emailId);
+					StudentControlWork studentEntityWork = studentControlWorkService.get(studentId);
 					if (studentEntityWork != null) {
 						studentEntityWork.setSubscriptionType("F");
 						studentControlWorkService.update(studentEntityWork);
@@ -265,8 +265,8 @@ public class StudentRegistrationBusiness {
 		}
 	}
 
-	public void checkAndUpdateIfEvalPeriodExpired(String emailId, String editionId) {
-		StudentControl studentEntity = studentControlService.getStudentByEmail(emailId);
+	public void checkAndUpdateIfEvalPeriodExpired(Long studentId, String editionId) {
+		StudentControl studentEntity = studentControlService.get(studentId);
 		if (studentEntity != null && !"Y".equals(studentEntity.getEvalAvailed())) {
 			StudentSubscription studentSubscription = studentSubscriptionService.get(studentEntity.getStudentId(),
 					editionId);
@@ -274,7 +274,7 @@ public class StudentRegistrationBusiness {
 					&& studentSubscription.getEndDate().isBefore(LocalDate.now())) {
 				studentEntity.setEvalAvailed("Y");
 				studentControlService.update(studentEntity);
-				StudentControlWork studentEntityWork = studentControlWorkService.getStudentByEmail(emailId);
+				StudentControlWork studentEntityWork = studentControlWorkService.get(studentId);
 				StudentSubscriptionWork studentSubscriptionWork = studentSubscriptionWorkService
 						.get(studentEntity.getStudentId(), editionId);
 				if (studentSubscriptionWork != null

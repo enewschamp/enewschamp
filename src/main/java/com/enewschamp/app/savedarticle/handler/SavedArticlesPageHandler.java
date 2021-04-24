@@ -115,7 +115,7 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		SavedArticlePageData pageData = (SavedArticlePageData) commonService.mapPageData(SavedArticlePageData.class,
 				pageNavigationContext.getPageRequest());
@@ -140,7 +140,7 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		searchRequestData.setEditionId(editionId);
 		searchRequestData.setStudentId(studentId);
 		searchRequestData.setPublicationDateFrom(
-				commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_SAVED_ARTICLES, emailId));
+				commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_SAVED_ARTICLES, studentId));
 		if (filterData != null) {
 			searchRequestData.setGenre(filterData.getGenre());
 			searchRequestData.setHeadline(filterData.getHeadline());
@@ -223,7 +223,7 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageRequest.getHeader().getStudentId();
 		ArticlePageData articlePageData = (ArticlePageData) commonService.mapPageData(ArticlePageData.class,
 				pageRequest);
 		String likeFlag = articlePageData.getLikeFlag();
@@ -242,7 +242,7 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageRequest.getHeader().getStudentId();
 		ArticlePageData articlePageData = (ArticlePageData) commonService.mapPageData(ArticlePageData.class,
 				pageRequest);
 		String opinion = articlePageData.getOpinionText();
@@ -261,7 +261,7 @@ public class SavedArticlesPageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageRequest.getHeader().getStudentId();
 		ArticlePageData saveData = (ArticlePageData) commonService.mapPageData(ArticlePageData.class, pageRequest);
 		String saveFlag = saveData.getSaveFlag();
 		Long newsArticleId = saveData.getNewsArticleId();

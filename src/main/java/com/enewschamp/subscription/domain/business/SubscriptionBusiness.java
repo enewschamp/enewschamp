@@ -280,9 +280,8 @@ public class SubscriptionBusiness {
 		}
 	}
 
-	public boolean isStudentSubscriptionValid(String appName, String emailId, String editionId) {
+	public boolean isStudentSubscriptionValid(String appName, Long studentId, String editionId) {
 		boolean validSubcription = false;
-		Long studentId = studentControlBusiness.getStudentId(emailId);
 		StudentSubscription studentSubscriptionEntity = studentSubscriptionService.get(studentId, editionId);
 		LocalDate startDate = studentSubscriptionEntity.getStartDate();
 		LocalDate endDate = studentSubscriptionEntity.getEndDate();

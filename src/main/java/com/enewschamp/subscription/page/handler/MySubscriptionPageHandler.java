@@ -126,10 +126,9 @@ public class MySubscriptionPageHandler implements IPageHandler {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		MySubscriptionPageData mySubscriptionPageData = new MySubscriptionPageData();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		StudentSubscriptionDTO studentSubscriptionDTO = studentSubscriptionBusiness
 				.getStudentSubscriptionFromMaster(studentId, editionId);
 		List<StudentPayment> studentPaymentList = studentPaymentService.getAllByStudentIdAndEdition(studentId,
@@ -202,10 +201,8 @@ public class MySubscriptionPageHandler implements IPageHandler {
 
 	public PageDTO handleCancelSubscriptionAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
-		String operation = pageRequest.getHeader().getOperation();
 		String editionId = pageRequest.getHeader().getEditionId();
-		String emailId = pageRequest.getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageRequest.getHeader().getStudentId();
 		StudentSubscriptionDTO studentSubscriptionDTO = modelMapper
 				.map(studentSubscriptionService.get(studentId, editionId), StudentSubscriptionDTO.class);
 		try {

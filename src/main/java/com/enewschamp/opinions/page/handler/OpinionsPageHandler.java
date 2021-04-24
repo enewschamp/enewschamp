@@ -101,7 +101,7 @@ public class OpinionsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		OpinionsPageData pageData = (OpinionsPageData) commonService.mapPageData(OpinionsPageData.class,
@@ -122,12 +122,11 @@ public class OpinionsPageHandler implements IPageHandler {
 			pageData.setPagination(paginationData);
 		}
 		CommonFilterData filterData = pageData.getFilter();
-		studentId = studentControlBusiness.getStudentId(emailId);
 		OpinionsSearchRequest searchRequestData = new OpinionsSearchRequest();
 		searchRequestData.setEditionId(editionId);
 		searchRequestData.setStudentId(studentId);
 		searchRequestData.setPublicationDateFrom(
-				commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_OPINIONS, emailId));
+				commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_OPINIONS, studentId));
 		if (filterData != null) {
 			searchRequestData.setGenre(filterData.getGenre());
 			searchRequestData.setHeadline(filterData.getHeadline());

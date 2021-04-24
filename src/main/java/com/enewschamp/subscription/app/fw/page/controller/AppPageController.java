@@ -216,6 +216,7 @@ public class AppPageController {
 					StudentRegistration student = regService.getStudentReg(emailId);
 					if (student != null) {
 						studentId = student.getStudentId();
+						pageRequest.getHeader().setStudentId(studentId);
 					}
 				}
 			}
@@ -247,7 +248,7 @@ public class AppPageController {
 								propertiesService.getValue(module, PropertyConstants.ACCOUNT_INACTIVE_OPERATION));
 					} else {
 						userLogin = userLoginBusiness.getLoginDetails(deviceId, loginCredentials, emailId, UserType.S);
-						StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+						StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 						if (userLogin != null && "Y".equals(userLogin.getLoginFlag().toString())
 								&& studentControlDTO != null && "Y".equals(studentControlDTO.getEmailIdVerified())) {
 							LocalDateTime tokenRefershTime = userLogin.getTokenExpirationTime().minusSeconds(60);
@@ -392,9 +393,11 @@ public class AppPageController {
 			}
 			header.setRequestStatus(RequestStatusType.F);
 			header.setEmailId(null);
+			header.setStudentId(null);
 			throw new Fault(e, header);
 		}
 		response.getBody().getHeader().setEmailId(null);
+		response.getBody().getHeader().setStudentId(null);
 		return response;
 	}
 
@@ -414,12 +417,13 @@ public class AppPageController {
 			// validate of the user is already logged in..
 			String emailId = pageRequest.getHeader().getEmailId();
 			String deviceId = pageRequest.getHeader().getDeviceId();
+			Long studentId = pageRequest.getHeader().getStudentId();
 			if ("".equals(emailId) || null == emailId) {
 				throw new BusinessException(ErrorCodeConstants.INVALID_EMAIL_ID);
 			} else {
 				boolean isLogged = userLoginBusiness.isUserLoggedIn(deviceId, "", emailId, UserType.S);
 				if (!isLogged) {
-					boolean isSubscriptiionValid = subscriptionBusiness.isStudentSubscriptionValid(module, emailId,
+					boolean isSubscriptiionValid = subscriptionBusiness.isStudentSubscriptionValid(module, studentId,
 							edition);
 					if (!isSubscriptiionValid)
 						throw new BusinessException(ErrorCodeConstants.UNAUTH_ACCESS);
@@ -462,8 +466,8 @@ public class AppPageController {
 				controlWorkEntryOrExit = pageNavDto.getControlWorkEntryOrExit();
 			}
 			if ("loadIncompleteOperationPage".equalsIgnoreCase(nextPageLoadMethod)) {
-				String emailId = pageResponse.getHeader().getEmailId();
-				StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+				Long studentId = pageResponse.getHeader().getStudentId();
+				StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 				nextPageName = studentControlWorkDTO.getNextPageName();
 				nextPageOperation = studentControlWorkDTO.getNextPageOperation();
 				nextPageLoadMethod = studentControlWorkDTO.getNextPageLoadMethod();
@@ -516,9 +520,10 @@ public class AppPageController {
 	private void updateWorkTable(String nextPageName, String nextPageOperation, String nextPageLoadMethod,
 			PageDTO pageDTO) {
 		String emailId = pageDTO.getHeader().getEmailId();
+		Long studentId = pageDTO.getHeader().getStudentId();
 		String editionId = pageDTO.getHeader().getEditionId();
-		studentRegBusiness.checkAndUpdateIfEvalPeriodExpired(emailId, editionId);
-		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+		studentRegBusiness.checkAndUpdateIfEvalPeriodExpired(studentId, editionId);
+		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 		if (studentControlWorkDTO != null) {
 			studentControlWorkDTO.setNextPageName(nextPageName);
 			studentControlWorkDTO.setNextPageOperation(nextPageOperation);
@@ -530,18 +535,17 @@ public class AppPageController {
 	}
 
 	private void doStudentControlWorkExitNext(PageDTO pageDTO) {
-		String emailId = pageDTO.getHeader().getEmailId();
+		Long studentId = pageDTO.getHeader().getStudentId();
 		String editionId = pageDTO.getHeader().getEditionId();
-		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
-		studentControlBusiness.workToMaster(studentControlWorkDTO.getStudentId());
+		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
+		studentControlBusiness.workToMaster(studentId);
 		studentControlBusiness.deleteFromWork(studentControlWorkDTO);
-		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 		if (studentControlDTO != null) {
-			StudentPayment studentPayment = studentPaymentService
-					.getByStudentIdAndEdition(studentControlDTO.getStudentId(), editionId);
+			StudentPayment studentPayment = studentPaymentService.getByStudentIdAndEdition(studentId, editionId);
 			if (studentPayment != null && studentPayment.getSubscriptionEndDate() == null) {
 				StudentSubscriptionDTO studentSubscriptionDTO = subscriptionBusiness
-						.getStudentSubscriptionFromMaster(studentControlDTO.getStudentId(), editionId);
+						.getStudentSubscriptionFromMaster(studentId, editionId);
 				if (studentSubscriptionDTO != null && studentSubscriptionDTO.getEndDate() != null) {
 					studentPayment.setSubscriptionEndDate(studentSubscriptionDTO.getEndDate());
 					studentPaymentService.update(studentPayment);
@@ -551,11 +555,10 @@ public class AppPageController {
 	}
 
 	private void doStudentControlWorkExitPrev(PageDTO pageDTO) {
-		String emailId = pageDTO.getHeader().getEmailId();
+		Long studentId = pageDTO.getHeader().getStudentId();
 		String editionId = pageDTO.getHeader().getEditionId();
-		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 		if (studentControlWorkDTO != null) {
-			Long studentId = studentControlWorkDTO.getStudentId();
 			if (studentPreferencesWorkService.get(studentId) != null) {
 				studentPreferencesWorkService.delete(studentId);
 			}
@@ -581,15 +584,14 @@ public class AppPageController {
 
 	private PageDTO doStudentControlWorkEntry(String nextPageLoadMethod, PageDTO pageDTO) {
 		String emailId = pageDTO.getHeader().getEmailId();
+		Long studentId = pageDTO.getHeader().getStudentId();
 		String editionId = pageDTO.getHeader().getEditionId();
-		studentRegBusiness.checkAndUpdateIfEvalPeriodExpired(emailId, editionId);
-		Long studentId = 0L;
-		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
-		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+		studentRegBusiness.checkAndUpdateIfEvalPeriodExpired(studentId, editionId);
+		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
+		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 		if (studentControlDTO != null) {
 			studentControlWorkDTO = new StudentControlWorkDTO();
 			studentControlWorkDTO.setStudentId(studentControlDTO.getStudentId());
-			studentControlWorkDTO.setEmailId(studentControlDTO.getEmailId());
 			studentControlWorkDTO.setSubscriptionType(studentControlDTO.getSubscriptionType());
 			studentControlWorkDTO.setStudentDetails(studentControlDTO.getStudentDetails());
 			studentControlWorkDTO.setSchoolDetails(studentControlDTO.getSchoolDetails());
@@ -625,7 +627,6 @@ public class AppPageController {
 			studentControlWorkDTO.setNextPageName(pageDTO.getHeader().getPageName());
 			studentControlWorkDTO.setNextPageOperation(pageDTO.getHeader().getOperation());
 			studentControlWorkDTO.setNextPageLoadMethod(nextPageLoadMethod);
-			studentControlWorkDTO.setEmailId(emailId);
 			studentControlWorkDTO.setStudentId(studReg.getStudentId());
 			studentControlWorkDTO.setOperatorId("" + studentId);
 			studentControlWorkDTO.setRecordInUse(RecordInUseType.Y);

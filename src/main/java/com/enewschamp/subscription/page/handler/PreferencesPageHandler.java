@@ -109,8 +109,7 @@ public class PreferencesPageHandler implements IPageHandler {
 
 	public PageDTO loadExistingPreferencesPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		StudentPreferencesPageData studentPreferencePageData = new StudentPreferencesPageData();
 		StudentPreferencesDTO studentPreferencesDTO = preferenceBusiness.getPreferenceFromMaster(studentId);
 		if (studentPreferencesDTO != null) {
@@ -123,8 +122,7 @@ public class PreferencesPageHandler implements IPageHandler {
 
 	public PageDTO loadWorkDataPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		StudentPreferencesPageData studentPreferencePageData = new StudentPreferencesPageData();
 		StudentPreferencesWorkDTO studentPreferencesWorkDTO = preferenceBusiness.getPreferenceFromWork(studentId);
 		if (studentPreferencesWorkDTO != null) {
@@ -143,8 +141,7 @@ public class PreferencesPageHandler implements IPageHandler {
 	@Override
 	public PageDTO saveAsMaster(PageRequestDTO pageRequest) {
 		PageDTO pageDTO = new PageDTO();
-		String emailId = pageRequest.getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageRequest.getHeader().getStudentId();
 		preferenceBusiness.workToMaster(studentId);
 		studentPreferencesWorkService.delete(studentId);
 		pageDTO.setHeader(pageRequest.getHeader());
@@ -180,12 +177,11 @@ public class PreferencesPageHandler implements IPageHandler {
 
 	public PageDTO handlePreferencesSaveAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDto = new PageDTO();
-		Long studentId = 0L;
-		String emailId = pageRequest.getHeader().getEmailId();
+		Long studentId = pageRequest.getHeader().getStudentId();
 		String saveIn = pageNavigatorDTO.getUpdationTable();
 		StudentPreferencesPageData studentPreferencePageData = mapPagedata(pageRequest);
 		if (PageSaveTable.W.toString().equals(saveIn)) {
-			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 			studentId = studentControlWorkDTO.getStudentId();
 			studentControlWorkDTO.setPreferencesW("Y");
 			StudentPreferencesWorkDTO studentPreferencesWorkDTO = modelMapper.map(studentPreferencePageData,
@@ -196,7 +192,7 @@ public class PreferencesPageHandler implements IPageHandler {
 			preferenceBusiness.saveAsWork(studentPreferencesWorkDTO);
 			studentControlBusiness.updateAsWork(studentControlWorkDTO);
 		} else {
-			StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+			StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 			studentId = studentControlDTO.getStudentId();
 			studentControlDTO.setPreferences("Y");
 			StudentPreferencesDTO studentPreferencesDTO = modelMapper.map(studentPreferencePageData,
@@ -208,7 +204,7 @@ public class PreferencesPageHandler implements IPageHandler {
 			studentControlDTO.setOperatorId("" + studentId);
 			studentControlDTO.setRecordInUse(RecordInUseType.Y);
 			studentControlBusiness.saveAsMaster(studentControlDTO);
-			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 			if (studentControlWorkDTO != null) {
 				studentControlWorkDTO.setPreferences("Y");
 				studentControlWorkDTO.setOperatorId("" + studentId);
@@ -225,12 +221,11 @@ public class PreferencesPageHandler implements IPageHandler {
 
 	public PageDTO handlePreviousWorkDataPage(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDto = new PageDTO();
-		Long studentId = 0L;
-		String emailId = pageRequest.getHeader().getEmailId();
+		Long studentId = pageRequest.getHeader().getStudentId();
 		String saveIn = pageNavigatorDTO.getUpdationTable();
 		StudentPreferencesPageData studentPreferencePageData = mapPagedata(pageRequest);
 		if (PageSaveTable.W.toString().equals(saveIn)) {
-			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 			studentId = studentControlWorkDTO.getStudentId();
 			StudentPreferencesWorkDTO studentPreferencesWorkDTO = preferenceBusiness.getPreferenceFromWork(studentId);
 			if (studentPreferencesWorkDTO == null) {

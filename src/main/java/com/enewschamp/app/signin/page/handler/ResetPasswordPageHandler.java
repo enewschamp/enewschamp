@@ -351,7 +351,7 @@ public class ResetPasswordPageHandler implements IPageHandler {
 		studentRegBusiness.resetPassword(emailId, password, userActivityTracker);
 		userActivityTracker.setActionStatus(UserAction.SUCCESS);
 		userLoginBusiness.auditUserActivity(userActivityTracker);
-		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 		if (studentControlWorkDTO != null) {
 			studentControlWorkDTO.setEmailIdVerified("Y");
 			studentControlBusiness.saveAsWork(studentControlWorkDTO);

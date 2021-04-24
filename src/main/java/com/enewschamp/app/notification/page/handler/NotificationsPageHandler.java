@@ -105,7 +105,7 @@ public class NotificationsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		NotificationsPageData pageData = (NotificationsPageData) commonService.mapPageData(NotificationsPageData.class,
@@ -129,7 +129,7 @@ public class NotificationsPageHandler implements IPageHandler {
 		NotificationsSearchRequest searchRequest = new NotificationsSearchRequest();
 		searchRequest.setEditionId(editionId);
 		searchRequest.setStudentId(studentId);
-		String limitDate = commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_NOTIFICATIONS, emailId)
+		String limitDate = commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_NOTIFICATIONS, studentId)
 				+ " 00:00";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		searchRequest.setOperationDateTime(LocalDateTime.parse(limitDate, formatter));

@@ -51,9 +51,8 @@ public class ShareAchievementsPageHandler implements IPageHandler {
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		StudentShareAchievementsPageData studentShareAchievementsPageData = new StudentShareAchievementsPageData();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		List<StudentShareAchievementsDTO> studentShareAchievementsDTO = studentShareAchievementsBusiness
 				.getStudentDetailsFromMaster(studentId);
 		if (studentShareAchievementsDTO != null) {
@@ -100,9 +99,8 @@ public class ShareAchievementsPageHandler implements IPageHandler {
 
 	public PageDTO handleSaveAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDto = new PageDTO();
-		String emailId = pageRequest.getHeader().getEmailId();
 		StudentShareAchievementsPageData studentShareAchievementsPageData = mapPagedata(pageRequest);
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageRequest.getHeader().getStudentId();
 		StudentShareAchievementsDTO studAch = mapPageToDTO(studentShareAchievementsPageData);
 		studAch.setStudentId(studentId);
 		studAch.setOperatorId("" + studentId);

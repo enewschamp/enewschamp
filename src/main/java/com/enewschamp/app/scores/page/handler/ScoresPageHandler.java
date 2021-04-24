@@ -95,11 +95,7 @@ public class ScoresPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		ScoresSearchData searchData = new ScoresSearchData();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
-		if (studentId == 0L) {
-			throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
-		}
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
 		if (studentId > 0) {
@@ -140,11 +136,7 @@ public class ScoresPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		ScoresSearchData searchData = new ScoresSearchData();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
-		if (studentId == 0L) {
-			throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
-		}
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
 		if (studentId > 0) {
@@ -195,11 +187,7 @@ public class ScoresPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		ScoresSearchData searchData = new ScoresSearchData();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
-		if (studentId == 0L) {
-			throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
-		}
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
 		if (studentId > 0) {
@@ -264,11 +252,7 @@ public class ScoresPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		ScoresSearchData searchData = new ScoresSearchData();
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
-		if (studentId == 0L) {
-			throw new BusinessException(ErrorCodeConstants.STUDENT_DTLS_NOT_FOUND);
-		}
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		int readingLevel = 0;
 		StudentPreferencesDTO preferenceDto = null;
 		if (studentId > 0) {

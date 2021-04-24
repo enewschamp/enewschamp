@@ -154,7 +154,7 @@ public class SignInPageHandler implements IPageHandler {
 		userActivityTracker.setUserType(UserType.S);
 		userActivityTracker.setActionTime(LocalDateTime.now());
 		userActivityTracker.setActionStatus(UserAction.SUCCESS);
-		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 		if (student != null && "Y".equals(student.getIsDeleted())) {
 			userActivityTracker.setErrorCode(ErrorCodeConstants.STUD_ACCOUNT_DELETED);
 			userActivityTracker.setErrorDescription(errorCodeService.getValue(ErrorCodeConstants.STUD_ACCOUNT_DELETED));
@@ -262,7 +262,7 @@ public class SignInPageHandler implements IPageHandler {
 		userActivityTracker.setUserId(emailId);
 		userActivityTracker.setUserType(UserType.S);
 		userActivityTracker.setActionTime(LocalDateTime.now());
-		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 		if (studentControlDTO == null) {
 			userActivityTracker.setActionStatus(UserAction.FAILURE);
 			userActivityTracker.setErrorCode(ErrorCodeConstants.STUD_REG_NOT_FOUND);
@@ -331,7 +331,7 @@ public class SignInPageHandler implements IPageHandler {
 		userActivityTracker.setUserId(emailId);
 		userActivityTracker.setUserType(UserType.S);
 		userActivityTracker.setActionTime(LocalDateTime.now());
-		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 		if ((student != null && "Y".equals(student.getIsDeleted()))
 				|| (studentControlDTO == null || !"Y".equals(studentControlDTO.getEmailIdVerified()))) {
 			throw new BusinessException(ErrorCodeConstants.STUD_REG_NOT_FOUND, emailId);
@@ -373,7 +373,7 @@ public class SignInPageHandler implements IPageHandler {
 		userActivityTracker.setUserId(emailId);
 		userActivityTracker.setUserType(UserType.S);
 		userActivityTracker.setActionTime(LocalDateTime.now());
-		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 		if ((student != null && "Y".equals(student.getIsDeleted()))
 				|| (studentControlDTO == null || !"Y".equals(studentControlDTO.getEmailIdVerified()))) {
 			throw new BusinessException(ErrorCodeConstants.STUD_REG_NOT_FOUND, emailId);

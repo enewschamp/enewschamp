@@ -10,7 +10,6 @@ import java.util.Base64;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,10 +41,10 @@ public class CommonService {
 	@Autowired
 	private StudentControlBusiness studentControlBusiness;
 
-	public LocalDate getLimitDate(String module, String constantName, String emailId) {
+	public LocalDate getLimitDate(String module, String constantName, Long studentId) {
 		String unitType = "";
 		int unitValue = 0;
-		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 		String subscriptionType = "F";
 		if (studentControlDTO != null) {
 			subscriptionType = studentControlDTO.getSubscriptionType();

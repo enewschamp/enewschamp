@@ -27,7 +27,6 @@ import com.enewschamp.subscription.app.dto.StudentSubscriptionPageData;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
 import com.enewschamp.subscription.domain.entity.StudentControlWork;
-import com.enewschamp.subscription.domain.entity.StudentSubscription;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionService;
 import com.enewschamp.subscription.domain.service.StudentSubscriptionWorkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -111,10 +110,11 @@ public class SubscriptionPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
+		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 		StudentSubscriptionPageData subscripionPagedata = new StudentSubscriptionPageData();
 		if (studentControlWorkDTO != null) {
-			subscripionPagedata.setEmailId(studentControlWorkDTO.getEmailId());
+			subscripionPagedata.setEmailId(emailId);
 			subscripionPagedata.setSubscriptionSelected(studentControlWorkDTO.getSubscriptionTypeW());
 		}
 		pageDto.setData(subscripionPagedata);
@@ -125,10 +125,11 @@ public class SubscriptionPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
+		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 		StudentSubscriptionPageData subscripionPagedata = new StudentSubscriptionPageData();
 		if (studentControlDTO != null) {
-			subscripionPagedata.setEmailId(studentControlDTO.getEmailId());
+			subscripionPagedata.setEmailId(emailId);
 			subscripionPagedata.setSubscriptionSelected(studentControlDTO.getSubscriptionType());
 		}
 		pageDto.setData(subscripionPagedata);
@@ -138,9 +139,8 @@ public class SubscriptionPageHandler implements IPageHandler {
 	@Override
 	public PageDTO saveAsMaster(PageRequestDTO pageRequest) {
 		PageDTO pageDTO = new PageDTO();
-		String emailId = pageRequest.getHeader().getEmailId();
 		String editionId = pageRequest.getHeader().getEditionId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageRequest.getHeader().getStudentId();
 		subscriptionBusiness.workToMaster(pageRequest.getHeader().getModule(), studentId, editionId);
 		studentSubscriptionWorkService.delete(studentId);
 		pageDTO.setHeader(pageRequest.getHeader());
@@ -179,16 +179,14 @@ public class SubscriptionPageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		String operation = pageRequest.getHeader().getOperation();
 		String editionId = pageRequest.getHeader().getEditionId();
-		String emailId = pageRequest.getHeader().getEmailId();
+		Long studentId = pageRequest.getHeader().getStudentId();
 		String saveIn = pageNavigatorDTO.getUpdationTable();
 		String evalAvailed = "";
 		StudentSubscriptionPageData subscripionPagedata = mapPagedata(pageRequest);
-		studentRegBusiness.checkAndUpdateIfEvalPeriodExpired(emailId, editionId);
-		Long studentId = 0L;
+		studentRegBusiness.checkAndUpdateIfEvalPeriodExpired(studentId, editionId);
 		if (PageSaveTable.W.toString().equals(saveIn)) {
-			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 			if (studentControlWorkDTO != null) {
-				studentId = studentControlWorkDTO.getStudentId();
 				if ("Y".equalsIgnoreCase(studentControlWorkDTO.getEvalAvailed())) {
 					evalAvailed = studentControlWorkDTO.getEvalAvailed();
 				}

@@ -11,7 +11,6 @@ public class StudentControlDTO extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	private Long studentId;
-	private String emailId;
 	private String studentDetails;
 	private String schoolDetails;
 	private String subscriptionType;

@@ -94,10 +94,10 @@ public class MyProfilePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		MyProfilePageData myProfilePageData = new MyProfilePageData();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
-		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+		StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 		StudentSubscriptionDTO studentSubscriptionDTO = studentSubscriptionBusiness
 				.getStudentSubscriptionFromMaster(studentId, editionId);
 		StudentSubscriptionPageData studentSubscriptionPageData = modelMapper.map(studentSubscriptionDTO,

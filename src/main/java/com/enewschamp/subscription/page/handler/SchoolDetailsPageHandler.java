@@ -128,9 +128,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 
 	public PageDTO loadPreviousPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDTO = new PageDTO();
-		Long studentId = 0L;
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		StudentSchoolPageData studentSchoolPageData = new StudentSchoolPageData();
 		StudentSchoolDTO studentSchoolDTO = schoolDetailsBusiness.getStudentFromMaster(studentId);
 		if (studentSchoolDTO == null) {
@@ -152,9 +150,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 
 	public PageDTO loadWorkDataPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDTO = new PageDTO();
-		Long studentId = 0L;
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String subscriptionType = "";
 		StudentSchoolPageData studentSchoolPageData = new StudentSchoolPageData();
 		StudentSchoolWorkDTO studentSchoolWorkDTO = schoolDetailsBusiness.getStudentFromWork(studentId);
@@ -167,11 +163,11 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 				studentSchoolPageData = modelMapper.map(studentSchoolDTO, StudentSchoolPageData.class);
 			}
 		}
-		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 		if (studentControlWorkDTO != null) {
 			subscriptionType = studentControlWorkDTO.getSubscriptionTypeW();
 		} else {
-			StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+			StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 			if (studentControlDTO != null) {
 				subscriptionType = studentControlDTO.getSubscriptionType();
 			}
@@ -200,10 +196,8 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 
 	public PageDTO loadExistingSchoolDetailsPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDTO = new PageDTO();
-		Long studentId = 0L;
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String subscriptionType = "";
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
-		studentId = studentControlBusiness.getStudentId(emailId);
 		StudentSchoolDTO studentSchoolDTO = schoolDetailsBusiness.getStudentFromMaster(studentId);
 		StudentSchoolPageData studentSchoolPageData = new StudentSchoolPageData();
 		if (studentSchoolDTO != null) {
@@ -211,11 +205,11 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 		} else {
 			studentSchoolDTO = new StudentSchoolDTO();
 		}
-		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 		if (studentControlWorkDTO != null) {
 			subscriptionType = studentControlWorkDTO.getSubscriptionTypeW();
 		} else {
-			StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+			StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 			if (studentControlDTO != null) {
 				subscriptionType = studentControlDTO.getSubscriptionType();
 			}
@@ -337,8 +331,7 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 	@Override
 	public PageDTO saveAsMaster(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		String emailId = pageRequest.getHeader().getEmailId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageRequest.getHeader().getStudentId();
 		schoolDetailsBusiness.workToMaster(studentId);
 		studentSchoolWorkService.delete(studentId);
 		pageDto.setHeader(pageRequest.getHeader());
@@ -376,26 +369,23 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		String operation = pageRequest.getHeader().getOperation();
 		String editionId = pageRequest.getHeader().getEditionId();
+		Long studentId = pageRequest.getHeader().getStudentId();
 		String saveIn = pageNavigatorDTO.getUpdationTable();
 		if (PageSaveTable.M.toString().equals(saveIn)) {
 			StudentSchoolPageData studentSchoolPageData = null;
 			studentSchoolPageData = mapPagedata(pageRequest);
-			String emailId = pageRequest.getHeader().getEmailId();
-			Long studentId = studentControlBusiness.getStudentId(emailId);
 			StudentSchoolDTO studSchool = modelMapper.map(studentSchoolPageData, StudentSchoolDTO.class);
 			studSchool.setStudentId(studentId);
 			studSchool.setOperatorId("" + studentId);
 			studSchool.setRecordInUse(RecordInUseType.Y);
 			schoolDetailsBusiness.saveAsMaster(studSchool);
-			StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(emailId);
+			StudentControlDTO studentControlDTO = studentControlBusiness.getStudentFromMaster(studentId);
 			studentControlDTO.setSchoolDetails("Y");
 			studentControlBusiness.saveAsMaster(studentControlDTO);
 		} else if (PageSaveTable.W.toString().equals(saveIn)) {
 			StudentSchoolPageData studentSchoolPageData = null;
 			studentSchoolPageData = mapPagedata(pageRequest);
-			String emailId = pageRequest.getHeader().getEmailId();
-			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
-			Long studentId = studentControlBusiness.getStudentId(emailId);
+			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 			StudentSchoolWorkDTO studenSchool = modelMapper.map(studentSchoolPageData, StudentSchoolWorkDTO.class);
 			studenSchool.setStudentId(studentId);
 			studenSchool.setOperatorId("" + studentId);
@@ -421,12 +411,11 @@ public class SchoolDetailsPageHandler implements IPageHandler {
 
 	public PageDTO handlePreviousWorkDataPage(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
-		Long studentId = 0L;
-		String emailId = pageRequest.getHeader().getEmailId();
+		Long studentId = pageRequest.getHeader().getStudentId();
 		String saveIn = pageNavigatorDTO.getUpdationTable();
 		StudentSchoolPageData studentSchoolPageData = mapPagedata(pageRequest);
 		if (PageSaveTable.W.toString().equals(saveIn)) {
-			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 			studentId = studentControlWorkDTO.getStudentId();
 			StudentSchoolWorkDTO studentSchoolWorkDTO = schoolDetailsBusiness.getStudentFromWork(studentId);
 			if (studentSchoolWorkDTO == null) {

@@ -40,11 +40,6 @@ public class StudentControlWork extends BaseEntity {
 	@Column(name = "nextPageLoadMethod", length = 99)
 	private String nextPageLoadMethod;
 
-	@Convert(converter = StringCryptoConverter.class)
-	@NotNull
-	@Column(name = "emailId", length = 99)
-	private String emailId;
-
 	@Column(name = "studentDetails", length = 1)
 	private String studentDetails;
 

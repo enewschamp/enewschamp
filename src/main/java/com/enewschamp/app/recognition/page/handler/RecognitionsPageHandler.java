@@ -102,7 +102,7 @@ public class RecognitionsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		RecognitionPageData pageData = (RecognitionPageData) commonService.mapPageData(RecognitionPageData.class,
 				pageNavigationContext.getPageRequest());
@@ -121,7 +121,7 @@ public class RecognitionsPageHandler implements IPageHandler {
 			paginationData.setPageSize(pageSize);
 			pageData.setPagination(paginationData);
 		}
-		LocalDate limitDate = commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_RECOGNITIONS, emailId);
+		LocalDate limitDate = commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_RECOGNITIONS, studentId);
 		Page<RecognitionData> pageResult = studentBadgesBusiness.getStudentBadges(studentId, editionId, limitDate,
 				pageNo, pageSize);
 		if (pageResult == null || pageResult.isLast()) {

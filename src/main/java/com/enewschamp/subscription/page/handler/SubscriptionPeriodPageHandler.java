@@ -113,16 +113,13 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 	public PageDTO loadNextPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
-		Long studentId = 0L;
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String subscriptionType = "";
 		SubscriptionPeriodPageData subscriptionPeriodPageData = new SubscriptionPeriodPageData();
-		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 		if (studentControlWorkDTO != null) {
-			studentId = studentControlWorkDTO.getStudentId();
 			subscriptionType = studentControlWorkDTO.getSubscriptionTypeW();
-			emailId = studentControlWorkDTO.getEmailId();
 		}
 		subscriptionPeriodPageData = mapPricingDetails(subscriptionPeriodPageData, subscriptionType, studentId,
 				editionId);
@@ -133,16 +130,14 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 	public PageDTO loadWorkDataPage(PageNavigationContext pageNavigationContext) {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
-		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
-		Long studentId = 0L;
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String subscriptionType = "";
 		SubscriptionPeriodPageData subscriptionPeriodPageData = new SubscriptionPeriodPageData();
-		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 		if (studentControlWorkDTO != null) {
 			studentId = studentControlWorkDTO.getStudentId();
 			subscriptionType = studentControlWorkDTO.getSubscriptionTypeW();
-			emailId = studentControlWorkDTO.getEmailId();
 		}
 		StudentSubscriptionWorkDTO studentSubscriptionWorkDTO = subscriptionBusiness
 				.getStudentSubscriptionFromWork(studentId, editionId);
@@ -161,19 +156,15 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 	@Override
 	public PageDTO saveAsMaster(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		String emailId = pageRequest.getHeader().getEmailId();
-		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
-		Long studentId = 0L;
+		Long studentId = pageRequest.getHeader().getStudentId();
+		StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 		if (studentControlWorkDTO != null) {
 			studentId = studentControlWorkDTO.getStudentId();
 		}
 		String editionId = pageRequest.getHeader().getEditionId();
-
-		// get subscription dto from master
 		StudentSubscriptionDTO studentSubscriotionDTO = subscriptionBusiness.getStudentSubscriptionFromMaster(studentId,
 				editionId);
 		SubscriptionPeriodPageData subscriptionPeriodPageData = null;
-		// map the request data
 		subscriptionPeriodPageData = mapPagedata(pageRequest);
 		String subscriptionPeriod = subscriptionPeriodPageData.getSubscriptionPeriodSelected();
 		String autoRenew = subscriptionPeriodPageData.getAutoRenew();
@@ -226,13 +217,12 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 
 	public PageDTO handleNextAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
-		Long studentId = 0L;
-		String emailId = pageRequest.getHeader().getEmailId();
+		Long studentId = pageRequest.getHeader().getStudentId();
 		String editionId = pageRequest.getHeader().getEditionId();
 		String saveIn = pageNavigatorDTO.getUpdationTable();
 		String operation = pageRequest.getHeader().getOperation();
 		if (PageSaveTable.W.toString().equals(saveIn)) {
-			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
+			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 			studentId = studentControlWorkDTO.getStudentId();
 			StudentSubscriptionWorkDTO studentSubscpritionWorkDTO = subscriptionBusiness
 					.getStudentSubscriptionFromWork(studentId, editionId);
@@ -269,14 +259,12 @@ public class SubscriptionPeriodPageHandler implements IPageHandler {
 
 	public PageDTO handlePreviousWorkDataPage(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		PageDTO pageDTO = new PageDTO();
-		Long studentId = 0L;
-		String emailId = pageRequest.getHeader().getEmailId();
+		Long studentId = pageRequest.getHeader().getStudentId();
 		String editionId = pageRequest.getHeader().getEditionId();
 		String saveIn = pageNavigatorDTO.getUpdationTable();
 		String operation = pageRequest.getHeader().getOperation();
 		if (PageSaveTable.W.toString().equals(saveIn)) {
-			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(emailId);
-			studentId = studentControlWorkDTO.getStudentId();
+			StudentControlWorkDTO studentControlWorkDTO = studentControlBusiness.getStudentFromWork(studentId);
 			StudentSubscriptionWorkDTO studentSubscpritionWorkDTO = subscriptionBusiness
 					.getStudentSubscriptionFromWork(studentId, editionId);
 			SubscriptionPeriodPageData subscriptionPeriodPageData = mapPagedata(pageRequest);

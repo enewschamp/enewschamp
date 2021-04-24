@@ -1,6 +1,5 @@
 package com.enewschamp.app.article.page.handler;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -45,8 +44,6 @@ import com.enewschamp.publication.domain.service.GenreService;
 import com.enewschamp.subscription.app.dto.StudentPreferencesDTO;
 import com.enewschamp.subscription.domain.business.PreferenceBusiness;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "NewsEventsPageHandler")
@@ -131,7 +128,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 		if (studReg != null) {
 			isTestUser = studReg.getIsTestUser();
 		}
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
 		NewsEventsPageData pageData = (NewsEventsPageData) commonService.mapPageData(NewsEventsPageData.class,
 				pageNavigationContext.getPageRequest());
@@ -161,7 +158,7 @@ public class NewsEventsPageHandler implements IPageHandler {
 		searchRequestData.setIsTestUser(isTestUser);
 		searchRequestData.setArticleType(ArticleType.NEWSEVENT);
 		searchRequestData.setPublicationDateFrom(
-				commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_NEWS_EVENTS, emailId));
+				commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_NEWS_EVENTS, studentId));
 		if (readingLevel == 1) {
 			searchRequestData.setReadingLevel1(AppConstants.YES);
 		} else if (readingLevel == 2) {

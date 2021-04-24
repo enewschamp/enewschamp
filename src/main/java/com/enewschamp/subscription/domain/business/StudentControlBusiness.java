@@ -73,8 +73,8 @@ public class StudentControlBusiness {
 		return studentControlService.studentExist(studentId);
 	}
 
-	public StudentControlDTO getStudentFromMaster(String emailId) {
-		StudentControl studentEntity = studentControlService.getStudentByEmail(emailId);
+	public StudentControlDTO getStudentFromMaster(Long studentId) {
+		StudentControl studentEntity = studentControlService.get(studentId);
 		if (studentEntity != null) {
 			StudentControlDTO studentDto = modelMapper.map(studentEntity, StudentControlDTO.class);
 			return studentDto;
@@ -83,8 +83,8 @@ public class StudentControlBusiness {
 
 	}
 
-	public StudentControlWorkDTO getStudentFromWork(String emailId) {
-		StudentControlWork studentEntityWork = studentControlWorkService.getStudentByEmail(emailId);
+	public StudentControlWorkDTO getStudentFromWork(Long studentId) {
+		StudentControlWork studentEntityWork = studentControlWorkService.get(studentId);
 		if (studentEntityWork != null) {
 			StudentControlWorkDTO studentDto = modelMapper.map(studentEntityWork, StudentControlWorkDTO.class);
 			return studentDto;
@@ -93,16 +93,12 @@ public class StudentControlBusiness {
 
 	}
 
-	public Long getStudentId(String emailId) {
-		Long studentId = 0L;
-		StudentControlDTO studentControlDTO = getStudentFromMaster(emailId);
-		if (studentControlDTO != null) {
-			studentId = studentControlDTO.getStudentId();
-		} else {
-			StudentControlWorkDTO studentControlWorkDTO = getStudentFromWork(emailId);
-			if (studentControlWorkDTO != null)
-				studentId = studentControlWorkDTO.getStudentId();
-		}
-		return studentId;
-	}
+	/*
+	 * public Long getStudentId(String emailId) { Long studentId = 0L;
+	 * StudentControlDTO studentControlDTO = getStudentFromMaster(emailId); if
+	 * (studentControlDTO != null) { studentId = studentControlDTO.getStudentId(); }
+	 * else { StudentControlWorkDTO studentControlWorkDTO =
+	 * getStudentFromWork(emailId); if (studentControlWorkDTO != null) studentId =
+	 * studentControlWorkDTO.getStudentId(); } return studentId; }
+	 */
 }

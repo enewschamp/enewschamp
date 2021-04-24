@@ -57,15 +57,6 @@ public class StudentControlWorkService {
 		}
 	}
 
-	public boolean studentExistByEmail(String emailId) {
-		StudentControlWork existingEntity = repository.searchByEmail(emailId);
-		if (existingEntity != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	public boolean studentExist(Long studentId) {
 		return repository.existsById(studentId);
 
@@ -80,10 +71,4 @@ public class StudentControlWorkService {
 		StudentControlWork.setStudentId(studentId);
 		return auditService.getEntityAudit(StudentControlWork);
 	}
-
-	public StudentControlWork getStudentByEmail(String emailId) {
-		StudentControlWork existingEntity = repository.searchByEmail(emailId);
-		return existingEntity;
-	}
-
 }

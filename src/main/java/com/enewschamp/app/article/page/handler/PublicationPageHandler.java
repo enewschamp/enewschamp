@@ -103,8 +103,9 @@ public class PublicationPageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		String emailId = pageNavigationContext.getPageRequest().getHeader().getEmailId();
 		String editionId = pageNavigationContext.getPageRequest().getHeader().getEditionId();
-		studentRegBusiness.checkAndUpdateIfEvalPeriodExpired(emailId, editionId);
-		studentRegBusiness.checkAndUpdateIfSubscriptionExpired(emailId, editionId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
+		studentRegBusiness.checkAndUpdateIfEvalPeriodExpired(studentId, editionId);
+		studentRegBusiness.checkAndUpdateIfSubscriptionExpired(studentId, editionId);
 		String methodName = pageNavigationContext.getLoadMethod();
 		if (methodName != null && !"".equals(methodName)) {
 			Class[] params = new Class[1];
@@ -136,7 +137,7 @@ public class PublicationPageHandler implements IPageHandler {
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		String tokenId = pageNavigationContext.getPageRequest().getHeader().getLoginCredentials();
 		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
 		if (studReg != null) {
@@ -216,7 +217,7 @@ public class PublicationPageHandler implements IPageHandler {
 			NotificationsSearchRequest searchRequest = new NotificationsSearchRequest();
 			searchRequest.setEditionId(editionId);
 			searchRequest.setStudentId(studentId);
-			String limitDate = commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_NOTIFICATIONS, emailId)
+			String limitDate = commonService.getLimitDate(module, PropertyConstants.VIEW_LIMIT_NOTIFICATIONS, studentId)
 					+ " 00:00";
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 			searchRequest.setOperationDateTime(LocalDateTime.parse(limitDate, formatter));
@@ -237,7 +238,7 @@ public class PublicationPageHandler implements IPageHandler {
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		String tokenId = pageNavigationContext.getPageRequest().getHeader().getLoginCredentials();
 		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
 		if (studReg != null) {
@@ -316,7 +317,7 @@ public class PublicationPageHandler implements IPageHandler {
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		String tokenId = pageNavigationContext.getPageRequest().getHeader().getLoginCredentials();
 		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
 		if (studReg != null) {
@@ -395,7 +396,7 @@ public class PublicationPageHandler implements IPageHandler {
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		String tokenId = pageNavigationContext.getPageRequest().getHeader().getLoginCredentials();
 		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
 		if (studReg != null) {
@@ -470,7 +471,7 @@ public class PublicationPageHandler implements IPageHandler {
 		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		String tokenId = pageNavigationContext.getPageRequest().getHeader().getLoginCredentials();
 		String deviceId = pageNavigationContext.getPageRequest().getHeader().getDeviceId();
-		Long studentId = studentControlBusiness.getStudentId(emailId);
+		Long studentId = pageNavigationContext.getPageRequest().getHeader().getStudentId();
 		String isTestUser = "";
 		StudentRegistration studReg = regService.getStudentReg(emailId);
 		if (studReg != null) {
