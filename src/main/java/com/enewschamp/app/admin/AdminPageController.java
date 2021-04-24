@@ -32,6 +32,7 @@ import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
+import com.enewschamp.common.domain.service.PropertiesFrontendService;
 import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.problem.Fault;
@@ -47,6 +48,9 @@ public class AdminPageController {
 
 	@Autowired
 	private CommonModuleService commonModuleService;
+
+	@Autowired
+	private PropertiesFrontendService propertiesFrontendService;
 
 	@Autowired
 	UserLoginBusiness userLoginBusiness;
@@ -103,6 +107,14 @@ public class AdminPageController {
 	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest, String context) {
 		// Process current page
 		PageDTO pageResponse = pageHandlerFactory.getPageHandler(pageName, context).handleAction(pageRequest);
+		// if ("Menu".equalsIgnoreCase(pageResponse.getPageName())) {
+		String propertiesLabel = propertiesFrontendService.getValue(pageRequest.getHeader().getModule(),
+				PropertyConstants.PROPERTIES_LABEL);
+		if (!propertiesLabel.equals(pageRequest.getHeader().getPropertiesLabel())) {
+			pageResponse.setGlobalProperties(
+					propertiesFrontendService.getPropertyList(pageRequest.getHeader().getModule()));
+		}
+		// }
 		return pageResponse;
 	}
 

@@ -41,6 +41,7 @@ import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.enewschamp.app.user.login.service.UserLoginBusiness;
 import com.enewschamp.common.domain.service.PropertiesBackendService;
+import com.enewschamp.common.domain.service.PropertiesFrontendService;
 import com.enewschamp.domain.common.PageHandlerFactory;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
@@ -66,6 +67,9 @@ public class PublisherPageController {
 
 	@Autowired
 	private PropertiesBackendService propertiesService;
+
+	@Autowired
+	private PropertiesFrontendService propertiesFrontendService;
 
 	@Autowired
 	private EnewschampApplicationProperties appConfig;
@@ -204,6 +208,7 @@ public class PublisherPageController {
 	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest, String context) {
 		// Process current page
 		String edition = pageRequest.getHeader().getEditionId();
+		String module = pageRequest.getHeader().getModule();
 		// check if the edition exist..
 		editionService.getEdition(edition);
 		PageDTO pageResponse = pageHandlerFactory.getPageHandler(pageName, context).handleAction(pageRequest);
@@ -230,11 +235,12 @@ public class PublisherPageController {
 			pageNavigationContext.setPreviousPageResponse(pageResponse);
 			pageResponse = pageHandlerFactory.getPageHandler(nextPageName, context).loadPage(pageNavigationContext);
 		}
-		addSuccessHeader(pageName, actionName, pageResponse, context);
+		addSuccessHeader(pageName, actionName, pageRequest, pageResponse, context);
 		return pageResponse;
 	}
 
-	private void addSuccessHeader(String currentPageName, String actionName, PageDTO page, String context) {
+	private void addSuccessHeader(String currentPageName, String actionName, PageRequestDTO pageRequest, PageDTO page,
+			String context) {
 		if (page.getHeader() == null) {
 			page.setHeader(new HeaderDTO());
 		}
@@ -244,6 +250,14 @@ public class PublisherPageController {
 		String nextPageName = appConfig.getPageNavigationConfig().get(context).get(currentPageName.toLowerCase())
 				.get(actionName.toLowerCase());
 		page.getHeader().setPageName(nextPageName);
+		if ("Menu".equalsIgnoreCase(nextPageName)) {
+			String propertiesLabel = propertiesFrontendService.getValue(pageRequest.getHeader().getModule(),
+					PropertyConstants.PROPERTIES_LABEL);
+			if (!propertiesLabel.equals(pageRequest.getHeader().getPropertiesLabel())) {
+				page.setGlobalProperties(
+						propertiesFrontendService.getPropertyList(pageRequest.getHeader().getModule()));
+			}
+		}
 	}
 
 	@RequestMapping(value = "/publisher/images", method = RequestMethod.GET, produces = MediaType.ALL_VALUE)

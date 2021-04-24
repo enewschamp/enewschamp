@@ -2,7 +2,7 @@ package com.enewschamp.app.common;
 
 public interface PropertyConstants {
 
-	public static String PROPERTIES_LABEL = "propertiesLabel.propertiesLabel";
+	public static String PROPERTIES_LABEL = "propertiesLabel";
 
 	public static String LAUNCH_APP_PAGE_NAME = "launchApp.pageName";
 	public static String LAUNCH_APP_OPERATION = "launchApp.operation";
