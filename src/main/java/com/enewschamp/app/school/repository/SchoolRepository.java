@@ -19,6 +19,7 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 
 	@Query("Select s from School s where s.schoolProgramCode= :schoolProgramCode and recordInUse='Y'")
 	public List<School> getSchoolFromProgramCode(@Param("schoolProgramCode") String schoolProgramCode);
-	
-	public Optional<School> findByNameAndCityIdAndStateIdAndCountryId(String name, String cityId, String stateId, String countryId);
+
+	public Optional<School> findByNameAndCityIdAndStateIdAndCountryId(String name, String cityId, String stateId,
+			String countryId);
 }

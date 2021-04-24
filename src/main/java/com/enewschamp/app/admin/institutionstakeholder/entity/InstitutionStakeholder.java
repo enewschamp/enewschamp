@@ -29,7 +29,7 @@ public class InstitutionStakeholder extends BaseEntity {
 	@SequenceGenerator(name = "institution_stakeholders_id_generator", sequenceName = "institution_stakeholders_id_seq", allocationSize = 1)
 	@Column(name = "institutionStakeholdersId", updatable = false, nullable = false)
 	private Long institutionStakeholdersId;
-	
+
 	@NotNull
 	@Column(name = "stakeholderId")
 	private Long stakeholderId;

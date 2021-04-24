@@ -32,7 +32,7 @@ public class StudentSubscriptionService {
 
 	@Autowired
 	StudentSubscriptionRepository repository;
-	
+
 	@Autowired
 	StudentSubscriptionRepositoryCustomImpl repositoryCustom;
 
@@ -101,7 +101,7 @@ public class StudentSubscriptionService {
 		StudentDetails.setStudentId(studentId);
 		return auditService.getEntityAudit(StudentDetails);
 	}
-	
+
 	public StudentSubscription read(StudentSubscription studentSubscription) {
 		Long studentsubscriptionId = studentSubscription.getStudentId();
 		StudentSubscription studentSubscriptionEntity = get(studentsubscriptionId, null);

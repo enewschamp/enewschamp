@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.fw.page.navigation.entity.PageNavigator;
 
-@JaversSpringDataAuditable	
+@JaversSpringDataAuditable
 public interface PageNavigatorRepository extends JpaRepository<PageNavigator, Long> {
 
 	@Cacheable
@@ -23,16 +23,16 @@ public interface PageNavigatorRepository extends JpaRepository<PageNavigator, Lo
 	@Query("select n from PageNavigator n where n. action=:action and n.operation= :operation and n.currentPage= :currPage")
 	public PageNavigator getNavPage(@Param("action") String action, @Param("operation") String operation,
 			@Param("currPage") String currPage);
-	
+
 	@Modifying
 	@Transactional
 	@Query(value = "truncate table page_navigator", nativeQuery = true)
 	public void truncate();
-	
+
 	@Modifying
 	@Query(value = "truncate table page_navigator_id_seq", nativeQuery = true)
 	public void deleteSequences();
-	
+
 	@Modifying
 	@Query(value = "insert into page_navigator_id_seq values(1)", nativeQuery = true)
 	public void initializeSequence();

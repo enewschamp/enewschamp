@@ -28,7 +28,7 @@ public class AvatarPageData extends PageData {
 	private String imageBase64;
 	private String imageTypeExt;
 	private String imageUpdate;
-	
+
 	@JsonIgnore
 	public String getImageBase64() {
 		return this.imageBase64;

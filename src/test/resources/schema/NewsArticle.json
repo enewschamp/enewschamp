@@ -1,220 +1,220 @@
 {
-  "type": "object",
-  "properties": {
-    "articleType": {
-      "enum": [
-        "NEWSARTICLE",
-        "NEWSEVENT"
-      ],
-      "type": "string"
-    },
-    "authorId": {
-      "type": "string"
-    },
-    "authorWorked": {
-      "type": "string"
-    },
-    "cityId": {
-      "type": "string"
-    },
-    "comments": {
-      "type": "string"
-    },
-    "content": {
-      "type": "string"
-    },
-    "credits": {
-      "type": "string"
-    },
-    "currentAction": {
-      "enum": [
-        "SaveNewsArticleGroup",
-        "AssignAuthor",
-        "AssignEditor",
-        "SaveAsDraft",
-        "SubmitForReview",
-        "ReworkForAuthor",
-        "ReworkForEditor",
-        "ReadyToPublish",
-        "Publish",
-        "Close",
-        "Reinstate"
-      ],
-      "type": "string"
-    },
-    "editorId": {
-      "type": "string"
-    },
-    "editorWorked": {
-      "type": "string"
-    },
-    "genreId": {
-      "type": "string"
-    },
-    "hashTags": {
-      "type": "string"
-    },
-    "headline": {
-      "type": "string"
-    },
-    "imagePathDesktop": {
-      "type": "string"
-    },
-    "imagePathMobile": {
-      "type": "string"
-    },
-    "imagePathTab": {
-      "type": "string"
-    },
-    "imagePathThumbnail": {
-      "type": "string"
-    },
-    "intendedPubDate": {
-      "type": "string"
-    },
-    "intendedPubDay": {
-      "enum": [
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-        "Sat",
-        "Sun"
-      ],
-      "type": "string"
-    },
-    "intendedPubMonth": {
-      "enum": [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-      ],
-      "type": "string"
-    },
-    "likeHCount": {
-      "type": "integer"
-    },
-    "likeLCount": {
-      "type": "integer"
-    },
-    "likeOCount": {
-      "type": "integer"
-    },
-    "likeSCount": {
-      "type": "integer"
-    },
-    "likeWCount": {
-      "type": "integer"
-    },
-    "newsArticleGroupId": {
-      "type": "integer"
-    },
-    "newsArticleId": {
-      "type": "integer"
-    },
-    "newsArticleQuiz": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "correctOpt": {
-            "type": "integer"
-          },
-          "newsArticleId": {
-            "type": "integer"
-          },
-          "newsArticleQuizId": {
-            "type": "integer"
-          },
-          "": {
-            "enum": [
-              "Y",
-              "N"
-            ],
-            "type": "string"
-          },
-          "opt1": {
-            "type": "string"
-          },
-          "opt2": {
-            "type": "string"
-          },
-          "opt3": {
-            "type": "string"
-          },
-          "opt4": {
-            "type": "string"
-          },
-          "question": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "": {
-      "enum": [
-        "Y",
-        "N"
-      ],
-      "type": "string"
-    },
-    "publicationDate": {
-      "type": "string"
-    },
-    "publicationId": {
-      "type": "integer"
-    },
-    "publisherWorked": {
-      "type": "string"
-    },
-    "rating": {
-      "type": "string"
-    },
-    "readingLevel": {
-      "type": "integer"
-    },
-    "sequence": {
-      "type": "integer"
-    },
-    "sourceText": {
-      "type": "string"
-    },
-    "status": {
-      "enum": [
-        "Initial",
-        "Unassigned",
-        "Assigned",
-        "UnderReview",
-        "ReworkForAuthor",
-        "ReworkForEditor",
-        "ReadyToPublish",
-        "Published",
-        "Closed"
-      ],
-      "type": "string"
-    },
-    "targetCompletionDate": {
-      "type": "string"
-    },
-    "url": {
-      "type": "string"
-    },
-    "imageOnly": {
-      "type": "boolean"
-    },
-    "noQuiz": {
-      "type": "boolean"
-    }
-  },
-  "$schema": "http://json-schema.org/draft-04/schema#"
+	"type": "object",
+	"properties": {
+		"articleType": {
+			"enum": [
+				"NEWSARTICLE",
+				"NEWSEVENT"
+			],
+			"type": "string"
+		},
+		"authorId": {
+			"type": "string"
+		},
+		"authorWorked": {
+			"type": "string"
+		},
+		"cityId": {
+			"type": "string"
+		},
+		"comments": {
+			"type": "string"
+		},
+		"content": {
+			"type": "string"
+		},
+		"credits": {
+			"type": "string"
+		},
+		"currentAction": {
+			"enum": [
+				"SaveNewsArticleGroup",
+				"AssignAuthor",
+				"AssignEditor",
+				"SaveAsDraft",
+				"SubmitForReview",
+				"ReworkForAuthor",
+				"ReworkForEditor",
+				"ReadyToPublish",
+				"Publish",
+				"Close",
+				"Reinstate"
+			],
+			"type": "string"
+		},
+		"editorId": {
+			"type": "string"
+		},
+		"editorWorked": {
+			"type": "string"
+		},
+		"genreId": {
+			"type": "string"
+		},
+		"hashTags": {
+			"type": "string"
+		},
+		"headline": {
+			"type": "string"
+		},
+		"imagePathDesktop": {
+			"type": "string"
+		},
+		"imagePathMobile": {
+			"type": "string"
+		},
+		"imagePathTab": {
+			"type": "string"
+		},
+		"imagePathThumbnail": {
+			"type": "string"
+		},
+		"intendedPubDate": {
+			"type": "string"
+		},
+		"intendedPubDay": {
+			"enum": [
+				"Mon",
+				"Tue",
+				"Wed",
+				"Thu",
+				"Fri",
+				"Sat",
+				"Sun"
+			],
+			"type": "string"
+		},
+		"intendedPubMonth": {
+			"enum": [
+				"Jan",
+				"Feb",
+				"Mar",
+				"Apr",
+				"May",
+				"Jun",
+				"Jul",
+				"Aug",
+				"Sep",
+				"Oct",
+				"Nov",
+				"Dec"
+			],
+			"type": "string"
+		},
+		"likeHCount": {
+			"type": "integer"
+		},
+		"likeLCount": {
+			"type": "integer"
+		},
+		"likeOCount": {
+			"type": "integer"
+		},
+		"likeSCount": {
+			"type": "integer"
+		},
+		"likeWCount": {
+			"type": "integer"
+		},
+		"newsArticleGroupId": {
+			"type": "integer"
+		},
+		"newsArticleId": {
+			"type": "integer"
+		},
+		"newsArticleQuiz": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"correctOpt": {
+						"type": "integer"
+					},
+					"newsArticleId": {
+						"type": "integer"
+					},
+					"newsArticleQuizId": {
+						"type": "integer"
+					},
+					"": {
+						"enum": [
+							"Y",
+							"N"
+						],
+						"type": "string"
+					},
+					"opt1": {
+						"type": "string"
+					},
+					"opt2": {
+						"type": "string"
+					},
+					"opt3": {
+						"type": "string"
+					},
+					"opt4": {
+						"type": "string"
+					},
+					"question": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"": {
+			"enum": [
+				"Y",
+				"N"
+			],
+			"type": "string"
+		},
+		"publicationDate": {
+			"type": "string"
+		},
+		"publicationId": {
+			"type": "integer"
+		},
+		"publisherWorked": {
+			"type": "string"
+		},
+		"rating": {
+			"type": "string"
+		},
+		"readingLevel": {
+			"type": "integer"
+		},
+		"sequence": {
+			"type": "integer"
+		},
+		"sourceText": {
+			"type": "string"
+		},
+		"status": {
+			"enum": [
+				"Initial",
+				"Unassigned",
+				"Assigned",
+				"UnderReview",
+				"ReworkForAuthor",
+				"ReworkForEditor",
+				"ReadyToPublish",
+				"Published",
+				"Closed"
+			],
+			"type": "string"
+		},
+		"targetCompletionDate": {
+			"type": "string"
+		},
+		"url": {
+			"type": "string"
+		},
+		"imageOnly": {
+			"type": "boolean"
+		},
+		"noQuiz": {
+			"type": "boolean"
+		}
+	},
+	"$schema": "http://json-schema.org/draft-04/schema#"
 }

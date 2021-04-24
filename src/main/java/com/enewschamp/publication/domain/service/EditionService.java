@@ -27,7 +27,7 @@ public class EditionService extends AbstractDomainService {
 
 	@Autowired
 	EditionRepository repository;
-	
+
 	@Autowired
 	EditionRepositoryCustomImpl repositoryCustom;
 
@@ -40,13 +40,11 @@ public class EditionService extends AbstractDomainService {
 
 	@Autowired
 	AuditService auditService;
-	
-	
 
 	public Edition create(Edition editionEntity) {
 		Edition edition = null;
 		Optional<Edition> existingEdition = repository.findById(editionEntity.getEditionId());
-		if(existingEdition.isPresent()) {
+		if (existingEdition.isPresent()) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		try {
@@ -60,13 +58,12 @@ public class EditionService extends AbstractDomainService {
 	public Edition update(Edition edition) {
 		String editionId = edition.getEditionId();
 		Edition existingEdition = get(editionId);
-		if(existingEdition.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingEdition.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(edition, existingEdition);
 		return repository.save(existingEdition);
 	}
-
 
 	public Edition patch(Edition edition) {
 		String editionId = edition.getEditionId();
@@ -106,7 +103,7 @@ public class EditionService extends AbstractDomainService {
 	public List<ListOfValuesItem> getLOV() {
 		return toListOfValuesItems(repository.getEditionLOV());
 	}
-	
+
 	public Edition read(Edition edition) {
 		String editionId = edition.getEditionId();
 		Edition editionEntity = get(editionId);
@@ -116,7 +113,7 @@ public class EditionService extends AbstractDomainService {
 	public Edition close(Edition editionEntity) {
 		String editionId = editionEntity.getEditionId();
 		Edition existingEntity = get(editionId);
-		if(existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingEntity.setRecordInUse(RecordInUseType.N);
@@ -124,25 +121,24 @@ public class EditionService extends AbstractDomainService {
 		return repository.save(existingEntity);
 	}
 
-	
 	public Edition reinstate(Edition editionEntity) {
 		String editionId = editionEntity.getEditionId();
 		Edition existingEdition = get(editionId);
-		if(existingEdition.getRecordInUse().equals(RecordInUseType.Y)) {
+		if (existingEdition.getRecordInUse().equals(RecordInUseType.Y)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingEdition.setRecordInUse(RecordInUseType.Y);
 		existingEdition.setOperationDateTime(null);
 		return repository.save(existingEdition);
 	}
-	
+
 	public Page<Edition> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Edition> editionList = repositoryCustom.findAll(pageable, null);
 		return editionList;
 	}
-	
-	public List<EditionView> getAllEditionView(){
+
+	public List<EditionView> getAllEditionView() {
 		return repository.findAllProjectedBy();
 	}
 }

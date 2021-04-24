@@ -37,7 +37,7 @@ public class OTPService {
 
 	@Autowired
 	OTPRepository repository;
-	
+
 	@Autowired
 	OTPRepositoryCustomImpl repositoryCustom;
 
@@ -160,7 +160,7 @@ public class OTPService {
 		}
 		return validOtp;
 	}
-	
+
 	public OTP get(Long otpId) {
 		Optional<OTP> existingEntity = repository.findById(otpId);
 		if (existingEntity.isPresent()) {
@@ -169,7 +169,7 @@ public class OTPService {
 			throw new BusinessException(ErrorCodeConstants.OTP_NOT_FOUND, String.valueOf(otpId));
 		}
 	}
-	
+
 	public OTP create(OTP otp) {
 		OTP otpEntity = null;
 		try {
@@ -189,7 +189,7 @@ public class OTPService {
 		modelMapper.map(otp, existingOTP);
 		return repository.save(existingOTP);
 	}
-	
+
 	public OTP read(OTP otp) {
 		Long OTPId = otp.getOtpId();
 		OTP existingOTP = get(OTPId);

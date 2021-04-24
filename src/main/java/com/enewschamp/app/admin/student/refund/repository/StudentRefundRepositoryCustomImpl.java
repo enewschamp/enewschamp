@@ -24,7 +24,8 @@ import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.user.domain.entity.StudentRefund;
 
 @Repository
-public class StudentRefundRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<StudentRefund>, AdminConstant {
+public class StudentRefundRepositoryCustomImpl extends RepositoryImpl
+		implements IGenericListRepository<StudentRefund>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -35,7 +36,7 @@ public class StudentRefundRepositoryCustomImpl extends RepositoryImpl implements
 		CriteriaQuery<StudentRefund> criteriaQuery = cb.createQuery(StudentRefund.class);
 		Root<StudentRefund> studentRefundRoot = criteriaQuery.from(StudentRefund.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		
+
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentRefundRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query

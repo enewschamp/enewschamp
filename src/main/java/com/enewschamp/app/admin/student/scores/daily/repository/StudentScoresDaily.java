@@ -18,18 +18,18 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "ScoresDaily",uniqueConstraints = {
+@Table(name = "ScoresDaily", uniqueConstraints = {
 		@UniqueConstraint(columnNames = { "studentId", "editionId", "readingLevel", "publicationDate" }) })
 @EqualsAndHashCode(callSuper = false)
 public class StudentScoresDaily extends BaseEntity {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "scores_daily_id_generator")
 	@SequenceGenerator(name = "scores_daily_id_generator", sequenceName = "scores_daily_id_seq", allocationSize = 1)
 	@Column(name = "scoresDailyId", length = 3)
 	private Long scoresDailyId;
-	
+
 	@Column(name = "publicationDate")
 	private LocalDate publicationDate;
 
@@ -41,13 +41,13 @@ public class StudentScoresDaily extends BaseEntity {
 
 	@Column(name = "quizCorrect")
 	private Long quizCorrect;
-	
+
 	@Column(name = "studentId")
 	private Long studentId;
-	
+
 	@Column(name = "editionId")
 	private String editionId;
-	
+
 	@Column(name = "readingLevel")
 	private String readingLevel;
 

@@ -84,14 +84,14 @@ public class StudentRefundPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createStudentRefund(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentRefundPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentRefundPageData.class);
+		StudentRefundPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentRefundPageData.class);
 		validate(pageData, this.getClass().getName());
 		StudentRefund StudentRefund = mapStudentRefundData(pageRequest, pageData);
 		StudentRefund = refundService.create(StudentRefund);
 		mapStudentRefund(pageRequest, pageDto, StudentRefund);
 		return pageDto;
 	}
-
 
 	private StudentRefund mapStudentRefundData(PageRequestDTO pageRequest, StudentRefundPageData pageData) {
 		StudentRefund StudentRefund = modelMapper.map(pageData, StudentRefund.class);
@@ -102,7 +102,8 @@ public class StudentRefundPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updateStudentRefund(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentRefundPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentRefundPageData.class);
+		StudentRefundPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentRefundPageData.class);
 		validate(pageData, this.getClass().getName());
 		StudentRefund StudentRefund = mapStudentRefundData(pageRequest, pageData);
 		StudentRefund = refundService.update(StudentRefund);
@@ -113,7 +114,8 @@ public class StudentRefundPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readStudentRefund(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentRefundPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentRefundPageData.class);
+		StudentRefundPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentRefundPageData.class);
 		StudentRefund StudentRefund = modelMapper.map(pageData, StudentRefund.class);
 		StudentRefund = refundService.read(StudentRefund);
 		mapStudentRefund(pageRequest, pageDto, StudentRefund);
@@ -123,7 +125,8 @@ public class StudentRefundPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closeStudentRefund(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentRefundPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentRefundPageData.class);
+		StudentRefundPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentRefundPageData.class);
 		StudentRefund StudentRefund = modelMapper.map(pageData, StudentRefund.class);
 		StudentRefund = refundService.close(StudentRefund);
 		mapStudentRefund(pageRequest, pageDto, StudentRefund);
@@ -133,7 +136,8 @@ public class StudentRefundPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reinstateStudentRefund(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentRefundPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentRefundPageData.class);
+		StudentRefundPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentRefundPageData.class);
 		StudentRefund StudentRefund = modelMapper.map(pageData, StudentRefund.class);
 		StudentRefund = refundService.reinstate(StudentRefund);
 		mapStudentRefund(pageRequest, pageDto, StudentRefund);
@@ -180,7 +184,8 @@ public class StudentRefundPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<StudentRefund> pageDataList = page.getContent();
 			for (StudentRefund StudentRefund : pageDataList) {
-				StudentRefundPageData StudentRefundPageData = modelMapper.map(StudentRefund, StudentRefundPageData.class);
+				StudentRefundPageData StudentRefundPageData = modelMapper.map(StudentRefund,
+						StudentRefundPageData.class);
 				StudentRefundPageData.setLastUpdate(StudentRefund.getOperationDateTime());
 				StudentRefundPageDataList.add(StudentRefundPageData);
 			}

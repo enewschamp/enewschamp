@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class UIControlsPageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long uiControlId;
 
 	@NotNull(message = MessageConstants.PAGE_NAME_NOT_NULL)

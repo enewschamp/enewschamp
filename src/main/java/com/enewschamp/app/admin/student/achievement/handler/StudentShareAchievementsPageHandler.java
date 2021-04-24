@@ -87,7 +87,7 @@ public class StudentShareAchievementsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		StudentShareAchievementsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				StudentShareAchievementsPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		StudentShareAchievements studentAchievements = mapStudentShareAchievementsData(pageRequest, pageData);
 		studentAchievements = studentShareAchievementsService.create(studentAchievements);
 		mapStudentShareAchievements(pageRequest, pageDto, studentAchievements);
@@ -99,7 +99,7 @@ public class StudentShareAchievementsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		StudentShareAchievementsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				StudentShareAchievementsPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		StudentShareAchievements studentAchievements = mapStudentShareAchievementsData(pageRequest, pageData);
 		studentAchievements = studentShareAchievementsService.update(studentAchievements);
 		mapStudentShareAchievements(pageRequest, pageDto, studentAchievements);
@@ -169,7 +169,6 @@ public class StudentShareAchievementsPageHandler implements IPageHandler {
 		pageData = mapPageData(studentAchievements);
 		pageDto.setData(pageData);
 	}
-
 
 	private StudentShareAchievements mapStudentShareAchievementsData(PageRequestDTO pageRequest,
 			StudentShareAchievementsPageData pageData) {

@@ -25,7 +25,8 @@ import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.subscription.domain.entity.StudentPayment;
 
 @Repository
-public class StudentPaymentRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<StudentPayment>, AdminConstant {
+public class StudentPaymentRepositoryCustomImpl extends RepositoryImpl
+		implements IGenericListRepository<StudentPayment>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -44,10 +45,12 @@ public class StudentPaymentRepositoryCustomImpl extends RepositoryImpl implement
 			filterPredicates.add(cb.equal(studentPaymentRoot.get(EDITION_ID), searchRequest.getEditionId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSubscriptionType()))
-			filterPredicates.add(cb.equal(studentPaymentRoot.get(SUBSCRIPTION_TYPE), searchRequest.getSubscriptionType()));
+			filterPredicates
+					.add(cb.equal(studentPaymentRoot.get(SUBSCRIPTION_TYPE), searchRequest.getSubscriptionType()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSubscriptionPeriod()))
-			filterPredicates.add(cb.equal(studentPaymentRoot.get(SUBSCRIPTION_PERIOD), searchRequest.getSubscriptionPeriod()));
+			filterPredicates
+					.add(cb.equal(studentPaymentRoot.get(SUBSCRIPTION_PERIOD), searchRequest.getSubscriptionPeriod()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentPaymentRoot.get(CommonConstants.OPERATION_DATE_TIME)));

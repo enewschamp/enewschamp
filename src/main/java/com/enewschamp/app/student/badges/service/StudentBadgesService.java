@@ -31,7 +31,7 @@ public class StudentBadgesService {
 
 	@Autowired
 	StudentBadgesCustomRepository studentBadgesCustomRepository;
-	
+
 	@Autowired
 	StudentBadgesRepositoryCustomImpl studentBadgesRepositoryCustom;
 
@@ -131,7 +131,7 @@ public class StudentBadgesService {
 		}
 		return badge;
 	}
-	
+
 	public StudentBadges read(StudentBadges studentBadges) {
 		Long badgesId = studentBadges.getStudentBadgesId();
 		StudentBadges studentBadgesEntity = get(badgesId);
@@ -162,8 +162,7 @@ public class StudentBadgesService {
 
 	public Page<StudentBadges> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<StudentBadges> studentBadgesList = studentBadgesRepositoryCustom.findAll(pageable,
-				searchRequest);
+		Page<StudentBadges> studentBadgesList = studentBadgesRepositoryCustom.findAll(pageable, searchRequest);
 		return studentBadgesList;
 	}
 }

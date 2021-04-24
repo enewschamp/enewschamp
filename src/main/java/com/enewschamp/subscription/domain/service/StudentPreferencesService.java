@@ -30,7 +30,7 @@ public class StudentPreferencesService {
 
 	@Autowired
 	StudentPreferencesRepository repository;
-	
+
 	@Autowired
 	private StudentPreferencesRepositoryCustomImpl repositoryCustom;
 
@@ -86,7 +86,7 @@ public class StudentPreferencesService {
 		studentPreferences.setStudentId(studentId);
 		return auditService.getEntityAudit(studentPreferences);
 	}
-	
+
 	public StudentPreferences read(StudentPreferences studentPreferencesEntity) {
 		Long studentId = studentPreferencesEntity.getStudentId();
 		StudentPreferences studentPreferences = get(studentId);

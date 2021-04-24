@@ -98,7 +98,7 @@ public class PromotionPageHandler implements IPageHandler {
 		validate(pageData);
 		Promotion promotion = mapPromotionData(pageRequest, pageData);
 		promotion = promotionService.create(promotion);
-        mapPromotion(pageRequest, pageDto, promotion);
+		mapPromotion(pageRequest, pageDto, promotion);
 		return pageDto;
 	}
 
@@ -119,7 +119,7 @@ public class PromotionPageHandler implements IPageHandler {
 		PromotionPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PromotionPageData.class);
 		Promotion promotion = modelMapper.map(pageData, Promotion.class);
 		promotion = promotionService.read(promotion);
-        mapPromotion(pageRequest, pageDto, promotion);
+		mapPromotion(pageRequest, pageDto, promotion);
 		return pageDto;
 	}
 
@@ -129,17 +129,17 @@ public class PromotionPageHandler implements IPageHandler {
 		PromotionPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PromotionPageData.class);
 		Promotion promotion = modelMapper.map(pageData, Promotion.class);
 		promotion = promotionService.close(promotion);
-        mapPromotion(pageRequest, pageDto, promotion);
+		mapPromotion(pageRequest, pageDto, promotion);
 		return pageDto;
 	}
-	
+
 	@SneakyThrows
 	private PageDTO reinstatePromotion(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		PromotionPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), PromotionPageData.class);
 		Promotion promotion = modelMapper.map(pageData, Promotion.class);
 		promotion = promotionService.reinstate(promotion);
-        mapPromotion(pageRequest, pageDto, promotion);
+		mapPromotion(pageRequest, pageDto, promotion);
 		return pageDto;
 	}
 
@@ -175,7 +175,7 @@ public class PromotionPageHandler implements IPageHandler {
 		}
 		return promotionPageDataList;
 	}
-	
+
 	private void mapPromotion(PageRequestDTO pageRequest, PageDTO pageDto, Promotion promotion) {
 		PromotionPageData pageData;
 		mapHeaderData(pageRequest, pageDto);

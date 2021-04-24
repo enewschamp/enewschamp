@@ -95,7 +95,8 @@ public class StudentScoresMonthlyTotalPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createStudentScoresMonthlyTotal(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentScoresMonthlyTotalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentScoresMonthlyTotalPageData.class);
+		StudentScoresMonthlyTotalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentScoresMonthlyTotalPageData.class);
 		validate(pageData);
 		StudentScoresMonthlyTotal studentScoreMonthly = mapStudentScoresMonthlyTotalData(pageRequest, pageData);
 		studentScoreMonthly = studentScoresMonthlyService.create(studentScoreMonthly);
@@ -103,8 +104,8 @@ public class StudentScoresMonthlyTotalPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-
-	private StudentScoresMonthlyTotal mapStudentScoresMonthlyTotalData(PageRequestDTO pageRequest, StudentScoresMonthlyTotalPageData pageData) {
+	private StudentScoresMonthlyTotal mapStudentScoresMonthlyTotalData(PageRequestDTO pageRequest,
+			StudentScoresMonthlyTotalPageData pageData) {
 		StudentScoresMonthlyTotal studentScoresMonthly = modelMapper.map(pageData, StudentScoresMonthlyTotal.class);
 		studentScoresMonthly.setRecordInUse(RecordInUseType.Y);
 		return studentScoresMonthly;
@@ -113,7 +114,8 @@ public class StudentScoresMonthlyTotalPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updateStudentScoresMonthlyTotal(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentScoresMonthlyTotalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentScoresMonthlyTotalPageData.class);
+		StudentScoresMonthlyTotalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentScoresMonthlyTotalPageData.class);
 		validate(pageData);
 		StudentScoresMonthlyTotal studentScoresMonthly = mapStudentScoresMonthlyTotalData(pageRequest, pageData);
 		studentScoresMonthly = studentScoresMonthlyService.update(studentScoresMonthly);
@@ -124,7 +126,8 @@ public class StudentScoresMonthlyTotalPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readStudentScoresMonthlyTotal(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentScoresMonthlyTotalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentScoresMonthlyTotalPageData.class);
+		StudentScoresMonthlyTotalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentScoresMonthlyTotalPageData.class);
 		StudentScoresMonthlyTotal studentScoresMonthly = modelMapper.map(pageData, StudentScoresMonthlyTotal.class);
 		studentScoresMonthly = studentScoresMonthlyService.read(studentScoresMonthly);
 		mapStudentScoresMonthlyTotal(pageRequest, pageDto, studentScoresMonthly);
@@ -134,7 +137,8 @@ public class StudentScoresMonthlyTotalPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closeStudentScoresMonthlyTotal(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentScoresMonthlyTotalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentScoresMonthlyTotalPageData.class);
+		StudentScoresMonthlyTotalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentScoresMonthlyTotalPageData.class);
 		StudentScoresMonthlyTotal studentScoresMonthly = modelMapper.map(pageData, StudentScoresMonthlyTotal.class);
 		studentScoresMonthly = studentScoresMonthlyService.close(studentScoresMonthly);
 		mapStudentScoresMonthlyTotal(pageRequest, pageDto, studentScoresMonthly);
@@ -144,7 +148,8 @@ public class StudentScoresMonthlyTotalPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reinstateStudentScoresMonthlyTotal(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentScoresMonthlyTotalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentScoresMonthlyTotalPageData.class);
+		StudentScoresMonthlyTotalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentScoresMonthlyTotalPageData.class);
 		StudentScoresMonthlyTotal studentScoresMonthly = modelMapper.map(pageData, StudentScoresMonthlyTotal.class);
 		studentScoresMonthly = studentScoresMonthlyService.reinstate(studentScoresMonthly);
 		mapStudentScoresMonthlyTotal(pageRequest, pageDto, studentScoresMonthly);
@@ -174,24 +179,28 @@ public class StudentScoresMonthlyTotalPageHandler implements IPageHandler {
 	}
 
 	private StudentScoresMonthlyTotalPageData mapPageData(StudentScoresMonthlyTotal studentScoresMonthly) {
-		StudentScoresMonthlyTotalPageData pageData = modelMapper.map(studentScoresMonthly, StudentScoresMonthlyTotalPageData.class);
+		StudentScoresMonthlyTotalPageData pageData = modelMapper.map(studentScoresMonthly,
+				StudentScoresMonthlyTotalPageData.class);
 		pageData.setLastUpdate(studentScoresMonthly.getOperationDateTime());
 		return pageData;
 	}
 
-	private void mapStudentScoresMonthlyTotal(PageRequestDTO pageRequest, PageDTO pageDto, StudentScoresMonthlyTotal studentScoresMonthly) {
+	private void mapStudentScoresMonthlyTotal(PageRequestDTO pageRequest, PageDTO pageDto,
+			StudentScoresMonthlyTotal studentScoresMonthly) {
 		StudentScoresMonthlyTotalPageData pageData;
 		mapHeaderData(pageRequest, pageDto);
 		pageData = mapPageData(studentScoresMonthly);
 		pageDto.setData(pageData);
 	}
 
-	public List<StudentScoresMonthlyTotalPageData> mapStudentScoresMonthlyTotalData(Page<StudentScoresMonthlyTotal> page) {
+	public List<StudentScoresMonthlyTotalPageData> mapStudentScoresMonthlyTotalData(
+			Page<StudentScoresMonthlyTotal> page) {
 		List<StudentScoresMonthlyTotalPageData> studentScoresMonthlyPageDataList = new ArrayList<StudentScoresMonthlyTotalPageData>();
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<StudentScoresMonthlyTotal> pageDataList = page.getContent();
 			for (StudentScoresMonthlyTotal studentScoresMonthly : pageDataList) {
-				StudentScoresMonthlyTotalPageData studentScoresMonthlyPageData = modelMapper.map(studentScoresMonthly, StudentScoresMonthlyTotalPageData.class);
+				StudentScoresMonthlyTotalPageData studentScoresMonthlyPageData = modelMapper.map(studentScoresMonthly,
+						StudentScoresMonthlyTotalPageData.class);
 				studentScoresMonthlyPageData.setLastUpdate(studentScoresMonthly.getOperationDateTime());
 				studentScoresMonthlyPageDataList.add(studentScoresMonthlyPageData);
 			}

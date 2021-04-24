@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@JsonIgnoreProperties({ "operatorId", "lastUpdate", "recordInUse"})
+@JsonIgnoreProperties({ "operatorId", "lastUpdate", "recordInUse" })
 public class PublicationDailySummaryPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	private Integer quizPublished;

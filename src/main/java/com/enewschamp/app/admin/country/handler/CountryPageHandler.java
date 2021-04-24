@@ -95,7 +95,7 @@ public class CountryPageHandler implements IPageHandler {
 	private PageDTO updateCountry(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		CountryPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), CountryPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		Country country = mapCountryData(pageRequest, pageData);
 		country = countryService.update(country);
 		mapCountry(pageRequest, pageDto, country);
@@ -111,7 +111,7 @@ public class CountryPageHandler implements IPageHandler {
 		mapCountry(pageRequest, pageDto, country);
 		return pageDto;
 	}
-	
+
 	@SneakyThrows
 	private PageDTO closeCountry(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
@@ -170,7 +170,6 @@ public class CountryPageHandler implements IPageHandler {
 		pageData.setLastUpdate(country.getOperationDateTime());
 		return pageData;
 	}
-
 
 	public List<CountryPageData> mapCountryData(Page<Country> page) {
 		List<CountryPageData> countryPageDataList = new ArrayList<CountryPageData>();

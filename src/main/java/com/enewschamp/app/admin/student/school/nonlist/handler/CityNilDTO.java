@@ -10,8 +10,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@JsonIgnoreProperties({ "operationDateTime"})
-public class CityNilDTO extends CityDTO{
+@JsonIgnoreProperties({ "operationDateTime" })
+public class CityNilDTO extends CityDTO {
 	private static final long serialVersionUID = 1L;
 	private LocalDateTime lastUpdate;
 

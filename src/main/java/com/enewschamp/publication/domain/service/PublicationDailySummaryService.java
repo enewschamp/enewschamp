@@ -30,7 +30,7 @@ public class PublicationDailySummaryService extends AbstractDomainService {
 
 	@Autowired
 	private PublicationDailySummaryRepository repository;
-	
+
 	@Autowired
 	private PublicationDailySummaryRepositoryCustomImpl repositoryCustom;
 
@@ -124,7 +124,7 @@ public class PublicationDailySummaryService extends AbstractDomainService {
 
 		return response;
 	}
-	
+
 	public Page<ArticlePublicationDaily> listPublicationDailySummary(AdminSearchRequest searchRequest, int pageNo,
 			int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);

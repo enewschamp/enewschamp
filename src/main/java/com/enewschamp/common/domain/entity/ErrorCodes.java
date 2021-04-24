@@ -18,8 +18,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "ErrorCodes",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "errorCode" }) })
+@Table(name = "ErrorCodes", uniqueConstraints = { @UniqueConstraint(columnNames = { "errorCode" }) })
 public class ErrorCodes extends BaseEntity {
 
 	/**

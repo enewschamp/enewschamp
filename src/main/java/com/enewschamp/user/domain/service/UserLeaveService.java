@@ -26,7 +26,7 @@ public class UserLeaveService extends AbstractDomainService {
 
 	@Autowired
 	UserLeaveRepository repository;
-	
+
 	@Autowired
 	UserLeaveRepositoryCustomImpl customRepository;
 
@@ -60,7 +60,6 @@ public class UserLeaveService extends AbstractDomainService {
 		return repository.save(existingUserLeave);
 	}
 
-
 	public UserLeave patch(UserLeave userLeave) {
 		UserLeaveKey userLeaveKey = userLeave.getUserLeaveKey();
 		UserLeave existingEntity = get(userLeaveKey);
@@ -86,7 +85,7 @@ public class UserLeaveService extends AbstractDomainService {
 		userLeave.setUserLeaveKey(userLeaveKey);
 		return auditService.getEntityAudit(userLeaveKey);
 	}
-	
+
 	public UserLeave read(UserLeave userLeaveEntity) {
 		UserLeaveKey userLeaveId = userLeaveEntity.getUserLeaveKey();
 		UserLeave userLeave = get(userLeaveId);

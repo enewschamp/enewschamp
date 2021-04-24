@@ -87,7 +87,7 @@ public class InstitutionStakeholderPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		InstitutionStakeholderPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				InstitutionStakeholderPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		InstitutionStakeholder institutionStakeholder = mapInstitutionStakeholderData(pageRequest, pageData);
 		institutionStakeholder = instStackHolderService.create(institutionStakeholder);
 		mapInstitutionStakeholder(pageRequest, pageDto, institutionStakeholder);
@@ -99,7 +99,7 @@ public class InstitutionStakeholderPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		InstitutionStakeholderPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				InstitutionStakeholderPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		InstitutionStakeholder institutionStakeholder = mapInstitutionStakeholderData(pageRequest, pageData);
 		institutionStakeholder = instStackHolderService.update(institutionStakeholder);
 		mapInstitutionStakeholder(pageRequest, pageDto, institutionStakeholder);

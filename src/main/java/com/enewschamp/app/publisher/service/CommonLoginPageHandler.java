@@ -124,8 +124,8 @@ public class CommonLoginPageHandler implements IPageHandler {
 			}
 			loginSuccess = userService.validatePassword(userId, password, userActivityTracker);
 			if (loginSuccess) {
-				UserLogin userLogin = userLoginBusiness.login(userId, userId, deviceId, tokenId, module,
-						appVersion, UserType.A);				
+				UserLogin userLogin = userLoginBusiness.login(userId, userId, deviceId, tokenId, module, appVersion,
+						UserType.A);
 				userLogin.setLoginFlag(AppConstants.YES);
 				loginService.update(userLogin);
 				userActivityTracker.setActionStatus(UserAction.SUCCESS);

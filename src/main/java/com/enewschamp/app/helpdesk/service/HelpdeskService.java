@@ -24,7 +24,7 @@ public class HelpdeskService {
 
 	@Autowired
 	HelpdeskRepository helpdeskRespository;
-	
+
 	@Autowired
 	private HelpdeskRepositoryCustomImpl helpDeskRespositoryCustom;
 
@@ -37,9 +37,9 @@ public class HelpdeskService {
 
 	public Helpdesk create(Helpdesk helpDeskEntity) {
 		Helpdesk existingHelpdesk = getByStudentId(helpDeskEntity.getStudentId());
-        if(existingHelpdesk !=null) {
-        	throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
-        }
+		if (existingHelpdesk != null) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
 		return helpdeskRespository.save(helpDeskEntity);
 	}
 
@@ -81,10 +81,11 @@ public class HelpdeskService {
 			return null;
 		}
 	}
+
 	public Helpdesk read(Helpdesk helpDesk) {
 		Long helpDeskId = helpDesk.getHelpdeskId();
 		Helpdesk helpDeskEntity = get(helpDeskId);
-        return helpDeskEntity;
+		return helpDeskEntity;
 	}
 
 	public Helpdesk close(Helpdesk helpDeskEntity) {
@@ -108,7 +109,7 @@ public class HelpdeskService {
 		existingHelpdesk.setOperationDateTime(null);
 		return helpdeskRespository.save(existingHelpdesk);
 	}
-	
+
 	public Page<Helpdesk> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Helpdesk> helpDeskList = helpDeskRespositoryCustom.findAll(pageable, searchRequest);

@@ -8,11 +8,12 @@ import com.enewschamp.app.common.PageData;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class StakeHolderPageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long stakeholderId;
 	private String title;
 

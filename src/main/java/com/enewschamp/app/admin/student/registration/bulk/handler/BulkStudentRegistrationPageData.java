@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class BulkStudentRegistrationPageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	
+
 	@NotNull(message = MessageConstants.STUDENT_CONTROL_NOT_NULL)
 	private StudentControlNilDTO studentControl;
 	@NotNull(message = MessageConstants.STUDENT_REGISTRATION_NOT_NULL)

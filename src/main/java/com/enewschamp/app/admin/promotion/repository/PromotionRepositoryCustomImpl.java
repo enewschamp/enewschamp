@@ -20,9 +20,10 @@ import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
+
 @Repository
-public class PromotionRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Promotion>{
-	
+public class PromotionRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Promotion> {
+
 	@PersistenceContext
 	private EntityManager entityManager;
 

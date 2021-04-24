@@ -92,8 +92,7 @@ public class StudentPaymentPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<StudentPayment> pageDataList = page.getContent();
 			for (StudentPayment userLogin : pageDataList) {
-				StudentPaymentPageData userLoginPageData = modelMapper.map(userLogin,
-						StudentPaymentPageData.class);
+				StudentPaymentPageData userLoginPageData = modelMapper.map(userLogin, StudentPaymentPageData.class);
 				userLoginPageData.setLastUpdate(userLogin.getOperationDateTime());
 				userLoginPageDataList.add(userLoginPageData);
 			}

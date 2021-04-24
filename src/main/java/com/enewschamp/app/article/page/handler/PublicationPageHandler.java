@@ -1,6 +1,5 @@
 package com.enewschamp.app.article.page.handler;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
@@ -550,15 +549,5 @@ public class PublicationPageHandler implements IPageHandler {
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setHeader(pageRequest.getHeader());
 		return pageDTO;
-	}
-
-	private PublicationPageData mapPageData(PublicationPageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), PublicationPageData.class);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return pageData;
 	}
 }

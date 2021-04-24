@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import com.enewschamp.app.user.login.entity.UserLogin;
 import com.enewschamp.app.user.login.entity.UserType;
 
-
 public interface UserLoginRepository extends JpaRepository<UserLogin, Long> {
 
 	@Query("Select s from UserLogin s where s.userId= :userId and s.deviceId= :deviceId and s.tokenId=:tokenId and s.userType= :userType and s.loginFlag='Y'")
@@ -32,11 +31,10 @@ public interface UserLoginRepository extends JpaRepository<UserLogin, Long> {
 	@Query("Select s from UserLogin s where s.userId= :userId and s.deviceId= :deviceId and s.tokenId= :tokenId and s.userType= 'P'")
 	public Optional<UserLogin> getOperatorLogin(@Param("userId") String userId, @Param("deviceId") String deviceId,
 			@Param("tokenId") String tokenId);
-	
+
 	@Query("Select s from UserLogin s where s.userId= :userId and s.deviceId= :deviceId and s.tokenId= :tokenId and s.userType= :userType")
 	public Optional<UserLogin> getOperatorLogin(@Param("userId") String userId, @Param("deviceId") String deviceId,
 			@Param("tokenId") String tokenId, @Param("userType") UserType userType);
-
 
 	@Query("Select s from UserLogin s where s.userId= :userId and s.userType= 'P'")
 	public Optional<UserLogin> getOperatorLogin(@Param("userId") String userId);

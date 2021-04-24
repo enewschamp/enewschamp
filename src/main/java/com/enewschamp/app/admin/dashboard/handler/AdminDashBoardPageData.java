@@ -13,18 +13,18 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class AdminDashBoardPageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	
+
 	private List<GenreView> genres;
 
 	private List<BadgeList> badges;
 
 	private List<HolidayList> holidays;
-	
+
 	private List<CountryView> countries;
-	
+
 	private List<AvatarView> avatars;
-	
+
 	private List<EditionView> editions;
-	
+
 	private List<UserView> users;
-} 
+}

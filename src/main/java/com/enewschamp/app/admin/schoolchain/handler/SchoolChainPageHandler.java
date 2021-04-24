@@ -86,7 +86,7 @@ public class SchoolChainPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		SchoolChainPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				SchoolChainPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		SchoolChain schoolChain = mapSchoolChainData(pageRequest, pageData);
 		schoolChain = schoolChainService.create(schoolChain);
 		mapSchoolChain(pageRequest, pageDto, schoolChain);
@@ -98,7 +98,7 @@ public class SchoolChainPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		SchoolChainPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				SchoolChainPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		SchoolChain schoolChain = mapSchoolChainData(pageRequest, pageData);
 		schoolChain = schoolChainService.update(schoolChain);
 		mapSchoolChain(pageRequest, pageDto, schoolChain);

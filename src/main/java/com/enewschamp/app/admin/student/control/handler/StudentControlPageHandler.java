@@ -82,7 +82,8 @@ public class StudentControlPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updateStudentControl(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentControlPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentControlPageData.class);
+		StudentControlPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentControlPageData.class);
 		validate(pageData);
 		StudentControl studentControl = mapStudentControlData(pageRequest, pageData);
 		studentControl = studentControlService.update(studentControl);
@@ -115,21 +116,21 @@ public class StudentControlPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<StudentControl> pageDataList = page.getContent();
 			for (StudentControl studentControl : pageDataList) {
-				StudentControlPageData studentControlPageData = modelMapper.map(studentControl, StudentControlPageData.class);
+				StudentControlPageData studentControlPageData = modelMapper.map(studentControl,
+						StudentControlPageData.class);
 				studentControlPageData.setLastUpdate(studentControl.getOperationDateTime());
 				studentControlPageDataList.add(studentControlPageData);
 			}
 		}
 		return studentControlPageDataList;
 	}
-	
+
 	private void mapStudentControl(PageRequestDTO pageRequest, PageDTO pageDto, StudentControl studentControl) {
 		StudentControlPageData pageData;
 		mapHeaderData(pageRequest, pageDto);
 		pageData = mapPageData(studentControl);
 		pageDto.setData(pageData);
 	}
-
 
 	private StudentControl mapStudentControlData(PageRequestDTO pageRequest, StudentControlPageData pageData) {
 		StudentControl studentControl = modelMapper.map(pageData, StudentControl.class);

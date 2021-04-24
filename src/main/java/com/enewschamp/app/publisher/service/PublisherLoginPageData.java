@@ -9,7 +9,6 @@ import lombok.Data;
 @Data
 public class PublisherLoginPageData extends PageData {
 
-
 	/**
 	 * 
 	 */

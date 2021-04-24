@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public interface GenreView {
 	@JsonProperty("id")
 	String getNameId();
+
 	String getImageName();
 
 }

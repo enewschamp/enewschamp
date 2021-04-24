@@ -43,5 +43,5 @@ public class PageDTO implements Serializable {
 	private String errorMessage;
 	private JsonNode filter;
 	private List<PageData> records;
-	
+
 }

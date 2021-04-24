@@ -30,7 +30,7 @@ public class UIControlsRulesService {
 
 	@Autowired
 	UIControlsRulesRepository UIControlsRulesRepository;
-	
+
 	@Autowired
 	UIControlsRulesRepositoryCustomImpl uiControlsRulesRepositoryCustom;
 
@@ -53,7 +53,7 @@ public class UIControlsRulesService {
 		}
 		return uiControlsRules;
 	}
-	
+
 	public UIControlsRules updateOne(UIControlsRules UIControlsRules) {
 		Long uiControlId = UIControlsRules.getRuleId();
 		UIControlsRules existingUIControlsRules = get(uiControlId);
@@ -105,7 +105,7 @@ public class UIControlsRulesService {
 		UIControlsRules.setUiControlId(uiControlId);
 		return auditService.getEntityAudit(UIControlsRules);
 	}
-	
+
 	public UIControlsRules read(UIControlsRules uiControlEntity) {
 		Long ruleId = uiControlEntity.getRuleId();
 		UIControlsRules existingEntity = get(ruleId);

@@ -26,4 +26,7 @@ public class StudentSubscriptionPageData extends PageData {
 
 	@JsonInclude
 	private String validity;
+
+	@JsonInclude
+	private String autoRenewal;
 }

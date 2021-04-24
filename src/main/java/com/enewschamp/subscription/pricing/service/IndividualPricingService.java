@@ -27,7 +27,7 @@ public class IndividualPricingService {
 
 	@Autowired
 	IndividualPricingRepository individualPricingRepository;
-	
+
 	@Autowired
 	private IndividualPricingRepositoryCustomImpl individualPricingRepositoryCustom;
 
@@ -51,7 +51,7 @@ public class IndividualPricingService {
 	public IndividualPricing update(IndividualPricing IndividualPricingEntity) {
 		Long IndividualPricingId = IndividualPricingEntity.getIndividualPricingId();
 		IndividualPricing existingIndividualPricing = get(IndividualPricingId);
-		if(existingIndividualPricing.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingIndividualPricing.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(IndividualPricingEntity, existingIndividualPricing);
@@ -89,11 +89,11 @@ public class IndividualPricingService {
 			throw new BusinessException(ErrorCodeConstants.INDIVIDUAL_PRICING_NOT_FOUND);
 		}
 	}
-	
+
 	public IndividualPricing read(IndividualPricing individualPricing) {
 		Long inPricingId = individualPricing.getIndividualPricingId();
 		IndividualPricing individualPricingEntity = get(inPricingId);
-        return individualPricingEntity;
+		return individualPricingEntity;
 	}
 
 	public IndividualPricing close(IndividualPricing individualPricingEntity) {
@@ -121,7 +121,7 @@ public class IndividualPricingService {
 	public Page<IndividualPricing> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<IndividualPricing> individualPricingList = individualPricingRepositoryCustom.findAll(pageable, null);
-		if(individualPricingList.getContent().isEmpty()) {
+		if (individualPricingList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return individualPricingList;

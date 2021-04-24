@@ -47,7 +47,7 @@ public class InstitutionAddressService {
 	public InstitutionAddress update(InstitutionAddress institutionAddressEntity) {
 		Long addressId = institutionAddressEntity.getAddressId();
 		InstitutionAddress existingInstitution = get(addressId);
-		if(existingInstitution.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingInstitution.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(institutionAddressEntity, existingInstitution);
@@ -66,7 +66,7 @@ public class InstitutionAddressService {
 	public InstitutionAddress read(InstitutionAddress institutionAddressEntity) {
 		Long addressId = institutionAddressEntity.getAddressId();
 		InstitutionAddress institutionAddress = get(addressId);
-        return institutionAddress;
+		return institutionAddress;
 	}
 
 	public InstitutionAddress close(InstitutionAddress institutionAddressEntity) {

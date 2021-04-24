@@ -33,7 +33,7 @@ public class SchoolPricingService {
 
 	@Autowired
 	SchoolRepository schoolRepository;
-	
+
 	@Autowired
 	private SchoolPricingRepositoryCustomImpl schoolPricingRepositoryCustom;
 
@@ -108,6 +108,7 @@ public class SchoolPricingService {
 			}
 		}
 	}
+
 	public SchoolPricing read(SchoolPricing schoolPricingEntity) {
 		Long stakeHolderId = schoolPricingEntity.getSchoolPricingId();
 		SchoolPricing stakeHolder = get(stakeHolderId);

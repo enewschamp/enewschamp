@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "IndividualPricing",uniqueConstraints = {
+@Table(name = "IndividualPricing", uniqueConstraints = {
 		@UniqueConstraint(columnNames = { "editionId", "effectiveDate" }) })
 @EqualsAndHashCode(callSuper = false)
 public class IndividualPricing extends BaseEntity {

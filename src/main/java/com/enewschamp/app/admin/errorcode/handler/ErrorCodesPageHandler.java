@@ -101,7 +101,8 @@ public class ErrorCodesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createErrorCodes(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		ErrorCodesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ErrorCodesPageData.class);
+		ErrorCodesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				ErrorCodesPageData.class);
 		validate(pageData);
 		ErrorCodes errorCodes = mapErrorCodesData(pageRequest, pageData);
 		errorCodes = errorCodesService.create(errorCodes);
@@ -118,7 +119,8 @@ public class ErrorCodesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updateErrorCodes(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		ErrorCodesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ErrorCodesPageData.class);
+		ErrorCodesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				ErrorCodesPageData.class);
 		validate(pageData);
 		ErrorCodes errorCodes = mapErrorCodesData(pageRequest, pageData);
 		errorCodes = errorCodesService.update(errorCodes);
@@ -129,7 +131,8 @@ public class ErrorCodesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readErrorCodes(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		ErrorCodesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ErrorCodesPageData.class);
+		ErrorCodesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				ErrorCodesPageData.class);
 		ErrorCodes errorCodes = modelMapper.map(pageData, ErrorCodes.class);
 		errorCodes = errorCodesService.read(errorCodes);
 		mapErrorCodes(pageRequest, pageDto, errorCodes);
@@ -139,7 +142,8 @@ public class ErrorCodesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closeErrorCodes(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		ErrorCodesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ErrorCodesPageData.class);
+		ErrorCodesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				ErrorCodesPageData.class);
 		ErrorCodes errorCodes = modelMapper.map(pageData, ErrorCodes.class);
 		errorCodes = errorCodesService.close(errorCodes);
 		mapErrorCodes(pageRequest, pageDto, errorCodes);
@@ -149,7 +153,8 @@ public class ErrorCodesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reinstateErrorCodes(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		ErrorCodesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ErrorCodesPageData.class);
+		ErrorCodesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				ErrorCodesPageData.class);
 		ErrorCodes errorCodes = modelMapper.map(pageData, ErrorCodes.class);
 		errorCodes = errorCodesService.reinstate(errorCodes);
 		mapErrorCodes(pageRequest, pageDto, errorCodes);
@@ -177,16 +182,17 @@ public class ErrorCodesPageHandler implements IPageHandler {
 		dto.setRecords(variable);
 		return dto;
 	}
-	
+
 	@SneakyThrows
 	@Transactional
 	private PageDTO insertAll(PageRequestDTO pageRequest) {
-	    PageDTO pageDto = new PageDTO();
-	    ErrorCodesPageRoot pageRoot = objectMapper.readValue(pageRequest.getData().toString(), ErrorCodesPageRoot.class);
+		PageDTO pageDto = new PageDTO();
+		ErrorCodesPageRoot pageRoot = objectMapper.readValue(pageRequest.getData().toString(),
+				ErrorCodesPageRoot.class);
 		List<ErrorCodes> pageNavigators = mapErrorCodes(pageRequest, pageRoot.getErrorCodes());
-		if(pageRoot.isCleanRequired())
-		errorCodesService.clean();
-		int totalRecords= errorCodesService.createAll(pageNavigators);
+		if (pageRoot.isCleanRequired())
+			errorCodesService.clean();
+		int totalRecords = errorCodesService.createAll(pageNavigators);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
 		responseData.setNumberOfRecords(totalRecords);
 		mapHeaderData(pageRequest, pageDto);
@@ -231,14 +237,12 @@ public class ErrorCodesPageHandler implements IPageHandler {
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
 	}
-	
+
 	private List<ErrorCodes> mapErrorCodes(PageRequestDTO pageRequest, List<ErrorCodesPageData> pageData) {
-		List<ErrorCodes> errorCodes = pageData.stream()
-				.peek(element -> {
-					element.setOperatorId(pageRequest.getHeader().getUserId());
-					element.setRecordInUse(RecordInUseType.Y);
-				})
-				.map(errorcode -> modelMapper.map(errorcode, ErrorCodes.class)).collect(Collectors.toList());
+		List<ErrorCodes> errorCodes = pageData.stream().peek(element -> {
+			element.setOperatorId(pageRequest.getHeader().getUserId());
+			element.setRecordInUse(RecordInUseType.Y);
+		}).map(errorcode -> modelMapper.map(errorcode, ErrorCodes.class)).collect(Collectors.toList());
 		return errorCodes;
 	}
 

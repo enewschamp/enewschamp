@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@JsonIgnoreProperties({ "operatorId", "lastUpdate", "recordInUse"})
+@JsonIgnoreProperties({ "operatorId", "lastUpdate", "recordInUse" })
 public class PublicationMonthlyTotalPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	private Integer quizPublished;
@@ -16,4 +16,3 @@ public class PublicationMonthlyTotalPageData extends PageData {
 	private String readingLevel;
 	private String yearMonth;
 }
-

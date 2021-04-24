@@ -26,7 +26,7 @@ public class UserLoginService {
 
 	@Autowired
 	UserLoginRepository repository;
-	
+
 	@Autowired
 	UserLoginRepositoryCustomImpl repositoryCustom;
 
@@ -129,7 +129,7 @@ public class UserLoginService {
 			return null;
 		}
 	}
-	
+
 	public UserLogin getOperatorLogin(final String userId, UserType userType) {
 		Optional<UserLogin> existingEntity = repository.getOperatorLogin(userId, userType);
 		if (existingEntity.isPresent()) {
@@ -138,7 +138,7 @@ public class UserLoginService {
 			return null;
 		}
 	}
-	
+
 	public UserLogin read(UserLogin userLogin) {
 		Long UserLoginId = userLogin.getUserLoginId();
 		UserLogin existingUserLogin = get(UserLoginId);
@@ -172,7 +172,7 @@ public class UserLoginService {
 		Page<UserLogin> userList = repositoryCustom.findAll(pageable, searchRequest);
 		return userList;
 	}
-	
+
 	public UserLogin getOperatorLogin(final String userId, final String deviceId, final String tokenId,
 			final UserType userType) {
 		Optional<UserLogin> existingEntity = repository.getOperatorLogin(userId, deviceId, tokenId, userType);
@@ -182,6 +182,5 @@ public class UserLoginService {
 			return null;
 		}
 	}
-	
 
 }

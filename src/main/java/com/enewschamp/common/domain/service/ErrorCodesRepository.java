@@ -19,15 +19,15 @@ interface ErrorCodesRepository extends JpaRepository<ErrorCodes, Long> {
 
 	@Query(value = "select a from ErrorCodes a where a.errorCode= :errorCode")
 	public ErrorCodes getErrorCodes(@Param("errorCode") String errorCode);
-	
+
 	@Modifying
 	@Query(value = "truncate table error_codes", nativeQuery = true)
 	public void truncate();
-	
+
 	@Modifying
 	@Query(value = "truncate table error_codes_id_seq", nativeQuery = true)
 	public void deleteSequences();
-	
+
 	@Modifying
 	@Query(value = "insert into error_codes_id_seq values(1)", nativeQuery = true)
 	public void initializeSequence();

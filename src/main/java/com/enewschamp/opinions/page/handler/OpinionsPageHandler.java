@@ -1,6 +1,5 @@
 package com.enewschamp.opinions.page.handler;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import com.enewschamp.app.article.page.dto.ArticlePageData;
 import com.enewschamp.app.common.CommonFilterData;
 import com.enewschamp.app.common.CommonService;
 import com.enewschamp.app.common.ErrorCodeConstants;
@@ -38,8 +36,6 @@ import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.service.GenreService;
 import com.enewschamp.subscription.domain.business.StudentControlBusiness;
 import com.enewschamp.subscription.domain.business.SubscriptionBusiness;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component(value = "OpinionsPageHandler")
@@ -201,18 +197,5 @@ public class OpinionsPageHandler implements IPageHandler {
 			}
 		}
 		return opinionPageDataList;
-	}
-
-	private ArticlePageData mapPageData(ArticlePageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), ArticlePageData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return pageData;
 	}
 }

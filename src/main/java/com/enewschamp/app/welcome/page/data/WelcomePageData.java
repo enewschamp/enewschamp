@@ -3,6 +3,8 @@ package com.enewschamp.app.welcome.page.data;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.enewschamp.app.admin.celebration.dto.CelebrationDTO;
+import com.enewschamp.app.admin.promotion.dto.PromotionDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.recognition.page.data.RecognitionData;
 import com.enewschamp.app.scores.dto.StudentScoresMonthlyDTO;
@@ -56,6 +58,12 @@ public class WelcomePageData extends PageData {
 
 	@JsonInclude
 	private StudentPreferencesPageData preferences;
+
+	@JsonInclude
+	private List<CelebrationDTO> celebrations;
+
+	@JsonInclude
+	private List<PromotionDTO> promotions;
 
 	@JsonInclude
 	private List<RecognitionData> badgeDetails;

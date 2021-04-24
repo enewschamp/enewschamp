@@ -19,11 +19,11 @@ public class EntitlementPageData extends PageData {
 	@NotNull(message = MessageConstants.USER_ID_NOT_NULL)
 	@NotEmpty(message = MessageConstants.USER_ID_NOT_EMPTY)
 	private String userId;
-	
+
 	@NotNull(message = MessageConstants.USER_ROLE_NOT_NULL)
 	@NotEmpty(message = MessageConstants.USER_ROLE_NOT_EMPTY)
 	private String role;
-	
+
 	@NotNull(message = MessageConstants.PAGE_NAME_NOT_NULL)
 	@NotEmpty(message = MessageConstants.PAGE_NAME_NOT_EMPTY)
 	private String pageName;

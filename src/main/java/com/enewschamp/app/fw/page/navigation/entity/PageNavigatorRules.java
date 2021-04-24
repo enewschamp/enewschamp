@@ -17,8 +17,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "PageNavigatorRules",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "navId", "execSeq" }) })
+@Table(name = "PageNavigatorRules", uniqueConstraints = { @UniqueConstraint(columnNames = { "navId", "execSeq" }) })
 public class PageNavigatorRules extends BaseEntity {
 	/**
 	* 

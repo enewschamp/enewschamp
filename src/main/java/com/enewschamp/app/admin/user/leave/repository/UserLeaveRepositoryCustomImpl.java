@@ -25,7 +25,8 @@ import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.user.domain.entity.UserLeave;
 
 @Repository
-public class UserLeaveRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<UserLeave>,AdminConstant {
+public class UserLeaveRepositoryCustomImpl extends RepositoryImpl
+		implements IGenericListRepository<UserLeave>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;

@@ -29,7 +29,7 @@ public class StudentRegistrationService {
 
 	@Autowired
 	StudentRegistrationRepositoryCustomImpl repositoryCustom;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
 
@@ -50,11 +50,10 @@ public class StudentRegistrationService {
 		return registration;
 	}
 
-
 	public StudentRegistrationDTO update(StudentRegistration studentRegistration) {
 		Long studentId = studentRegistration.getStudentId();
 		StudentRegistration existingStudentRegistration = get(studentId);
-		if(existingStudentRegistration.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingStudentRegistration.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(studentRegistration, existingStudentRegistration);
@@ -101,7 +100,7 @@ public class StudentRegistrationService {
 		}
 		return exists;
 	}
-	
+
 	public StudentRegistration updateOne(StudentRegistration studentRegistration) {
 		Long studentId = studentRegistration.getStudentId();
 		StudentRegistration existingStudentRegistration = get(studentId);

@@ -13,16 +13,16 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class PropertiesBackendPageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long propertyId;
 	private String appName;
 
-    @NotNull(message = MessageConstants.PROPERTY_NAME_NOT_NULL)
-    @NotEmpty(message = MessageConstants.PROPERTY_NAME_NOT_EMPTY)
+	@NotNull(message = MessageConstants.PROPERTY_NAME_NOT_NULL)
+	@NotEmpty(message = MessageConstants.PROPERTY_NAME_NOT_EMPTY)
 	private String name;
 
-    @NotNull(message = MessageConstants.PROPERTY_VALUE_NOT_NULL)
-    @NotEmpty(message = MessageConstants.PROPERTY_VALUE_NOT_EMPTY)
+	@NotNull(message = MessageConstants.PROPERTY_VALUE_NOT_NULL)
+	@NotEmpty(message = MessageConstants.PROPERTY_VALUE_NOT_EMPTY)
 	private String value;
 
 }

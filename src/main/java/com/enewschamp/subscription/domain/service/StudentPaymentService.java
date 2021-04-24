@@ -29,7 +29,7 @@ public class StudentPaymentService {
 
 	@Autowired
 	StudentPaymentRepository repository;
-	
+
 	@Autowired
 	private StudentPaymentRepositoryCustomImpl repositoryCustom;
 
@@ -98,7 +98,7 @@ public class StudentPaymentService {
 		StudentDetails.setPaymentId(paymentId);
 		return auditService.getEntityAudit(StudentDetails);
 	}
-	
+
 	public Page<StudentPayment> listStudentPayment(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentPayment> userActivityTrackerList = repositoryCustom.findAll(pageable, searchRequest);

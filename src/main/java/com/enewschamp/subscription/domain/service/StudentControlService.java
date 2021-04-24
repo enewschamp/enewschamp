@@ -33,7 +33,7 @@ public class StudentControlService {
 
 	@Autowired
 	StudentControlRepository repository;
-	
+
 	@Autowired
 	private StudentControlRepositoryCustomImpl repositoryCustom;
 
@@ -56,7 +56,7 @@ public class StudentControlService {
 		modelMapper.map(StudentControl, existingEntity);
 		return repository.save(existingEntity);
 	}
-	
+
 	public StudentControl patch(StudentControl StudentControl) {
 		Long studentId = StudentControl.getStudentId();
 
@@ -99,7 +99,7 @@ public class StudentControlService {
 		StudentControl.setStudentId(studentId);
 		return auditService.getEntityAudit(StudentControl);
 	}
-	
+
 	public Page<StudentControl> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentControl> studentControlList = repositoryCustom.findAll(pageable, null);

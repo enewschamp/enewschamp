@@ -41,14 +41,17 @@ public class UIControlsRepositoryCustomImpl extends RepositoryImpl
 		if (!StringUtils.isEmpty(searchRequest.getUiControlId()))
 			filterPredicates.add(cb.equal(uiControlsRoot.get(UI_CONTROL_ID), searchRequest.getUiControlId()));
 
-		if (!StringUtils.isEmpty(searchRequest.getControlName()))
-			filterPredicates.add(cb.like(uiControlsRoot.get(CONTROL_NAME), "%" + searchRequest.getControlName() + "%"));
-		
+		if (!StringUtils.isEmpty(searchRequest.getPageName()))
+			filterPredicates.add(cb.equal(uiControlsRoot.get(PAGE_NAME), searchRequest.getPageName()));
+
 		if (!StringUtils.isEmpty(searchRequest.getOperation()))
-			filterPredicates.add(cb.like(uiControlsRoot.get(PAGE_NAME), "%" + searchRequest.getPageName() + "%"));
+			filterPredicates.add(cb.equal(uiControlsRoot.get(OPERATION), searchRequest.getOperation()));
+
+		if (!StringUtils.isEmpty(searchRequest.getControlName()))
+			filterPredicates.add(cb.equal(uiControlsRoot.get(CONTROL_NAME), searchRequest.getControlName()));
 
 		if (!StringUtils.isEmpty(searchRequest.getGlobalControlRef()))
-			filterPredicates.add(cb.like(uiControlsRoot.get(GLOBAL_CONTROL_REF), "%" + searchRequest.getGlobalControlRef() + "%"));
+			filterPredicates.add(cb.equal(uiControlsRoot.get(GLOBAL_CONTROL_REF), searchRequest.getGlobalControlRef()));
 
 		if (!StringUtils.isEmpty(searchRequest.getIsPremiumFeature()))
 			filterPredicates.add(cb.equal(uiControlsRoot.get(IS_PREMIUM_FEATURE), searchRequest.getIsPremiumFeature()));

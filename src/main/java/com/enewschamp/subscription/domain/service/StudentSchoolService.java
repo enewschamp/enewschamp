@@ -25,10 +25,10 @@ import com.enewschamp.subscription.domain.repository.StudentSchoolRepository;
 public class StudentSchoolService {
 	@Autowired
 	StudentSchoolRepository repository;
-	
+
 	@Autowired
 	private StudentSchoolRepositoryCustomImpl repositoryCustom;
-	
+
 	@Autowired
 	private StudentSchoolRepositoryCustomImplNotInTheList nonListRepositoryCustom;
 
@@ -46,8 +46,7 @@ public class StudentSchoolService {
 		StudentSchool studentSchoolEntity = null;
 		try {
 			studentSchoolEntity = repository.save(studentSchool);
-		}
-		catch(DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		return studentSchoolEntity;
@@ -56,7 +55,7 @@ public class StudentSchoolService {
 	public StudentSchool update(StudentSchool studentSchool) {
 		Long studentId = studentSchool.getStudentId();
 		StudentSchool existingEntity = get(studentId);
-		if(existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(studentSchool, existingEntity);
@@ -119,7 +118,7 @@ public class StudentSchoolService {
 		Page<StudentSchool> studentSchoolList = repositoryCustom.findAll(pageable, searchRequest);
 		return studentSchoolList;
 	}
-	
+
 	public Page<StudentSchool> notInThelist(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentSchool> studentSchoolList = nonListRepositoryCustom.findAll(pageable, searchRequest);

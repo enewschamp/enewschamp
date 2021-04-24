@@ -30,7 +30,7 @@ public class AppSecurityService {
 
 	@Autowired
 	private AppSecurityRepositoryCustomImpl appSecurityRepositoryCustom;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
 

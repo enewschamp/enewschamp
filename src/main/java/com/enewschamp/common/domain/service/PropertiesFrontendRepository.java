@@ -27,16 +27,16 @@ interface PropertiesFrontendRepository extends JpaRepository<PropertiesFrontend,
 	@Cacheable
 	@Query(value = "select a from PropertiesFrontend a where a.appName like concat('%',:appName,'%') and a.name= :name")
 	public PropertiesFrontend getProperty(@Param("appName") String appName, @Param("name") String name);
-	
+
 	@Modifying
 	@Transactional
 	@Query(value = "truncate table properties_frontend", nativeQuery = true)
 	public void truncate();
-	
+
 	@Modifying
 	@Query(value = "truncate table properties_frontend_id_seq", nativeQuery = true)
 	public void deleteSequences();
-	
+
 	@Modifying
 	@Query(value = "insert into properties_frontend_id_seq values(1)", nativeQuery = true)
 	public void initializeSequence();

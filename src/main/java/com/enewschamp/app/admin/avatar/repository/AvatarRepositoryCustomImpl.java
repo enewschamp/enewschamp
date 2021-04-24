@@ -21,9 +21,10 @@ import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.publication.domain.entity.Avatar;
+
 @Repository
-public class AvatarRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Avatar>{
-	
+public class AvatarRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Avatar> {
+
 	@PersistenceContext
 	private EntityManager entityManager;
 

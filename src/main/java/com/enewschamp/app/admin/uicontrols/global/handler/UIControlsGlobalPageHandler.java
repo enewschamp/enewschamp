@@ -102,7 +102,8 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createUIControlsGlobal(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsGlobalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsGlobalPageData.class);
+		UIControlsGlobalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsGlobalPageData.class);
 		validate(pageData);
 		UIControlsGlobal uiControlsGlobalGlobal = mapUIControlsGlobalData(pageRequest, pageData);
 		uiControlsGlobalGlobal = uiControlsGlobalGlobalsService.createOne(uiControlsGlobalGlobal);
@@ -119,7 +120,8 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updateUIControlsGlobal(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsGlobalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsGlobalPageData.class);
+		UIControlsGlobalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsGlobalPageData.class);
 		validate(pageData);
 		UIControlsGlobal uiControlsGlobal = mapUIControlsGlobalData(pageRequest, pageData);
 		uiControlsGlobal = uiControlsGlobalGlobalsService.update(uiControlsGlobal);
@@ -130,7 +132,8 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readUIControlsGlobal(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsGlobalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsGlobalPageData.class);
+		UIControlsGlobalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsGlobalPageData.class);
 		UIControlsGlobal uiControlsGlobal = modelMapper.map(pageData, UIControlsGlobal.class);
 		uiControlsGlobal = uiControlsGlobalGlobalsService.read(uiControlsGlobal);
 		mapUIControlsGlobal(pageRequest, pageDto, uiControlsGlobal);
@@ -140,7 +143,8 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closeUIControlsGlobal(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsGlobalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsGlobalPageData.class);
+		UIControlsGlobalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsGlobalPageData.class);
 		UIControlsGlobal uiControlsGlobal = modelMapper.map(pageData, UIControlsGlobal.class);
 		uiControlsGlobal = uiControlsGlobalGlobalsService.close(uiControlsGlobal);
 		mapUIControlsGlobal(pageRequest, pageDto, uiControlsGlobal);
@@ -150,7 +154,8 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reinstateUIControlsGlobal(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsGlobalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsGlobalPageData.class);
+		UIControlsGlobalPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsGlobalPageData.class);
 		UIControlsGlobal uiControlsGlobal = modelMapper.map(pageData, UIControlsGlobal.class);
 		uiControlsGlobal = uiControlsGlobalGlobalsService.reinstate(uiControlsGlobal);
 		mapUIControlsGlobal(pageRequest, pageDto, uiControlsGlobal);
@@ -178,11 +183,11 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 		dto.setRecords(variable);
 		return dto;
 	}
-	
+
 	@SneakyThrows
 	@Transactional
 	private PageDTO insertAll(PageRequestDTO pageRequest) {
-	    PageDTO pageDto = new PageDTO();
+		PageDTO pageDto = new PageDTO();
 		List<UIControlsGlobalPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				new TypeReference<List<UIControlsGlobalPageData>>() {
 				});
@@ -214,7 +219,8 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<UIControlsGlobal> pageDataList = page.getContent();
 			for (UIControlsGlobal uiControlsGlobal : pageDataList) {
-				UIControlsGlobalPageData uiControlsGlobalPageData = modelMapper.map(uiControlsGlobal, UIControlsGlobalPageData.class);
+				UIControlsGlobalPageData uiControlsGlobalPageData = modelMapper.map(uiControlsGlobal,
+						UIControlsGlobalPageData.class);
 				uiControlsGlobalPageData.setLastUpdate(uiControlsGlobal.getOperationDateTime());
 				uiControlsGlobalPageDataList.add(uiControlsGlobalPageData);
 			}
@@ -233,14 +239,14 @@ public class UIControlsGlobalPageHandler implements IPageHandler {
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
 	}
-	
-	private List<UIControlsGlobal> mapUIControlsGlobals(PageRequestDTO pageRequest, List<UIControlsGlobalPageData> pageData) {
-		List<UIControlsGlobal> pageNavigators = pageData.stream()
-				.peek(element -> {
-					element.setOperatorId(pageRequest.getHeader().getUserId());
-					element.setRecordInUse(RecordInUseType.Y);
-				})
-				.map(uicontrolglobal -> modelMapper.map(uicontrolglobal, UIControlsGlobal.class)).collect(Collectors.toList());
+
+	private List<UIControlsGlobal> mapUIControlsGlobals(PageRequestDTO pageRequest,
+			List<UIControlsGlobalPageData> pageData) {
+		List<UIControlsGlobal> pageNavigators = pageData.stream().peek(element -> {
+			element.setOperatorId(pageRequest.getHeader().getUserId());
+			element.setRecordInUse(RecordInUseType.Y);
+		}).map(uicontrolglobal -> modelMapper.map(uicontrolglobal, UIControlsGlobal.class))
+				.collect(Collectors.toList());
 		return pageNavigators;
 	}
 }

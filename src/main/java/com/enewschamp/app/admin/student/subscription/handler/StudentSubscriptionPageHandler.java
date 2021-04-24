@@ -87,7 +87,7 @@ public class StudentSubscriptionPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		StudentSubscriptionPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				StudentSubscriptionPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		StudentSubscription studentSubscription = mapStudentSubscriptionData(pageRequest, pageData);
 		studentSubscription = studentSubscriptionService.create(studentSubscription);
 		mapStudentSubscription(pageRequest, pageDto, studentSubscription);
@@ -99,7 +99,7 @@ public class StudentSubscriptionPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		StudentSubscriptionPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				StudentSubscriptionPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		StudentSubscription studentSubscription = mapStudentSubscriptionData(pageRequest, pageData);
 		studentSubscription = studentSubscriptionService.update(studentSubscription);
 		mapStudentSubscription(pageRequest, pageDto, studentSubscription);
@@ -178,8 +178,7 @@ public class StudentSubscriptionPageHandler implements IPageHandler {
 	}
 
 	private StudentSubscriptionPageData mapPageData(StudentSubscription studentSubscription) {
-		StudentSubscriptionPageData pageData = modelMapper.map(studentSubscription,
-				StudentSubscriptionPageData.class);
+		StudentSubscriptionPageData pageData = modelMapper.map(studentSubscription, StudentSubscriptionPageData.class);
 		pageData.setLastUpdate(studentSubscription.getOperationDateTime());
 		return pageData;
 	}

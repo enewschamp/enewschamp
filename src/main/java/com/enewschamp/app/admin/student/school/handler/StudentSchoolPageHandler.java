@@ -89,7 +89,7 @@ public class StudentSchoolPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		StudentSchoolPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				StudentSchoolPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		StudentSchool studentSchool = mapStudentSchoolData(pageRequest, pageData);
 		studentSchool = studentSchoolService.create(studentSchool);
 		mapStudentSchool(pageRequest, pageDto, studentSchool);
@@ -101,7 +101,7 @@ public class StudentSchoolPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		StudentSchoolPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				StudentSchoolPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		StudentSchool studentSchool = mapStudentSchoolData(pageRequest, pageData);
 		studentSchool = studentSchoolService.update(studentSchool);
 		mapStudentSchool(pageRequest, pageDto, studentSchool);
@@ -164,24 +164,21 @@ public class StudentSchoolPageHandler implements IPageHandler {
 		return dto;
 	}
 
-	private void mapStudentSchool(PageRequestDTO pageRequest, PageDTO pageDto,
-			StudentSchool studentSchool) {
+	private void mapStudentSchool(PageRequestDTO pageRequest, PageDTO pageDto, StudentSchool studentSchool) {
 		StudentSchoolPageData pageData;
 		mapHeaderData(pageRequest, pageDto);
 		pageData = mapPageData(studentSchool);
 		pageDto.setData(pageData);
 	}
 
-	private StudentSchool mapStudentSchoolData(PageRequestDTO pageRequest,
-			StudentSchoolPageData pageData) {
+	private StudentSchool mapStudentSchoolData(PageRequestDTO pageRequest, StudentSchoolPageData pageData) {
 		StudentSchool studentSchool = modelMapper.map(pageData, StudentSchool.class);
 		studentSchool.setRecordInUse(RecordInUseType.Y);
 		return studentSchool;
 	}
 
 	private StudentSchoolPageData mapPageData(StudentSchool studentSchool) {
-		StudentSchoolPageData pageData = modelMapper.map(studentSchool,
-				StudentSchoolPageData.class);
+		StudentSchoolPageData pageData = modelMapper.map(studentSchool, StudentSchoolPageData.class);
 		pageData.setLastUpdate(studentSchool.getOperationDateTime());
 		return pageData;
 	}
@@ -191,8 +188,7 @@ public class StudentSchoolPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<StudentSchool> pageDataList = page.getContent();
 			for (StudentSchool studentSchool : pageDataList) {
-				StudentSchoolPageData pageData = modelMapper.map(studentSchool,
-						StudentSchoolPageData.class);
+				StudentSchoolPageData pageData = modelMapper.map(studentSchool, StudentSchoolPageData.class);
 				pageData.setLastUpdate(studentSchool.getOperationDateTime());
 				studentSchoolPageDataList.add(pageData);
 			}

@@ -26,7 +26,7 @@ public class HolidayService {
 
 	@Autowired
 	HolidayRepository holidayRepository;
-	
+
 	@Autowired
 	HolidayRepositoryCustomImpl holidayRepositoryCustom;
 
@@ -50,7 +50,7 @@ public class HolidayService {
 	public Holiday update(Holiday holidayEntity) {
 		Long holidayId = holidayEntity.getHolidayId();
 		Holiday existingHoliday = get(holidayId);
-		if(existingHoliday.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingHoliday.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(holidayEntity, existingHoliday);
@@ -92,7 +92,7 @@ public class HolidayService {
 	public Holiday read(Holiday holiday) {
 		Long holidayId = holiday.getHolidayId();
 		Holiday holidayEntity = get(holidayId);
-        return holidayEntity;
+		return holidayEntity;
 	}
 
 	public Holiday close(Holiday holidayEntity) {
@@ -119,8 +119,8 @@ public class HolidayService {
 
 	public Page<Holiday> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<Holiday> holidayList = holidayRepositoryCustom.findAll	(pageable, null);
-		if(holidayList.getContent().isEmpty()) {
+		Page<Holiday> holidayList = holidayRepositoryCustom.findAll(pageable, null);
+		if (holidayList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return holidayList;

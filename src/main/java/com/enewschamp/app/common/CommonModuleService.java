@@ -42,23 +42,23 @@ public class CommonModuleService {
 
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	UserRoleService userRoleService;
-	
+
 	@Autowired
 	EntitlementService entitlementService;
 
 	@Autowired
 	EditionService editionService;
-	
+
 	@Autowired
 	private PropertiesBackendService propertiesService;
-	
+
 	@Autowired
 	private UserLoginService userLoginService;
 	private Validator validator;
-	
+
 	public PageDTO performRefreshToken(PageRequestDTO pageRequest, String loginCredentials, String userId,
 			String deviceId, UserActivityTracker userActivityTracker, UserType userType) {
 		PageDTO pageResponse;
@@ -66,7 +66,8 @@ public class CommonModuleService {
 		String edition = pageRequest.getHeader().getEditionId();
 		editionService.getEdition(edition);
 		userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, userType, userActivityTracker);
-		UserLogin userLogin = userLoginBusiness.login(userId, deviceId, loginCredentials, loginCredentials, loginCredentials, loginCredentials, userType);
+		UserLogin userLogin = userLoginBusiness.login(userId, deviceId, loginCredentials, loginCredentials,
+				loginCredentials, loginCredentials, userType);
 		userActivityTracker.setActionStatus(UserAction.SUCCESS);
 		userLoginBusiness.auditUserActivity(userActivityTracker);
 		pageResponse = new PageDTO();
@@ -75,8 +76,7 @@ public class CommonModuleService {
 		LoginPageData loginPageData = new LoginPageData();
 		loginPageData.setMessage("Token Refreshed Successfully");
 		loginPageData.setLoginCredentials(userLogin.getTokenId());
-		loginPageData.setTokenValidity(
-				propertiesService.getValue(module, PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));
+		loginPageData.setTokenValidity(propertiesService.getValue(module, PropertyConstants.LOGIN_SESSION_EXPIRY_SECS));
 		pageResponse.setData(loginPageData);
 		pageResponse.getHeader().setLoginCredentials(null);
 		return pageResponse;
@@ -115,8 +115,9 @@ public class CommonModuleService {
 		}
 		return userActivityTracker;
 	}
-	
-	public LoginPageData getLoginPageData(String module, String userId, UserType userType, String deviceId, String loginCredentials) {
+
+	public LoginPageData getLoginPageData(String module, String userId, UserType userType, String deviceId,
+			String loginCredentials) {
 		User user = userService.get(userId);
 		LoginPageData loginPageData = new LoginPageData();
 		if (user != null) {
@@ -125,18 +126,19 @@ public class CommonModuleService {
 			loginPageData.setTheme(user.getTheme());
 			loginPageData.setUserRole(userLoginBusiness.getUserRole(userId));
 			loginPageData.setLoginCredentials(userLoginService.getOperatorLogin(userId, userType).getTokenId());
-			loginPageData.setTokenValidity(
-					propertiesService.getValue(module, PropertyConstants.PUBLISHER_SESSION_EXPIRY_SECS));		}
+			loginPageData
+					.setTokenValidity(propertiesService.getValue(module, PropertyConstants.LOGIN_SESSION_EXPIRY_SECS));
+		}
 		return loginPageData;
 	}
-	
+
 	public void doEntitlementCheck(HeaderDTO pageData) {
 		Boolean validEntitlement = entitlementService.isValidUser(pageData.getUserId(), pageData.getModule());
-		if(validEntitlement) {
+		if (validEntitlement) {
 			userRoleService.isValidRole(pageData.getUserId(), pageData.getModule());
 		}
 	}
-	
+
 	public void validateHeaders(HeaderDTO pageData, String module) {
 //		// For an Admin login we don't to validate the login credential as this will be generated in the login flow
 //		if(pageData.getPageName() != null && pageData.getPageName().equals("Admin")) {
@@ -151,7 +153,7 @@ public class CommonModuleService {
 			});
 			throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
 		}
-		
+
 		if ((!propertiesService.getProperty("Admin", PropertyConstants.ADMIN_MODULE_NAME).equals(module))) {
 			log.error("Module name doesn't match");
 			throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);

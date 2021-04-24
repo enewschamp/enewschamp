@@ -45,13 +45,13 @@ public class PublicationMonthlySummaryService extends AbstractDomainService {
 
 	@Autowired
 	private PublicationSummaryRepositoryCustom customRepository;
-	
+
 	@Autowired
 	private PublicationMonthyTotalRepositoryCustomImpl monthlyTotalRepository;
 
 	@Autowired
 	private PublicationMonthySummaryRepositoryCustomImpl repositoryCustom;
-	
+
 	@Autowired
 	PropertiesBackendService propertiesService;
 
@@ -162,9 +162,9 @@ public class PublicationMonthlySummaryService extends AbstractDomainService {
 
 		return response;
 	}
-	
-	public Page<ArticlePublicationMonthlyGenre> listPublicationMonthlySummary(AdminSearchRequest searchRequest, int pageNo,
-			int pageSize) {
+
+	public Page<ArticlePublicationMonthlyGenre> listPublicationMonthlySummary(AdminSearchRequest searchRequest,
+			int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<ArticlePublicationMonthlyGenre> monthlySummaryList = repositoryCustom.findAll(pageable, searchRequest);
 		if (monthlySummaryList.getContent().isEmpty()) {
@@ -172,12 +172,12 @@ public class PublicationMonthlySummaryService extends AbstractDomainService {
 		}
 		return monthlySummaryList;
 	}
-	
 
-	public Page<ArticlePublicationMonthlyTotal> listPublicationMonthlyTotal(AdminSearchRequest searchRequest, int pageNo,
-			int pageSize) {
+	public Page<ArticlePublicationMonthlyTotal> listPublicationMonthlyTotal(AdminSearchRequest searchRequest,
+			int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<ArticlePublicationMonthlyTotal> monthlySummaryList = monthlyTotalRepository.findAll(pageable, searchRequest);
+		Page<ArticlePublicationMonthlyTotal> monthlySummaryList = monthlyTotalRepository.findAll(pageable,
+				searchRequest);
 		return monthlySummaryList;
 	}
 }

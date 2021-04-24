@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class UserLeavePageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	
+
 	@NotNull(message = MessageConstants.USER_ID_NOT_NULL)
 	@NotEmpty(message = MessageConstants.USER_ID_NOT_EMPTY)
 	private String userId;

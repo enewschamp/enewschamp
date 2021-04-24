@@ -102,7 +102,8 @@ public class UIControlsPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createUIControls(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsPageData.class);
+		UIControlsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsPageData.class);
 		validate(pageData);
 		UIControls uiControls = mapUIControlsData(pageRequest, pageData);
 		uiControls = uiControlsService.createOne(uiControls);
@@ -119,7 +120,8 @@ public class UIControlsPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updateUIControls(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsPageData.class);
+		UIControlsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsPageData.class);
 		validate(pageData);
 		UIControls uiControls = mapUIControlsData(pageRequest, pageData);
 		uiControls = uiControlsService.update(uiControls);
@@ -130,7 +132,8 @@ public class UIControlsPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readUIControls(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsPageData.class);
+		UIControlsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsPageData.class);
 		UIControls uiControls = modelMapper.map(pageData, UIControls.class);
 		uiControls = uiControlsService.read(uiControls);
 		mapUIControls(pageRequest, pageDto, uiControls);
@@ -140,7 +143,8 @@ public class UIControlsPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closeUIControls(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsPageData.class);
+		UIControlsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsPageData.class);
 		UIControls uiControls = modelMapper.map(pageData, UIControls.class);
 		uiControls = uiControlsService.close(uiControls);
 		mapUIControls(pageRequest, pageDto, uiControls);
@@ -150,7 +154,8 @@ public class UIControlsPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reinstateUIControls(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		UIControlsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UIControlsPageData.class);
+		UIControlsPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				UIControlsPageData.class);
 		UIControls uiControls = modelMapper.map(pageData, UIControls.class);
 		uiControls = uiControlsService.reInstateUIControls(uiControls);
 		mapUIControls(pageRequest, pageDto, uiControls);
@@ -182,7 +187,7 @@ public class UIControlsPageHandler implements IPageHandler {
 	@SneakyThrows
 	@Transactional
 	private PageDTO insertAll(PageRequestDTO pageRequest) {
-	    PageDTO pageDto = new PageDTO();
+		PageDTO pageDto = new PageDTO();
 		List<UIControlsPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				new TypeReference<List<UIControlsPageData>>() {
 				});
@@ -233,13 +238,12 @@ public class UIControlsPageHandler implements IPageHandler {
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
 	}
+
 	private List<UIControls> mapUIControls(PageRequestDTO pageRequest, List<UIControlsPageData> pageData) {
-		List<UIControls> pageNavigators = pageData.stream()
-				.peek(element -> {
-					element.setOperatorId(pageRequest.getHeader().getUserId());
-					element.setRecordInUse(RecordInUseType.Y);
-				})
-				.map(uiControls -> modelMapper.map(uiControls, UIControls.class)).collect(Collectors.toList());
+		List<UIControls> pageNavigators = pageData.stream().peek(element -> {
+			element.setOperatorId(pageRequest.getHeader().getUserId());
+			element.setRecordInUse(RecordInUseType.Y);
+		}).map(uiControls -> modelMapper.map(uiControls, UIControls.class)).collect(Collectors.toList());
 		return pageNavigators;
 	}
 }

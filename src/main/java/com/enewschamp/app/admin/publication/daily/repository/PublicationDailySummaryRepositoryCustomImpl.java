@@ -56,5 +56,5 @@ public class PublicationDailySummaryRepositoryCustomImpl extends RepositoryImpl
 		long count = getRecordCount(criteriaQuery, filterPredicates, dailySummaryRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
-	
+
 }

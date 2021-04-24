@@ -11,6 +11,6 @@ import lombok.Data;
 @Configuration
 @ConfigurationProperties("enewschamp.admin.audit")
 public class EnewschampEntityConfig {
-	private Map<String,  String> entityConfig;
+	private Map<String, String> entityConfig;
 
 }

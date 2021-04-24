@@ -69,8 +69,8 @@ public class StudentActivityRepositoryCustomImpl extends RepositoryImpl
 			filterPredicates.add(cb.equal(studentActivityRoot.get(QUIZ_SCORE), searchRequest.getQuizScore()));
 
 		if (!StringUtils.isEmpty(searchRequest.getDateFrom()) && !StringUtils.isEmpty(searchRequest.getDateTo()))
-			filterPredicates.add(cb.between(studentActivityRoot.get(CommonConstants.OPERATION_DATE_TIME), searchRequest.getDateFrom(),
-					searchRequest.getDateTo()));
+			filterPredicates.add(cb.between(studentActivityRoot.get(CommonConstants.OPERATION_DATE_TIME),
+					searchRequest.getDateFrom(), searchRequest.getDateTo()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentActivityRoot.get(CommonConstants.OPERATION_DATE_TIME)));

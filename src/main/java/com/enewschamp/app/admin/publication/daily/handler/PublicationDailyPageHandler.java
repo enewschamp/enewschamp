@@ -94,7 +94,7 @@ public class PublicationDailyPageHandler implements IPageHandler {
 			for (ArticlePublicationDaily userLogin : pageDataList) {
 				PublicationDailySummaryPageData userLoginPageData = modelMapper.map(userLogin,
 						PublicationDailySummaryPageData.class);
-				//userLoginPageData.setLastUpdate(userLogin.getOperationDateTime());
+				// userLoginPageData.setLastUpdate(userLogin.getOperationDateTime());
 				dailySummaryPageDataList.add(userLoginPageData);
 			}
 		}

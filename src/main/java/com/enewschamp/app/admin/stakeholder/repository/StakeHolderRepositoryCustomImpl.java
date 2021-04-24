@@ -37,13 +37,12 @@ public class StakeHolderRepositoryCustomImpl extends RepositoryImpl
 		CriteriaQuery<StakeHolder> criteriaQuery = cb.createQuery(StakeHolder.class);
 		Root<StakeHolder> stakeHolderRoot = criteriaQuery.from(StakeHolder.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		
+
 		if (!StringUtils.isEmpty(searchRequest.getName()))
 			filterPredicates.add(cb.like(stakeHolderRoot.get(NAME), "%" + searchRequest.getName() + "%"));
 
 		if (!StringUtils.isEmpty(searchRequest.getSurname()))
 			filterPredicates.add(cb.like(stakeHolderRoot.get(SURNAME), "%" + searchRequest.getSurname() + "%"));
-
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(stakeHolderRoot.get(CommonConstants.OPERATION_DATE_TIME)));

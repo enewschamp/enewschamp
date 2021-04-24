@@ -154,17 +154,4 @@ public class RecognitionsPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private RecognitionPageData mapPageData(RecognitionPageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), RecognitionPageData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return pageData;
-	}
-
 }

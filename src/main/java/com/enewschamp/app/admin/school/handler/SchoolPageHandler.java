@@ -36,7 +36,6 @@ public class SchoolPageHandler implements IPageHandler {
 	@Autowired
 	ObjectMapper objectMapper;
 
-
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
 		PageDTO pageDto = null;
@@ -87,7 +86,7 @@ public class SchoolPageHandler implements IPageHandler {
 	private PageDTO createSchool(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		SchoolPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), SchoolPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		School school = mapSchoolData(pageRequest, pageData);
 		school = schoolService.create(school);
 		mapSchool(pageRequest, pageDto, school);
@@ -98,7 +97,7 @@ public class SchoolPageHandler implements IPageHandler {
 	private PageDTO updateSchool(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		SchoolPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), SchoolPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		School school = mapSchoolData(pageRequest, pageData);
 		school = schoolService.update(school);
 		mapSchool(pageRequest, pageDto, school);
@@ -114,7 +113,7 @@ public class SchoolPageHandler implements IPageHandler {
 		mapSchool(pageRequest, pageDto, school);
 		return pageDto;
 	}
-	
+
 	@SneakyThrows
 	private PageDTO closeSchool(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
@@ -176,7 +175,6 @@ public class SchoolPageHandler implements IPageHandler {
 		pageData.setLastUpdate(school.getOperationDateTime());
 		return pageData;
 	}
-
 
 	public List<SchoolPageData> mapSchoolData(Page<School> page) {
 		List<SchoolPageData> SchoolPageDataList = new ArrayList<SchoolPageData>();

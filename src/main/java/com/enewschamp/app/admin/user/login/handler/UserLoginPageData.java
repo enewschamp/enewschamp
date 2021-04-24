@@ -16,15 +16,15 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class UserLoginPageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long userLoginId;
 
 	@NotNull(message = MessageConstants.USER_ID_NOT_NULL)
-    @NotEmpty(message = MessageConstants.USER_ID_NOT_EMPTY)   
+	@NotEmpty(message = MessageConstants.USER_ID_NOT_EMPTY)
 	private String userId;
 
 	@NotNull(message = MessageConstants.LOGIN_FLAG_NOT_NULL)
-    @NotEmpty(message = MessageConstants.LOGIN_FLAG_NOT_EMPTY)
+	@NotEmpty(message = MessageConstants.LOGIN_FLAG_NOT_EMPTY)
 	private String loginFlag;
 
 	private LocalDateTime lastLoginTime;
@@ -34,7 +34,7 @@ public class UserLoginPageData extends PageData {
 	private String tokenId;
 
 	@NotNull(message = MessageConstants.DEVICE_ID_NOT_NULL)
-    @NotEmpty(message = MessageConstants.DEVICE_ID_NOT_EMPTY) 
+	@NotEmpty(message = MessageConstants.DEVICE_ID_NOT_EMPTY)
 	private String deviceId;
 
 	@NotNull(message = MessageConstants.USER_TYPE_NOT_NULL)

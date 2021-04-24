@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.rowset.serial.SerialBlob;
 
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.modelmapper.ModelMapper;
@@ -38,6 +39,8 @@ import com.enewschamp.subscription.domain.business.StudentPaymentBusiness;
 import com.enewschamp.subscription.domain.entity.StudentPaymentWork;
 import com.enewschamp.subscription.domain.service.StudentPaymentWorkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.paytm.pg.merchant.PaytmChecksum;
 
 import lombok.extern.java.Log;
@@ -265,15 +268,10 @@ public class PaytmCallbackController {
 					if (json.get("body") != null) {
 						jsonBody = (JSONObject) parser.parse(json.get("body").toString());
 						try {
-							isValidChecksum = PaytmChecksum.verifySignature(json.get("body").toString(),
+							Gson gson = new Gson();
+							JsonObject jsonObject = gson.fromJson(responseData, JsonObject.class);
+							isValidChecksum = PaytmChecksum.verifySignature(jsonObject.get("body").toString(),
 									KeyProperty.MERCHANT_KEY, checksumHash);
-							System.out.println(">>>>>>>>>checksumHash>>>>>>>>>" + checksumHash);
-							System.out.println(">>>>>>>>>isValidChecksum1>>>>>>>>>" + PaytmChecksum.verifySignature(
-									json.get("body").toString(), KeyProperty.MERCHANT_KEY, checksumHash));
-							System.out.println(">>>>>>>>>isValidChecksum2>>>>>>>>>" + PaytmChecksum
-									.verifySignature(json.toString(), KeyProperty.MERCHANT_KEY, checksumHash));
-							System.out.println(">>>>>>>>>isValidChecksum3>>>>>>>>>" + PaytmChecksum
-									.verifySignature(responseData, KeyProperty.MERCHANT_KEY, checksumHash));
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -300,41 +298,5 @@ public class PaytmCallbackController {
 			studentPaymentWorkService.update(studentPaymentWork);
 		}
 		return tranData;
-	}
-
-	public static void main(String[] args) {
-		JSONObject json = new JSONObject();
-		json.put("bankName", "WALLET");
-		json.put("bankTxnId", "64376087");
-		json.put("gatewayName", "WALLET");
-		json.put("mid", "ErzAtT88266326392189");
-		json.put("orderId", "ENC_20215908225903_57");
-		json.put("paymentMode", "PPI");
-		json.put("refundAmt", "0.00");
-		JSONObject resultInfo = new JSONObject();
-		resultInfo.put("resultCode", "01");
-		resultInfo.put("resultMsg", "Txn Success");
-		resultInfo.put("resultStatus", "TXN_SUCCESS");
-		json.put("resultInfo", resultInfo);
-		json.put("subsId", "167473");
-		json.put("txnAmount", "100.00");
-		json.put("txnDate", "2021-04-08 22:59:04.0");
-		json.put("txnId", "20210408111212800110168508002512108");
-		json.put("txnType", "SALE");
-		try {
-			System.out.println(">>>>>>>>>>" + PaytmChecksum.verifySignature("{\"bankName\" : \"WALLET\","
-					+ "		\"bankTxnId\" : \"64376087\"," + "		\"gatewayName\" : \"WALLET\","
-					+ "		\"mid\" : \"ErzAtT88266326392189\"," + "		\"orderId\" : \"ENC_20215908225903_57\","
-					+ "		\"paymentMode\" : \"PPI\"," + "		\"refundAmt\" : \"0.00\"," + "		\"resultInfo\" : {"
-					+ "			\"resultCode\" : \"01\"," + "			\"resultMsg\" : \"Txn Success\","
-					+ "			\"resultStatus\" : \"TXN_SUCCESS\"" + "		}," + "		\"subsId\" : \"167473\","
-					+ "		\"txnAmount\" : \"100.00\"," + "		\"txnDate\" : \"2021-04-08 22:59:04.0\","
-					+ "		\"txnId\" : \"20210408111212800110168508002512108\"," + "		\"txnType\" : \"SALE\"}",
-					"kk3pYLy_DD4uk9NR",
-					"eL0IMK5fd1dqmq02wEvoVDqCR/mdG+WSuGsYFQmtanP58lLWTKJFlROXeDTr6wphy2HORvs3nB8HZZmsdkbYgereywwLKXh6UFJTZVi4yv8="));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

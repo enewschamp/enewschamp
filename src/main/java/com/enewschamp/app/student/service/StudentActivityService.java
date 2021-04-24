@@ -23,7 +23,7 @@ public class StudentActivityService {
 
 	@Autowired
 	StudentActivityRepository studentActivityRepository;
-	
+
 	@Autowired
 	private StudentActivityRepositoryCustomImpl studentActivityRepositoryCustom;
 
@@ -83,7 +83,7 @@ public class StudentActivityService {
 			throw new BusinessException(ErrorCodeConstants.STUDENT_ACTIVITY_NOT_FOUND);
 		}
 	}
-	
+
 	public Page<StudentActivity> listStudentActivity(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentActivity> studentActivityList = studentActivityRepositoryCustom.findAll(pageable, searchRequest);

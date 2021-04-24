@@ -15,11 +15,11 @@ public class StudentPreferencesPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 
 	private Long studentId;
-	
+
 	@NotNull(message = MessageConstants.READING_LEVEL_NOT_NULL)
 	@NotEmpty(message = MessageConstants.READING_LEVEL_NOT_EMPTY)
 	private String readingLevel;
-	
+
 	private String dailyPublication;
 	private String scoresProgressReports;
 	private String alertsNotifications;

@@ -16,8 +16,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "Edition",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "editionId", "languageId" }) })
+@Table(name = "Edition", uniqueConstraints = { @UniqueConstraint(columnNames = { "editionId", "languageId" }) })
 public class Edition extends BaseEntity {
 
 	private static final long serialVersionUID = 4703046794189386714L;

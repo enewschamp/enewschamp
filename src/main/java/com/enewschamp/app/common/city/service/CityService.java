@@ -32,10 +32,9 @@ public class CityService extends AbstractDomainService {
 
 	@Autowired
 	CityRepository cityRepository;
-	
+
 	@Autowired
 	private CityRepositoryCustomImpl customRepository;
-
 
 	@Autowired
 	ModelMapper modelMapper;

@@ -1,10 +1,16 @@
 DROP TABLE scores_dailydto;
 DROP TABLE scores_monthlydto;
-DROP TABLE scores_monthly_genredto;
-DROP TABLE yearly_scores_genredto;
+DROP TABLE student_scores_dailydto;
+DROP TABLE student_scores_monthly_genredto;
+DROP TABLE student_scores_monthly_totaldto;
+DROP TABLE student_scores_yearly_genredto;
 DROP TABLE news_article_viewdto;
 DROP TABLE student_notificationdto;
 DROP TABLE recognition_data;
+DROP TABLE daily_published_articles_vw;
+DROP TABLE monthly_published_articles_genre_vw;
+DROP TABLE monthly_published_articles_total_vw;
+DROP TABLE champs_vw;
 
 CREATE OR REPLACE VIEW champs_vw AS
     SELECT 

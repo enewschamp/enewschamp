@@ -36,7 +36,7 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
 
@@ -50,13 +50,12 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 		Root<StudentPreferences> studentPreferencesRoot = criteriaQuery.from(StudentPreferences.class);
 		Root<StudentSubscription> studentSubscriptionRoot = criteriaQuery.from(StudentSubscription.class);
 		Root<StudentRegistration> studentRegistrationRoot = criteriaQuery.from(StudentRegistration.class);
-		
+
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		filterPredicates
 				.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentSubscriptionRoot.get(STUDENT_ID)));
-		filterPredicates
-				.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentPreferencesRoot.get(STUDENT_ID)));
+		filterPredicates.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentPreferencesRoot.get(STUDENT_ID)));
 		filterPredicates.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentSchoolRoot.get(STUDENT_ID)));
 		filterPredicates.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentDetailsRoot.get(STUDENT_ID)));
 		filterPredicates.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentControlRoot.get(STUDENT_ID)));
@@ -69,20 +68,20 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 		mapStudentPreferencePredicate(searchRequest, studentPreferencesRoot, cb, filterPredicates);
 		mapStudentSubscriptionPredicate(searchRequest, studentSubscriptionRoot, cb, filterPredicates);
 
-		criteriaQuery.select(cb.tuple(studentRegistrationRoot, studentControlRoot, studentDetailsRoot, studentSchoolRoot, studentPreferencesRoot, studentSubscriptionRoot  
-				 ))
+		criteriaQuery
+				.select(cb.tuple(studentRegistrationRoot, studentControlRoot, studentDetailsRoot, studentSchoolRoot,
+						studentPreferencesRoot, studentSubscriptionRoot))
 				.where((Predicate[]) filterPredicates.toArray(new Predicate[0]));
-		
+
 		TypedQuery<Tuple> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
 			int pageNumber = pageable.getPageNumber();
 			q.setFirstResult(pageNumber * pageable.getPageSize());
 			q.setMaxResults(pageable.getPageSize());
 		}
-		List<Tuple>  list = q.getResultList();
+		List<Tuple> list = q.getResultList();
 		long count = getRecordCount(criteriaQuery, filterPredicates, studentRegistrationRoot);
-		
-		
+
 		List<BulkStudentRegistrationPageData> bulkList = new ArrayList<BulkStudentRegistrationPageData>();
 		for (Tuple t : list) {
 			BulkStudentRegistrationPageData pageData = new BulkStudentRegistrationPageData();
@@ -92,7 +91,7 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 			StudentSchool studentSchool = (StudentSchool) t.get(3);
 			StudentPreferences studentPreference = (StudentPreferences) t.get(4);
 			StudentSubscription studentSubscription = (StudentSubscription) t.get(5);
-			
+
 			pageData.setStudentRegistration(modelMapper.map(studentRegistration, StudentRegistrationNilDTO.class));
 			pageData.setStudentSubscription(modelMapper.map(studentSubscription, StudentSubscriptionNilDTO.class));
 			pageData.setStudentPreferences(modelMapper.map(studentPreference, StudentPreferencesNilDTO.class));
@@ -104,12 +103,15 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 		}
 		return new PageImpl<>(bulkList, pageable, count);
 	}
-	
+
 	private void buildCommsOverEmail(BulkStudentRegistrationPageData pagedata, StudentPreferences studentPreference) {
-		pagedata.getStudentPreferences().setAlertsNotifications(studentPreference.getCommsOverEmail().getAlertsNotifications());
+		pagedata.getStudentPreferences()
+				.setAlertsNotifications(studentPreference.getCommsOverEmail().getAlertsNotifications());
 		pagedata.getStudentPreferences().setCommsEmailId(studentPreference.getCommsOverEmail().getCommsEmailId());
-		pagedata.getStudentPreferences().setDailyPublication(studentPreference.getCommsOverEmail().getDailyPublication());
-		pagedata.getStudentPreferences().setScoresProgressReports(studentPreference.getCommsOverEmail().getScoresProgressReports());
+		pagedata.getStudentPreferences()
+				.setDailyPublication(studentPreference.getCommsOverEmail().getDailyPublication());
+		pagedata.getStudentPreferences()
+				.setScoresProgressReports(studentPreference.getCommsOverEmail().getScoresProgressReports());
 	}
 
 	private void mapStudentRegistrationPredicate(AdminSearchRequest searchRequest,
@@ -128,7 +130,6 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 			filterPredicates.add(cb.or(cb.isNull(studentRegistrationRoot.get(AVATAR_NAME)),
 					cb.equal(cb.trim(studentRegistrationRoot.get(AVATAR_NAME)), "")));
 		}
-		
 
 		if (!StringUtils.isEmpty(searchRequest.getPhoto()) && searchRequest.getPhoto().equals("Y")) {
 			filterPredicates.add(cb.and(cb.isNotNull(studentRegistrationRoot.get(PHOTO_NAME)),
@@ -151,21 +152,21 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 
 		if (!StringUtils.isEmpty(searchRequest.getIsDeleted()))
 			filterPredicates.add(cb.equal(studentRegistrationRoot.get(IS_DELETED), searchRequest.getIsDeleted()));
-	
+
 		if (!StringUtils.isEmpty(searchRequest.getLastSuccessLoginTimeFrom())
 				&& !StringUtils.isEmpty(searchRequest.getLastSuccessLoginTimeTo()))
-			filterPredicates.add(cb.between(studentRegistrationRoot.get(LAST_SUCCESS_LOGIN_ATTEMPT), searchRequest.getLastSuccessLoginTimeFrom(),
-					searchRequest.getLastSuccessLoginTimeTo()));
-		
+			filterPredicates.add(cb.between(studentRegistrationRoot.get(LAST_SUCCESS_LOGIN_ATTEMPT),
+					searchRequest.getLastSuccessLoginTimeFrom(), searchRequest.getLastSuccessLoginTimeTo()));
+
 		if (!StringUtils.isEmpty(searchRequest.getLastUnSuccessLoginTimeFrom())
 				&& !StringUtils.isEmpty(searchRequest.getLastUnSuccessLoginTimeTo()))
-			filterPredicates.add(cb.between(studentRegistrationRoot.get(LAST_UNSUCCESS_LOGIN_ATTEMPT), searchRequest.getLastUnSuccessLoginTimeFrom(),
-					searchRequest.getLastUnSuccessLoginTimeTo()));
-		
+			filterPredicates.add(cb.between(studentRegistrationRoot.get(LAST_UNSUCCESS_LOGIN_ATTEMPT),
+					searchRequest.getLastUnSuccessLoginTimeFrom(), searchRequest.getLastUnSuccessLoginTimeTo()));
+
 		if (!StringUtils.isEmpty(searchRequest.getCreateDateFrom())
 				&& !StringUtils.isEmpty(searchRequest.getCreateDateTo()))
-			filterPredicates.add(cb.between(studentRegistrationRoot.get(CREATION_DATE_TIME), searchRequest.getCreateDateFrom(),
-					searchRequest.getCreateDateTo()));
+			filterPredicates.add(cb.between(studentRegistrationRoot.get(CREATION_DATE_TIME),
+					searchRequest.getCreateDateFrom(), searchRequest.getCreateDateTo()));
 
 	}
 
@@ -205,8 +206,8 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 			filterPredicates.add(cb.equal(studentDetailsRoot.get(GENDER), searchRequest.getGender()));
 
 		if (!StringUtils.isEmpty(searchRequest.getDobFrom()) && !StringUtils.isEmpty(searchRequest.getDobTo()))
-			filterPredicates.add(
-					cb.between(studentDetailsRoot.get(DOB), searchRequest.getDobFrom(), searchRequest.getDobTo()));
+			filterPredicates
+					.add(cb.between(studentDetailsRoot.get(DOB), searchRequest.getDobFrom(), searchRequest.getDobTo()));
 
 		if (!StringUtils.isEmpty(searchRequest.getMobileNumber()))
 			filterPredicates.add(cb.equal(studentDetailsRoot.get(MOBILE_NUMBER), searchRequest.getMobileNumber()));
@@ -237,8 +238,8 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 			filterPredicates.add(cb.equal(studentSchoolRoot.get(SCHOOL), searchRequest.getSchool()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSchoolNotInTheList()))
-			filterPredicates
-					.add(cb.equal(studentSchoolRoot.get(SCHOOL_NOT_IN_THE_LIST), searchRequest.getSchoolNotInTheList()));
+			filterPredicates.add(
+					cb.equal(studentSchoolRoot.get(SCHOOL_NOT_IN_THE_LIST), searchRequest.getSchoolNotInTheList()));
 
 		if (!StringUtils.isEmpty(searchRequest.getState()))
 			filterPredicates.add(cb.equal(studentSchoolRoot.get(STATE), searchRequest.getState()));
@@ -258,16 +259,16 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 			filterPredicates.add(cb.equal(studentPreferenceRoot.get(READING_LEVEL), searchRequest.getReadingLevel()));
 
 		if (!StringUtils.isEmpty(searchRequest.getDailyPublication()))
-			filterPredicates
-					.add(cb.equal(studentPreferenceRoot.get(COMMS_OVER_MAIL).get(DAILY_PUBLICATION), searchRequest.getDailyPublication()));
+			filterPredicates.add(cb.equal(studentPreferenceRoot.get(COMMS_OVER_MAIL).get(DAILY_PUBLICATION),
+					searchRequest.getDailyPublication()));
 
 		if (!StringUtils.isEmpty(searchRequest.getScoresProgressReports()))
 			filterPredicates.add(cb.equal(studentPreferenceRoot.get(COMMS_OVER_MAIL).get(SCHOOL_PROGRESS_REPORT),
 					searchRequest.getScoresProgressReports()));
 
 		if (!StringUtils.isEmpty(searchRequest.getAlertsNotifications()))
-			filterPredicates.add(
-					cb.equal(studentPreferenceRoot.get(COMMS_OVER_MAIL).get(ALERT_NOTIFICATION), searchRequest.getAlertsNotifications()));
+			filterPredicates.add(cb.equal(studentPreferenceRoot.get(COMMS_OVER_MAIL).get(ALERT_NOTIFICATION),
+					searchRequest.getAlertsNotifications()));
 	}
 
 	private void mapStudentSubscriptionPredicate(AdminSearchRequest searchRequest,

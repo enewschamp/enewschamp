@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.enewschamp.publication.domain.common.BadgeList;
 import com.enewschamp.publication.domain.entity.Badge;
+
 @JaversSpringDataAuditable
 public interface BadgeRepository extends JpaRepository<Badge, Long> {
 

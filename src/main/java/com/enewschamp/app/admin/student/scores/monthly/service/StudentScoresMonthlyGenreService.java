@@ -25,7 +25,7 @@ public class StudentScoresMonthlyGenreService {
 
 	@Autowired
 	private StudentScoresMonthlyGenreRepositoryCustomImpl repositoryCustom;
-	
+
 	@Autowired
 	private StudentScoresMonthlyGenreRepository repository;
 
@@ -52,7 +52,7 @@ public class StudentScoresMonthlyGenreService {
 	public StudentScoresMonthlyGenre update(StudentScoresMonthlyGenre studentScoreMonthly) {
 		Long studentScoreMonthlyId = studentScoreMonthly.getScoresMonthlyGenreId();
 		StudentScoresMonthlyGenre existingStudentScoresMonthlyGenre = get(studentScoreMonthlyId);
-		if(existingStudentScoresMonthlyGenre.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingStudentScoresMonthlyGenre.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(studentScoreMonthly, existingStudentScoresMonthlyGenre);
@@ -75,10 +75,10 @@ public class StudentScoresMonthlyGenreService {
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.STUDENT_SCORES_MONTHLY_NOT_FOUND, String.valueOf(studentScoreMonthlyId));
+			throw new BusinessException(ErrorCodeConstants.STUDENT_SCORES_MONTHLY_NOT_FOUND,
+					String.valueOf(studentScoreMonthlyId));
 		}
 	}
-
 
 	public StudentScoresMonthlyGenre read(StudentScoresMonthlyGenre studentScoreMonthly) {
 		Long studentScoreMonthlyId = studentScoreMonthly.getScoresMonthlyGenreId();
@@ -107,7 +107,6 @@ public class StudentScoresMonthlyGenreService {
 		existingStudentScoresMonthlyGenre.setOperationDateTime(null);
 		return repository.save(existingStudentScoresMonthlyGenre);
 	}
-	
 
 	public Page<StudentScoresMonthlyGenre> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);

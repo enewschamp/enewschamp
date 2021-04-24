@@ -35,7 +35,7 @@ public class StudentShareAchievementsService {
 
 	@Autowired
 	StudentShareAchievementsRepository repository;
-	
+
 	@Autowired
 	StudentShareAchievementsRepositoryCustomImpl repositoryCustom;
 
@@ -58,6 +58,7 @@ public class StudentShareAchievementsService {
 		modelMapper.map(StudentShareAchievements, existingEntity);
 		return repository.save(existingEntity);
 	}
+
 	public StudentShareAchievements patch(StudentShareAchievements StudentShareAchievements) {
 		Long studentId = StudentShareAchievements.getStudentId();
 		StudentShareAchievements existingEntity = get(studentId);
@@ -83,7 +84,7 @@ public class StudentShareAchievementsService {
 		StudentShareAchievements.setStudentId(studentId);
 		return auditService.getEntityAudit(StudentShareAchievements);
 	}
-	
+
 	public StudentShareAchievements read(StudentShareAchievements achievementEntity) {
 		Long achievementId = achievementEntity.getStudentId();
 		StudentShareAchievements stakeHolder = get(achievementId);

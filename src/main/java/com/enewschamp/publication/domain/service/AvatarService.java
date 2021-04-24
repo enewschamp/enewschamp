@@ -29,7 +29,7 @@ public class AvatarService extends AbstractDomainService {
 
 	@Autowired
 	AvatarRepository repository;
-	
+
 	@Autowired
 	AvatarRepositoryCustomImpl repositoryCustom;
 
@@ -56,12 +56,13 @@ public class AvatarService extends AbstractDomainService {
 	public Avatar update(Avatar avatar) {
 		Long avatarId = avatar.getAvatarId();
 		Avatar existingAvatar = get(avatarId);
-		if(existingAvatar.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingAvatar.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(avatar, existingAvatar);
 		return repository.save(existingAvatar);
 	}
+
 	public Avatar patch(Avatar avatar) {
 		Long avatarId = avatar.getAvatarId();
 		Avatar existingEntity = get(avatarId);
@@ -105,7 +106,7 @@ public class AvatarService extends AbstractDomainService {
 		avatar.setAvatarId(avatarId);
 		return auditService.getEntityAudit(avatar);
 	}
-	
+
 	public Avatar read(Avatar avatar) {
 		Long avatarId = avatar.getAvatarId();
 		Avatar avatarEntity = get(avatarId);
@@ -137,15 +138,14 @@ public class AvatarService extends AbstractDomainService {
 	public Page<Avatar> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Avatar> avatarList = repositoryCustom.findAll(pageable, null);
-		if(avatarList.getContent().isEmpty()) {
+		if (avatarList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return avatarList;
 	}
-	
+
 	public List<AvatarView> getAllAvatarView() {
 		return repository.findAllProjectedBy();
 	}
-
 
 }

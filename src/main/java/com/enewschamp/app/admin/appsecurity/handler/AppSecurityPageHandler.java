@@ -115,6 +115,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 		pageData = mapPageData(appSecurity);
 		pageDto.setData(pageData);
 	}
+
 	@SneakyThrows
 	private PageDTO updateAppSecurity(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
@@ -138,7 +139,6 @@ public class AppSecurityPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	
 	private AppSecurityPageData mapPageData(AppSecurity appSecurity) {
 		AppSecurityPageData pageData = modelMapper.map(appSecurity, AppSecurityPageData.class);
 		pageData.setLastUpdate(appSecurity.getOperationDateTime());
@@ -166,6 +166,7 @@ public class AppSecurityPageHandler implements IPageHandler {
 		mapAppSecurity(pageRequest, pageDto, appSecurity);
 		return pageDto;
 	}
+
 	@SneakyThrows
 	private PageDTO listAppSecurity(PageRequestDTO pageRequest) {
 		Page<AppSecurity> appSecList = appSecurityService.list(

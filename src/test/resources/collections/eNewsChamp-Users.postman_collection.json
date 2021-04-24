@@ -31,15 +31,15 @@
 								"value": "application/json"
 							},
 							{
-						"key": "publisherAppName",
-						"value": "{{publisherAppName}}",
-						"type": "text"
-					},
-					{
-						"key": "publisherAppKey",
-						"value": "{{publisherAppKey}}",
-						"type": "text"
-					}
+								"key": "publisherAppName",
+								"value": "{{publisherAppName}}",
+								"type": "text"
+							},
+							{
+								"key": "publisherAppKey",
+								"value": "{{publisherAppKey}}",
+								"type": "text"
+							}
 						],
 						"body": {
 							"mode": "raw",

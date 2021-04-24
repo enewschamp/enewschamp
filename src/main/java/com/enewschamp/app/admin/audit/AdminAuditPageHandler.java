@@ -73,7 +73,7 @@ public class AdminAuditPageHandler implements IPageHandler {
 		Long fieldValue = pageRequest.getData().get("audit").get("fieldValue").asLong();
 		String packageName = entityConfig.getEntityConfig().get(classname.toLowerCase());
 		if (packageName == null) {
-			log.error(ErrorCodeConstants.ENTITY_PACKAGE_NOT_FOUND +classname);
+			log.error(ErrorCodeConstants.ENTITY_PACKAGE_NOT_FOUND + classname);
 			throw new BusinessException(ErrorCodeConstants.ENTITY_PACKAGE_NOT_FOUND, classname);
 		}
 		try {

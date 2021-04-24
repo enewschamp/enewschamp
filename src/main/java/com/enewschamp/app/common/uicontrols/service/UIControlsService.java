@@ -28,7 +28,7 @@ public class UIControlsService implements IUIControlsService {
 
 	@Autowired
 	UIControlsRepository repository;
-	
+
 	@Autowired
 	UIControlsRepositoryCustomImpl customRepository;
 
@@ -51,7 +51,7 @@ public class UIControlsService implements IUIControlsService {
 		UIControlsDTO dto = modelMapper.map(uicontrols, UIControlsDTO.class);
 		return dto;
 	}
-	
+
 	public UIControls createOne(UIControls entity) {
 		UIControls uiControlos = null;
 		try {
@@ -125,7 +125,7 @@ public class UIControlsService implements IUIControlsService {
 		}
 		return noOfRecords;
 	}
-	
+
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void clean() {
 		repository.truncate();

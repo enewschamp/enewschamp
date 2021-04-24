@@ -25,7 +25,8 @@ import com.enewschamp.app.helpdesk.entity.Helpdesk;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class HelpdeskRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Helpdesk>, AdminConstant {
+public class HelpdeskRepositoryCustomImpl extends RepositoryImpl
+		implements IGenericListRepository<Helpdesk>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -39,21 +40,20 @@ public class HelpdeskRepositoryCustomImpl extends RepositoryImpl implements IGen
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
 			filterPredicates.add(cb.equal(helpdeskRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
-		
 		if (!StringUtils.isEmpty(searchRequest.getCategoryId()))
 			filterPredicates.add(cb.equal(helpdeskRoot.get(CATEGORY_ID), searchRequest.getCategoryId()));
-		
+
 		if (!StringUtils.isEmpty(searchRequest.getCloseFlag()))
 			filterPredicates.add(cb.equal(helpdeskRoot.get(CLOSE_FLAG), searchRequest.getCloseFlag()));
-		
+
 		if (!StringUtils.isEmpty(searchRequest.getSupportUserId()))
 			filterPredicates.add(cb.equal(helpdeskRoot.get(SUPPORT_USER_ID), searchRequest.getSupportUserId()));
-		
-		
-		if (!StringUtils.isEmpty(searchRequest.getCreateDateFrom()) && !StringUtils.isEmpty(searchRequest.getCreateDateTo()))
+
+		if (!StringUtils.isEmpty(searchRequest.getCreateDateFrom())
+				&& !StringUtils.isEmpty(searchRequest.getCreateDateTo()))
 			filterPredicates.add(cb.between(helpdeskRoot.get(CREATE_DATE_TIME), searchRequest.getCreateDateFrom(),
 					searchRequest.getCreateDateTo()));
-		
+
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(helpdeskRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query

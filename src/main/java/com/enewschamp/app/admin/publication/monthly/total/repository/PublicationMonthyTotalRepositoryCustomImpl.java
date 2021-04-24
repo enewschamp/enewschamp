@@ -33,8 +33,10 @@ public class PublicationMonthyTotalRepositoryCustomImpl extends RepositoryImpl
 	@Override
 	public Page<ArticlePublicationMonthlyTotal> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<ArticlePublicationMonthlyTotal> criteriaQuery = cb.createQuery(ArticlePublicationMonthlyTotal.class);
-		Root<ArticlePublicationMonthlyTotal> monthlySummaryRoot = criteriaQuery.from(ArticlePublicationMonthlyTotal.class);
+		CriteriaQuery<ArticlePublicationMonthlyTotal> criteriaQuery = cb
+				.createQuery(ArticlePublicationMonthlyTotal.class);
+		Root<ArticlePublicationMonthlyTotal> monthlySummaryRoot = criteriaQuery
+				.from(ArticlePublicationMonthlyTotal.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getReadingLevel()))

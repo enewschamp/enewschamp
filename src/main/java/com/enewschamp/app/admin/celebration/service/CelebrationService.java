@@ -1,5 +1,6 @@
 package com.enewschamp.app.admin.celebration.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -19,10 +20,11 @@ import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.subscription.domain.entity.StudentPayment;
 
 @Service
 public class CelebrationService {
-	
+
 	@Autowired
 	private CelebrationRepository repository;
 
@@ -52,7 +54,7 @@ public class CelebrationService {
 	public Celebration update(Celebration celebration) {
 		Long celebrationId = celebration.getCelebrationId();
 		Celebration existingCelebration = get(celebrationId);
-		if(existingCelebration.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingCelebration.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(celebration, existingCelebration);
@@ -78,7 +80,6 @@ public class CelebrationService {
 			throw new BusinessException(ErrorCodeConstants.GENRE_NOT_FOUND, String.valueOf(celebrationId));
 		}
 	}
-
 
 	public String getAudit(Long celebrationId) {
 		Celebration celebration = new Celebration();
@@ -113,10 +114,10 @@ public class CelebrationService {
 		existingCelebration.setOperationDateTime(null);
 		return repository.save(existingCelebration);
 	}
-	
-//	public List<CelebrationList> getCelebrationList() {
-//		return repository.getCelebrationList();
-//	}
+
+	public List<Celebration> getCelebrationListForToday(String editionId) {
+		return repository.getCelebrationListForToday(editionId);
+	}
 
 	public Page<Celebration> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);

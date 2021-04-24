@@ -38,29 +38,28 @@ import lombok.SneakyThrows;
 public class EchampBulkEntityPageHandler implements IPageHandler {
 	@Autowired
 	private PageNavigatorService pageNavigatorService;
-	
+
 	@Autowired
 	private PageNavigationRulesService pageNavigationRulesService;
-	
+
 	@Autowired
 	private UIControlsGlobalService uiControlsGlobalService;
-	
+
 	@Autowired
 	private UIControlsService uiControlsService;
-	
+
 	@Autowired
 	private UIControlsRulesService uiControlsRulesService;
-	
+
 	@Autowired
 	private PropertiesBackendService propertiesBackendService;
-	
+
 	@Autowired
 	private PropertiesFrontendService propertiesFrontendService;
-	
+
 	@Autowired
 	private ErrorCodesService errorCodeService;
-	
-	
+
 	@Autowired
 	private ModelMapper modelMapper;
 	@Autowired
@@ -103,16 +102,16 @@ public class EchampBulkEntityPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		EchampBulkEntityPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				EchampBulkEntityPageData.class);
-		
+
 		List<PageNavigator> pageNavigators = mapPageNavigators(pageRequest, pageData);
 		List<PageNavigatorRules> pageNavigatorRules = mapPageNavigatorRules(pageRequest, pageData);
 		List<UIControlsGlobal> uiControlsGlobals = mapUiControlsGlobals(pageRequest, pageData);
 		List<UIControls> uiControls = mapUIControls(pageRequest, pageData);
 		List<UIControlsRules> uiControlsRules = mapUIControlsRules(pageRequest, pageData);
 		List<PropertiesBackend> propertiesBackends = mapPropertiesBackends(pageRequest, pageData);
-		List<PropertiesFrontend> propertiesFrontends =  mapPropertiesFrontends(pageRequest, pageData);
+		List<PropertiesFrontend> propertiesFrontends = mapPropertiesFrontends(pageRequest, pageData);
 		List<ErrorCodes> errorCodes = mapErrorCodes(pageRequest, pageData);
-		
+
 		pageNavigatorService.createAll(pageNavigators);
 		pageNavigationRulesService.createAll(pageNavigatorRules);
 		uiControlsGlobalService.createAll(uiControlsGlobals);
@@ -125,70 +124,60 @@ public class EchampBulkEntityPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-
 	private List<PageNavigator> mapPageNavigators(PageRequestDTO pageRequest, EchampBulkEntityPageData pageData) {
-		List<PageNavigator> pageNavigators = pageData.getPageNavigators()
-				  .stream()
-				  .map(navigator -> modelMapper.map(navigator, PageNavigator.class))
-				  .collect(Collectors.toList());	
+		List<PageNavigator> pageNavigators = pageData.getPageNavigators().stream()
+				.map(navigator -> modelMapper.map(navigator, PageNavigator.class)).collect(Collectors.toList());
 		return pageNavigators;
 	}
 
-	private List<PageNavigatorRules> mapPageNavigatorRules(PageRequestDTO pageRequest, EchampBulkEntityPageData pageData) {
-		List<PageNavigatorRules> pageNavigatorRules = pageData.getPageNavigatorRules()
-				  .stream()
-				  .map(navigatorRules -> modelMapper.map(navigatorRules, PageNavigatorRules.class))
-				  .collect(Collectors.toList());	
+	private List<PageNavigatorRules> mapPageNavigatorRules(PageRequestDTO pageRequest,
+			EchampBulkEntityPageData pageData) {
+		List<PageNavigatorRules> pageNavigatorRules = pageData.getPageNavigatorRules().stream()
+				.map(navigatorRules -> modelMapper.map(navigatorRules, PageNavigatorRules.class))
+				.collect(Collectors.toList());
 		return pageNavigatorRules;
 	}
-	
+
 	private List<UIControlsGlobal> mapUiControlsGlobals(PageRequestDTO pageRequest, EchampBulkEntityPageData pageData) {
-		List<UIControlsGlobal> uiControlsGlobals = pageData.getUiControlsGlobals()
-				  .stream()
-				  .map(uiControlsGlobal -> modelMapper.map(uiControlsGlobal, UIControlsGlobal.class))
-				  .collect(Collectors.toList());	
+		List<UIControlsGlobal> uiControlsGlobals = pageData.getUiControlsGlobals().stream()
+				.map(uiControlsGlobal -> modelMapper.map(uiControlsGlobal, UIControlsGlobal.class))
+				.collect(Collectors.toList());
 		return uiControlsGlobals;
 	}
-	
+
 	private List<UIControls> mapUIControls(PageRequestDTO pageRequest, EchampBulkEntityPageData pageData) {
-		List<UIControls> uiControls = pageData.getUiControls()
-				  .stream()
-				  .map(uiControl -> modelMapper.map(uiControl, UIControls.class))
-				  .collect(Collectors.toList());	
+		List<UIControls> uiControls = pageData.getUiControls().stream()
+				.map(uiControl -> modelMapper.map(uiControl, UIControls.class)).collect(Collectors.toList());
 		return uiControls;
 	}
-	
+
 	private List<UIControlsRules> mapUIControlsRules(PageRequestDTO pageRequest, EchampBulkEntityPageData pageData) {
-		List<UIControlsRules> uiControlsRules = pageData.getUiControlsRules()
-				  .stream()
-				  .map(uiControlRule -> modelMapper.map(uiControlRule, UIControlsRules.class))
-				  .collect(Collectors.toList());	
+		List<UIControlsRules> uiControlsRules = pageData.getUiControlsRules().stream()
+				.map(uiControlRule -> modelMapper.map(uiControlRule, UIControlsRules.class))
+				.collect(Collectors.toList());
 		return uiControlsRules;
 	}
-	
-	private List<PropertiesBackend> mapPropertiesBackends(PageRequestDTO pageRequest, EchampBulkEntityPageData pageData) {
-		List<PropertiesBackend> propertiesBackends = pageData.getPropertiesBackends()
-				  .stream()
-				  .map(propertiesBackend -> modelMapper.map(propertiesBackend, PropertiesBackend.class))
-				  .collect(Collectors.toList());	
+
+	private List<PropertiesBackend> mapPropertiesBackends(PageRequestDTO pageRequest,
+			EchampBulkEntityPageData pageData) {
+		List<PropertiesBackend> propertiesBackends = pageData.getPropertiesBackends().stream()
+				.map(propertiesBackend -> modelMapper.map(propertiesBackend, PropertiesBackend.class))
+				.collect(Collectors.toList());
 		return propertiesBackends;
 	}
-	
-	private List<PropertiesFrontend> mapPropertiesFrontends(PageRequestDTO pageRequest, EchampBulkEntityPageData pageData) {
-		List<PropertiesFrontend> propertiesFrontends = pageData.getPropertiesFrontends()
-				  .stream()
-				  .map(propertiesFrontend -> modelMapper.map(propertiesFrontend, PropertiesFrontend.class))
-				  .collect(Collectors.toList());	
+
+	private List<PropertiesFrontend> mapPropertiesFrontends(PageRequestDTO pageRequest,
+			EchampBulkEntityPageData pageData) {
+		List<PropertiesFrontend> propertiesFrontends = pageData.getPropertiesFrontends().stream()
+				.map(propertiesFrontend -> modelMapper.map(propertiesFrontend, PropertiesFrontend.class))
+				.collect(Collectors.toList());
 		return propertiesFrontends;
 	}
-	
+
 	private List<ErrorCodes> mapErrorCodes(PageRequestDTO pageRequest, EchampBulkEntityPageData pageData) {
-		List<ErrorCodes> propertiesFrontends = pageData.getErrorCodes()
-				  .stream()
-				  .map(errorCode -> modelMapper.map(errorCode, ErrorCodes.class))
-				  .collect(Collectors.toList());	
+		List<ErrorCodes> propertiesFrontends = pageData.getErrorCodes().stream()
+				.map(errorCode -> modelMapper.map(errorCode, ErrorCodes.class)).collect(Collectors.toList());
 		return propertiesFrontends;
 	}
-	
-	
+
 }

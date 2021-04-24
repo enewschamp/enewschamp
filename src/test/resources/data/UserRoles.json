@@ -1,37 +1,37 @@
 [
-    {
-        "userId": "deepsem",
-        "roleId": "AUTHOR",
-        "day": "Mon"
-    },
-    {
-        "userId": "mesmayus",
-        "roleId": "EDITOR",
-        "day": "Tue"
-    },
-    {
-        "userId": "govisaxe",
-        "roleId": "PUBLISHER",
-        "day": "Wed"
-    },
-    {
-        "userId": "author1",
-        "roleId": "AUTHOR",
-        "day": "Wed"
-    },
-    {
-        "userId": "author2",
-        "roleId": "AUTHOR",
-        "day": "Wed"
-    },
-    {
-        "userId": "editor1",
-        "roleId": "EDITOR",
-        "day": "Wed"
-    },
-    {
-        "userId": "editor2",
-        "roleId": "EDITOR",
-        "day": "Wed"
-    }
+	{
+		"userId": "deepsem",
+		"roleId": "AUTHOR",
+		"day": "Mon"
+	},
+	{
+		"userId": "mesmayus",
+		"roleId": "EDITOR",
+		"day": "Tue"
+	},
+	{
+		"userId": "govisaxe",
+		"roleId": "PUBLISHER",
+		"day": "Wed"
+	},
+	{
+		"userId": "author1",
+		"roleId": "AUTHOR",
+		"day": "Wed"
+	},
+	{
+		"userId": "author2",
+		"roleId": "AUTHOR",
+		"day": "Wed"
+	},
+	{
+		"userId": "editor1",
+		"roleId": "EDITOR",
+		"day": "Wed"
+	},
+	{
+		"userId": "editor2",
+		"roleId": "EDITOR",
+		"day": "Wed"
+	}
 ]

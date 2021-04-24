@@ -87,7 +87,7 @@ public class SchoolPricingPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		SchoolPricingPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				SchoolPricingPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		SchoolPricing schoolPricing = mapSchoolPricingData(pageRequest, pageData);
 		schoolPricing = schoolPricingService.create(schoolPricing);
 		mapSchoolPricing(pageRequest, pageDto, schoolPricing);
@@ -99,7 +99,7 @@ public class SchoolPricingPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		SchoolPricingPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				SchoolPricingPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		SchoolPricing schoolPricing = mapSchoolPricingData(pageRequest, pageData);
 		schoolPricing = schoolPricingService.update(schoolPricing);
 		mapSchoolPricing(pageRequest, pageDto, schoolPricing);
@@ -162,24 +162,21 @@ public class SchoolPricingPageHandler implements IPageHandler {
 		return dto;
 	}
 
-	private void mapSchoolPricing(PageRequestDTO pageRequest, PageDTO pageDto,
-			SchoolPricing schoolPricing) {
+	private void mapSchoolPricing(PageRequestDTO pageRequest, PageDTO pageDto, SchoolPricing schoolPricing) {
 		SchoolPricingPageData pageData;
 		mapHeaderData(pageRequest, pageDto);
 		pageData = mapPageData(schoolPricing);
 		pageDto.setData(pageData);
 	}
 
-	private SchoolPricing mapSchoolPricingData(PageRequestDTO pageRequest,
-			SchoolPricingPageData pageData) {
+	private SchoolPricing mapSchoolPricingData(PageRequestDTO pageRequest, SchoolPricingPageData pageData) {
 		SchoolPricing schoolPricing = modelMapper.map(pageData, SchoolPricing.class);
 		schoolPricing.setRecordInUse(RecordInUseType.Y);
 		return schoolPricing;
 	}
 
 	private SchoolPricingPageData mapPageData(SchoolPricing schoolPricing) {
-		SchoolPricingPageData pageData = modelMapper.map(schoolPricing,
-				SchoolPricingPageData.class);
+		SchoolPricingPageData pageData = modelMapper.map(schoolPricing, SchoolPricingPageData.class);
 		pageData.setLastUpdate(schoolPricing.getOperationDateTime());
 		return pageData;
 	}
@@ -189,8 +186,7 @@ public class SchoolPricingPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<SchoolPricing> pageDataList = page.getContent();
 			for (SchoolPricing schoolPricing : pageDataList) {
-				SchoolPricingPageData pageData = modelMapper.map(schoolPricing,
-						SchoolPricingPageData.class);
+				SchoolPricingPageData pageData = modelMapper.map(schoolPricing, SchoolPricingPageData.class);
 				pageData.setLastUpdate(schoolPricing.getOperationDateTime());
 				schoolPricingPageDataList.add(pageData);
 			}

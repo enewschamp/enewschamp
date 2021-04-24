@@ -42,7 +42,7 @@ public class UserService extends AbstractDomainService {
 
 	@Autowired
 	UserRepositoryCustomImpl customRepository;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
 
@@ -61,8 +61,8 @@ public class UserService extends AbstractDomainService {
 
 	public User create(User user) {
 		User userEntity = null;
-		Optional<User> existingUser =  repository.findById(user.getUserId());
-		if(existingUser.isPresent()) {
+		Optional<User> existingUser = repository.findById(user.getUserId());
+		if (existingUser.isPresent()) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		try {
@@ -85,17 +85,17 @@ public class UserService extends AbstractDomainService {
 		handlePasswords(user, existingUser);
 		return repository.save(existingUser);
 	}
-	
+
 	private void handlePasswords(User user, User existingUser) {
-		//if (StringUtils.isEmpty(user.getPassword()))
-			user.setPassword(existingUser.getPassword());
-		//if (StringUtils.isEmpty(user.getPassword1()))
-			user.setPassword1(existingUser.getPassword1());
-		//if (StringUtils.isEmpty(user.getPassword2()))
-			user.setPassword2(existingUser.getPassword2());
+		// if (StringUtils.isEmpty(user.getPassword()))
+		user.setPassword(existingUser.getPassword());
+		// if (StringUtils.isEmpty(user.getPassword1()))
+		user.setPassword1(existingUser.getPassword1());
+		// if (StringUtils.isEmpty(user.getPassword2()))
+		user.setPassword2(existingUser.getPassword2());
 		modelMapper.map(user, existingUser);
 	}
-	
+
 	public User patch(User user) {
 		String userId = user.getUserId();
 		User existingEntity = load(userId);
@@ -244,7 +244,6 @@ public class UserService extends AbstractDomainService {
 		user.setTheme(theme);
 		repository.save(user);
 	}
-	
 
 	public User read(User userEntity) {
 		String userId = userEntity.getUserId();
@@ -279,8 +278,8 @@ public class UserService extends AbstractDomainService {
 		Page<User> userList = customRepository.findAll(pageable, searchRequest);
 		return userList;
 	}
-	
-	public List<UserView> getAllUserView(){
+
+	public List<UserView> getAllUserView() {
 		return repository.findAllProjectedBy();
 	}
 }

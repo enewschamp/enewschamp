@@ -28,7 +28,7 @@ public class StateService extends AbstractDomainService {
 
 	@Autowired
 	StateRepository stateRepository;
-	
+
 	@Autowired
 	private StateRepositoryCustomImpl customRepository;
 
@@ -105,7 +105,7 @@ public class StateService extends AbstractDomainService {
 		}
 		return statePageData;
 	}
-	
+
 	public State getByNameAndCountryId(String nameId, String countryId) {
 		Optional<State> state = stateRepository.findByNameIdAndCountryId(nameId, countryId);
 		if (state.isPresent())

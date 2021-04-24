@@ -24,9 +24,8 @@ public class UserRolePageData extends PageData {
 	private String roleId;
 
 	private String contribution;
-	
+
 	private String comments;
 	private WeekDayType dayOfTheWeek;
-
 
 }

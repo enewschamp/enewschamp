@@ -21,9 +21,10 @@ import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.publication.domain.entity.Badge;
+
 @Repository
-public class BadgeRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Badge>{
-	
+public class BadgeRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Badge> {
+
 	@PersistenceContext
 	private EntityManager entityManager;
 

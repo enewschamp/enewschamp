@@ -87,7 +87,7 @@ public class UserRolePageHandler implements IPageHandler {
 	private PageDTO createUserRole(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserRolePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserRolePageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		UserRole userRole = mapUserRoleData(pageRequest, pageData);
 		userRole = userRoleService.create(userRole);
 		mapUserRole(pageRequest, pageDto, userRole);
@@ -106,7 +106,7 @@ public class UserRolePageHandler implements IPageHandler {
 	private PageDTO updateUserRole(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserRolePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserRolePageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		UserRole userRole = mapUserRoleData(pageRequest, pageData);
 		userRole = userRoleService.update(userRole);
 		mapUserRole(pageRequest, pageDto, userRole);
@@ -209,5 +209,5 @@ public class UserRolePageHandler implements IPageHandler {
 		}
 		return userRolePageDataList;
 	}
-	
+
 }

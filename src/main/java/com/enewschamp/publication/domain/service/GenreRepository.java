@@ -19,6 +19,6 @@ interface GenreRepository extends JpaRepository<Genre, Long> {
 
 	@Query(value = "select a.genreId as genreId, a.nameId as name,a.imageName as image from Genre a")
 	public List<GenreList> getGenreList();
-	
+
 	public List<GenreView> findAllProjectedBy();
 }

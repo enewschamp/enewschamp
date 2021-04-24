@@ -41,16 +41,16 @@ import lombok.extern.slf4j.Slf4j;
 public class AvatarPageHandler implements IPageHandler {
 	@Autowired
 	private AvatarService avatarService;
-	
+
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	private CommonService commonService;
-	
+
 	private Validator validator;
 
 	@Override
@@ -105,10 +105,9 @@ public class AvatarPageHandler implements IPageHandler {
 		AvatarPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), AvatarPageData.class);
 		validate(pageData);
 		Avatar avatar = saveImageAndAudio(pageData);
-        mapAvatar(pageRequest, pageDto, avatar);
+		mapAvatar(pageRequest, pageDto, avatar);
 		return pageDto;
 	}
-
 
 	@SneakyThrows
 	private PageDTO updateAvatar(PageRequestDTO pageRequest) {
@@ -188,7 +187,7 @@ public class AvatarPageHandler implements IPageHandler {
 		}
 		return avatarPageDataList;
 	}
-	
+
 	private void mapAvatar(PageRequestDTO pageRequest, PageDTO pageDto, Avatar avatar) {
 		AvatarPageData pageData;
 		mapHeaderData(pageRequest, pageDto);
@@ -207,7 +206,7 @@ public class AvatarPageHandler implements IPageHandler {
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
 	}
-	
+
 	private Avatar updateImage(AvatarPageData avatarDTO, Long AvatarId) {
 		avatarDTO.setAvatarId(AvatarId);
 		Avatar avatar = avatarService.get(AvatarId);
@@ -237,14 +236,14 @@ public class AvatarPageHandler implements IPageHandler {
 				updateFlag = true;
 			}
 		}
-		
+
 		if (updateFlag) {
 			avatar = avatarService.update(avatar);
 		}
 		avatar.setImageBase64(null);
 		return avatar;
 	}
-	
+
 	private Avatar saveImageAndAudio(AvatarPageData avatarDTO) {
 		Avatar avatar = modelMapper.map(avatarDTO, Avatar.class);
 		try {
@@ -273,7 +272,7 @@ public class AvatarPageHandler implements IPageHandler {
 				updateFlag = true;
 			}
 		}
-	
+
 		if (updateFlag) {
 			avatar = avatarService.update(avatar);
 		}

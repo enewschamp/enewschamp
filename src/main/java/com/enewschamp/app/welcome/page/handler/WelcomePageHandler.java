@@ -12,6 +12,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.enewschamp.app.admin.celebration.dto.CelebrationDTO;
+import com.enewschamp.app.admin.celebration.entity.Celebration;
+import com.enewschamp.app.admin.celebration.service.CelebrationService;
+import com.enewschamp.app.admin.promotion.dto.PromotionDTO;
+import com.enewschamp.app.admin.promotion.repository.Promotion;
+import com.enewschamp.app.admin.promotion.service.PromotionService;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageRequestDTO;
@@ -96,6 +102,12 @@ public class WelcomePageHandler implements IPageHandler {
 
 	@Autowired
 	BadgeService badgeService;
+
+	@Autowired
+	CelebrationService celebrationService;
+
+	@Autowired
+	PromotionService promotionService;
 
 	@Autowired
 	ScoresMonthlyTotalBusiness scoresMonthlyTotalBusiness;
@@ -187,6 +199,7 @@ public class WelcomePageHandler implements IPageHandler {
 				studentSubscriptionPageData
 						.setSubscriptionSelected(("Y".equals(studentControlDTO.getEvalAvailed()) ? "F" : "E"));
 				studentSubscriptionPageData.setValidity(studentSubscriptionDTO.getEndDate().toString());
+				studentSubscriptionPageData.setAutoRenewal(studentSubscriptionDTO.getAutoRenewal());
 			} else if (studentSubscriptionDTO.getEndDate().isBefore(LocalDate.now())) {
 				studentSubscriptionPageData.setValidity("");
 			} else {
@@ -199,6 +212,18 @@ public class WelcomePageHandler implements IPageHandler {
 		StudentDetailsDTO studentDetailsDTO = studentDetailsBusiness.getStudentDetailsFromMaster(studentId);
 		if (studentDetailsDTO != null) {
 			studentDetailsPageData = modelMapper.map(studentDetailsDTO, StudentDetailsPageData.class);
+		}
+		List<Celebration> celebrationList = celebrationService.getCelebrationListForToday(editionId);
+		List<CelebrationDTO> celebrationDTOList = new ArrayList<CelebrationDTO>();
+		for (int i = 0; i < celebrationList.size(); i++) {
+			CelebrationDTO celebrationDTO = modelMapper.map(celebrationList.get(i), CelebrationDTO.class);
+			celebrationDTOList.add(celebrationDTO);
+		}
+		List<Promotion> promotionList = promotionService.getActivePromotionList(editionId);
+		List<PromotionDTO> promotionDTOList = new ArrayList<PromotionDTO>();
+		for (int i = 0; i < promotionList.size(); i++) {
+			PromotionDTO promotionDTO = modelMapper.map(promotionList.get(i), PromotionDTO.class);
+			promotionDTOList.add(promotionDTO);
 		}
 		MyPicturePageData myPicturePageData = new MyPicturePageData();
 		AppearancePageData appearancePageData = new AppearancePageData();
@@ -298,6 +323,8 @@ public class WelcomePageHandler implements IPageHandler {
 		pageData.setStudentDetails(studentDetailsPageData);
 		pageData.setSubscription(studentSubscriptionPageData);
 		pageData.setBadgeDetails(studentbadges);
+		pageData.setCelebrations(celebrationDTOList);
+		pageData.setPromotions(promotionDTOList);
 		pageData.setLastActivityDatetime(lastLogin);
 		pageDto.setData(pageData);
 		return pageDto;

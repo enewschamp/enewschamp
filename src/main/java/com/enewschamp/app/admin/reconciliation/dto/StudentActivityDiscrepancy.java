@@ -8,6 +8,6 @@ import lombok.Data;
 public class StudentActivityDiscrepancy {
 	private List<NewsArticleInfo> newsArticles;
 	private Long studentId;
-	//private StudentInfo student;
+	// private StudentInfo student;
 
 }

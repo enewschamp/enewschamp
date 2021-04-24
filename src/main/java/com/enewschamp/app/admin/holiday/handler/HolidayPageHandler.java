@@ -84,7 +84,7 @@ public class HolidayPageHandler implements IPageHandler {
 	private PageDTO createHoliday(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		HolidayPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HolidayPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		Holiday holiday = mapHolidayData(pageRequest, pageData);
 		holiday = holidayService.create(holiday);
 		mapHoliday(pageRequest, pageDto, holiday);

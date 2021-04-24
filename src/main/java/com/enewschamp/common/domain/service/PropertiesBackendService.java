@@ -34,7 +34,7 @@ public class PropertiesBackendService extends AbstractDomainService {
 
 	@Autowired
 	PropertiesBackendRepository repository;
-	
+
 	@Autowired
 	PropertiesBackendRepositoryCustomImpl customRepository;
 
@@ -56,27 +56,21 @@ public class PropertiesBackendService extends AbstractDomainService {
 	public String getValue(String appName, String name) {
 		String arr[] = name.split("\\.");
 		String value = "";
-		// System.out.println(">>>>>>>>>>>property name>>>>>>>>>>>>>>" +
-		// name.split("\\.")[0]);
 		PropertiesBackend property = repository.getProperty(appName, name.split("\\.")[0]);
 		if (arr.length > 1) {
 			JSONParser parser = new JSONParser();
 			try {
-				// System.out.println(">>>>>>>>>property_value>>>>>>>>>>>>>>>>" +
-				// property.getValue());
 				JSONObject json = (JSONObject) parser.parse(property.getValue());
 				if (json.get(arr[1]) != null) {
 					value = json.get(arr[1]).toString().trim();
 				}
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
 			value = property.getValue().trim();
 		}
 		return value;
-
 	}
 
 	public PropertiesBackend create(PropertiesBackend properties) {
@@ -145,7 +139,7 @@ public class PropertiesBackendService extends AbstractDomainService {
 		properties.setPropertyId(propertyId);
 		return auditService.getEntityAudit(properties);
 	}
-	
+
 	public PropertiesBackend read(PropertiesBackend propertiesBackendEntity) {
 		Long propertiesId = propertiesBackendEntity.getPropertyId();
 		PropertiesBackend existingEntity = get(propertiesId);
@@ -197,6 +191,5 @@ public class PropertiesBackendService extends AbstractDomainService {
 		repository.deleteSequences();
 		repository.initializeSequence();
 	}
-
 
 }

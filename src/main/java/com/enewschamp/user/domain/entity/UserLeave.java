@@ -42,10 +42,10 @@ public class UserLeave extends BaseEntity {
 	@NotNull
 	@Column(name = "ApplicationDateTime")
 	private LocalDateTime applicationDateTime;
-	
+
 	@Column(name = "Comments", length = 200)
 	private String comments;
-	
+
 	@Column(name = "ManagerComments", length = 200)
 	private String managerComments;
 

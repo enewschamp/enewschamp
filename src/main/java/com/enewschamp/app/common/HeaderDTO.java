@@ -50,23 +50,28 @@ public class HeaderDTO implements Serializable {
 	public String getLoginCredentials() {
 		return this.loginCredentials;
 	}
+
 	@JsonIgnore
 	public String getUserId() {
 		return this.userId;
 	}
+
 	@JsonIgnore
 	public String getDeviceId() {
 		return this.deviceId;
 	}
-    @JsonProperty
+
+	@JsonProperty
 	public void setLoginCredentials(String loginCredentials) {
 		this.loginCredentials = loginCredentials;
 	}
-    @JsonProperty
+
+	@JsonProperty
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-    @JsonProperty
+
+	@JsonProperty
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
 	}

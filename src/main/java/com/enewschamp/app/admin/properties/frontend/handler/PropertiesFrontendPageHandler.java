@@ -111,7 +111,6 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-
 	private PropertiesFrontend mapPropertiesFrontendData(PageRequestDTO pageRequest,
 			PropertiesFrontendPageData pageData) {
 		PropertiesFrontend propertiesFrontend = modelMapper.map(pageData, PropertiesFrontend.class);
@@ -194,7 +193,7 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 				new TypeReference<List<PropertiesFrontendPageData>>() {
 				});
 		List<PropertiesFrontend> pageNavigators = mapPropertiesFrontends(pageRequest, pageData);
-		propertiesFrontendService.clean(); 
+		propertiesFrontendService.clean();
 		int totalRecords = propertiesFrontendService.createAll(pageNavigators);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
 		responseData.setNumberOfRecords(totalRecords);
@@ -245,12 +244,10 @@ public class PropertiesFrontendPageHandler implements IPageHandler {
 
 	private List<PropertiesFrontend> mapPropertiesFrontends(PageRequestDTO pageRequest,
 			List<PropertiesFrontendPageData> pageData) {
-		List<PropertiesFrontend> pageNavigators = pageData.stream()
-				.peek(element -> {
-					element.setOperatorId(pageRequest.getHeader().getUserId());
-					element.setRecordInUse(RecordInUseType.Y);
-				})
-				.map(frontend -> modelMapper.map(frontend, PropertiesFrontend.class)).collect(Collectors.toList());
+		List<PropertiesFrontend> pageNavigators = pageData.stream().peek(element -> {
+			element.setOperatorId(pageRequest.getHeader().getUserId());
+			element.setRecordInUse(RecordInUseType.Y);
+		}).map(frontend -> modelMapper.map(frontend, PropertiesFrontend.class)).collect(Collectors.toList());
 		return pageNavigators;
 	}
 }

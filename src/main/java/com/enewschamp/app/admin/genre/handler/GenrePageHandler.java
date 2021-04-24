@@ -43,7 +43,7 @@ public class GenrePageHandler implements IPageHandler {
 	private GenreService genreService;
 	@Autowired
 	private CommonService commonService;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
 	@Autowired
@@ -111,7 +111,7 @@ public class GenrePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		GenrePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), GenrePageData.class);
 		validate(pageData);
-	    Genre genre  = updateImage(pageData, pageData.getGenreId());
+		Genre genre = updateImage(pageData, pageData.getGenreId());
 		mapGenre(pageRequest, pageDto, genre);
 		return pageDto;
 	}
@@ -204,7 +204,7 @@ public class GenrePageHandler implements IPageHandler {
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
 	}
-	
+
 	private Genre updateImage(GenrePageData genreDTO, Long genreId) {
 		genreDTO.setGenreId(genreId);
 		Genre genre = genreService.get(genreId);
@@ -234,14 +234,14 @@ public class GenrePageHandler implements IPageHandler {
 				updateFlag = true;
 			}
 		}
-		
+
 		if (updateFlag) {
 			genre = genreService.update(genre);
 		}
 		genre.setImageBase64(null);
 		return genre;
 	}
-	
+
 	private Genre saveImageAndAudio(GenrePageData genreDTO) {
 		Genre genre = modelMapper.map(genreDTO, Genre.class);
 		try {
@@ -270,7 +270,7 @@ public class GenrePageHandler implements IPageHandler {
 				updateFlag = true;
 			}
 		}
-	
+
 		if (updateFlag) {
 			genre = genreService.update(genre);
 		}

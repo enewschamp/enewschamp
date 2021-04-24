@@ -30,7 +30,7 @@ public class CountryService extends AbstractDomainService {
 
 	@Autowired
 	CountryRepository countryRepository;
-	
+
 	@Autowired
 	private CountryRepositoryCustomImpl countryRepositoryCustom;
 
@@ -45,8 +45,7 @@ public class CountryService extends AbstractDomainService {
 		Country country = null;
 		try {
 			country = countryRepository.save(countryEntity);
-		}
-		catch(DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		return country;
@@ -117,28 +116,28 @@ public class CountryService extends AbstractDomainService {
 
 		return countryData;
 	}
-	
+
 	public Country read(Country countryEntity) {
 		Long countryId = countryEntity.getCountryId();
 		Country country = get(countryId);
-        return country;
+		return country;
 	}
 
 	public Country close(Country countryEntity) {
 		Long countryId = countryEntity.getCountryId();
 		Country existingCountry = get(countryId);
-		if(existingCountry.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingCountry.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingCountry.setRecordInUse(RecordInUseType.N);
 		existingCountry.setOperationDateTime(null);
 		return countryRepository.save(existingCountry);
 	}
-	
+
 	public Country reInstate(Country countryEntity) {
 		Long countryId = countryEntity.getCountryId();
 		Country existingCountry = get(countryId);
-		if(existingCountry.getRecordInUse().equals(RecordInUseType.Y)) {
+		if (existingCountry.getRecordInUse().equals(RecordInUseType.Y)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}
 		existingCountry.setRecordInUse(RecordInUseType.Y);
@@ -151,8 +150,8 @@ public class CountryService extends AbstractDomainService {
 		Page<Country> countryList = countryRepositoryCustom.findAll(pageable, null);
 		return countryList;
 	}
-	
-	public List<CountryView> getAllCountryView(){
+
+	public List<CountryView> getAllCountryView() {
 		return countryRepository.findAllProjectedBy();
 	}
 }

@@ -25,7 +25,7 @@ public class StudentDetailsService {
 
 	@Autowired
 	StudentDetailsRepository repository;
-	
+
 	@Autowired
 	StudentDetailsRepositoryCustomImpl repositoryCustom;
 
@@ -58,6 +58,7 @@ public class StudentDetailsService {
 		modelMapper.map(StudentDetails, existingEntity);
 		return repository.save(existingEntity);
 	}
+
 	public StudentDetails patch(StudentDetails StudentDetails) {
 		Long studentId = StudentDetails.getStudentId();
 
@@ -80,7 +81,7 @@ public class StudentDetailsService {
 		studentDetails.setStudentId(studentId);
 		return auditService.getEntityAudit(studentDetails);
 	}
-	
+
 	public StudentDetails read(StudentDetails studentDetailsEntity) {
 		Long studentDetailsId = studentDetailsEntity.getStudentId();
 		StudentDetails stakeHolder = get(studentDetailsId);

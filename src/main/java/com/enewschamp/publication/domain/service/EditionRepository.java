@@ -15,6 +15,6 @@ interface EditionRepository extends JpaRepository<Edition, String> {
 
 	@Query(value = "select a.editionId as id, a.editionName as name from Edition a")
 	public List<LOVProjection> getEditionLOV();
-	
+
 	public List<EditionView> findAllProjectedBy();
 }

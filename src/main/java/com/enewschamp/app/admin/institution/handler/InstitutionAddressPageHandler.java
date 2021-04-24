@@ -85,8 +85,9 @@ public class InstitutionAddressPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createInstitutionAddress(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		InstitutionAddressPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), InstitutionAddressPageData.class);
-		validate(pageData,  this.getClass().getName());
+		InstitutionAddressPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				InstitutionAddressPageData.class);
+		validate(pageData, this.getClass().getName());
 		InstitutionAddress institutionAddress = mapInstitutionAddressData(pageRequest, pageData);
 		institutionAddress = institutionAddressService.create(institutionAddress);
 		mapInstitutionAddress(pageRequest, pageDto, institutionAddress);
@@ -96,8 +97,9 @@ public class InstitutionAddressPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updateInstitutionAddress(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		InstitutionAddressPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), InstitutionAddressPageData.class);
-		validate(pageData,  this.getClass().getName());
+		InstitutionAddressPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				InstitutionAddressPageData.class);
+		validate(pageData, this.getClass().getName());
 		InstitutionAddress institutionAddress = mapInstitutionAddressData(pageRequest, pageData);
 		institutionAddress = institutionAddressService.update(institutionAddress);
 		mapInstitutionAddress(pageRequest, pageDto, institutionAddress);
@@ -107,17 +109,19 @@ public class InstitutionAddressPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readInstitutionAddress(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		InstitutionAddressPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), InstitutionAddressPageData.class);
+		InstitutionAddressPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				InstitutionAddressPageData.class);
 		InstitutionAddress institutionAddress = modelMapper.map(pageData, InstitutionAddress.class);
 		institutionAddress = institutionAddressService.read(institutionAddress);
 		mapInstitutionAddress(pageRequest, pageDto, institutionAddress);
 		return pageDto;
 	}
-	
+
 	@SneakyThrows
 	private PageDTO closeInstitutionAddress(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		InstitutionAddressPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), InstitutionAddressPageData.class);
+		InstitutionAddressPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				InstitutionAddressPageData.class);
 		InstitutionAddress institutionAddress = modelMapper.map(pageData, InstitutionAddress.class);
 		institutionAddress = institutionAddressService.close(institutionAddress);
 		mapInstitutionAddress(pageRequest, pageDto, institutionAddress);
@@ -127,7 +131,8 @@ public class InstitutionAddressPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reinstateInstitutionAddress(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		InstitutionAddressPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), InstitutionAddressPageData.class);
+		InstitutionAddressPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				InstitutionAddressPageData.class);
 		InstitutionAddress institutionAddress = modelMapper.map(pageData, InstitutionAddress.class);
 		institutionAddress = institutionAddressService.reinstate(institutionAddress);
 		mapInstitutionAddress(pageRequest, pageDto, institutionAddress);
@@ -156,14 +161,16 @@ public class InstitutionAddressPageHandler implements IPageHandler {
 		return dto;
 	}
 
-	private void mapInstitutionAddress(PageRequestDTO pageRequest, PageDTO pageDto, InstitutionAddress institutionAddress) {
+	private void mapInstitutionAddress(PageRequestDTO pageRequest, PageDTO pageDto,
+			InstitutionAddress institutionAddress) {
 		InstitutionAddressPageData pageData;
 		mapHeaderData(pageRequest, pageDto);
 		pageData = mapPageData(institutionAddress);
 		pageDto.setData(pageData);
 	}
 
-	private InstitutionAddress mapInstitutionAddressData(PageRequestDTO pageRequest, InstitutionAddressPageData pageData) {
+	private InstitutionAddress mapInstitutionAddressData(PageRequestDTO pageRequest,
+			InstitutionAddressPageData pageData) {
 		InstitutionAddress institutionAddress = modelMapper.map(pageData, InstitutionAddress.class);
 		institutionAddress.setRecordInUse(RecordInUseType.Y);
 		return institutionAddress;
@@ -175,13 +182,13 @@ public class InstitutionAddressPageHandler implements IPageHandler {
 		return pageData;
 	}
 
-
 	public List<InstitutionAddressPageData> mapInstitutionAddressData(Page<InstitutionAddress> page) {
 		List<InstitutionAddressPageData> InstitutionAddressPageDataList = new ArrayList<InstitutionAddressPageData>();
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<InstitutionAddress> pageDataList = page.getContent();
 			for (InstitutionAddress institutionAddress : pageDataList) {
-				InstitutionAddressPageData institutePageData = modelMapper.map(institutionAddress, InstitutionAddressPageData.class);
+				InstitutionAddressPageData institutePageData = modelMapper.map(institutionAddress,
+						InstitutionAddressPageData.class);
 				institutePageData.setLastUpdate(institutionAddress.getOperationDateTime());
 				InstitutionAddressPageDataList.add(institutePageData);
 			}

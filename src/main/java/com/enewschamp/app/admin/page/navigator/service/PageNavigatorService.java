@@ -92,7 +92,7 @@ public class PageNavigatorService {
 		Page<PageNavigator> pageList = repositoryCustom.findAll(pageable, searchRequest);
 		return pageList;
 	}
-	
+
 	public int createAll(List<PageNavigator> pageNavigators) {
 		int noOfRecords = 0;
 		try {
@@ -102,7 +102,7 @@ public class PageNavigatorService {
 		}
 		return noOfRecords;
 	}
-	
+
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void clean() {
 		repository.truncate();

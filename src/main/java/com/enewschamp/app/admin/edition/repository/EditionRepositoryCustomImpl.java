@@ -21,9 +21,10 @@ import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.publication.domain.entity.Edition;
+
 @Repository
-public class EditionRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Edition>{
-	
+public class EditionRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Edition> {
+
 	@PersistenceContext
 	private EntityManager entityManager;
 

@@ -1,5 +1,6 @@
 package com.enewschamp.app.admin.promotion.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.celebration.entity.Celebration;
 import com.enewschamp.app.admin.promotion.repository.Promotion;
 import com.enewschamp.app.admin.promotion.repository.PromotionRepository;
 import com.enewschamp.app.admin.promotion.repository.PromotionRepositoryCustomImpl;
@@ -47,7 +49,7 @@ public class PromotionService {
 	public Promotion update(Promotion promotionEntity) {
 		Long promotionId = promotionEntity.getPromotionId();
 		Promotion existingPromotion = get(promotionId);
-		if(existingPromotion.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingPromotion.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(promotionEntity, existingPromotion);
@@ -96,5 +98,9 @@ public class PromotionService {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Promotion> promotionList = repositoryCustom.findAll(pageable, null);
 		return promotionList;
+	}
+
+	public List<Promotion> getActivePromotionList(String editionId) {
+		return repository.getActivePromotionList(editionId);
 	}
 }

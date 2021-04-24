@@ -28,7 +28,7 @@ public class ErrorCodesService extends AbstractDomainService {
 
 	@Autowired
 	ErrorCodesRepository repository;
-	
+
 	@Autowired
 	ErrorCodesRepositoryCustomImpl customRepository;
 
@@ -110,7 +110,7 @@ public class ErrorCodesService extends AbstractDomainService {
 	public List<ListOfValuesItem> getLOV() {
 		return toListOfValuesItems(repository.getErrorCodesLOV());
 	}
-	
+
 	public ErrorCodes read(ErrorCodes errorCodesEntity) {
 		Long errorCodesId = errorCodesEntity.getErrorCodeId();
 		ErrorCodes existingEntity = get(errorCodesId);
@@ -145,7 +145,7 @@ public class ErrorCodesService extends AbstractDomainService {
 		Page<ErrorCodes> errorCodesList = customRepository.findAll(pageable, searchRequest);
 		return errorCodesList;
 	}
-	
+
 	public int createAll(List<ErrorCodes> errorCodes) {
 		int noOfRecords = 0;
 		try {
@@ -155,9 +155,9 @@ public class ErrorCodesService extends AbstractDomainService {
 		}
 		return noOfRecords;
 	}
-	
+
 	public void truncate() {
-		
+
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)

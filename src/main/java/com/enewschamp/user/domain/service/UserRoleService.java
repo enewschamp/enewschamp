@@ -26,7 +26,6 @@ public class UserRoleService extends AbstractDomainService {
 
 	@Autowired
 	UserRoleRepository repository;
-	
 
 	@Autowired
 	UserRoleRepositoryCustomImpl repositoryCustom;
@@ -115,7 +114,6 @@ public class UserRoleService extends AbstractDomainService {
 		return auditService.getEntityAudit(userRoleKey);
 	}
 
-
 	public UserRole read(UserRole userRole) {
 		UserRoleKey userRoleKey = userRole.getUserRoleKey();
 		UserRole existingEntity = load(userRoleKey);
@@ -149,7 +147,7 @@ public class UserRoleService extends AbstractDomainService {
 		Page<UserRole> userList = repositoryCustom.findAll(pageable, searchRequest);
 		return userList;
 	}
-	
+
 	public Boolean isValidRole(String userId, String roleId) {
 		UserRole userRole = getByUserIdAndRole(userId, roleId);
 		if (userRole != null)

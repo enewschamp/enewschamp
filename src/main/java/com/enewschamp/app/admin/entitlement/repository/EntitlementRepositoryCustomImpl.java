@@ -24,7 +24,8 @@ import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class EntitlementRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Entitlement>, AdminConstant {
+public class EntitlementRepositoryCustomImpl extends RepositoryImpl
+		implements IGenericListRepository<Entitlement>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;

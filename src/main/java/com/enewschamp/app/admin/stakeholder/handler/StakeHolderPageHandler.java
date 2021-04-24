@@ -87,7 +87,7 @@ public class StakeHolderPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		StakeHolderPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				StakeHolderPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		StakeHolder stakeHolder = mapStakeHolderData(pageRequest, pageData);
 		stakeHolder = stackHolderService.create(stakeHolder);
 		mapStakeHolder(pageRequest, pageDto, stakeHolder);
@@ -99,7 +99,7 @@ public class StakeHolderPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		StakeHolderPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				StakeHolderPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		StakeHolder stakeHolder = mapStakeHolderData(pageRequest, pageData);
 		stakeHolder = stackHolderService.update(stakeHolder);
 		mapStakeHolder(pageRequest, pageDto, stakeHolder);

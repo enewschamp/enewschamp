@@ -25,7 +25,8 @@ import com.enewschamp.domain.repository.RepositoryImpl;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
 
 @Repository
-public class StudentDetailsRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<StudentDetails>, AdminConstant {
+public class StudentDetailsRepositoryCustomImpl extends RepositoryImpl
+		implements IGenericListRepository<StudentDetails>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;

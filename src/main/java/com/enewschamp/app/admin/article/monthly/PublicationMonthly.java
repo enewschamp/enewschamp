@@ -9,7 +9,7 @@ public class PublicationMonthly implements Serializable {
 	private String yearMonth;
 
 	private String readingLevel;
-	
+
 	private String genreId;
 
 }

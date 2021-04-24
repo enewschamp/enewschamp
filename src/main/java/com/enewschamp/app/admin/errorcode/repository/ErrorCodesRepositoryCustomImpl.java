@@ -25,7 +25,8 @@ import com.enewschamp.common.domain.entity.ErrorCodes;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class ErrorCodesRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<ErrorCodes>, AdminConstant {
+public class ErrorCodesRepositoryCustomImpl extends RepositoryImpl
+		implements IGenericListRepository<ErrorCodes>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;

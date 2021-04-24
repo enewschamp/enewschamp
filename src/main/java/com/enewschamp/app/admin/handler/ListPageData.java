@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@JsonIgnoreProperties({ "operatorId", "lastUpdate", "recordInUse"})
+@JsonIgnoreProperties({ "operatorId", "lastUpdate", "recordInUse" })
 public class ListPageData extends PageData {
 	/**
 	 * 

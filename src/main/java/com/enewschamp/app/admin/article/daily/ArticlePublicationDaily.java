@@ -19,7 +19,7 @@ import lombok.Data;
 @Immutable
 @IdClass(PublicationDaily.class)
 public class ArticlePublicationDaily {
-	
+
 	@Id
 	@NotNull
 	@Column(name = "PublicationDate", updatable = false, nullable = false)
@@ -29,7 +29,7 @@ public class ArticlePublicationDaily {
 	@NotNull
 	@Column(name = "ReadingLevel", updatable = false, nullable = false)
 	private String readingLevel;
-	
+
 	@NotNull
 	@Column(name = "QuizPublished")
 	private Integer quizPublished = 0;

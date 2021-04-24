@@ -48,7 +48,7 @@ public class StakeHolderService {
 	public StakeHolder update(StakeHolder stakeHolderEntity) {
 		Long stakeHolderId = stakeHolderEntity.getStakeholderId();
 		StakeHolder existingStakeHolder = get(stakeHolderId);
-		if(existingStakeHolder.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingStakeHolder.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(stakeHolderEntity, existingStakeHolder);

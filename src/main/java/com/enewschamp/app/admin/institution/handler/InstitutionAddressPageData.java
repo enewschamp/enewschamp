@@ -13,9 +13,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class InstitutionAddressPageData extends PageData {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long addressId;
-	
+
 	@NotNull(message = MessageConstants.INSTITUTION_ID_NOT_NULL)
 	private Long institutionId;
 
@@ -34,11 +34,11 @@ public class InstitutionAddressPageData extends PageData {
 	@NotNull(message = MessageConstants.COUNTRY_NOT_NULL)
 	@NotEmpty(message = MessageConstants.COUNTRY_NOT_EMPTY)
 	private String countryId;
-	
+
 	@NotNull(message = MessageConstants.CITY_NOT_NULL)
 	@NotEmpty(message = MessageConstants.CITY_NOT_EMPTY)
 	private String cityId;
-	
+
 	private String address;
 	private String pinCode;
 	private String landLine1;

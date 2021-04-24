@@ -21,12 +21,13 @@ import com.enewschamp.app.common.uicontrols.entity.UIControlsGlobal;
 import com.enewschamp.app.common.uicontrols.repository.UIControlsGlobalRepository;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+
 @Service
 public class UIControlsGlobalService {
 
 	@Autowired
 	UIControlsGlobalRepository repository;
-	
+
 	@Autowired
 	UIControlsGlobalRepositoryCustomImpl customRepository;
 

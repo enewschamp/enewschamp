@@ -92,7 +92,6 @@ public class CityPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-
 	private City mapCityData(PageRequestDTO pageRequest, CityPageData pageData) {
 		City city = modelMapper.map(pageData, City.class);
 		city.setRecordInUse(RecordInUseType.Y);

@@ -28,7 +28,7 @@ public class SchoolService {
 
 	@Autowired
 	SchoolRepository schoolRepository;
-	
+
 	@Autowired
 	private SchoolRepositoryCustomImpl schoolRepositoryCustom;
 
@@ -106,7 +106,7 @@ public class SchoolService {
 	public List<School> getSchoolFromProgramCode(String schoolProgramCode) {
 		return schoolRepository.getSchoolFromProgramCode(schoolProgramCode);
 	}
-	
+
 	public School read(School schoolEntity) {
 		Long countryId = schoolEntity.getSchoolId();
 		School school = get(countryId);

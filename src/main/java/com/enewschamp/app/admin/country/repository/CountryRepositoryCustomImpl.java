@@ -21,9 +21,10 @@ import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.country.entity.Country;
 import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
+
 @Repository
-public class CountryRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Country>{
-	
+public class CountryRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Country> {
+
 	@PersistenceContext
 	private EntityManager entityManager;
 

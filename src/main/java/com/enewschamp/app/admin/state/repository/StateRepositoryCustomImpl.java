@@ -23,9 +23,10 @@ import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.app.common.state.entity.State;
 import com.enewschamp.domain.repository.RepositoryImpl;
+
 @Repository
-public class StateRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<State>, AdminConstant{
-	
+public class StateRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<State>, AdminConstant {
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -35,8 +36,8 @@ public class StateRepositoryCustomImpl extends RepositoryImpl implements IGeneri
 		CriteriaQuery<State> criteriaQuery = cb.createQuery(State.class);
 		Root<State> stateRoot = criteriaQuery.from(State.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		if(!StringUtils.isEmpty(searchRequest.getCountryId()))
-		filterPredicates.add(cb.equal(stateRoot.get(COUNTRY_ID), searchRequest.getCountryId()));
+		if (!StringUtils.isEmpty(searchRequest.getCountryId()))
+			filterPredicates.add(cb.equal(stateRoot.get(COUNTRY_ID), searchRequest.getCountryId()));
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(stateRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query

@@ -18,16 +18,16 @@ public interface PageNavigatorRulesRepository extends JpaRepository<PageNavigato
 	@Cacheable
 	@Query("select n from PageNavigatorRules n where n.navId= :navId and n.recordInUse ='Y' order by n.execSeq")
 	public List<PageNavigatorRules> getNavRules(@Param("navId") Long navId);
-	
+
 	@Modifying
 	@Transactional
 	@Query(value = "truncate table page_navigator_rules", nativeQuery = true)
 	public void truncate();
-	
+
 	@Modifying
 	@Query(value = "truncate table pagenavigator_rules_id_seq", nativeQuery = true)
 	public void deleteSequences();
-	
+
 	@Modifying
 	@Query(value = "insert into pagenavigator_rules_id_seq values(1)", nativeQuery = true)
 	public void initializeSequence();

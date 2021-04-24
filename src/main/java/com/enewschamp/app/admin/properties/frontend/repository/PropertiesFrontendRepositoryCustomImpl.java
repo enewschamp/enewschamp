@@ -25,7 +25,8 @@ import com.enewschamp.common.domain.entity.PropertiesFrontend;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class PropertiesFrontendRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<PropertiesFrontend>, AdminConstant {
+public class PropertiesFrontendRepositoryCustomImpl extends RepositoryImpl
+		implements IGenericListRepository<PropertiesFrontend>, AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;

@@ -81,7 +81,7 @@ public class PageNavigatorRulesPageHandler implements IPageHandler {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public PageDTO handleAppAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		// TODO Auto-generated method stub
@@ -93,7 +93,7 @@ public class PageNavigatorRulesPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		PageNavigatorRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				PageNavigatorRulesPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		PageNavigatorRules pageNavigator = mapPageNavigatorRulesData(pageRequest, pageData);
 		pageNavigator = pageNavigationRulesService.create(pageNavigator);
 		mapPageNavigatorRules(pageRequest, pageDto, pageNavigator);
@@ -112,7 +112,7 @@ public class PageNavigatorRulesPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		PageNavigatorRulesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				PageNavigatorRulesPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		PageNavigatorRules pageNavigator = mapPageNavigatorRulesData(pageRequest, pageData);
 		pageNavigator = pageNavigationRulesService.update(pageNavigator);
 		mapPageNavigatorRules(pageRequest, pageDto, pageNavigator);
@@ -186,11 +186,11 @@ public class PageNavigatorRulesPageHandler implements IPageHandler {
 		dto.setRecords(variable);
 		return dto;
 	}
-	
+
 	@SneakyThrows
 	@Transactional
 	private PageDTO insertAll(PageRequestDTO pageRequest) {
-	    PageDTO pageDto = new PageDTO();
+		PageDTO pageDto = new PageDTO();
 		List<PageNavigatorRulesPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				new TypeReference<List<PageNavigatorRulesPageData>>() {
 				});
@@ -203,7 +203,6 @@ public class PageNavigatorRulesPageHandler implements IPageHandler {
 		pageDto.setData(responseData);
 		return pageDto;
 	}
-
 
 	private List<PageNavigatorRulesPageData> mapPageNavigatorRulesData(Page<PageNavigatorRules> page) {
 		List<PageNavigatorRulesPageData> pageNavigatorPageDataList = new ArrayList<PageNavigatorRulesPageData>();
@@ -219,15 +218,13 @@ public class PageNavigatorRulesPageHandler implements IPageHandler {
 		return pageNavigatorPageDataList;
 	}
 
-	private List<PageNavigatorRules> mapPageNavigatorRules(PageRequestDTO pageRequest, List<PageNavigatorRulesPageData> pageData) {
-		List<PageNavigatorRules> pageNavigators = pageData.stream()
-				.peek(element -> {
-					element.setOperatorId(pageRequest.getHeader().getUserId());
-					element.setRecordInUse(RecordInUseType.Y);
-				})
-				.map(navigator -> modelMapper.map(navigator, PageNavigatorRules.class)).collect(Collectors.toList());
+	private List<PageNavigatorRules> mapPageNavigatorRules(PageRequestDTO pageRequest,
+			List<PageNavigatorRulesPageData> pageData) {
+		List<PageNavigatorRules> pageNavigators = pageData.stream().peek(element -> {
+			element.setOperatorId(pageRequest.getHeader().getUserId());
+			element.setRecordInUse(RecordInUseType.Y);
+		}).map(navigator -> modelMapper.map(navigator, PageNavigatorRules.class)).collect(Collectors.toList());
 		return pageNavigators;
 	}
-
 
 }

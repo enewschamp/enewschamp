@@ -23,8 +23,8 @@ import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class CelebrationRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Celebration>{
-	
+public class CelebrationRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<Celebration> {
+
 	@PersistenceContext
 	private EntityManager entityManager;
 

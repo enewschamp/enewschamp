@@ -50,7 +50,7 @@ public class PromotionPageData extends PageData {
 	@NotEmpty(message = MessageConstants.PROMOTION_DETAIL_NOT_EMPTY)
 	@JsonInclude
 	private String promotionDetails;
-	
+
 	@JsonInclude
 	@NotNull(message = MessageConstants.DESCRIPTION_NOT_NULL)
 	@NotEmpty(message = MessageConstants.DESCRIPTION_NOT_EMPTY)

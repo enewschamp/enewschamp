@@ -87,13 +87,13 @@ public class OTPPageHandler implements IPageHandler {
 	private PageDTO createOTP(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		OTPPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), OTPPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		OTP otp = mapOTPData(pageRequest, pageData);
 		if (StringUtils.isEmpty(otp.getOtpGenTime())) {
 			otp.setOtpGenTime(LocalDateTime.now());
 			otp.setOperationDateTime(LocalDateTime.now());
 		}
-		
+
 		otp = otpService.create(otp);
 		mapOTP(pageRequest, pageDto, otp);
 		return pageDto;
@@ -110,7 +110,7 @@ public class OTPPageHandler implements IPageHandler {
 	private PageDTO updateOTP(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		OTPPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), OTPPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		OTP otp = mapOTPData(pageRequest, pageData);
 		otp = otpService.update(otp);
 		mapOTP(pageRequest, pageDto, otp);

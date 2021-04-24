@@ -85,15 +85,17 @@ public class StudentPreferencesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createStudentPreferences(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentPreferencesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentPreferencesPageData.class);
-		validate(pageData,  this.getClass().getName());
+		StudentPreferencesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentPreferencesPageData.class);
+		validate(pageData, this.getClass().getName());
 		StudentPreferences studentPreferences = mapStudentPreferencesPageData(pageRequest, pageData);
 		studentPreferences = StudentPreferencesService.create(studentPreferences);
 		mapStudentPreferences(pageRequest, pageDto, studentPreferences);
 		return pageDto;
 	}
 
-	private StudentPreferences mapStudentPreferencesPageData(PageRequestDTO pageRequest, StudentPreferencesPageData pageData) {
+	private StudentPreferences mapStudentPreferencesPageData(PageRequestDTO pageRequest,
+			StudentPreferencesPageData pageData) {
 		StudentPreferences studentPreferences = modelMapper.map(pageData, StudentPreferences.class);
 		StudentPreferenceComm commsOverEmail = new StudentPreferenceComm();
 		commsOverEmail.setAlertsNotifications(pageData.getAlertsNotifications());
@@ -108,15 +110,17 @@ public class StudentPreferencesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updateStudentPreferences(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentPreferencesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentPreferencesPageData.class);
-		validate(pageData,  this.getClass().getName());
+		StudentPreferencesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentPreferencesPageData.class);
+		validate(pageData, this.getClass().getName());
 		StudentPreferences studentPreferences = mapStudentPreferencesPageData(pageRequest, pageData);
 		studentPreferences = StudentPreferencesService.update(studentPreferences);
 		mapStudentPreferences(pageRequest, pageDto, studentPreferences);
 		return pageDto;
 	}
 
-	private void mapStudentPreferences(PageRequestDTO pageRequest, PageDTO pageDto, StudentPreferences StudentPreferences) {
+	private void mapStudentPreferences(PageRequestDTO pageRequest, PageDTO pageDto,
+			StudentPreferences StudentPreferences) {
 		StudentPreferencesPageData pageData;
 		mapHeaderData(pageRequest, pageDto);
 		pageData = mapPageData(StudentPreferences);
@@ -126,7 +130,8 @@ public class StudentPreferencesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readStudentPreferences(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentPreferencesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentPreferencesPageData.class);
+		StudentPreferencesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentPreferencesPageData.class);
 		StudentPreferences studentPreferences = modelMapper.map(pageData, StudentPreferences.class);
 		studentPreferences = StudentPreferencesService.read(studentPreferences);
 		mapStudentPreferences(pageRequest, pageDto, studentPreferences);
@@ -136,7 +141,8 @@ public class StudentPreferencesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reInStudentPreferences(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentPreferencesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentPreferencesPageData.class);
+		StudentPreferencesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentPreferencesPageData.class);
 		StudentPreferences studentPreferences = modelMapper.map(pageData, StudentPreferences.class);
 		studentPreferences = StudentPreferencesService.reInStudentPreferences(studentPreferences);
 		mapStudentPreferences(pageRequest, pageDto, studentPreferences);
@@ -156,7 +162,8 @@ public class StudentPreferencesPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closeStudentPreferences(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentPreferencesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentPreferencesPageData.class);
+		StudentPreferencesPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentPreferencesPageData.class);
 		StudentPreferences studentPreferences = modelMapper.map(pageData, StudentPreferences.class);
 		studentPreferences = StudentPreferencesService.close(studentPreferences);
 		mapStudentPreferences(pageRequest, pageDto, studentPreferences);
@@ -190,7 +197,8 @@ public class StudentPreferencesPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<StudentPreferences> pageDataList = page.getContent();
 			for (StudentPreferences studentPreferences : pageDataList) {
-				StudentPreferencesPageData studentPreferencesPageData = modelMapper.map(studentPreferences, StudentPreferencesPageData.class);
+				StudentPreferencesPageData studentPreferencesPageData = modelMapper.map(studentPreferences,
+						StudentPreferencesPageData.class);
 				studentPreferencesPageData.setLastUpdate(studentPreferences.getOperationDateTime());
 				StudentPreferencesPageDataList.add(studentPreferencesPageData);
 			}
@@ -198,5 +206,4 @@ public class StudentPreferencesPageHandler implements IPageHandler {
 		return StudentPreferencesPageDataList;
 	}
 
-	
 }

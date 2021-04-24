@@ -6,6 +6,7 @@ import com.enewschamp.app.common.PageData;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class RecordRoot extends PageData {

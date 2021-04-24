@@ -15,4 +15,3 @@ public class StudentSubscriptionNilDTO extends StudentSubscriptionPageData {
 	private static final long serialVersionUID = 1L;
 	private LocalDateTime lastUpdate;
 }
-

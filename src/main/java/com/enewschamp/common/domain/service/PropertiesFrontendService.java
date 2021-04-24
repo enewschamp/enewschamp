@@ -23,6 +23,7 @@ import com.enewschamp.app.admin.properties.frontend.repository.PropertiesFronten
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.common.app.dto.PropertiesFrontendDTO;
+import com.enewschamp.common.domain.entity.PropertiesBackend;
 import com.enewschamp.common.domain.entity.PropertiesFrontend;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
@@ -34,7 +35,7 @@ public class PropertiesFrontendService extends AbstractDomainService {
 
 	@Autowired
 	PropertiesFrontendRepository repository;
-	
+
 	@Autowired
 	PropertiesFrontendRepositoryCustomImpl customRepository;
 
@@ -54,24 +55,17 @@ public class PropertiesFrontendService extends AbstractDomainService {
 	}
 
 	public String getValue(String appName, String name) {
-		// PropertiesFrontend property = repository.getProperty(appName, name);
-		// return property == null ? null : property.getValue();
 		String arr[] = name.split("\\.");
 		String value = "";
-		// System.out.println(">>>>>>>>>>>property name>>>>>>>>>>>>>>" +
-		// name.split("\\.")[0]);
 		PropertiesFrontend property = repository.getProperty(appName, name.split("\\.")[0]);
 		if (arr.length > 1) {
 			JSONParser parser = new JSONParser();
 			try {
-				// System.out.println(">>>>>>>>>property_value>>>>>>>>>>>>>>>>" +
-				// property.getValue());
 				JSONObject json = (JSONObject) parser.parse(property.getValue());
 				if (json.get(arr[1]) != null) {
 					value = json.get(arr[1]).toString().trim();
 				}
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
@@ -99,7 +93,7 @@ public class PropertiesFrontendService extends AbstractDomainService {
 		modelMapper.map(properties, existingProperties);
 		return repository.save(existingProperties);
 	}
-	
+
 	public PropertiesFrontend patch(PropertiesFrontend properties) {
 		Long propertyId = properties.getPropertyId();
 		PropertiesFrontend existingEntity = get(propertyId);

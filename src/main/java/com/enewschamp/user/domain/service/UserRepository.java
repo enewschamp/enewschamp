@@ -28,6 +28,6 @@ interface UserRepository extends JpaRepository<User, String> {
 
 	@Query(value = "select a.title as title,a.userId as userId,a.name as name, a.surname as surname,a.otherNames as otherNames,a.gender as gender,a.imageName as image,a.emailId1 as email,a.mobileNumber1 as mobile,a.isActive as isActive from User a")
 	public List<BOUserList> getBOUserList();
-	
+
 	public List<UserView> findAllProjectedBy();
 }

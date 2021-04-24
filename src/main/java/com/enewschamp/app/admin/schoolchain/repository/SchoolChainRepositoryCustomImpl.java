@@ -23,8 +23,8 @@ import com.enewschamp.app.common.repository.IGenericListRepository;
 import com.enewschamp.domain.repository.RepositoryImpl;
 
 @Repository
-public class SchoolChainRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<SchoolChain>{
-	
+public class SchoolChainRepositoryCustomImpl extends RepositoryImpl implements IGenericListRepository<SchoolChain> {
+
 	@PersistenceContext
 	private EntityManager entityManager;
 

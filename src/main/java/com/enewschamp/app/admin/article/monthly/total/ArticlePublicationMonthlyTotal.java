@@ -17,7 +17,7 @@ import lombok.Data;
 @Immutable
 @IdClass(PublicationMonthlyTotal.class)
 public class ArticlePublicationMonthlyTotal {
-	
+
 	@Id
 	@NotNull
 	@Column(name = "YearMonth", updatable = false, nullable = false)
@@ -27,7 +27,7 @@ public class ArticlePublicationMonthlyTotal {
 	@NotNull
 	@Column(name = "ReadingLevel", updatable = false, nullable = false)
 	private String readingLevel;
-	
+
 	@NotNull
 	@Column(name = "QuizPublished")
 	private Integer quizPublished = 0;

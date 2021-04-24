@@ -87,7 +87,7 @@ public class UserLeavePageHandler implements IPageHandler {
 	private PageDTO createUserLeave(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserLeavePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserLeavePageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		UserLeave userLeave = mapUserLeaveData(pageRequest, pageData);
 		if (pageData.getUpdateApplicationDateTime() != null && pageData.getUpdateApplicationDateTime().equals("Y"))
 			userLeave.setApplicationDateTime(LocalDateTime.now());
@@ -107,7 +107,7 @@ public class UserLeavePageHandler implements IPageHandler {
 	private PageDTO updateUserLeave(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserLeavePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserLeavePageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		UserLeave userLeave = mapUserLeaveData(pageRequest, pageData);
 		if (pageData.getUpdateApplicationDateTime() != null && pageData.getUpdateApplicationDateTime().equals("Y"))
 			userLeave.setApplicationDateTime(LocalDateTime.now());
@@ -211,5 +211,5 @@ public class UserLeavePageHandler implements IPageHandler {
 		}
 		return userLeavePageDataList;
 	}
-	
+
 }

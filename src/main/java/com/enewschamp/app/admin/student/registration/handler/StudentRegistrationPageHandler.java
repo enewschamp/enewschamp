@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 public class StudentRegistrationPageHandler implements IPageHandler {
 	@Autowired
 	private StudentRegistrationService studentRegistrationService;
-	
+
 	@Autowired
 	ModelMapper modelMapper;
 	@Autowired
@@ -184,7 +184,7 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 		pageData.setLastUpdate(studentRegistration.getOperationDateTime());
 		return pageData;
 	}
-	
+
 	private void mapStudentRegistration(PageRequestDTO pageRequest, PageDTO pageDto,
 			StudentRegistration studentRegistration) {
 		StudentRegistrationPageData pageData;
@@ -218,6 +218,5 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
 	}
-	
-	
+
 }

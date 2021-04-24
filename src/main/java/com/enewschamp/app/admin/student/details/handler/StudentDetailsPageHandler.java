@@ -169,7 +169,6 @@ public class StudentDetailsPageHandler implements IPageHandler {
 		pageDto.setData(pageData);
 	}
 
-
 	private StudentDetails mapStudentDetailsData(PageRequestDTO pageRequest, StudentDetailsPageData pageData) {
 		StudentDetails studentDetails = modelMapper.map(pageData, StudentDetails.class);
 		studentDetails.setRecordInUse(RecordInUseType.Y);

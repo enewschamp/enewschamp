@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public interface EditionView {
 	String getEditionId();
+
 	String getEditionName();
+
 	@JsonProperty("language")
 	String getLanguageId();
 }

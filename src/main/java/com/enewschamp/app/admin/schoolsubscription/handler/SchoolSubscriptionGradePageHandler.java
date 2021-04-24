@@ -87,7 +87,7 @@ public class SchoolSubscriptionGradePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		SchoolSubscriptionGradePageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				SchoolSubscriptionGradePageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		SchoolSubscriptionGrade schoolSubscriptionGrade = mapSchoolSubscriptionGradeData(pageRequest, pageData);
 		schoolSubscriptionGrade = schoolSubscriptionGradeService.create(schoolSubscriptionGrade);
 		mapSchoolSubscriptionGrade(pageRequest, pageDto, schoolSubscriptionGrade);
@@ -99,7 +99,7 @@ public class SchoolSubscriptionGradePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		SchoolSubscriptionGradePageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				SchoolSubscriptionGradePageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		SchoolSubscriptionGrade schoolSubscriptionGrade = mapSchoolSubscriptionGradeData(pageRequest, pageData);
 		schoolSubscriptionGrade = schoolSubscriptionGradeService.update(schoolSubscriptionGrade);
 		mapSchoolSubscriptionGrade(pageRequest, pageDto, schoolSubscriptionGrade);

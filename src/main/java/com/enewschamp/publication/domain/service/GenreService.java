@@ -28,7 +28,7 @@ public class GenreService extends AbstractDomainService {
 
 	@Autowired
 	GenreRepository repository;
-	
+
 	@Autowired
 	GenreRepositoryCustomImpl repositoryCustom;
 
@@ -55,7 +55,7 @@ public class GenreService extends AbstractDomainService {
 	public Genre update(Genre genre) {
 		Long genreId = genre.getGenreId();
 		Genre existingGenre = get(genreId);
-		if(existingGenre.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingGenre.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(genre, existingGenre);
@@ -95,7 +95,7 @@ public class GenreService extends AbstractDomainService {
 		genre.setGenreId(genreId);
 		return auditService.getEntityAudit(genre);
 	}
-	
+
 	public Genre read(Genre genre) {
 		Long genreId = genre.getGenreId();
 		Genre genreEntity = get(genreId);
@@ -123,16 +123,16 @@ public class GenreService extends AbstractDomainService {
 		existingGenre.setOperationDateTime(null);
 		return repository.save(existingGenre);
 	}
-	
+
 	public Page<Genre> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Genre> genreList = repositoryCustom.findAll(pageable, null);
-		if(genreList.getContent().isEmpty()) {
+		if (genreList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return genreList;
 	}
-	
+
 	public List<GenreView> getAllGenreView() {
 		return repository.findAllProjectedBy();
 	}

@@ -98,10 +98,9 @@ public class EditionPageHandler implements IPageHandler {
 		validate(pageData);
 		Edition edition = mapEditionData(pageRequest, pageData);
 		edition = editionService.create(edition);
-        mapEdition(pageRequest, pageDto, edition);
+		mapEdition(pageRequest, pageDto, edition);
 		return pageDto;
 	}
-
 
 	@SneakyThrows
 	private PageDTO updateEdition(PageRequestDTO pageRequest) {
@@ -110,7 +109,7 @@ public class EditionPageHandler implements IPageHandler {
 		validate(pageData);
 		Edition edition = mapEditionData(pageRequest, pageData);
 		edition = editionService.update(edition);
-        mapEdition(pageRequest, pageDto, edition);
+		mapEdition(pageRequest, pageDto, edition);
 		return pageDto;
 	}
 
@@ -120,27 +119,27 @@ public class EditionPageHandler implements IPageHandler {
 		EditionPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EditionPageData.class);
 		Edition edition = modelMapper.map(pageData, Edition.class);
 		edition = editionService.read(edition);
-        mapEdition(pageRequest, pageDto, edition);
+		mapEdition(pageRequest, pageDto, edition);
 		return pageDto;
 	}
-	
+
 	@SneakyThrows
 	private PageDTO closeEdition(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		EditionPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EditionPageData.class);
 		Edition edition = modelMapper.map(pageData, Edition.class);
 		edition = editionService.close(edition);
-        mapEdition(pageRequest, pageDto, edition);
+		mapEdition(pageRequest, pageDto, edition);
 		return pageDto;
 	}
-	
+
 	@SneakyThrows
 	private PageDTO reinstateEdition(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		EditionPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EditionPageData.class);
 		Edition edition = modelMapper.map(pageData, Edition.class);
 		edition = editionService.reinstate(edition);
-        mapEdition(pageRequest, pageDto, edition);
+		mapEdition(pageRequest, pageDto, edition);
 		return pageDto;
 	}
 
@@ -195,7 +194,7 @@ public class EditionPageHandler implements IPageHandler {
 		pageData.setLastUpdate(edition.getOperationDateTime());
 		return pageData;
 	}
-	
+
 	private void validate(EditionPageData pageData) {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();

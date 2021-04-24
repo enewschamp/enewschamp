@@ -25,25 +25,25 @@ public class AdminDashBoardPageHandler implements IPageHandler {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private CountryService countryService;
-	
+
 	@Autowired
 	private AvatarService avatarService;
-	
+
 	@Autowired
 	private EditionService editionService;
-	
+
 	@Autowired
 	private GenreService genreService;
-	
+
 	@Autowired
 	private BadgeService badgeService;
-	
+
 	@Autowired
 	private HolidayService holidayService;
-	
+
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
 		PageDTO pageDto = null;
@@ -59,7 +59,7 @@ public class AdminDashBoardPageHandler implements IPageHandler {
 
 	private PageDTO listDashboardData(PageRequestDTO pageRequest) {
 		PageDTO dto = new PageDTO();
-		AdminDashBoardPageData pageData =  new AdminDashBoardPageData();
+		AdminDashBoardPageData pageData = new AdminDashBoardPageData();
 		List<UserView> userViews = userService.getAllUserView();
 		List<CountryView> countries = countryService.getAllCountryView();
 		List<AvatarView> avatars = avatarService.getAllAvatarView();
@@ -96,4 +96,4 @@ public class AdminDashBoardPageHandler implements IPageHandler {
 		// TODO Auto-generated method stub
 		return null;
 	}
-} 
+}

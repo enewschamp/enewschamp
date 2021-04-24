@@ -18,18 +18,17 @@ public interface UIControlsRepository extends JpaRepository<UIControls, Long> {
 	public List<UIControls> findByPageNameAndOperation(String screenName, String operation);
 
 	public UIControls save(UIControls uicontrols);
-	
+
 	@Modifying
 	@Transactional
 	@Query(value = "truncate table uicontrols", nativeQuery = true)
 	public void truncate();
-	
+
 	@Modifying
 	@Query(value = "truncate table uicontrols_id_seq", nativeQuery = true)
 	public void deleteSequences();
-	
+
 	@Modifying
 	@Query(value = "insert into uicontrols_id_seq values(1)", nativeQuery = true)
 	public void initializeSequence();
 }
-

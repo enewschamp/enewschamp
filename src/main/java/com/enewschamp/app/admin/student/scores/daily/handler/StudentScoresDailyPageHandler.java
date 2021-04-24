@@ -95,7 +95,8 @@ public class StudentScoresDailyPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createStudentScoresDaily(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentScoresDailyPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentScoresDailyPageData.class);
+		StudentScoresDailyPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentScoresDailyPageData.class);
 		validate(pageData);
 		StudentScoresDaily studentScoreDaily = mapStudentScoresDailyData(pageRequest, pageData);
 		studentScoreDaily = studentScoresDailyService.create(studentScoreDaily);
@@ -103,7 +104,8 @@ public class StudentScoresDailyPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-	private StudentScoresDaily mapStudentScoresDailyData(PageRequestDTO pageRequest, StudentScoresDailyPageData pageData) {
+	private StudentScoresDaily mapStudentScoresDailyData(PageRequestDTO pageRequest,
+			StudentScoresDailyPageData pageData) {
 		StudentScoresDaily studentScoresDaily = modelMapper.map(pageData, StudentScoresDaily.class);
 		studentScoresDaily.setRecordInUse(RecordInUseType.Y);
 		return studentScoresDaily;
@@ -112,7 +114,8 @@ public class StudentScoresDailyPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updateStudentScoresDaily(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentScoresDailyPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentScoresDailyPageData.class);
+		StudentScoresDailyPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentScoresDailyPageData.class);
 		validate(pageData);
 		StudentScoresDaily studentScoresDaily = mapStudentScoresDailyData(pageRequest, pageData);
 		studentScoresDaily = studentScoresDailyService.update(studentScoresDaily);
@@ -123,7 +126,8 @@ public class StudentScoresDailyPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readStudentScoresDaily(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentScoresDailyPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentScoresDailyPageData.class);
+		StudentScoresDailyPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentScoresDailyPageData.class);
 		StudentScoresDaily studentScoresDaily = modelMapper.map(pageData, StudentScoresDaily.class);
 		studentScoresDaily = studentScoresDailyService.read(studentScoresDaily);
 		mapStudentScoresDaily(pageRequest, pageDto, studentScoresDaily);
@@ -133,7 +137,8 @@ public class StudentScoresDailyPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closeStudentScoresDaily(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentScoresDailyPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentScoresDailyPageData.class);
+		StudentScoresDailyPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentScoresDailyPageData.class);
 		StudentScoresDaily studentScoresDaily = modelMapper.map(pageData, StudentScoresDaily.class);
 		studentScoresDaily = studentScoresDailyService.close(studentScoresDaily);
 		mapStudentScoresDaily(pageRequest, pageDto, studentScoresDaily);
@@ -143,7 +148,8 @@ public class StudentScoresDailyPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reinstateStudentScoresDaily(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		StudentScoresDailyPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentScoresDailyPageData.class);
+		StudentScoresDailyPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentScoresDailyPageData.class);
 		StudentScoresDaily studentScoresDaily = modelMapper.map(pageData, StudentScoresDaily.class);
 		studentScoresDaily = studentScoresDailyService.reinstate(studentScoresDaily);
 		mapStudentScoresDaily(pageRequest, pageDto, studentScoresDaily);
@@ -178,7 +184,8 @@ public class StudentScoresDailyPageHandler implements IPageHandler {
 		return pageData;
 	}
 
-	private void mapStudentScoresDaily(PageRequestDTO pageRequest, PageDTO pageDto, StudentScoresDaily studentScoresDaily) {
+	private void mapStudentScoresDaily(PageRequestDTO pageRequest, PageDTO pageDto,
+			StudentScoresDaily studentScoresDaily) {
 		StudentScoresDailyPageData pageData;
 		mapHeaderData(pageRequest, pageDto);
 		pageData = mapPageData(studentScoresDaily);
@@ -190,7 +197,8 @@ public class StudentScoresDailyPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<StudentScoresDaily> pageDataList = page.getContent();
 			for (StudentScoresDaily studentScoresDaily : pageDataList) {
-				StudentScoresDailyPageData studentScoresDailyPageData = modelMapper.map(studentScoresDaily, StudentScoresDailyPageData.class);
+				StudentScoresDailyPageData studentScoresDailyPageData = modelMapper.map(studentScoresDaily,
+						StudentScoresDailyPageData.class);
 				studentScoresDailyPageData.setLastUpdate(studentScoresDaily.getOperationDateTime());
 				studentScoresDailyPageDataList.add(studentScoresDailyPageData);
 			}

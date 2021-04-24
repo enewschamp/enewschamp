@@ -100,7 +100,6 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
-
 	private UIControlsRules mapUIControlsRulesData(PageRequestDTO pageRequest, UIControlsRulesPageData pageData) {
 		UIControlsRules uiControlesRules = modelMapper.map(pageData, UIControlsRules.class);
 		uiControlesRules.setRecordInUse(RecordInUseType.Y);
@@ -181,7 +180,7 @@ public class UIControlsRulesPageHandler implements IPageHandler {
 		List<UIControlsRulesPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				new TypeReference<List<UIControlsRulesPageData>>() {
 				});
-		pageData.forEach(page->{
+		pageData.forEach(page -> {
 			validate(pageData, this.getClass().getName());
 		});
 		List<UIControlsRules> uiControlsRules = mapPageUIControlsRules(pageRequest, pageData);

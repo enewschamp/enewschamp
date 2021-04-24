@@ -8,10 +8,11 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@JsonIgnoreProperties({ "operatorId", "lastUpdate", "recordInUse"})
-public class BulkInsertResponsePageData extends PageData {/**
-	 * 
-	 */
+@JsonIgnoreProperties({ "operatorId", "lastUpdate", "recordInUse" })
+public class BulkInsertResponsePageData extends PageData {
+	/**
+	* 
+	*/
 	private static final long serialVersionUID = 1L;
 	private int numberOfRecords;
 

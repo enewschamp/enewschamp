@@ -10,8 +10,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@JsonIgnoreProperties({ "operationDateTime", "keyAsString"})
-public class StateNilDTO extends StateDTO{
+@JsonIgnoreProperties({ "operationDateTime", "keyAsString" })
+public class StateNilDTO extends StateDTO {
 
 	/**
 	 * 

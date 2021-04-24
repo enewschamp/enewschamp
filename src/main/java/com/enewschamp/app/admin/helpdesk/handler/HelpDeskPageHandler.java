@@ -121,10 +121,10 @@ public class HelpDeskPageHandler implements IPageHandler {
 		HelpDeskPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), HelpDeskPageData.class);
 		Helpdesk helpDesk = modelMapper.map(pageData, Helpdesk.class);
 		helpDesk = helpDeskService.close(helpDesk);
-        mapHelpdesk(pageRequest, pageDto, helpDesk);
+		mapHelpdesk(pageRequest, pageDto, helpDesk);
 		return pageDto;
 	}
-	
+
 	@SneakyThrows
 	private PageDTO reinstateHelpDesk(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
@@ -177,13 +177,12 @@ public class HelpDeskPageHandler implements IPageHandler {
 		pageDto.setData(pageData);
 	}
 
-
 	private HelpDeskPageData mapPageData(Helpdesk helpdesk) {
 		HelpDeskPageData pageData = modelMapper.map(helpdesk, HelpDeskPageData.class);
 		pageData.setLastUpdate(helpdesk.getOperationDateTime());
 		return pageData;
 	}
-	
+
 	private Helpdesk mapHelpDeskData(PageRequestDTO pageRequest, HelpDeskPageData pageData) {
 		Helpdesk helpDesk = modelMapper.map(pageData, Helpdesk.class);
 		helpDesk.setRecordInUse(RecordInUseType.Y);

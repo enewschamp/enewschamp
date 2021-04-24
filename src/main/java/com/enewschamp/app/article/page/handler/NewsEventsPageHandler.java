@@ -244,17 +244,4 @@ public class NewsEventsPageHandler implements IPageHandler {
 		return pageDTO;
 	}
 
-	private NewsEventsPageData mapPageData(NewsEventsPageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), NewsEventsPageData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return pageData;
-	}
-
 }

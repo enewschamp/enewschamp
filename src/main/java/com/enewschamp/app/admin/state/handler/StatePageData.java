@@ -29,4 +29,3 @@ public class StatePageData extends PageData {
 	@NotEmpty(message = MessageConstants.DESCRIPTION_NOT_EMPTY)
 	private String description;
 }
-

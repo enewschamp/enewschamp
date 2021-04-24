@@ -37,9 +37,10 @@ public class InstitutionStakeholderRepositoryCustomImpl extends RepositoryImpl
 		CriteriaQuery<InstitutionStakeholder> criteriaQuery = cb.createQuery(InstitutionStakeholder.class);
 		Root<InstitutionStakeholder> inststakeHolderRoot = criteriaQuery.from(InstitutionStakeholder.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-		
+
 		if (!StringUtils.isEmpty(searchRequest.getInstitutionType()))
-			filterPredicates.add(cb.equal(inststakeHolderRoot.get(INSTITUTION_TYPE), searchRequest.getInstitutionType()));
+			filterPredicates
+					.add(cb.equal(inststakeHolderRoot.get(INSTITUTION_TYPE), searchRequest.getInstitutionType()));
 
 		if (!StringUtils.isEmpty(searchRequest.getInstitutionId()))
 			filterPredicates.add(cb.equal(inststakeHolderRoot.get(INSTITUTION_ID), searchRequest.getInstitutionId()));

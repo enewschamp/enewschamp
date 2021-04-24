@@ -82,13 +82,12 @@ public class UserLoginPageHandler implements IPageHandler {
 	private PageDTO createUserLogin(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserLoginPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserLoginPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		UserLogin userLogin = mapUserLoginData(pageRequest, pageData);
 		userLogin = userLoginService.create(userLogin);
 		mapUserLogin(pageRequest, pageDto, userLogin);
 		return pageDto;
 	}
-
 
 	private UserLogin mapUserLoginData(PageRequestDTO pageRequest, UserLoginPageData pageData) {
 		UserLogin userLogin = modelMapper.map(pageData, UserLogin.class);
@@ -100,7 +99,7 @@ public class UserLoginPageHandler implements IPageHandler {
 	private PageDTO updateUserLogin(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserLoginPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserLoginPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		UserLogin userLogin = mapUserLoginData(pageRequest, pageData);
 		userLogin = userLoginService.update(userLogin);
 		mapUserLogin(pageRequest, pageDto, userLogin);
@@ -184,6 +183,5 @@ public class UserLoginPageHandler implements IPageHandler {
 		}
 		return userLoginPageDataList;
 	}
-
 
 }

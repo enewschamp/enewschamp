@@ -192,7 +192,7 @@ public class PropertiesBackendPageHandler implements IPageHandler {
 				new TypeReference<List<PropertiesBackendPageData>>() {
 				});
 		List<PropertiesBackend> pageNavigators = mapPropertiesBackend(pageRequest, pageData);
-		propertiesBackendService.clean(); 
+		propertiesBackendService.clean();
 		int totalRecords = propertiesBackendService.createAll(pageNavigators);
 		BulkInsertResponsePageData responseData = new BulkInsertResponsePageData();
 		responseData.setNumberOfRecords(totalRecords);
@@ -243,12 +243,10 @@ public class PropertiesBackendPageHandler implements IPageHandler {
 
 	private List<PropertiesBackend> mapPropertiesBackend(PageRequestDTO pageRequest,
 			List<PropertiesBackendPageData> pageData) {
-		List<PropertiesBackend> propertiesBackends = pageData.stream()
-				.peek(element -> {
-					element.setOperatorId(pageRequest.getHeader().getUserId());
-					element.setRecordInUse(RecordInUseType.Y);
-				})
-				.map(backend -> modelMapper.map(backend, PropertiesBackend.class)).collect(Collectors.toList());
+		List<PropertiesBackend> propertiesBackends = pageData.stream().peek(element -> {
+			element.setOperatorId(pageRequest.getHeader().getUserId());
+			element.setRecordInUse(RecordInUseType.Y);
+		}).map(backend -> modelMapper.map(backend, PropertiesBackend.class)).collect(Collectors.toList());
 		return propertiesBackends;
 	}
 }

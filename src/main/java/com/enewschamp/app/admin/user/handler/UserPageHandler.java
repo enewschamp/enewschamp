@@ -93,7 +93,7 @@ public class UserPageHandler implements IPageHandler {
 	private PageDTO createUser(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserPageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		User user = saveImage(pageData);
 		mapUser(pageRequest, pageDto, user);
 		return pageDto;
@@ -103,8 +103,8 @@ public class UserPageHandler implements IPageHandler {
 	private PageDTO updateUser(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserPageData.class);
-		validate(pageData,  this.getClass().getName());
-		User user  = updateImage(pageData, pageData.getUserId());
+		validate(pageData, this.getClass().getName());
+		User user = updateImage(pageData, pageData.getUserId());
 		mapUser(pageRequest, pageDto, user);
 		return pageDto;
 	}
@@ -192,7 +192,7 @@ public class UserPageHandler implements IPageHandler {
 		}
 		return userPageDataList;
 	}
-	
+
 	private User saveImage(UserPageData userDTO) {
 		User user = modelMapper.map(userDTO, User.class);
 		try {
@@ -221,14 +221,14 @@ public class UserPageHandler implements IPageHandler {
 				updateFlag = true;
 			}
 		}
-	
+
 		if (updateFlag) {
 			user = userService.update(user);
 		}
 		user.setImageBase64(null);
 		return user;
 	}
-	
+
 	private User updateImage(UserPageData userDto, String userId) {
 		userDto.setUserId(userId);
 		User user = userService.get(userId);
@@ -258,7 +258,7 @@ public class UserPageHandler implements IPageHandler {
 				updateFlag = true;
 			}
 		}
-		
+
 		if (updateFlag) {
 			user = userService.update(user);
 		}

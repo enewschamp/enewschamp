@@ -38,7 +38,7 @@ public class UserLoginBusiness {
 
 	@Autowired
 	UserActivityTrackerRepository userActivityTrackerRepository;
-	
+
 	@Autowired
 	private UserActivityTrackerRepositoryCustomImpl userActivityTrackerRepositoryCustom;
 
@@ -242,11 +242,9 @@ public class UserLoginBusiness {
 		UserLogin loggedIn = null;
 		if (UserType.S.toString().equals(userType.toString())) {
 			loggedIn = loginService.getUserLogin(userId, deviceId, tokenId, userType);
-		} 
-		else if (UserType.A.toString().equals(userType.toString())) {
+		} else if (UserType.A.toString().equals(userType.toString())) {
 			loggedIn = loginService.getOperatorLogin(userId, deviceId, tokenId, userType);
-		}
-		else {
+		} else {
 			loggedIn = loginService.getOperatorLogin(userId, deviceId, tokenId);
 		}
 		return loggedIn;
@@ -278,7 +276,7 @@ public class UserLoginBusiness {
 			return null;
 		}
 	}
-	
+
 	public Page<UserActivityTracker> listUserActivityTracker(AdminSearchRequest searchRequest, int pageNo,
 			int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);

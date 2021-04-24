@@ -21,11 +21,11 @@ public interface UIControlsGlobalRepository extends JpaRepository<UIControlsGlob
 	@Transactional
 	@Query(value = "truncate table uicontrols_global", nativeQuery = true)
 	public void truncate();
-	
+
 	@Modifying
 	@Query(value = "truncate table uicontrols_global_id_seq", nativeQuery = true)
 	public void deleteSequences();
-	
+
 	@Modifying
 	@Query(value = "insert into uicontrols_global_id_seq values(1)", nativeQuery = true)
 	public void initializeSequence();

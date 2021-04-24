@@ -156,18 +156,4 @@ public class ChampsPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		return pageDto;
 	}
-
-	private ChampsPageData mapPageData(ChampsPageData pageData, PageRequestDTO pageRequest) {
-		try {
-			pageData = objectMapper.readValue(pageRequest.getData().toString(), ChampsPageData.class);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return pageData;
-
-}
 }

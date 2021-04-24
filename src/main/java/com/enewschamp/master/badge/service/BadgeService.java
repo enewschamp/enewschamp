@@ -26,7 +26,7 @@ public class BadgeService {
 
 	@Autowired
 	BadgeRepository badgeRepository;
-	
+
 	@Autowired
 	BadgeRepositoryCustomImpl badgeRepositoryCustom;
 
@@ -53,7 +53,7 @@ public class BadgeService {
 	public Badge update(Badge badgeEntity) {
 		Long badgeId = badgeEntity.getBadgeId();
 		Badge existingBadge = get(badgeId);
-		if(existingBadge.getRecordInUse().equals(RecordInUseType.N)) {
+		if (existingBadge.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(badgeEntity, existingBadge);
@@ -143,7 +143,7 @@ public class BadgeService {
 		badge.setBadgeId(badgeId);
 		return auditService.getEntityAudit(badge);
 	}
-	
+
 	public Badge read(Badge badge) {
 		Long badgeId = badge.getBadgeId();
 		Badge badgeEntity = get(badgeId);
@@ -172,14 +172,14 @@ public class BadgeService {
 		existingCountry.setOperationDateTime(null);
 		return badgeRepository.save(existingCountry);
 	}
-	
+
 	public Page<Badge> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Badge> badgeList = badgeRepositoryCustom.findAll(pageable, null);
-		if(badgeList.getContent().isEmpty()) {
+		if (badgeList.getContent().isEmpty()) {
 			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
 		}
 		return badgeList;
 	}
-	
+
 }

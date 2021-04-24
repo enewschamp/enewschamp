@@ -1,6 +1,5 @@
 package com.enewschamp.app.admin.entitlement.handler;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,8 +84,9 @@ public class EntitlementPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO createEntitlement(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EntitlementPageData.class);
-		validate(pageData,  this.getClass().getName());
+		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				EntitlementPageData.class);
+		validate(pageData, this.getClass().getName());
 		Entitlement entitlement = mapEntitlementData(pageRequest, pageData);
 		entitlement = entitlementService.create(entitlement);
 		mapEntitlement(pageRequest, pageDto, entitlement);
@@ -102,8 +102,9 @@ public class EntitlementPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO updateEntitlement(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EntitlementPageData.class);
-		validate(pageData,  this.getClass().getName());
+		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				EntitlementPageData.class);
+		validate(pageData, this.getClass().getName());
 		Entitlement entitlement = mapEntitlementData(pageRequest, pageData);
 		entitlement = entitlementService.update(entitlement);
 		mapEntitlement(pageRequest, pageDto, entitlement);
@@ -120,7 +121,8 @@ public class EntitlementPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO readEntitlement(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EntitlementPageData.class);
+		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				EntitlementPageData.class);
 		Entitlement entitlement = modelMapper.map(pageData, Entitlement.class);
 		entitlement = entitlementService.read(entitlement);
 		mapEntitlement(pageRequest, pageDto, entitlement);
@@ -130,7 +132,8 @@ public class EntitlementPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO reinstateEntitlement(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EntitlementPageData.class);
+		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				EntitlementPageData.class);
 		Entitlement entitlement = modelMapper.map(pageData, Entitlement.class);
 		entitlement = entitlementService.reinstate(entitlement);
 		mapEntitlement(pageRequest, pageDto, entitlement);
@@ -146,7 +149,8 @@ public class EntitlementPageHandler implements IPageHandler {
 	@SneakyThrows
 	private PageDTO closeEntitlement(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
-		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), EntitlementPageData.class);
+		EntitlementPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				EntitlementPageData.class);
 		Entitlement entitlement = modelMapper.map(pageData, Entitlement.class);
 		entitlement = entitlementService.close(entitlement);
 		mapEntitlement(pageRequest, pageDto, entitlement);

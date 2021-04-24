@@ -17,8 +17,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "PropertiesBackend",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "name" }) })
+@Table(name = "PropertiesBackend", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }) })
 @EqualsAndHashCode(callSuper = false)
 public class PropertiesBackend extends BaseEntity {
 

@@ -85,7 +85,7 @@ public class StatePageHandler implements IPageHandler {
 	private PageDTO createState(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		StatePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StatePageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		State state = mapStateData(pageRequest, pageData);
 		state = stateService.create(state);
 		mapState(pageRequest, pageDto, state);
@@ -102,7 +102,7 @@ public class StatePageHandler implements IPageHandler {
 	private PageDTO updateState(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		StatePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StatePageData.class);
-		validate(pageData,  this.getClass().getName());
+		validate(pageData, this.getClass().getName());
 		State state = mapStateData(pageRequest, pageData);
 		state = stateService.update(state);
 		mapState(pageRequest, pageDto, state);

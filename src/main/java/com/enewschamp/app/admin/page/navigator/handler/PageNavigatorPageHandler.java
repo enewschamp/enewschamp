@@ -171,7 +171,7 @@ public class PageNavigatorPageHandler implements IPageHandler {
 		List<PageNavigatorPageData> pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				new TypeReference<List<PageNavigatorPageData>>() {
 				});
-		pageData.forEach(pagedata ->{
+		pageData.forEach(pagedata -> {
 			validate(pageData, this.getClass().getName());
 		});
 		List<PageNavigator> pageNavigators = mapPageNavigators(pageRequest, pageData);
@@ -221,12 +221,10 @@ public class PageNavigatorPageHandler implements IPageHandler {
 	}
 
 	private List<PageNavigator> mapPageNavigators(PageRequestDTO pageRequest, List<PageNavigatorPageData> pageData) {
-		List<PageNavigator> pageNavigators = pageData.stream()
-				.peek(element -> {
-					element.setOperatorId(pageRequest.getHeader().getUserId());
-					element.setRecordInUse(RecordInUseType.Y);
-				})
-				.map(navigator -> modelMapper.map(navigator, PageNavigator.class)).collect(Collectors.toList());
+		List<PageNavigator> pageNavigators = pageData.stream().peek(element -> {
+			element.setOperatorId(pageRequest.getHeader().getUserId());
+			element.setRecordInUse(RecordInUseType.Y);
+		}).map(navigator -> modelMapper.map(navigator, PageNavigator.class)).collect(Collectors.toList());
 		return pageNavigators;
 	}
 }
