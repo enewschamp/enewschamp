@@ -203,8 +203,7 @@ public class StudentPreferencesPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<StudentPreferences> pageDataList = page.getContent();
 			for (StudentPreferences studentPreferences : pageDataList) {
-				StudentPreferencesPageData studentPreferencesPageData = modelMapper.map(studentPreferences,
-						StudentPreferencesPageData.class);
+				StudentPreferencesPageData studentPreferencesPageData = mapPageData(studentPreferences);
 				studentPreferencesPageData.setLastUpdate(studentPreferences.getOperationDateTime());
 				StudentPreferencesPageDataList.add(studentPreferencesPageData);
 			}

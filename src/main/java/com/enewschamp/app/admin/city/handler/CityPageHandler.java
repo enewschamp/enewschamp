@@ -179,7 +179,7 @@ public class CityPageHandler implements IPageHandler {
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<City> pageDataList = page.getContent();
 			for (City city : pageDataList) {
-				CityPageData cityPageData = modelMapper.map(city, CityPageData.class);
+				CityPageData cityPageData = mapPageData(city);
 				cityPageData.setLastUpdate(city.getOperationDateTime());
 				cityPageDataList.add(cityPageData);
 			}
