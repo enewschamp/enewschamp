@@ -32,11 +32,14 @@ public class StudentRegistrationPageData extends PageData {
 	private String isActive;
 	private String theme;
 	private String fontHeight;
-	private String photoName;
 	private String avatarName;
 	private String isTestUser;
 	private String forcePasswordChange;
 	private LocalDateTime creationDateTime;
+	private String imageName;
+	private String imageBase64;
+	private String imageTypeExt = "jpg";
+	private String imageUpdate;
 
 	@JsonIgnore
 	public String getPassword() {

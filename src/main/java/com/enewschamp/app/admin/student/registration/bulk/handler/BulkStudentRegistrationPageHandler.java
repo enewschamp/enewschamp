@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
+import com.enewschamp.app.admin.student.registration.handler.StudentRegistrationPageData;
 import com.enewschamp.app.admin.student.school.nonlist.handler.StudentSchoolNilDTO;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.CommonService;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
@@ -82,6 +85,8 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+	@Autowired
+	private CommonService commonService;
 
 	@Override
 	public PageDTO loadPage(PageNavigationContext pageNavigationContext) {
@@ -230,11 +235,11 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 	private StudentRegistration createStudentRegistration(BulkStudentRegistrationPageData pageData,
 			PageRequestDTO pageRequest) {
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		StudentRegistration studentRegistration = modelMapper.map(pageData.getStudentRegistration(),
-				StudentRegistration.class);
-		studentRegistration.setOperatorId(pageRequest.getHeader().getUserId());
-		studentRegistration.setRecordInUse(RecordInUseType.Y);
-		studentRegistration = studentRegistrationService.create(studentRegistration);
+		StudentRegistrationPageData studentRegistrationDto = modelMapper.map(pageData.getStudentRegistration(),
+				StudentRegistrationPageData.class);
+		studentRegistrationDto.setOperatorId(pageRequest.getHeader().getUserId());
+		studentRegistrationDto.setRecordInUse(RecordInUseType.Y);
+		StudentRegistration studentRegistration = saveImage(studentRegistrationDto);
 		return studentRegistration;
 	}
 
@@ -310,6 +315,42 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 		commsOverEmail.setDailyPublication(pageData.getStudentPreferences().getDailyPublication());
 		commsOverEmail.setScoresProgressReports(pageData.getStudentPreferences().getScoresProgressReports());
 		return commsOverEmail;
+	}
+	
+	private StudentRegistration saveImage(StudentRegistrationPageData studentRegistrationDto) {
+		StudentRegistration studentRegistration = modelMapper.map(studentRegistrationDto, StudentRegistration.class);
+		try {
+			studentRegistration.setRecordInUse(RecordInUseType.Y);
+			studentRegistration = studentRegistrationService.create(studentRegistration);
+		} catch (DataIntegrityViolationException e) {
+			log.error(e.getMessage());
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(studentRegistrationDto.getImageUpdate())) {
+			String newImageName = studentRegistration.getStudentId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = studentRegistrationDto.getImageTypeExt();
+			String currentImageName = studentRegistration.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "student", imageType, studentRegistrationDto.getImageBase64(),
+					newImageName);
+			if (saveImageFlag) {
+				studentRegistration.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				studentRegistration.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "student", currentImageName);
+				updateFlag = true;
+			}
+		}
+
+		if (updateFlag) {
+			studentRegistration = studentRegistrationService.updateOne(studentRegistration);
+		}
+		studentRegistration.setImageBase64(null);
+		return studentRegistration;
 	}
 
 }

@@ -12,12 +12,14 @@ import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
 import com.enewschamp.app.common.CommonConstants;
+import com.enewschamp.app.common.CommonService;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
@@ -45,6 +47,8 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 	ModelMapper modelMapper;
 	@Autowired
 	ObjectMapper objectMapper;
+	@Autowired
+	private CommonService commonService;
 	private Validator validator;
 
 	@Override
@@ -99,17 +103,9 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 		StudentRegistrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				StudentRegistrationPageData.class);
 		validate(pageData);
-		StudentRegistration studentRegistration = mapStudentRegistrationData(pageRequest, pageData);
-		studentRegistration = studentRegistrationService.create(studentRegistration);
+	    StudentRegistration studentRegistration = saveImage(pageData);
 		mapStudentRegistration(pageRequest, pageDto, studentRegistration);
 		return pageDto;
-	}
-
-	private StudentRegistration mapStudentRegistrationData(PageRequestDTO pageRequest,
-			StudentRegistrationPageData pageData) {
-		StudentRegistration studentRegistration = modelMapper.map(pageData, StudentRegistration.class);
-		studentRegistration.setRecordInUse(RecordInUseType.Y);
-		return studentRegistration;
 	}
 
 	@SneakyThrows
@@ -118,8 +114,7 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 		StudentRegistrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
 				StudentRegistrationPageData.class);
 		validate(pageData);
-		StudentRegistration studentRegistration = mapStudentRegistrationData(pageRequest, pageData);
-		studentRegistration = studentRegistrationService.updateOne(studentRegistration);
+		StudentRegistration studentRegistration = updateImage(pageData, pageData.getStudentId());
 		mapStudentRegistration(pageRequest, pageDto, studentRegistration);
 		return pageDto;
 	}
@@ -217,6 +212,79 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
+	}
+	
+	private StudentRegistration saveImage(StudentRegistrationPageData studentRegistrationDto) {
+		StudentRegistration studentRegistration = modelMapper.map(studentRegistrationDto, StudentRegistration.class);
+		try {
+			studentRegistration.setRecordInUse(RecordInUseType.Y);
+			studentRegistration = studentRegistrationService.create(studentRegistration);
+		} catch (DataIntegrityViolationException e) {
+			log.error(e.getMessage());
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(studentRegistrationDto.getImageUpdate())) {
+			String newImageName = studentRegistration.getStudentId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = studentRegistrationDto.getImageTypeExt();
+			String currentImageName = studentRegistration.getImageName();
+			boolean saveImageFlag = commonService.saveImages("Admin", "student", imageType, studentRegistrationDto.getImageBase64(),
+					newImageName);
+			if (saveImageFlag) {
+				studentRegistration.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				studentRegistration.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "student", currentImageName);
+				updateFlag = true;
+			}
+		}
+
+		if (updateFlag) {
+			studentRegistration = studentRegistrationService.updateOne(studentRegistration);
+		}
+		studentRegistration.setImageBase64(null);
+		return studentRegistration;
+	}
+
+	private StudentRegistration updateImage(StudentRegistrationPageData studentRegistrationDto, Long studentId) {
+		studentRegistrationDto.setStudentId(studentId);
+		StudentRegistration studentRegistration = studentRegistrationService.get(studentId);
+		if (studentRegistration.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		String currentImageName = studentRegistration.getImageName();
+		studentRegistrationDto.setImageName(currentImageName);
+		studentRegistration = modelMapper.map(studentRegistrationDto, StudentRegistration.class);
+		studentRegistration.setRecordInUse(RecordInUseType.Y);
+		studentRegistration = studentRegistrationService.updateOne(studentRegistration);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(studentRegistrationDto.getImageUpdate())) {
+			String newImageName = studentRegistration.getStudentId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = studentRegistrationDto.getImageTypeExt();
+			boolean saveImageFlag = commonService.saveImages("Admin", "student", imageType, studentRegistrationDto.getImageBase64(),
+					newImageName);
+			if (saveImageFlag) {
+				studentRegistration.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				studentRegistration.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "student", currentImageName);
+				updateFlag = true;
+			}
+		}
+
+		if (updateFlag) {
+			studentRegistration = studentRegistrationService.updateOne(studentRegistration);
+		}
+		studentRegistration.setImageBase64(null);
+		return studentRegistration;
 	}
 
 }
