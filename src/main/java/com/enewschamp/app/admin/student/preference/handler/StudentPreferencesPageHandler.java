@@ -20,6 +20,7 @@ import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
+import com.enewschamp.subscription.domain.entity.ChampPermissions;
 import com.enewschamp.subscription.domain.entity.StudentPreferenceComm;
 import com.enewschamp.subscription.domain.entity.StudentPreferences;
 import com.enewschamp.subscription.domain.service.StudentPreferencesService;
@@ -103,6 +104,11 @@ public class StudentPreferencesPageHandler implements IPageHandler {
 		commsOverEmail.setDailyPublication(pageData.getDailyPublication());
 		commsOverEmail.setScoresProgressReports(pageData.getScoresProgressReports());
 		studentPreferences.setCommsOverEmail(commsOverEmail);
+		ChampPermissions champPermissions = new ChampPermissions();
+		champPermissions.setChampCity(pageData.getChampCity());
+		champPermissions.setChampProfilePic(pageData.getChampProfilePic());
+		champPermissions.setChampSchool(pageData.getChampSchool());
+		studentPreferences.setChampPermissions(champPermissions);
 		studentPreferences.setRecordInUse(RecordInUseType.Y);
 		return studentPreferences;
 	}
