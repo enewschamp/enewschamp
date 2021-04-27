@@ -45,6 +45,7 @@ public class PublisherMenuPageHandler extends AbstractPageHandler {
 		PageDTO pageDto = new PageDTO();
 		pageDto.setHeader(pageNavigationContext.getPageRequest().getHeader());
 		String userId = pageNavigationContext.getPageRequest().getHeader().getUserId();
+		String module = pageNavigationContext.getPageRequest().getHeader().getModule();
 		User user = userService.get(userId);
 		LoginPageData loginPageData = new LoginPageData();
 		if (user != null) {
@@ -52,7 +53,7 @@ public class PublisherMenuPageHandler extends AbstractPageHandler {
 			loginPageData.setTodaysDate(LocalDate.now());
 			loginPageData.setTheme(user.getTheme());
 			loginPageData.setImageName(user.getImageName());
-			loginPageData.setUserRole(userLoginBusiness.getUserRole(userId));
+			loginPageData.setUserRole(userLoginBusiness.getUserRole(userId, module));
 			loginPageData.setLoginCredentials(userLoginService.getOperatorLogin(userId).getTokenId());
 			loginPageData.setTokenValidity(
 					propertiesService.getValue(pageNavigationContext.getPageRequest().getHeader().getModule(),

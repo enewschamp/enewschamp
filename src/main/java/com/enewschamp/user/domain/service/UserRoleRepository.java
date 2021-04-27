@@ -8,15 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.enewschamp.user.domain.entity.UserRole;
-import com.enewschamp.user.domain.entity.UserRoleKey;
 
 @JaversSpringDataAuditable
-interface UserRoleRepository extends JpaRepository<UserRole, UserRoleKey> {
+interface UserRoleRepository extends JpaRepository<UserRole, Long> {
 
-	@Query("Select c from UserRole c where c.userRoleKey.userId= :userId and c.userRoleKey.roleId =:roleId ")
+	@Query("Select c from UserRole c where c.userId= :userId and c.roleId =:roleId ")
 	public Optional<UserRole> getByUserIdAndRole(@Param("userId") String userId, @Param("roleId") String roleId);
 
-	@Query("Select c from UserRole c where c.userRoleKey.userId= :userId ")
-	public Optional<UserRole> getByUserId(@Param("userId") String userId);
+	@Query("Select c from UserRole c where c.userId= :userId and c.module= :module")
+	public Optional<UserRole> getByUserId(@Param("userId") String userId, @Param("module") String module);
 
 }

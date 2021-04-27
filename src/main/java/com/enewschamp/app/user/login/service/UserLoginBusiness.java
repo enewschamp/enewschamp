@@ -150,10 +150,10 @@ public class UserLoginBusiness {
 		userActivityTrackerRepository.save(userActivityTracker);
 	}
 
-	public String getUserRole(final String userId) {
-		UserRole userRole = userRoleService.getByUserId(userId);
+	public String getUserRole(final String userId, final String module) {
+		UserRole userRole = userRoleService.getByUserId(userId, module);
 		if (userRole != null) {
-			return userRole.getUserRoleKey().getRoleId();
+			return userRole.getRoleId();
 		} else {
 			return "";
 		}

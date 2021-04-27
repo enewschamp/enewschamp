@@ -70,7 +70,7 @@ public class UserDTO extends MaintenanceDTO {
 	@JsonInclude
 	private String imageName;
 
-	private String base64Image;
+	private String imageBase64;
 
 	private String imageTypeExt = "jpg";
 

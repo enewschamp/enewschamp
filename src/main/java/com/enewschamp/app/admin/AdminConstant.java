@@ -72,7 +72,6 @@ public interface AdminConstant {
 	public static String GENRE_ID = "genreId";
 	public static String USER_LEAVE_KEY = "userLeaveKey";
 	public static String APPROVAL_STATUS = "approvalStatus";
-	public static String USER_ROLE_KEY = "userRoleKey";
 	public static String ROLE_ID = "roleId";
 	public static String PAGE_NAME = "pageName";
 	public static String ROLE = "role";
@@ -101,5 +100,5 @@ public interface AdminConstant {
 	public static String QUIZ_SCORE = "quizScore";
 	public static String SUBSCRIPTION_PERIOD = "subscriptionPeriod";
 	public static String ACTION_TIME = "actionTime";
-	
+
 }
