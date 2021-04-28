@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "UserRoles", uniqueConstraints = { @UniqueConstraint(columnNames = { "userId", "roleId" }) })
+@Table(name = "UserRoles", uniqueConstraints = { @UniqueConstraint(columnNames = { "userId", "module" }) })
 public class UserRole extends BaseEntity {
 
 	private static final long serialVersionUID = 2383120567523981474L;
