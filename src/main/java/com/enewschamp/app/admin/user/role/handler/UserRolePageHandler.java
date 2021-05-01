@@ -126,8 +126,7 @@ public class UserRolePageHandler implements IPageHandler {
 		mapUserRole(pageRequest, pageDto, userRole);
 		return pageDto;
 	}
-
-
+	
 	@SneakyThrows
 	private PageDTO reinstateUserRole(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();

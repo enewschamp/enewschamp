@@ -1,6 +1,7 @@
 package com.enewschamp.user.app.dto;
 
 import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
 
 import com.enewschamp.app.common.MaintenanceDTO;

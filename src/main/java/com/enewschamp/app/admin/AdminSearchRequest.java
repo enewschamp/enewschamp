@@ -3,11 +3,7 @@ package com.enewschamp.app.admin;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import javax.persistence.Convert;
-
-import com.enewschamp.app.common.StringCryptoConverter;
 import com.enewschamp.app.user.login.entity.UserAction;
-import com.enewschamp.app.user.login.entity.UserType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
