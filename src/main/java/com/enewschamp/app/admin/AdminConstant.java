@@ -100,5 +100,6 @@ public interface AdminConstant {
 	public static String QUIZ_SCORE = "quizScore";
 	public static String SUBSCRIPTION_PERIOD = "subscriptionPeriod";
 	public static String ACTION_TIME = "actionTime";
+	public static String APPROVAL_REQUIRED = "approvalRequired";
 
 }

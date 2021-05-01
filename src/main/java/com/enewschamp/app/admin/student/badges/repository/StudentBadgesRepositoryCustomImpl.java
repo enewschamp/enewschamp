@@ -46,7 +46,8 @@ public class StudentBadgesRepositoryCustomImpl extends RepositoryImpl
 					.add(cb.equal(studentachievementRoot.get(STUDENT_BADGES_ID), searchRequest.getStudentBadgesId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getYearMonth()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get(YEAR_MONTH), searchRequest.getYearMonth()));
+			filterPredicates
+					.add(cb.like(studentachievementRoot.get(YEAR_MONTH), '%' + searchRequest.getYearMonth() + '%'));
 
 		if (!StringUtils.isEmpty(searchRequest.getBadgeId()))
 			filterPredicates.add(cb.equal(studentachievementRoot.get(BADGE_ID), searchRequest.getBadgeId()));

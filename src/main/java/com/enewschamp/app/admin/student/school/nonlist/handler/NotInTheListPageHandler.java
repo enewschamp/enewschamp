@@ -187,6 +187,7 @@ public class NotInTheListPageHandler implements IPageHandler {
 			studentSchool.setRecordInUse(RecordInUseType.Y);
 			studentSchool.setOperatorId(pageData.getOperatorId());
 			studentSchool.setOperationDateTime(LocalDateTime.now());
+			studentSchool.setApprovalRequired("N");
 			Object existingStuSchool1 = studentSchoolService.update(studentSchool);
 			System.out.println(existingStuSchool1);
 		}

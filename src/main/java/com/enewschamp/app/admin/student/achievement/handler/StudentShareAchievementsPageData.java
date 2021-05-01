@@ -19,6 +19,8 @@ public class StudentShareAchievementsPageData extends PageData {
 	@NotNull(message = MessageConstants.PERSONALISED_MSG_NOT_NULL)
 	@NotEmpty(message = MessageConstants.PERSONALISED_MSG_NOT_EMPTY)
 	private String personalisedMessage;
+	
+	private String approvalRequired;
 
 	@NotNull(message = MessageConstants.RECIPIENT_NAME1_NOT_NULL)
 	@NotEmpty(message = MessageConstants.RECIPIENT_NAME1_NOT_EMPTY)

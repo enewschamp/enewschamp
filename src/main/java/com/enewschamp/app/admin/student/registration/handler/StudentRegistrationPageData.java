@@ -22,8 +22,7 @@ public class StudentRegistrationPageData extends PageData {
 	@NotEmpty(message = MessageConstants.EMAIL_ID_NOT_EMPTY)
 	private String emailId;
 	private String password;
-	private String password1;
-	private String password2;
+    private String confirmPassword;
 	private String isDeleted;
 	private String isAccountLocked;
 	private LocalDateTime lastSuccessfulLoginAttempt;
@@ -32,39 +31,27 @@ public class StudentRegistrationPageData extends PageData {
 	private String isActive;
 	private String theme;
 	private String fontHeight;
-	private String photoName;
 	private String avatarName;
 	private String isTestUser;
 	private String forcePasswordChange;
 	private LocalDateTime creationDateTime;
-
+	private String imageName;
+	private String imageBase64;
+	private String imageTypeExt = "jpg";
+	private String imageUpdate;
+	private String studentKey;
+	private String photoName;
+	private String imageApprovalRequired;
+	private String fcmToken;
+	
 	@JsonIgnore
 	public String getPassword() {
 		return this.password;
 	}
-
-	@JsonIgnore
-	public String getPassword1() {
-		return this.password1;
-	}
-
-	@JsonIgnore
-	public String getPassword2() {
-		return this.password2;
-	}
-
+	
 	@JsonProperty
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	@JsonProperty
-	public void setPassword1(String password1) {
-		this.password1 = password;
-	}
-
-	@JsonProperty
-	public void setPassword2(String password2) {
-		this.password2 = password;
-	}
 }

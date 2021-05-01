@@ -107,7 +107,6 @@ public class StudentRegistrationService {
 		if(existingStudentRegistration.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
-	//	modelMapper.map(studentRegistration, existingStudentRegistration);
 		handlePasswords(studentRegistration, existingStudentRegistration);
 		StudentRegistration student = repository.save(existingStudentRegistration);
 		return student;
@@ -148,11 +147,8 @@ public class StudentRegistrationService {
 	}
 	
 	private void handlePasswords(StudentRegistration studentRegistraton, StudentRegistration existingStudentRegistration) {
-	//	if (StringUtils.isEmpty(studentRegistraton.getPassword()))
 			studentRegistraton.setPassword(existingStudentRegistration.getPassword());
-	//	if (StringUtils.isEmpty(studentRegistraton.getPassword1()))
 			studentRegistraton.setPassword1(existingStudentRegistration.getPassword1());
-//		if (StringUtils.isEmpty(studentRegistraton.getPassword2()))
 			studentRegistraton.setPassword2(existingStudentRegistration.getPassword2());
 		modelMapper.map(studentRegistraton, existingStudentRegistration);
 	}

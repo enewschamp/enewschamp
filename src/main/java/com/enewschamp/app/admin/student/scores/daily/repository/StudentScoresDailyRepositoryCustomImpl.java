@@ -46,10 +46,10 @@ public class StudentScoresDailyRepositoryCustomImpl extends RepositoryImpl
 		if (!StringUtils.isEmpty(searchRequest.getReadingLevel()))
 			filterPredicates.add(cb.equal(studentScoresDailyRoot.get(READING_LEVEL), searchRequest.getReadingLevel()));
 
-		if (!StringUtils.isEmpty(searchRequest.getPublicationDate()))
-			filterPredicates
-					.add(cb.equal(studentScoresDailyRoot.get(PUBLICATION_DATE), searchRequest.getPublicationDate()));
-
+		if (!StringUtils.isEmpty(searchRequest.getPublicationDateFrom()) && !StringUtils.isEmpty(searchRequest.getPublicationDateTo()))
+			filterPredicates.add(cb.between(studentScoresDailyRoot.get(PUBLICATION_DATE),
+					searchRequest.getDateFrom(), searchRequest.getDateTo()));
+		
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentScoresDailyRoot.get(CommonConstants.PUBLICATION_DATE)),
 				cb.desc(studentScoresDailyRoot.get(CommonConstants.QUIZ_CORRECT)));

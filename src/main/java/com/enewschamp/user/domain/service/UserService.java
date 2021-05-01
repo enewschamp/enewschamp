@@ -68,7 +68,6 @@ public class UserService extends AbstractDomainService {
 			if (user.getCreationDateTime() == null) {
 				user.setCreationDateTime(LocalDateTime.now());
 			}
-			user.setForcePasswordChange("Y");
 			userEntity = repository.save(user);
 		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);

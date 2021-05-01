@@ -149,8 +149,8 @@ public class UserPageHandler implements IPageHandler {
 	private UserPageData mapPageData(User user) {
 		UserPageData pageData = modelMapper.map(user, UserPageData.class);
 		pageData.setPassword(null);
-		pageData.setPassword1(null);
-		pageData.setPassword2(null);
+		//pageData.setPassword1(null);
+		//pageData.setPassword2(null);
 		pageData.setLastUpdate(user.getOperationDateTime());
 		return pageData;
 	}
@@ -218,8 +218,8 @@ public class UserPageHandler implements IPageHandler {
 				UserPageData userPageData = modelMapper.map(user, UserPageData.class);
 				userPageData.setLastUpdate(user.getOperationDateTime());
 				userPageData.setPassword(null);
-				userPageData.setPassword1(null);
-				userPageData.setPassword2(null);
+				//userPageData.setPassword1(null);
+				//userPageData.setPassword2(null);
 				userPageDataList.add(userPageData);
 			}
 		}
@@ -232,6 +232,7 @@ public class UserPageHandler implements IPageHandler {
 		User user = modelMapper.map(userDTO, User.class);
 		try {
 			user.setRecordInUse(RecordInUseType.Y);
+			user.setForcePasswordChange("Y");
 			user = userService.create(user);
 		} catch (DataIntegrityViolationException e) {
 			log.error(e.getMessage());

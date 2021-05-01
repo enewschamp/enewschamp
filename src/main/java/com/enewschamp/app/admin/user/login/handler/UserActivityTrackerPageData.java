@@ -1,5 +1,6 @@
 package com.enewschamp.app.admin.user.login.handler;
 
+import java.sql.Blob;
 import java.time.LocalDateTime;
 
 import com.enewschamp.app.common.PageData;
@@ -20,5 +21,8 @@ public class UserActivityTrackerPageData extends PageData {
 	private String actionPerformed;
 	private LocalDateTime actionTime;
 	private UserAction actionStatus;
-
+	private String errorCode;
+	private String errorDescription;
+	private Blob requestData;
+	private Blob errorText;
 }

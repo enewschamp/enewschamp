@@ -27,4 +27,5 @@ public class UserRolePageData extends PageData {
 	@NotNull(message = MessageConstants.COMMENTS_NOT_NULL)
 	@NotEmpty(message = MessageConstants.COMMENTS_NOT_EMPTY)
 	private String comments;
+	private String module;
 }

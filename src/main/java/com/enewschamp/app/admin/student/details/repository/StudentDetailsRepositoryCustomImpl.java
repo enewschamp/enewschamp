@@ -41,6 +41,15 @@ public class StudentDetailsRepositoryCustomImpl extends RepositoryImpl
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
 			filterPredicates.add(cb.equal(studentDetailsRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 
+		if (!StringUtils.isEmpty(searchRequest.getApprovalRequired())) {
+			if (searchRequest.getIsApplicableForNewsEvents().equals("Y")) {
+				filterPredicates.add(cb.equal(studentDetailsRoot.get(APPROVAL_REQUIRED),
+						searchRequest.getIsApplicableForNewsEvents()));
+			} else {
+				filterPredicates.add(cb.notEqual(studentDetailsRoot.get(APPROVAL_REQUIRED), "Y"));
+			}
+		}
+
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentDetailsRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query

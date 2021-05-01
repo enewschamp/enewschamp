@@ -2,6 +2,7 @@ package com.enewschamp.app.admin.student.subscription.handler;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -32,14 +33,15 @@ public class StudentSubscriptionPageData extends PageData {
 
 	@NotNull(message = MessageConstants.END_DATE_NOT_NULL)
 	private LocalDate endDate;
-
-	@NotNull(message = MessageConstants.AUTO_RENEWAL_NOT_NULL)
-	@NotEmpty(message = MessageConstants.AUTO_RENEWAL_NOT_EMPTY)
 	private String autoRenewal;
 	private String subscriptionId;
 	private String subscriptionAmountType;
 	private String subscriptionFrequency;
 	private String subscriptionFrequencyUnit;
 	private String subscriptionExpiryDate;
+	private String subscriptionPeriod;
+	private String orderId;
+
+	
 
 }

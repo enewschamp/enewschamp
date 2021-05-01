@@ -47,17 +47,11 @@ public class UserPageData extends PageData {
 	private String comments;
 	private String password;
 	private String confirmPassword;
-	private String password1;
-	private String password2;
-
 	private String isAccountLocked;
-
 	private LocalDateTime lastSuccessfulLoginAttempt;
 	private LocalDateTime lastUnsuccessfulLoginAttempt;
 	private long incorrectLoginAttempts;
-
 	private String isActive;
-
 	private String theme;
 	private String fontHeight;
 	private LocalDateTime creationDateTime;

@@ -46,8 +46,10 @@ public class CityRepositoryCustomImpl extends RepositoryImpl implements IGeneric
 			filterPredicates.add(cb.like(cityRoot.get(NAME_ID), "%" + searchRequest.getName() + "%"));
 		}
 		if (!StringUtils.isEmpty(searchRequest.getIsApplicableForNewsEvents())) {
-			filterPredicates
-					.add(cb.equal(cityRoot.get(IS_APPLICABLE_FOR_NEWS_EVENT), searchRequest.getIsApplicableForNewsEvents()));
+			if (searchRequest.getIsApplicableForNewsEvents().equals("Y")) {
+				filterPredicates.add(cb.equal(cityRoot.get(IS_APPLICABLE_FOR_NEWS_EVENT),
+						searchRequest.getIsApplicableForNewsEvents()));
+			}
 		}
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));

@@ -47,8 +47,8 @@ public class StudentScoresMonthlyTotalRepositoryCustomImpl extends RepositoryImp
 			filterPredicates.add(cb.equal(studentScoresDailyRoot.get(READING_LEVEL), searchRequest.getReadingLevel()));
 
 		if (!StringUtils.isEmpty(searchRequest.getScoreYearMonth()))
-			filterPredicates
-					.add(cb.equal(studentScoresDailyRoot.get(SCORE_YEAR_MIONTH), searchRequest.getScoreYearMonth()));
+			filterPredicates.add(cb.like(studentScoresDailyRoot.get(SCORE_YEAR_MIONTH),
+					'%' + searchRequest.getScoreYearMonth() + '%'));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentScoresDailyRoot.get(CommonConstants.SCORE_YEAR_MONTH)),

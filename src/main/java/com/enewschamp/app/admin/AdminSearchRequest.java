@@ -121,4 +121,7 @@ public class AdminSearchRequest {
 	private String alertsNotifications;
 	private LocalDateTime actionDateFrom;
   	private LocalDateTime actionDateTo;
+  	private String approvalRequired;
+	private LocalDate publicationDateFrom;
+  	private LocalDate publicationDateTo;
 }
