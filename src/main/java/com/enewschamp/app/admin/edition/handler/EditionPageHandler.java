@@ -11,7 +11,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -31,18 +30,17 @@ import com.enewschamp.publication.domain.entity.Edition;
 import com.enewschamp.publication.domain.service.EditionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Component("EditionPageHandler")
 @Slf4j
+@RequiredArgsConstructor
 public class EditionPageHandler implements IPageHandler {
-	@Autowired
-	private EditionService editionService;
-	@Autowired
-	ModelMapper modelMapper;
-	@Autowired
-	ObjectMapper objectMapper;
+	private final EditionService editionService;
+	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 	private Validator validator;
 
 	@Override

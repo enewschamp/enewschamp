@@ -31,18 +31,17 @@ import com.enewschamp.subscription.pricing.entity.IndividualPricing;
 import com.enewschamp.subscription.pricing.service.IndividualPricingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Component("IndividualPricingPageHandler")
 @Slf4j
+@RequiredArgsConstructor
 public class IndividualPricingPageHandler implements IPageHandler {
-	@Autowired
-	private IndividualPricingService individualPricingService;
-	@Autowired
-	private ModelMapper modelMapper;
-	@Autowired
-	private ObjectMapper objectMapper;
+	private final IndividualPricingService individualPricingService;
+	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 	private Validator validator;
 
 	@Override

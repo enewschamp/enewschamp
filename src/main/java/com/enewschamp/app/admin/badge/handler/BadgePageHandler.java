@@ -11,7 +11,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -33,23 +32,18 @@ import com.enewschamp.problem.BusinessException;
 import com.enewschamp.publication.domain.entity.Badge;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Component("BadgePageHandler")
 @Slf4j
+@RequiredArgsConstructor
 public class BadgePageHandler implements IPageHandler {
-	@Autowired
-	private BadgeService badgeService;
-
-	@Autowired
-	CommonService commonService;
-
-	@Autowired
-	ModelMapper modelMapper;
-
-	@Autowired
-	ObjectMapper objectMapper;
+	private final BadgeService badgeService;
+	private final CommonService commonService;
+	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 
 	private Validator validator;
 

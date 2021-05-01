@@ -11,7 +11,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -33,23 +32,18 @@ import com.enewschamp.publication.domain.entity.Avatar;
 import com.enewschamp.publication.domain.service.AvatarService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Component("AvatarPageHandler")
 @Slf4j
+@RequiredArgsConstructor
 public class AvatarPageHandler implements IPageHandler {
-	@Autowired
-	private AvatarService avatarService;
-
-	@Autowired
-	private ModelMapper modelMapper;
-
-	@Autowired
-	private ObjectMapper objectMapper;
-
-	@Autowired
-	private CommonService commonService;
+	private final AvatarService avatarService;
+	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
+	private final CommonService commonService;
 
 	private Validator validator;
 

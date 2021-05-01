@@ -11,7 +11,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -31,19 +30,18 @@ import com.enewschamp.security.entity.AppSecurity;
 import com.enewschamp.security.service.AppSecurityService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Component("AppSecurityPageHandler")
 @Slf4j
+@RequiredArgsConstructor
 public class AppSecurityPageHandler implements IPageHandler {
-	@Autowired
-	private AppSecurityService appSecurityService;
-	@Autowired
-	ModelMapper modelMapper;
-	@Autowired
-	ObjectMapper objectMapper;
-	private Validator validator;
+	private final AppSecurityService appSecurityService;
+	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
+	private  Validator validator;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {

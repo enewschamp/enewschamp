@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -25,16 +24,15 @@ import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 @Component("HelpDeskPageHandler")
+@RequiredArgsConstructor
 public class HelpDeskPageHandler implements IPageHandler {
-	@Autowired
-	private HelpdeskService helpDeskService;
-	@Autowired
-	ModelMapper modelMapper;
-	@Autowired
-	ObjectMapper objectMapper;
+	private final HelpdeskService helpDeskService;
+	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {

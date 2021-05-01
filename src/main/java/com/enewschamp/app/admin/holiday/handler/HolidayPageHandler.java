@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -23,16 +22,15 @@ import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 @Component("HolidayPageHandler")
+@RequiredArgsConstructor
 public class HolidayPageHandler implements IPageHandler {
-	@Autowired
-	private HolidayService holidayService;
-	@Autowired
-	private ModelMapper modelMapper;
-	@Autowired
-	private ObjectMapper objectMapper;
+	private final HolidayService holidayService;
+	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {

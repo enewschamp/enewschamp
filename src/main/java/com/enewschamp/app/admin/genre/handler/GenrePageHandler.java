@@ -11,7 +11,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -33,21 +32,18 @@ import com.enewschamp.publication.domain.entity.Genre;
 import com.enewschamp.publication.domain.service.GenreService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Component("GenrePageHandler")
 @Slf4j
+@RequiredArgsConstructor
 public class GenrePageHandler implements IPageHandler {
-	@Autowired
-	private GenreService genreService;
-	@Autowired
-	private CommonService commonService;
-
-	@Autowired
-	ModelMapper modelMapper;
-	@Autowired
-	ObjectMapper objectMapper;
+	private final GenreService genreService;
+	private final CommonService commonService;
+	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 	private Validator validator;
 
 	@Override
