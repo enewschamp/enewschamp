@@ -45,12 +45,11 @@ public class CityRepositoryCustomImpl extends RepositoryImpl implements IGeneric
 		if (!StringUtils.isEmpty(searchRequest.getName())) {
 			filterPredicates.add(cb.like(cityRoot.get(NAME_ID), "%" + searchRequest.getName() + "%"));
 		}
-		if (!StringUtils.isEmpty(searchRequest.getNewsEventsApplicable())) {
+		if (!StringUtils.isEmpty(searchRequest.getIsApplicableForNewsEvents())) {
 			filterPredicates
-					.add(cb.equal(cityRoot.get(IS_APPLICABLE_FOR_NEWS_EVENT), searchRequest.getNewsEventsApplicable()));
-		} else {
-			filterPredicates.add(cb.notEqual(cityRoot.get(IS_APPLICABLE_FOR_NEWS_EVENT), "Y"));
+					.add(cb.equal(cityRoot.get(IS_APPLICABLE_FOR_NEWS_EVENT), searchRequest.getIsApplicableForNewsEvents()));
 		}
+
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(cityRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query

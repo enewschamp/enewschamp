@@ -138,9 +138,6 @@ public class AvatarService extends AbstractDomainService {
 	public Page<Avatar> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Avatar> avatarList = repositoryCustom.findAll(pageable, null);
-		if (avatarList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return avatarList;
 	}
 

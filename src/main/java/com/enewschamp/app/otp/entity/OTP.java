@@ -40,8 +40,8 @@ public class OTP extends BaseEntity {
 	@Column(name = "emailId", length = 80)
 	private String emailId;
 
-	@Column(name = "phoneNo", length = 15)
-	private String phoneNo;
+	@Column(name = "phoneNumber", length = 15)
+	private String phoneNumber;
 
 	@NotNull
 	@Column(name = "otp")

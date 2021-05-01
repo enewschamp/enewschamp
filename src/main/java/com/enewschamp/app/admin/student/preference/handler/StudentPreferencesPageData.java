@@ -19,12 +19,11 @@ public class StudentPreferencesPageData extends PageData {
 	@NotNull(message = MessageConstants.READING_LEVEL_NOT_NULL)
 	@NotEmpty(message = MessageConstants.READING_LEVEL_NOT_EMPTY)
 	private String readingLevel;
+
 	private String dailyPublication;
 	private String scoresProgressReports;
 	private String alertsNotifications;
 	private String commsEmailId;
 	private String featureProfileInChamps;
-	private String champCity;
-	private String champProfilePic;
-	private String champSchool;
+
 }

@@ -1,5 +1,6 @@
 package com.enewschamp.app.admin.user.handler;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,6 +66,12 @@ public class UserPageHandler implements IPageHandler {
 		case "List":
 			pageDto = listUser(pageRequest);
 			break;
+		case "ActiveStatus":
+			pageDto = activateUserStatus(pageRequest);
+			break;
+		case "ResetPassword":
+			pageDto = resetPassword(pageRequest);
+			break;
 		default:
 			break;
 		}
@@ -94,6 +101,9 @@ public class UserPageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		UserPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserPageData.class);
 		validate(pageData, this.getClass().getName());
+		if(!pageData.getPassword().equals(pageData.getConfirmPassword())) {
+			throw new BusinessException(ErrorCodeConstants.PASSWORD_MISMATCH);
+		}
 		User user = saveImage(pageData);
 		mapUser(pageRequest, pageDto, user);
 		return pageDto;
@@ -154,6 +164,29 @@ public class UserPageHandler implements IPageHandler {
 		mapUser(pageRequest, pageDto, user);
 		return pageDto;
 	}
+	
+	@SneakyThrows
+	private PageDTO activateUserStatus(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		UserPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserPageData.class);
+		User user = modelMapper.map(pageData, User.class);
+		user = userService.activate(user);
+		mapUser(pageRequest, pageDto, user);
+		return pageDto;
+	}
+	
+	@SneakyThrows
+	private PageDTO resetPassword(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		UserPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserPageData.class);
+		if(!pageData.getPassword().equals(pageData.getConfirmPassword())) {
+			throw new BusinessException(ErrorCodeConstants.PASSWORD_MISMATCH);
+		}
+		User user = modelMapper.map(pageData, User.class);
+		user = userService.resetPassword(user);
+		mapUser(pageRequest, pageDto, user);
+		return pageDto;
+	}
 
 	@SneakyThrows
 	private PageDTO listUser(PageRequestDTO pageRequest) {
@@ -192,6 +225,8 @@ public class UserPageHandler implements IPageHandler {
 		}
 		return userPageDataList;
 	}
+	
+	
 
 	private User saveImage(UserPageData userDTO) {
 		User user = modelMapper.map(userDTO, User.class);
@@ -237,8 +272,20 @@ public class UserPageHandler implements IPageHandler {
 		}
 		String currentImageName = user.getImageName();
 		userDto.setImageName(currentImageName);
+		LocalDateTime lastSuccessfulLoginAttempt = user.getLastSuccessfulLoginAttempt();
+		LocalDateTime lastUnSuccessfulLoginAttempt = user.getLastUnsuccessfulLoginAttempt();
+		String isActive = user.getIsActive();
+		String isAccountLocked = user.getIsAccountLocked();
+		String forcePasswordChange = user.getForcePasswordChange();
 		user = modelMapper.map(userDto, User.class);
+		
 		user.setRecordInUse(RecordInUseType.Y);
+		user.setLastSuccessfulLoginAttempt(lastSuccessfulLoginAttempt);
+		user.setLastUnsuccessfulLoginAttempt(lastUnSuccessfulLoginAttempt);
+		user.setIsActive(isActive);
+		user.setIsAccountLocked(isAccountLocked);
+		user.setForcePasswordChange(forcePasswordChange);
+		
 		user = userService.update(user);
 		boolean updateFlag = false;
 		if ("Y".equalsIgnoreCase(userDto.getImageUpdate())) {
@@ -265,5 +312,7 @@ public class UserPageHandler implements IPageHandler {
 		user.setImageBase64(null);
 		return user;
 	}
+	
+	
 
 }

@@ -18,8 +18,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "stakeholders",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "name", "surname" }) })
+@Table(name = "stakeholders")
 public class StakeHolder extends BaseEntity {
 
 	private static final long serialVersionUID = -6268188630471167106L;

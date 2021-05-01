@@ -50,13 +50,13 @@ public class AppSecFilter extends GenericFilterBean {
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
-		String callbackURL = propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_CALLBACK_URL);
+	//	String callbackURL = propertiesService.getValue("StudentApp", PropertyConstants.PAYTM_CALLBACK_URL);
 		final MultiReadHttpServletRequest requestWrapper = new MultiReadHttpServletRequest(request);
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
-		if (request.getRequestURL().toString().equalsIgnoreCase(callbackURL)) {
-			filterChain.doFilter(request, response);
-			return;
-		}
+//		if (request.getRequestURL().toString().equalsIgnoreCase(callbackURL)) {
+//			filterChain.doFilter(request, response);
+//			return;
+//		}
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
 		response.setHeader("Access-Control-Allow-Headers", "*");

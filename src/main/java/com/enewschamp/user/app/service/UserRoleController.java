@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.enewschamp.user.app.dto.UserRoleDTO;
-import com.enewschamp.user.app.dto.UserRoleKeyDTO;
 import com.enewschamp.user.domain.entity.UserRole;
-import com.enewschamp.user.domain.entity.UserRoleKey;
 import com.enewschamp.user.domain.service.UserRoleService;
 
 import lombok.extern.java.Log;
@@ -35,70 +33,50 @@ public class UserRoleController {
 	@Autowired
 	private UserRoleService userRoleService;
 
-	@PostMapping(value = "/admin/users/{userId}/roles")
-	public ResponseEntity<UserRoleDTO> create(@RequestBody @Valid UserRoleDTO userRoleDTO,
-			@PathVariable String userId) {
+	@PostMapping(value = "/admin/userroles")
+	public ResponseEntity<UserRoleDTO> create(@RequestBody @Valid UserRoleDTO userRoleDTO) {
 		UserRole userRole = modelMapper.map(userRoleDTO, UserRole.class);
 		userRole = userRoleService.create(userRole);
 		userRoleDTO = modelMapper.map(userRole, UserRoleDTO.class);
 		return new ResponseEntity<UserRoleDTO>(userRoleDTO, HttpStatus.CREATED);
 	}
 
-	@PutMapping(value = "/admin/users/{userId}/roles/{roleId}")
-	public ResponseEntity<UserRoleDTO> update(@RequestBody @Valid UserRoleDTO userRoleDTO, @PathVariable String userId,
-			@PathVariable String roleId) {
-		UserRoleKeyDTO userRoleKeyDTO = new UserRoleKeyDTO();
-		userRoleKeyDTO.setUserId(userId);
-		userRoleKeyDTO.setRoleId(roleId);
-		userRoleDTO.setUserRoleKey(userRoleKeyDTO);
+	@PutMapping(value = "/admin/userroles/{userRoleId}")
+	public ResponseEntity<UserRoleDTO> update(@RequestBody @Valid UserRoleDTO userRoleDTO,
+			@PathVariable Long userRoleId) {
+		userRoleDTO.setUserRoleId(userRoleDTO.getUserRoleId());
 		UserRole userRole = modelMapper.map(userRoleDTO, UserRole.class);
 		userRole = userRoleService.update(userRole);
 		userRoleDTO = modelMapper.map(userRole, UserRoleDTO.class);
 		return new ResponseEntity<UserRoleDTO>(userRoleDTO, HttpStatus.OK);
 	}
 
-	@PatchMapping(value = "/admin/users/{userId}/roles/{roleId}")
-	public ResponseEntity<UserRoleDTO> patch(@RequestBody @Valid UserRoleDTO userRoleDTO, @PathVariable String userId,
-			@PathVariable String roleId) {
-
-		UserRoleKeyDTO userRoleKeyDTO = new UserRoleKeyDTO();
-		userRoleKeyDTO.setUserId(userId);
-		userRoleKeyDTO.setRoleId(roleId);
-		userRoleDTO.setUserRoleKey(userRoleKeyDTO);
+	@PatchMapping(value = "/admin/userroles/{userRoleId}")
+	public ResponseEntity<UserRoleDTO> patch(@RequestBody @Valid UserRoleDTO userRoleDTO,
+			@PathVariable Long userRoleId) {
+		userRoleDTO.setUserRoleId(userRoleId);
 		UserRole userRole = modelMapper.map(userRoleDTO, UserRole.class);
 		userRole = userRoleService.patch(userRole);
 		userRoleDTO = modelMapper.map(userRole, UserRoleDTO.class);
 		return new ResponseEntity<UserRoleDTO>(userRoleDTO, HttpStatus.OK);
 	}
 
-	@DeleteMapping(value = "/admin/users/{userId}/roles/{roleId}")
-	public ResponseEntity<Void> delete(@PathVariable String userId, @PathVariable String roleId) {
-		UserRoleKeyDTO userRoleKeyDTO = new UserRoleKeyDTO();
-		userRoleKeyDTO.setUserId(userId);
-		userRoleKeyDTO.setRoleId(roleId);
-		UserRoleKey userRoleKey = modelMapper.map(userRoleKeyDTO, UserRoleKey.class);
-		userRoleService.delete(userRoleKey);
+	@DeleteMapping(value = "/admin/userroles/{userRoleId}")
+	public ResponseEntity<Void> delete(@PathVariable Long userRoleId) {
+		userRoleService.delete(userRoleId);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/admin/users/{userId}/roles/{roleId}")
-	public ResponseEntity<UserRoleDTO> get(@PathVariable String userId, @PathVariable String roleId) {
-		UserRoleKeyDTO userRoleKeyDTO = new UserRoleKeyDTO();
-		userRoleKeyDTO.setUserId(userId);
-		userRoleKeyDTO.setRoleId(roleId);
-		UserRoleKey userRoleKey = modelMapper.map(userRoleKeyDTO, UserRoleKey.class);
-		UserRole userRole = userRoleService.get(userRoleKey);
+	@GetMapping(value = "/admin/userroles/{userRoleId}")
+	public ResponseEntity<UserRoleDTO> get(@PathVariable Long userRoleId) {
+		UserRole userRole = userRoleService.get(userRoleId);
 		UserRoleDTO userRoleDTO = modelMapper.map(userRole, UserRoleDTO.class);
 		return new ResponseEntity<UserRoleDTO>(userRoleDTO, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/admin/users/{userId}/roles/{roleId}/audit")
-	public ResponseEntity<String> getAudit(@PathVariable String userId, @PathVariable String roleId) {
-		UserRoleKeyDTO userRoleKeyDTO = new UserRoleKeyDTO();
-		userRoleKeyDTO.setUserId(userId);
-		userRoleKeyDTO.setRoleId(roleId);
-		UserRoleKey userRoleKey = modelMapper.map(userRoleKeyDTO, UserRoleKey.class);
-		String audit = userRoleService.getAudit(userRoleKey);
+	@GetMapping(value = "/admin/userroles/{userRoleId}/audit")
+	public ResponseEntity<String> getAudit(@PathVariable Long userRoleId) {
+		String audit = userRoleService.getAudit(userRoleId);
 		return new ResponseEntity<String>(audit, HttpStatus.OK);
 	}
 

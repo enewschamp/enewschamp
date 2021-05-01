@@ -41,9 +41,10 @@ public class ErrorCodesRepositoryCustomImpl extends RepositoryImpl
 		if (!StringUtils.isEmpty(searchRequest.getErrorCodeId()))
 			filterPredicates.add(cb.equal(errorCodesRoot.get(ERROR_CODE_ID), searchRequest.getErrorCodeId()));
 
-		if (!StringUtils.isEmpty(searchRequest.getErrorCategory()))
-			filterPredicates.add(cb.equal(errorCodesRoot.get(ERROR_CATEGORY), searchRequest.getErrorCategory()));
-
+		if (!StringUtils.isEmpty(searchRequest.getErrorCategory())) {
+			filterPredicates.add(cb.like(errorCodesRoot.get(ERROR_CATEGORY), "%" + searchRequest.getErrorCategory() + "%"));
+		}
+		
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(errorCodesRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query

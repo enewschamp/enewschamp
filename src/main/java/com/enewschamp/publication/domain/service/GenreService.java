@@ -127,9 +127,6 @@ public class GenreService extends AbstractDomainService {
 	public Page<Genre> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<Genre> genreList = repositoryCustom.findAll(pageable, null);
-		if (genreList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return genreList;
 	}
 

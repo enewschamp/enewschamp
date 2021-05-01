@@ -50,7 +50,6 @@ public class Celebration extends BaseEntity {
 	@Column(name = "occasion")
 	private String occasion;
 
-	@NotNull
 	@Column(name = "readingLevel", length = 1)
 	private int readingLevel;
 

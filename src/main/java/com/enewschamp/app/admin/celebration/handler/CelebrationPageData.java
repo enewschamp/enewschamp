@@ -28,11 +28,8 @@ public class CelebrationPageData extends PageData {
 	@NotNull(message = MessageConstants.DATE_NOT_NULL)
 	private LocalDate date;
 
-	@NotNull(message = MessageConstants.OCCASION_NOT_NULL)
-	@NotEmpty(message = MessageConstants.OCCASION_NOT_EMPTY)
 	private String occasion;
 
-	@NotNull(message = MessageConstants.READING_LEVEL_NOT_NULL)
 	private int readingLevel;
 
 	private String imageBase64;

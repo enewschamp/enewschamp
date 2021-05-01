@@ -35,19 +35,17 @@ public class UserRoleRepositoryCustomImpl extends RepositoryImpl
 	public Page<UserRole> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<UserRole> criteriaQuery = cb.createQuery(UserRole.class);
-		Root<UserRole> studentachievementRoot = criteriaQuery.from(UserRole.class);
+		Root<UserRole> userRoleRoot = criteriaQuery.from(UserRole.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getUserId()))
-			filterPredicates
-					.add(cb.equal(studentachievementRoot.get(USER_ROLE_KEY).get(USER_ID), searchRequest.getUserId()));
+			filterPredicates.add(cb.equal(userRoleRoot.get(USER_ID), searchRequest.getUserId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getRoleId()))
-			filterPredicates
-					.add(cb.equal(studentachievementRoot.get(USER_ROLE_KEY).get(ROLE_ID), searchRequest.getRoleId()));
+			filterPredicates.add(cb.equal(userRoleRoot.get(ROLE_ID), searchRequest.getRoleId()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
-		criteriaQuery.orderBy(cb.desc(studentachievementRoot.get(CommonConstants.OPERATION_DATE_TIME)));
+		criteriaQuery.orderBy(cb.desc(userRoleRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<UserRole> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -56,7 +54,7 @@ public class UserRoleRepositoryCustomImpl extends RepositoryImpl
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<UserRole> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, studentachievementRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, userRoleRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

@@ -106,14 +106,15 @@ public class AdminPageController {
 
 	private PageDTO processRequest(String pageName, String actionName, PageRequestDTO pageRequest, String context) {
 		// Process current page
+
 		PageDTO pageResponse = pageHandlerFactory.getPageHandler(pageName, context).handleAction(pageRequest);
 		// if ("Menu".equalsIgnoreCase(pageResponse.getPageName())) {
-		String propertiesLabel = propertiesFrontendService.getValue(pageRequest.getHeader().getModule(),
-				PropertyConstants.PROPERTIES_LABEL);
-		if (!propertiesLabel.equals(pageRequest.getHeader().getPropertiesLabel())) {
-			pageResponse.setGlobalProperties(
-					propertiesFrontendService.getPropertyList(pageRequest.getHeader().getModule()));
-		}
+//		String propertiesLabel = propertiesFrontendService.getValue(pageRequest.getHeader().getModule(),
+//				PropertyConstants.PROPERTIES_LABEL);
+//		if (!propertiesLabel.equals(pageRequest.getHeader().getPropertiesLabel())) {
+//			pageResponse.setGlobalProperties(
+//					propertiesFrontendService.getPropertyList(pageRequest.getHeader().getModule()));
+//		}
 		// }
 		return pageResponse;
 	}

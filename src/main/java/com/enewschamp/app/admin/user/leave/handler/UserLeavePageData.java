@@ -31,7 +31,7 @@ public class UserLeavePageData extends PageData {
 	@NotNull(message = MessageConstants.NO_OF_DAYS_NOT_NULL)
 	private int numberOfDays;
 
-	private LeaveApprovalStatus approvalStatus;
+	private String approvalStatus;
 	private LocalDateTime applicationDateTime;
 	private String updateApplicationDateTime;
 	private String comments;

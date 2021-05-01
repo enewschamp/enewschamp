@@ -54,7 +54,7 @@ public class UserController {
 			String newImageName = user.getUserId() + "_" + System.currentTimeMillis();
 			String imageType = userDTO.getImageTypeExt();
 			String currentImageName = user.getImageName();
-			boolean saveImageFlag = commonService.saveImages("Admin", "user", imageType, userDTO.getBase64Image(),
+			boolean saveImageFlag = commonService.saveImages("Admin", "user", imageType, userDTO.getImageBase64(),
 					newImageName);
 			if (saveImageFlag) {
 				user.setImageName(newImageName + "." + imageType);
@@ -85,7 +85,7 @@ public class UserController {
 			String newImageName = user.getUserId() + "_" + System.currentTimeMillis();
 			String imageType = userDTO.getImageTypeExt();
 			String currentImageName = user.getImageName();
-			boolean saveImageFlag = commonService.saveImages("Admin", "user", imageType, userDTO.getBase64Image(),
+			boolean saveImageFlag = commonService.saveImages("Admin", "user", imageType, userDTO.getImageBase64(),
 					newImageName);
 			if (saveImageFlag) {
 				user.setImageName(newImageName + "." + imageType);

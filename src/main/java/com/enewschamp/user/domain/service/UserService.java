@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.dashboard.handler.UserView;
@@ -69,6 +68,7 @@ public class UserService extends AbstractDomainService {
 			if (user.getCreationDateTime() == null) {
 				user.setCreationDateTime(LocalDateTime.now());
 			}
+			user.setForcePasswordChange("Y");
 			userEntity = repository.save(user);
 		} catch (DataIntegrityViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
@@ -261,6 +261,36 @@ public class UserService extends AbstractDomainService {
 		existingUser.setOperationDateTime(null);
 		return repository.save(existingUser);
 	}
+	
+	public User activate(User userEntity) {
+		String userId = userEntity.getUserId();
+		User existingUser = get(userId);
+		if (existingUser.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingUser.setIsActive(userEntity.getIsActive());
+		existingUser.setOperationDateTime(null);
+		return repository.save(existingUser);
+	}
+	
+
+	public User resetPassword(User userEntity) {
+		String userId = userEntity.getUserId();
+		User existingUser = get(userId);
+		if (existingUser.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		String password = existingUser.getPassword();
+		String password1 = existingUser.getPassword1();
+		existingUser.setPassword(userEntity.getPassword());
+		existingUser.setPassword1(password);
+		existingUser.setPassword2(password1);
+		existingUser.setIsAccountLocked("");
+		existingUser.setForcePasswordChange("Y");
+		existingUser.setOperationDateTime(null);
+		return repository.save(existingUser);
+	}
+
 
 	public User reInstate(User userEntity) {
 		String UserId = userEntity.getUserId();

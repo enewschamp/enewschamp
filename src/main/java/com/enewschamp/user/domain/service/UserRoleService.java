@@ -19,7 +19,6 @@ import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.domain.service.AbstractDomainService;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.user.domain.entity.UserRole;
-import com.enewschamp.user.domain.entity.UserRoleKey;
 
 @Service
 public class UserRoleService extends AbstractDomainService {
@@ -51,8 +50,8 @@ public class UserRoleService extends AbstractDomainService {
 	}
 
 	public UserRole update(UserRole userRole) {
-		UserRoleKey userRoleKey = userRole.getUserRoleKey();
-		UserRole existingUserRole = load(userRoleKey);
+		Long userRoleId = userRole.getUserRoleId();
+		UserRole existingUserRole = load(userRoleId);
 		if (existingUserRole.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
@@ -61,28 +60,27 @@ public class UserRoleService extends AbstractDomainService {
 	}
 
 	public UserRole patch(UserRole userRole) {
-		UserRoleKey userRoleKey = userRole.getUserRoleKey();
-		UserRole existingEntity = load(userRoleKey);
+		Long userRoleId = userRole.getUserRoleId();
+		UserRole existingEntity = load(userRoleId);
 		modelMapperForPatch.map(userRole, existingEntity);
 		return repository.save(existingEntity);
 	}
 
-	public void delete(UserRoleKey userRoleKey) {
-		repository.deleteById(userRoleKey);
+	public void delete(Long userRoleId) {
+		repository.deleteById(userRoleId);
 	}
 
-	public UserRole load(UserRoleKey userRoleKey) {
-		Optional<UserRole> existingEntity = repository.findById(userRoleKey);
+	public UserRole load(Long userRoleId) {
+		Optional<UserRole> existingEntity = repository.findById(userRoleId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
-			throw new BusinessException(ErrorCodeConstants.USER_ROLE_NOT_FOUND, userRoleKey.getRoleId(),
-					userRoleKey.getUserId(), userRoleKey.getDayOfTheWeek().toString());
+			throw new BusinessException(ErrorCodeConstants.USER_ROLE_NOT_FOUND, "" + userRoleId);
 		}
 	}
 
-	public UserRole get(UserRoleKey userRoleKey) {
-		Optional<UserRole> existingEntity = repository.findById(userRoleKey);
+	public UserRole get(Long userRoleId) {
+		Optional<UserRole> existingEntity = repository.findById(userRoleId);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
@@ -99,8 +97,8 @@ public class UserRoleService extends AbstractDomainService {
 		}
 	}
 
-	public UserRole getByUserId(String userId) {
-		Optional<UserRole> existingEntity = repository.getByUserId(userId);
+	public UserRole getByUserId(String userId, String module) {
+		Optional<UserRole> existingEntity = repository.getByUserId(userId, module);
 		if (existingEntity.isPresent()) {
 			return existingEntity.get();
 		} else {
@@ -108,21 +106,21 @@ public class UserRoleService extends AbstractDomainService {
 		}
 	}
 
-	public String getAudit(UserRoleKey userRoleKey) {
+	public String getAudit(Long userRoleId) {
 		UserRole userRole = new UserRole();
-		userRole.setUserRoleKey(userRoleKey);
-		return auditService.getEntityAudit(userRoleKey);
+		userRole.setUserRoleId(userRoleId);
+		return auditService.getEntityAudit(userRoleId);
 	}
 
 	public UserRole read(UserRole userRole) {
-		UserRoleKey userRoleKey = userRole.getUserRoleKey();
-		UserRole existingEntity = load(userRoleKey);
+		Long userRoleId = userRole.getUserRoleId();
+		UserRole existingEntity = load(userRoleId);
 		return existingEntity;
 	}
 
 	public UserRole close(UserRole userRole) {
-		UserRoleKey userRoleKey = userRole.getUserRoleKey();
-		UserRole existingEntity = load(userRoleKey);
+		Long userRoleId = userRole.getUserRoleId();
+		UserRole existingEntity = load(userRoleId);
 		if (existingEntity.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
@@ -132,8 +130,8 @@ public class UserRoleService extends AbstractDomainService {
 	}
 
 	public UserRole reInstate(UserRole userRole) {
-		UserRoleKey userRoleKey = userRole.getUserRoleKey();
-		UserRole existingEntity = load(userRoleKey);
+		Long userRoleId = userRole.getUserRoleId();
+		UserRole existingEntity = load(userRoleId);
 		if (existingEntity.getRecordInUse().equals(RecordInUseType.Y)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
 		}

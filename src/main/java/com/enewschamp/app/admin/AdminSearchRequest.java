@@ -3,6 +3,9 @@ package com.enewschamp.app.admin;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import javax.persistence.Convert;
+
+import com.enewschamp.app.common.StringCryptoConverter;
 import com.enewschamp.app.user.login.entity.UserAction;
 import com.enewschamp.app.user.login.entity.UserType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -19,7 +22,7 @@ public class AdminSearchRequest {
 	private String stateId;
 	private String name;
 	private String surname;
-	private String newsEventsApplicable;
+	private String isApplicableForNewsEvents;
 	private Long studentId;
 	private LocalDateTime createDateFrom;
 	private LocalDateTime createDateTo;
@@ -54,7 +57,6 @@ public class AdminSearchRequest {
 	private String role;
 	private String pageName;
 	private Long userLoginId;
-	private UserType userType;
 	private String deviceId;
 	private String loginFlag;
 	private String emailId;

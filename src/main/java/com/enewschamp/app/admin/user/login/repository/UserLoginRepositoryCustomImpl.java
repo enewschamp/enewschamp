@@ -34,23 +34,21 @@ public class UserLoginRepositoryCustomImpl extends RepositoryImpl implements IGe
 	public Page<UserLogin> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<UserLogin> criteriaQuery = cb.createQuery(UserLogin.class);
-		Root<UserLogin> studentachievementRoot = criteriaQuery.from(UserLogin.class);
+		Root<UserLogin> userLoginRoot = criteriaQuery.from(UserLogin.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 
-		if (!StringUtils.isEmpty(searchRequest.getUserId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get(USER_ID), searchRequest.getUserId()));
-
-		if (!StringUtils.isEmpty(searchRequest.getUserType()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get(USER_TYPE), searchRequest.getUserType()));
-
+		if (!StringUtils.isEmpty(searchRequest.getUserId())) {
+			filterPredicates.add(cb.like(userLoginRoot.get(USER_ID), "%" + searchRequest.getUserId() + "%"));
+		}
+		
 		if (!StringUtils.isEmpty(searchRequest.getLoginFlag()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get(LOGIN_FLAG), searchRequest.getLoginFlag()));
+			filterPredicates.add(cb.equal(userLoginRoot.get(LOGIN_FLAG), searchRequest.getLoginFlag()));
 
 		if (!StringUtils.isEmpty(searchRequest.getAppName()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get(APP_NAME), searchRequest.getAppName()));
+			filterPredicates.add(cb.equal(userLoginRoot.get(APP_NAME), searchRequest.getAppName()));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
-		criteriaQuery.orderBy(cb.desc(studentachievementRoot.get(CommonConstants.OPERATION_DATE_TIME)));
+		criteriaQuery.orderBy(cb.desc(userLoginRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<UserLogin> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -59,7 +57,7 @@ public class UserLoginRepositoryCustomImpl extends RepositoryImpl implements IGe
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<UserLogin> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, studentachievementRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, userLoginRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

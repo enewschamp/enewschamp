@@ -46,6 +46,7 @@ public class UserPageData extends PageData {
 	private String emailId2;
 	private String comments;
 	private String password;
+	private String confirmPassword;
 	private String password1;
 	private String password2;
 

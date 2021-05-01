@@ -1,8 +1,13 @@
 package com.enewschamp.app.admin.otp.repository;
 
+import java.security.Key;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -38,10 +43,11 @@ public class OTPRepositoryCustomImpl extends RepositoryImpl implements IGenericL
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getEmailId()))
-			filterPredicates.add(cb.like(otpRoot.get(EMAIL_ID), "%" + searchRequest.getEmailId() + "%"));
+			filterPredicates.add(cb.equal(otpRoot.get(EMAIL_ID), searchRequest.getEmailId()));
 
+		
 		if (!StringUtils.isEmpty(searchRequest.getPhoneNumber()))
-			filterPredicates.add(cb.equal(otpRoot.get(PHONE_NUMBER), searchRequest.getPhoneNumber()));
+			filterPredicates.add(cb.like(otpRoot.get(PHONE_NUMBER), "%" + searchRequest.getPhoneNumber() + "%"));
 
 		if (!StringUtils.isEmpty(searchRequest.getVerified()))
 			filterPredicates.add(cb.equal(otpRoot.get(VERIFIED), searchRequest.getVerified()));
@@ -60,4 +66,32 @@ public class OTPRepositoryCustomImpl extends RepositoryImpl implements IGenericL
 		return new PageImpl<>(list, pageable, count);
 	}
 
+	private String encrypt(String value) {
+		Key key;
+		try {
+			key = new SecretKeySpec("3s6v9y$B&E)H@McQ".getBytes(), "AES");
+			Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			byte[] iv = new byte[c.getBlockSize()];
+			c.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
+			return new String(Base64.getEncoder().encode(c.doFinal(value.getBytes()))).toString();
+//			System.out.println(">>>>Encrypted value>>>>>>"
+//					+ new String(Base64.getEncoder().encode(c.doFinal(value.getBytes()))).toString());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	
+	public String  decrypt(String value) {
+		Key key;
+		try {
+			key = new SecretKeySpec("3s6v9y$B&E)H@McQ".getBytes(), "AES");
+			Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			byte[] iv = new byte[c.getBlockSize()];
+			c.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+			return new String(c.doFinal(Base64.getDecoder().decode(value)));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

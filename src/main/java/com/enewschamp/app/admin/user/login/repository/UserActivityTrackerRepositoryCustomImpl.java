@@ -41,9 +41,6 @@ public class UserActivityTrackerRepositoryCustomImpl extends RepositoryImpl
 		if (!StringUtils.isEmpty(searchRequest.getUserId()))
 			filterPredicates.add(cb.like(userActivityTrackerRoot.get(USER_ID), "%" + searchRequest.getUserId() + "%"));
 
-		if (!StringUtils.isEmpty(searchRequest.getUserType()))
-			filterPredicates.add(cb.equal(userActivityTrackerRoot.get(USER_TYPE), searchRequest.getUserType()));
-
 		if (!StringUtils.isEmpty(searchRequest.getDeviceId()))
 			filterPredicates
 					.add(cb.like(userActivityTrackerRoot.get(DEVICE_ID), "%" + searchRequest.getDeviceId() + "%"));

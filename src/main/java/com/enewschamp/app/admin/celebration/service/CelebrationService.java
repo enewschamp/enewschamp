@@ -20,7 +20,6 @@ import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.subscription.domain.entity.StudentPayment;
 
 @Service
 public class CelebrationService {

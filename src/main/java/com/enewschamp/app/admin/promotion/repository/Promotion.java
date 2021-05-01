@@ -61,11 +61,9 @@ public class Promotion extends BaseEntity {
 	@Column(name = "cityId", length = 50)
 	private String cityId;
 
-	@NotNull
 	@Column(name = "promotionDetails", length = 2000)
 	private String promotionDetails;
 
-	@NotNull
 	@Column(name = "description", length = 200)
 	private String description;
 }

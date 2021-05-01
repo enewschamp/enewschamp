@@ -36,8 +36,7 @@ public class UserLeave extends BaseEntity {
 
 	@NotNull
 	@Column(name = "ApprovalStatus")
-	@Enumerated(EnumType.STRING)
-	private LeaveApprovalStatus approvalStatus;
+	private String approvalStatus;
 
 	@NotNull
 	@Column(name = "ApplicationDateTime")

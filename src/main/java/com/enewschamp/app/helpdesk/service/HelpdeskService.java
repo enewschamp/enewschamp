@@ -1,5 +1,6 @@
 package com.enewschamp.app.helpdesk.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,12 +45,18 @@ public class HelpdeskService {
 	}
 
 	public Helpdesk update(Helpdesk helpDeskEntity) {
+		Helpdesk existingHelpdeskByStudent = getByStudentId(helpDeskEntity.getStudentId());
+		if (existingHelpdeskByStudent != null && !(existingHelpdeskByStudent.getHelpdeskId().equals(helpDeskEntity.getHelpdeskId()))) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
 		Long helpdeskId = helpDeskEntity.getHelpdeskId();
 		Helpdesk existingHelpdesk = get(helpdeskId);
+		LocalDateTime createDateTime = existingHelpdesk.getCreateDateTime();
 		if (existingHelpdesk.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(helpDeskEntity, existingHelpdesk);
+		existingHelpdesk.setCreateDateTime(createDateTime);
 		return helpdeskRespository.save(existingHelpdesk);
 	}
 

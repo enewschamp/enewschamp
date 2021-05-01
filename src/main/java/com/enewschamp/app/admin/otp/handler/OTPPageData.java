@@ -22,7 +22,7 @@ public class OTPPageData extends PageData {
 	@NotEmpty(message = MessageConstants.EMAIL_ID_NOT_EMPTY)
 	private String emailId;
 
-	private String phoneNo;
+	private String phoneNumber;
 
 	@NotNull(message = MessageConstants.OTP_NOT_NULL)
 	@NotEmpty(message = MessageConstants.OTP_NOT_EMPTY)
@@ -30,8 +30,6 @@ public class OTPPageData extends PageData {
 
 	private LocalDateTime otpGenTime;
 
-	@NotNull(message = MessageConstants.VERIFIED_NOT_NULL)
-	@NotEmpty(message = MessageConstants.VERIFIED_NOT_EMPTY)
 	private String verified;
 
 	private LocalDateTime verificationTime;

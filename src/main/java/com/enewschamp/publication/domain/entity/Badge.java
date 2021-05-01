@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "Badge",uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "readingLevel", "genreId", "nameId" }) })
+		@UniqueConstraint(columnNames = { "editionId", "genreId", "readingLevel", "nameId" }) })
 public class Badge extends BaseEntity {
 
 	/**

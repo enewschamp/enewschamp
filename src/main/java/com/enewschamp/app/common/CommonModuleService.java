@@ -124,7 +124,7 @@ public class CommonModuleService {
 			loginPageData.setUserName(user.getName() + " " + user.getSurname());
 			loginPageData.setTodaysDate(LocalDate.now());
 			loginPageData.setTheme(user.getTheme());
-			loginPageData.setUserRole(userLoginBusiness.getUserRole(userId));
+			loginPageData.setUserRole(userLoginBusiness.getUserRole(userId, module));
 			loginPageData.setLoginCredentials(userLoginService.getOperatorLogin(userId, userType).getTokenId());
 			loginPageData
 					.setTokenValidity(propertiesService.getValue(module, PropertyConstants.LOGIN_SESSION_EXPIRY_SECS));

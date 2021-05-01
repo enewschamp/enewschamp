@@ -15,17 +15,17 @@ import com.enewschamp.user.domain.entity.User;
 interface UserRepository extends JpaRepository<User, String> {
 
 	@Query(value = "select a.userId as id, a.name as name, a.surname as surname,a.isActive as isActive from User a, UserRole b"
-			+ " where a.userId = b.userRoleKey.userId and b.userRoleKey.roleId = 'PUBLISHER'")
+			+ " where a.userId = b.userId and b.roleId = 'PUBLISHER'")
 	public List<LOVProjection> getPublisherLOV();
 
 	@Query(value = "select a.userId as id, a.name as name,a.surname as surname,a.isActive as isActive from User a, UserRole b"
-			+ " where a.userId = b.userRoleKey.userId and b.userRoleKey.roleId = 'AUTHOR'")
+			+ " where a.userId = b.userId and b.roleId = 'AUTHOR'")
 	public List<LOVProjection> getAuthorLOV();
 
 	@Query(value = "select a.userId as id, a.name as name, a.surname as surname,a.isActive as isActive from User a, UserRole b"
-			+ " where a.userId = b.userRoleKey.userId and b.userRoleKey.roleId = 'EDITOR'")
+			+ " where a.userId = b.userId and b.roleId = 'EDITOR'")
 	public List<LOVProjection> getEditorLOV();
-
+	
 	@Query(value = "select a.title as title,a.userId as userId,a.name as name, a.surname as surname,a.otherNames as otherNames,a.gender as gender,a.imageName as image,a.emailId1 as email,a.mobileNumber1 as mobile,a.isActive as isActive from User a")
 	public List<BOUserList> getBOUserList();
 

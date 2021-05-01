@@ -22,7 +22,6 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.user.domain.entity.UserRole;
-import com.enewschamp.user.domain.entity.UserRoleKey;
 import com.enewschamp.user.domain.service.UserRoleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -96,9 +95,7 @@ public class UserRolePageHandler implements IPageHandler {
 
 	private UserRole mapUserRoleData(PageRequestDTO pageRequest, UserRolePageData pageData) {
 		UserRole userRole = modelMapper.map(pageData, UserRole.class);
-		mapRoleKey(pageData, userRole);
 		userRole.setRecordInUse(RecordInUseType.Y);
-
 		return userRole;
 	}
 
@@ -125,26 +122,17 @@ public class UserRolePageHandler implements IPageHandler {
 		PageDTO pageDto = new PageDTO();
 		UserRolePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserRolePageData.class);
 		UserRole userRole = modelMapper.map(pageData, UserRole.class);
-		mapRoleKey(pageData, userRole);
 		userRole = userRoleService.read(userRole);
 		mapUserRole(pageRequest, pageDto, userRole);
 		return pageDto;
 	}
 
-	private void mapRoleKey(UserRolePageData pageData, UserRole userRole) {
-		UserRoleKey roleKey = new UserRoleKey();
-		roleKey.setRoleId(pageData.getRoleId());
-		roleKey.setUserId(pageData.getUserId());
-		roleKey.setDayOfTheWeek(pageData.getDayOfTheWeek());
-		userRole.setUserRoleKey(roleKey);
-	}
 
 	@SneakyThrows
 	private PageDTO reinstateUserRole(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserRolePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserRolePageData.class);
 		UserRole userRole = modelMapper.map(pageData, UserRole.class);
-		mapRoleKey(pageData, userRole);
 		userRole = userRoleService.reInstate(userRole);
 		mapUserRole(pageRequest, pageDto, userRole);
 		return pageDto;
@@ -153,19 +141,17 @@ public class UserRolePageHandler implements IPageHandler {
 	private UserRolePageData mapPageData(UserRole userRole) {
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		UserRolePageData pageData = modelMapper.map(userRole, UserRolePageData.class);
-		pageData.setRoleId(userRole.getUserRoleKey().getRoleId());
-		pageData.setUserId(userRole.getUserRoleKey().getUserId());
-		pageData.setDayOfTheWeek(userRole.getUserRoleKey().getDayOfTheWeek());
+		pageData.setRoleId(userRole.getRoleId());
+		pageData.setUserId(userRole.getUserId());
 		pageData.setLastUpdate(userRole.getOperationDateTime());
 		return pageData;
 	}
-
+	
 	@SneakyThrows
 	private PageDTO closeUserRole(PageRequestDTO pageRequest) {
 		PageDTO pageDto = new PageDTO();
 		UserRolePageData pageData = objectMapper.readValue(pageRequest.getData().toString(), UserRolePageData.class);
 		UserRole userRole = modelMapper.map(pageData, UserRole.class);
-		mapRoleKey(pageData, userRole);
 		userRole = userRoleService.close(userRole);
 		mapUserRole(pageRequest, pageDto, userRole);
 		return pageDto;
@@ -200,10 +186,9 @@ public class UserRolePageHandler implements IPageHandler {
 			for (UserRole userRole : pageDataList) {
 				modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 				UserRolePageData userRolePageData = modelMapper.map(userRole, UserRolePageData.class);
-				userRolePageData.setRoleId(userRole.getUserRoleKey().getRoleId());
-				userRolePageData.setUserId(userRole.getUserRoleKey().getUserId());
+				userRolePageData.setRoleId(userRole.getRoleId());
+				userRolePageData.setUserId(userRole.getUserId());
 				userRolePageData.setLastUpdate(userRole.getOperationDateTime());
-				userRolePageData.setDayOfTheWeek(userRole.getUserRoleKey().getDayOfTheWeek());
 				userRolePageDataList.add(userRolePageData);
 			}
 		}

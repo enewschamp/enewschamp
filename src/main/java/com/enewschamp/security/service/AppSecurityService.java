@@ -110,12 +110,7 @@ public class AppSecurityService {
 	public AppSecurity read(AppSecurity appSecurity) {
 		Long appSecId = appSecurity.getAppSecurityId();
 		AppSecurity existingAppSecurity = get(appSecId);
-		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.Y)) {
-			return existingAppSecurity;
-		}
-		existingAppSecurity.setRecordInUse(RecordInUseType.Y);
-		existingAppSecurity.setOperationDateTime(null);
-		return appSecurityRepository.save(existingAppSecurity);
+		return existingAppSecurity;
 	}
 
 	public AppSecurity close(AppSecurity appSecurityEntity) {

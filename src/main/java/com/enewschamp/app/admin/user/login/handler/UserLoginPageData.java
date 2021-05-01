@@ -23,8 +23,6 @@ public class UserLoginPageData extends PageData {
 	@NotEmpty(message = MessageConstants.USER_ID_NOT_EMPTY)
 	private String userId;
 
-	@NotNull(message = MessageConstants.LOGIN_FLAG_NOT_NULL)
-	@NotEmpty(message = MessageConstants.LOGIN_FLAG_NOT_EMPTY)
 	private String loginFlag;
 
 	private LocalDateTime lastLoginTime;

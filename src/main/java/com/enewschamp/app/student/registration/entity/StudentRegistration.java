@@ -13,7 +13,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
@@ -113,15 +112,6 @@ public class StudentRegistration extends BaseEntity {
 
 	@Column(name = "fcmToken", length = 500)
 	private String fcmToken;
-
-	@Column(name = "imageName", length = 100)
-	private String imageName;
-	
-	@Transient
-	private String imageBase64;
-
-	@Transient
-	private String imageTypeExt;
 
 	public String getKeyAsString() {
 		return this.studentKey;

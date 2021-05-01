@@ -7,7 +7,10 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -30,7 +33,8 @@ public class StudentPayment extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@NotNull
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_payment_id_generator")
+	@SequenceGenerator(name = "student_payment_id_generator", sequenceName = "student_payment_id_seq", allocationSize = 1)
 	private Long paymentId = 0L;
 
 	@NotNull

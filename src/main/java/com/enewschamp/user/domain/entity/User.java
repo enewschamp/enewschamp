@@ -65,11 +65,9 @@ public class User extends BaseEntity {
 	@Column(name = "DoB")
 	private LocalDate doB;
 
-	@NotNull
 	@Column(name = "contractStartDate")
 	private LocalDate contractStartDate;
 
-	@NotNull
 	@Column(name = "contractEndDate")
 	private LocalDate contractEndDate;
 
