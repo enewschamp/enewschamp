@@ -48,7 +48,7 @@ public class StudentScoresDailyRepositoryCustomImpl extends RepositoryImpl
 
 		if (!StringUtils.isEmpty(searchRequest.getPublicationDateFrom()) && !StringUtils.isEmpty(searchRequest.getPublicationDateTo()))
 			filterPredicates.add(cb.between(studentScoresDailyRoot.get(PUBLICATION_DATE),
-					searchRequest.getDateFrom(), searchRequest.getDateTo()));
+					searchRequest.getPublicationDateFrom(), searchRequest.getPublicationDateFrom()));
 		
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentScoresDailyRoot.get(CommonConstants.PUBLICATION_DATE)),

@@ -78,7 +78,7 @@ public class AdminSearchRequest {
 	private String errorCategory;
 	private LocalDate publicationDate;
 	private String readingLevel;
-	private Long genreId;
+	private String genreId;
 	private String scoreYearMonth;
 	private String schoolNotInTheList;
 	private String cityNotInTheList;

@@ -46,10 +46,10 @@ public class StudentControl extends BaseEntity {
 	private String evalAvailed;
 
 	@Column(name = "BOUserComments", length = 999)
-	private Long boUserComments;
+	private String boUserComments;
 
 	@Column(name = "BOAuthComments", length = 999)
-	private Long boAuthComments;
+	private String boAuthComments;
 	
 	@Column(name = "approvalRequired", length = 1)
 	private String approvalRequired;

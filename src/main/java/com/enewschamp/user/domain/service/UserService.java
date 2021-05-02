@@ -287,6 +287,7 @@ public class UserService extends AbstractDomainService {
 		existingUser.setIsAccountLocked("");
 		existingUser.setForcePasswordChange("Y");
 		existingUser.setOperationDateTime(null);
+		existingUser.setIncorrectLoginAttempts(0);
 		return repository.save(existingUser);
 	}
 

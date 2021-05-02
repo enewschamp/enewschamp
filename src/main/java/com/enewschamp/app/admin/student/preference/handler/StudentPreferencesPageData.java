@@ -25,5 +25,7 @@ public class StudentPreferencesPageData extends PageData {
 	private String alertsNotifications;
 	private String commsEmailId;
 	private String featureProfileInChamps;
-
+	private String champCity;
+	private String champProfilePic;
+	private String champSchool;
 }

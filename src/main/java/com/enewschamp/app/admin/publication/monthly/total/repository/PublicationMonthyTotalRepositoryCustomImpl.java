@@ -43,7 +43,7 @@ public class PublicationMonthyTotalRepositoryCustomImpl extends RepositoryImpl
 			filterPredicates.add(cb.equal(monthlySummaryRoot.get(READING_LEVEL), searchRequest.getReadingLevel()));
 
 		if (!StringUtils.isEmpty(searchRequest.getYearMonth()))
-			filterPredicates.add(cb.equal(monthlySummaryRoot.get(YEAR_MONTH), searchRequest.getYearMonth()));
+			filterPredicates.add(cb.like(monthlySummaryRoot.get(YEAR_MONTH), '%' +searchRequest.getYearMonth() + '%'));
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(monthlySummaryRoot.get(YEAR_MONTH)));

@@ -17,8 +17,8 @@ public class StudentControlPageData extends PageData {
 	private String preferences;
 	private String emailIdVerified;
 	private String evalAvailed;
-	private Long boUserComments;
-	private Long boAuthComments;
+	private String boUserComments;
+	private String boAuthComments;
 	private String approvalRequired;
 	
 }

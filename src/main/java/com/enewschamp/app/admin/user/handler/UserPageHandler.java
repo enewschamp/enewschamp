@@ -287,6 +287,7 @@ public class UserPageHandler implements IPageHandler {
 		user.setIsAccountLocked(isAccountLocked);
 		user.setForcePasswordChange(forcePasswordChange);
 		
+		
 		user = userService.update(user);
 		boolean updateFlag = false;
 		if ("Y".equalsIgnoreCase(userDto.getImageUpdate())) {

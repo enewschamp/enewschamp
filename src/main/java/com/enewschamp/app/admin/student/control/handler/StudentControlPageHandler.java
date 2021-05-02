@@ -49,6 +49,9 @@ public class StudentControlPageHandler implements IPageHandler {
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
 		PageDTO pageDto = null;
 		switch (pageRequest.getHeader().getAction()) {
+		case "Create":
+			pageDto = createStudentControl(pageRequest);
+			break;
 		case "Update":
 			pageDto = updateStudentControl(pageRequest);
 			break;
@@ -77,6 +80,18 @@ public class StudentControlPageHandler implements IPageHandler {
 	public PageDTO handleAppAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@SneakyThrows
+	private PageDTO createStudentControl(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		StudentControlPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentControlPageData.class);
+		validate(pageData, this.getClass().getName());
+		StudentControl studentControl = mapStudentControlData(pageRequest, pageData);
+		studentControl = studentControlService.create(studentControl);
+		mapStudentControl(pageRequest, pageDto, studentControl);
+		return pageDto;
 	}
 
 	@SneakyThrows

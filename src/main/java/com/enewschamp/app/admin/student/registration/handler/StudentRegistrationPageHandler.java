@@ -260,7 +260,7 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 		if (studentRegistration.getRecordInUse().equals(RecordInUseType.N)) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
-		String currentImageName = studentRegistrationDto.getImageName();
+		String currentImageName = studentRegistration.getImageName();
 		studentRegistrationDto.setImageName(currentImageName);
 		LocalDateTime lastSuccessfulLoginAttempt = studentRegistrationDto.getLastSuccessfulLoginAttempt();
 		LocalDateTime lastUnSuccessfulLoginAttempt = studentRegistrationDto.getLastUnsuccessfulLoginAttempt();
