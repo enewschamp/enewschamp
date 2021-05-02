@@ -55,6 +55,15 @@ public class StudentControlPageHandler implements IPageHandler {
 		case "Update":
 			pageDto = updateStudentControl(pageRequest);
 			break;
+		case "Read":
+			pageDto = readStudentControl(pageRequest);
+			break;
+		case "Close":
+			pageDto = closeStudentControl(pageRequest);
+			break;
+		case "Reinstate":
+			pageDto = reinstateStudentControl(pageRequest);
+			break;
 		case "List":
 			pageDto = listStudentControl(pageRequest);
 			break;
@@ -102,6 +111,39 @@ public class StudentControlPageHandler implements IPageHandler {
 		validate(pageData);
 		StudentControl studentControl = mapStudentControlData(pageRequest, pageData);
 		studentControl = studentControlService.update(studentControl);
+		mapStudentControl(pageRequest, pageDto, studentControl);
+		return pageDto;
+	}
+	
+	@SneakyThrows
+	private PageDTO readStudentControl(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		StudentControlPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentControlPageData.class);
+		StudentControl studentControl = modelMapper.map(pageData, StudentControl.class);
+		studentControl = studentControlService.read(studentControl);
+		mapStudentControl(pageRequest, pageDto, studentControl);
+		return pageDto;
+	}
+
+	@SneakyThrows
+	private PageDTO closeStudentControl(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		StudentControlPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentControlPageData.class);
+		StudentControl studentControl = modelMapper.map(pageData, StudentControl.class);
+		studentControl = studentControlService.close(studentControl);
+		mapStudentControl(pageRequest, pageDto, studentControl);
+		return pageDto;
+	}
+
+	@SneakyThrows
+	private PageDTO reinstateStudentControl(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		StudentControlPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentControlPageData.class);
+		StudentControl studentControl = modelMapper.map(pageData, StudentControl.class);
+		studentControl = studentControlService.reinstate(studentControl);
 		mapStudentControl(pageRequest, pageDto, studentControl);
 		return pageDto;
 	}

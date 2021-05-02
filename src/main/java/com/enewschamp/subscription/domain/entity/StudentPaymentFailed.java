@@ -104,15 +104,15 @@ public class StudentPaymentFailed extends BaseEntity {
 	@Column(name = "paytmTxnDate")
 	String paytmTxnDate = null;
 
-	@Column(name = "initTranApiRequest")
-	private Blob initTranApiRequest;
-
-	@Column(name = "initTranApiResponse")
-	private Blob initTranApiResponse;
-
-	@Column(name = "tranStatusApiRequest")
-	private Blob tranStatusApiRequest;
-
-	@Column(name = "tranStatusApiResponse")
-	private Blob tranStatusApiResponse;
+//	@Column(name = "initTranApiRequest")
+//	private Blob initTranApiRequest;
+//
+//	@Column(name = "initTranApiResponse")
+//	private Blob initTranApiResponse;
+//
+//	@Column(name = "tranStatusApiRequest")
+//	private Blob tranStatusApiRequest;
+//
+//	@Column(name = "tranStatusApiResponse")
+//	private Blob tranStatusApiResponse;
 }

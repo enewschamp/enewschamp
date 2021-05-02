@@ -17,6 +17,7 @@ import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentControl;
+import com.enewschamp.subscription.domain.entity.StudentControl;
 import com.enewschamp.subscription.domain.repository.StudentControlRepository;
 
 @Service
@@ -38,6 +39,10 @@ public class StudentControlService {
 	private StudentControlRepositoryCustomImpl repositoryCustom;
 
 	public StudentControl create(StudentControl studentControl) {
+		Optional<StudentControl> existinStudentControl  = repository.findById(studentControl.getStudentId());
+		if(existinStudentControl.isPresent()) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
 		StudentControl studentControlEntity = null;
 		try {
 			studentControlEntity = repository.save(studentControl);
@@ -88,9 +93,33 @@ public class StudentControlService {
 	public Page<StudentControl> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentControl> studentControlList = repositoryCustom.findAll(pageable, null);
-		if (studentControlList.getContent().isEmpty()) {
-			throw new BusinessException(ErrorCodeConstants.NO_RECORD_FOUND);
-		}
 		return studentControlList;
+	}
+	
+	public StudentControl read(StudentControl studentControlEntity) {
+		Long studentControlId = studentControlEntity.getStudentId();
+		return get(studentControlId);
+	}
+
+	public StudentControl close(StudentControl studentControlEntity) {
+		Long studentControlId = studentControlEntity.getStudentId();
+		StudentControl existingStudentControls = get(studentControlId);
+		if (!(existingStudentControls.getRecordInUse().equals(RecordInUseType.Y))) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingStudentControls.setRecordInUse(RecordInUseType.N);
+		existingStudentControls.setOperationDateTime(null);
+		return repository.save(existingStudentControls);
+	}
+
+	public StudentControl reinstate(StudentControl StudentControlEntity) {
+		Long StudentControlId = StudentControlEntity.getStudentId();
+		StudentControl existingStudentControls = get(StudentControlId);
+		if (existingStudentControls.getRecordInUse().equals(RecordInUseType.Y)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_OPENED);
+		}
+		existingStudentControls.setRecordInUse(RecordInUseType.Y);
+		existingStudentControls.setOperationDateTime(null);
+		return repository.save(existingStudentControls);
 	}
 }

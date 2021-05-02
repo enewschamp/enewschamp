@@ -1,12 +1,20 @@
 package com.enewschamp.domain.common;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Set;
 
+import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+
+import org.apache.commons.io.IOUtils;
 
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.app.common.PageDTO;
@@ -15,6 +23,7 @@ import com.enewschamp.app.common.RequestStatusType;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.problem.BusinessException;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 public interface IPageHandler {
@@ -52,6 +61,20 @@ public interface IPageHandler {
 			});
 			throw new BusinessException(ErrorCodeConstants.INVALID_REQUEST);
 		}
+	}
+
+	@SneakyThrows
+	default String blobToString(Blob blobData) throws SQLException, IOException {
+		InputStream bstream = blobData.getBinaryStream();
+		return IOUtils.toString(bstream, "UTF-8");
+	}
+
+	default Blob stringToBlob(String data) throws SerialException, SQLException {
+		if (data == null) {
+			return null;
+		}
+		Blob blob = new SerialBlob(data.getBytes());
+		return blob;
 	}
 
 }

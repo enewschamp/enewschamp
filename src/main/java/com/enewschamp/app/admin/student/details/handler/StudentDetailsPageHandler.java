@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -24,17 +23,15 @@ import com.enewschamp.subscription.domain.entity.StudentDetails;
 import com.enewschamp.subscription.domain.service.StudentDetailsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 @Component("StudentDetailPageHandler")
+@RequiredArgsConstructor
 public class StudentDetailsPageHandler implements IPageHandler {
-
-	@Autowired
-	private StudentDetailsService studentDetailsService;
-	@Autowired
-	private ModelMapper modelMapper;
-	@Autowired
-	private ObjectMapper objectMapper;
+	private final StudentDetailsService studentDetailsService;
+	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {

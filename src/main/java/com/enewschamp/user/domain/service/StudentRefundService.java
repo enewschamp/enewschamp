@@ -112,7 +112,7 @@ public class StudentRefundService extends AbstractDomainService {
 	public StudentRefund close(StudentRefund studentRefundEntity) {
 		Long studentRefundId = studentRefundEntity.getRefundId();
 		StudentRefund existingStudentRefund = get(studentRefundId);
-		if (existingStudentRefund.getRecordInUse().equals(RecordInUseType.N)) {
+		if (!(existingStudentRefund.getRecordInUse().equals(RecordInUseType.Y))) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingStudentRefund.setRecordInUse(RecordInUseType.N);

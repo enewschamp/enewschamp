@@ -124,4 +124,6 @@ public class AdminSearchRequest {
   	private String approvalRequired;
 	private LocalDate publicationDateFrom;
   	private LocalDate publicationDateTo;
+	private LocalDateTime lastUpdateDateFrom;
+	private LocalDateTime lastUpdateDateTo;
 }

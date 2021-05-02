@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -19,25 +18,40 @@ import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
+import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.subscription.domain.entity.StudentPayment;
 import com.enewschamp.subscription.domain.service.StudentPaymentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 @Component("StudentPaymentPageHandler")
+@RequiredArgsConstructor
 public class StudentPaymentPageHandler implements IPageHandler {
-	@Autowired
-	private StudentPaymentService studentPaymentService;
-	@Autowired
-	ModelMapper modelMapper;
-	@Autowired
-	ObjectMapper objectMapper;
+	private final StudentPaymentService studentPaymentService;
+	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
 		PageDTO pageDto = null;
 		switch (pageRequest.getHeader().getAction()) {
+		case "Create":
+			pageDto = createStudentPayment(pageRequest);
+			break;
+		case "Update":
+			pageDto = updateStudentPayment(pageRequest);
+			break;
+		case "Read":
+			pageDto = readStudentPayment(pageRequest);
+			break;
+		case "Close":
+			pageDto = closeStudentPayment(pageRequest);
+			break;
+		case "Reinstate":
+			pageDto = reinstateStudentPayment(pageRequest);
+			break;
 		case "List":
 			pageDto = listStudentPayment(pageRequest);
 			break;
@@ -63,6 +77,74 @@ public class StudentPaymentPageHandler implements IPageHandler {
 	public PageDTO handleAppAction(PageRequestDTO pageRequest, PageNavigatorDTO pageNavigatorDTO) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@SneakyThrows
+	private PageDTO createStudentPayment(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		StudentPaymentPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentPaymentPageData.class);
+		validate(pageData, this.getClass().getName());
+		StudentPayment StudentPayment = mapStudentPaymentData(pageRequest, pageData);
+		StudentPayment = studentPaymentService.create(StudentPayment);
+		mapStudentPayment(pageRequest, pageDto, StudentPayment);
+		return pageDto;
+	}
+
+	@SneakyThrows
+	private StudentPayment mapStudentPaymentData(PageRequestDTO pageRequest, StudentPaymentPageData pageData) {
+		StudentPayment studentPayment = modelMapper.map(pageData, StudentPayment.class);
+		studentPayment.setTranStatusApiRequest(stringToBlob(pageData.getTranStatusApiRequest()));
+		studentPayment.setTranStatusApiResponse(stringToBlob(pageData.getTranStatusApiRequest()));
+		studentPayment.setInitTranApiRequest(stringToBlob(pageData.getInitTranApiRequest()));
+		studentPayment.setInitTranApiResponse(stringToBlob(pageData.getInitTranApiResponse()));
+		studentPayment.setRecordInUse(RecordInUseType.Y);
+		return studentPayment;
+	}
+
+	@SneakyThrows
+	private PageDTO updateStudentPayment(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		StudentPaymentPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentPaymentPageData.class);
+		validate(pageData, this.getClass().getName());
+		StudentPayment StudentPayment = mapStudentPaymentData(pageRequest, pageData);
+		StudentPayment = studentPaymentService.update(StudentPayment);
+		mapStudentPayment(pageRequest, pageDto, StudentPayment);
+		return pageDto;
+	}
+
+	@SneakyThrows
+	private PageDTO readStudentPayment(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		StudentPaymentPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentPaymentPageData.class);
+		StudentPayment StudentPayment = modelMapper.map(pageData, StudentPayment.class);
+		StudentPayment = studentPaymentService.read(StudentPayment);
+		mapStudentPayment(pageRequest, pageDto, StudentPayment);
+		return pageDto;
+	}
+
+	@SneakyThrows
+	private PageDTO closeStudentPayment(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		StudentPaymentPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentPaymentPageData.class);
+		StudentPayment StudentPayment = modelMapper.map(pageData, StudentPayment.class);
+		StudentPayment = studentPaymentService.close(StudentPayment);
+		mapStudentPayment(pageRequest, pageDto, StudentPayment);
+		return pageDto;
+	}
+
+	@SneakyThrows
+	private PageDTO reinstateStudentPayment(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		StudentPaymentPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentPaymentPageData.class);
+		StudentPayment StudentPayment = modelMapper.map(pageData, StudentPayment.class);
+		StudentPayment = studentPaymentService.reinstate(StudentPayment);
+		mapStudentPayment(pageRequest, pageDto, StudentPayment);
+		return pageDto;
 	}
 
 	@SneakyThrows
@@ -91,12 +173,31 @@ public class StudentPaymentPageHandler implements IPageHandler {
 		List<StudentPaymentPageData> userLoginPageDataList = new ArrayList<StudentPaymentPageData>();
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<StudentPayment> pageDataList = page.getContent();
-			for (StudentPayment userLogin : pageDataList) {
-				StudentPaymentPageData userLoginPageData = modelMapper.map(userLogin, StudentPaymentPageData.class);
-				userLoginPageData.setLastUpdate(userLogin.getOperationDateTime());
+			for (StudentPayment studentPayment : pageDataList) {
+				StudentPaymentPageData userLoginPageData = mapPageData(studentPayment);
+				userLoginPageData.setLastUpdate(studentPayment.getOperationDateTime());
 				userLoginPageDataList.add(userLoginPageData);
 			}
 		}
 		return userLoginPageDataList;
 	}
+	
+	private void mapStudentPayment(PageRequestDTO pageRequest, PageDTO pageDto, StudentPayment StudentPayment) {
+		StudentPaymentPageData pageData;
+		mapHeaderData(pageRequest, pageDto);
+		pageData = mapPageData(StudentPayment);
+		pageDto.setData(pageData);
+	}
+	
+	@SneakyThrows
+	private StudentPaymentPageData mapPageData(StudentPayment studentPayment) {
+		StudentPaymentPageData pageData = modelMapper.map(studentPayment, StudentPaymentPageData.class);
+		pageData.setLastUpdate(studentPayment.getOperationDateTime());
+		pageData.setTranStatusApiRequest(blobToString(studentPayment.getTranStatusApiRequest()));
+		pageData.setTranStatusApiResponse(blobToString(studentPayment.getTranStatusApiResponse()));
+	    pageData.setInitTranApiRequest(blobToString(studentPayment.getInitTranApiRequest()));
+	    pageData.setInitTranApiResponse(blobToString(studentPayment.getInitTranApiResponse()));
+		return pageData;
+	}
+
 }

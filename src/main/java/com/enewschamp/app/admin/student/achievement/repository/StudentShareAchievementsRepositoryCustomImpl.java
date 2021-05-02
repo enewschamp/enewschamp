@@ -42,9 +42,9 @@ public class StudentShareAchievementsRepositoryCustomImpl extends RepositoryImpl
 			filterPredicates.add(cb.equal(studentachievementRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 		
 		if (!StringUtils.isEmpty(searchRequest.getApprovalRequired())) {
-			if (searchRequest.getIsApplicableForNewsEvents().equals("Y")) {
+			if (searchRequest.getApprovalRequired().equals("Y")) {
 				filterPredicates.add(cb.equal(studentachievementRoot.get(APPROVAL_REQUIRED),
-						searchRequest.getIsApplicableForNewsEvents()));
+						searchRequest.getApprovalRequired()));
 			} else {
 				filterPredicates.add(cb.notEqual(studentachievementRoot.get(APPROVAL_REQUIRED), "Y"));
 			}

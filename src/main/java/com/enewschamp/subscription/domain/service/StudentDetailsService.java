@@ -2,14 +2,16 @@ package com.enewschamp.subscription.domain.service;
 
 import java.util.Optional;
 
+import javax.validation.ConstraintViolationException;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.student.details.repository.StudentDetailsRepositoryCustomImpl;
@@ -20,30 +22,30 @@ import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
 import com.enewschamp.subscription.domain.repository.StudentDetailsRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class StudentDetailsService {
-
-	@Autowired
-	StudentDetailsRepository repository;
-
-	@Autowired
-	StudentDetailsRepositoryCustomImpl repositoryCustom;
-
-	@Autowired
-	ModelMapper modelMapper;
-
+	private final StudentDetailsRepository repository;
+	private final StudentDetailsRepositoryCustomImpl repositoryCustom;
+    private final ModelMapper modelMapper;
+    private final AuditService auditService;
+    
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
 
-	@Autowired
-	AuditService auditService;
+	
 
 	public StudentDetails create(StudentDetails studentDetails) {
 		StudentDetails studentDetailsEntity = null;
 		try {
 			studentDetailsEntity = repository.save(studentDetails);
 		} catch (DataIntegrityViolationException e) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
+		catch (ConstraintViolationException e) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 		}
 		return studentDetailsEntity;

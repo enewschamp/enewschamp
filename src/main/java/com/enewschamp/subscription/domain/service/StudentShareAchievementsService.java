@@ -21,25 +21,27 @@ import com.enewschamp.problem.BusinessException;
 import com.enewschamp.subscription.domain.entity.StudentShareAchievements;
 import com.enewschamp.subscription.domain.repository.StudentShareAchievementsRepository;
 
-@Service
-public class StudentShareAchievementsService {
-	@Autowired
-	ModelMapper modelMapper;
+import lombok.RequiredArgsConstructor;
 
+@Service
+@RequiredArgsConstructor
+public class StudentShareAchievementsService {
+	private final ModelMapper modelMapper;
+	private final AuditService auditService;
+	private final StudentShareAchievementsRepository repository;
+	private final StudentShareAchievementsRepositoryCustomImpl repositoryCustom;
+	
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
 
-	@Autowired
-	AuditService auditService;
 
-	@Autowired
-	StudentShareAchievementsRepository repository;
-
-	@Autowired
-	StudentShareAchievementsRepositoryCustomImpl repositoryCustom;
 
 	public StudentShareAchievements create(StudentShareAchievements studentShareAchievements) {
+		Optional<StudentShareAchievements> existingEntity = repository.findById(studentShareAchievements.getStudentId());
+		if(existingEntity.isPresent()) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
 		StudentShareAchievements studentShareAchievementsEntity = null;
 		try {
 			studentShareAchievementsEntity = repository.save(studentShareAchievements);
