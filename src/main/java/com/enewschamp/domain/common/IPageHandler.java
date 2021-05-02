@@ -64,8 +64,11 @@ public interface IPageHandler {
 	}
 
 	@SneakyThrows
-	default String blobToString(Blob blobData) throws SQLException, IOException {
-		InputStream bstream = blobData.getBinaryStream();
+	default String blobToString(Blob data) throws SQLException, IOException {
+		if (data == null) {
+			return null;
+		}
+		InputStream bstream = data.getBinaryStream();
 		return IOUtils.toString(bstream, "UTF-8");
 	}
 

@@ -93,10 +93,15 @@ public class StudentRefundPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
+	@SneakyThrows
 	private StudentRefund mapStudentRefundData(PageRequestDTO pageRequest, StudentRefundPageData pageData) {
-		StudentRefund StudentRefund = modelMapper.map(pageData, StudentRefund.class);
-		StudentRefund.setRecordInUse(RecordInUseType.Y);
-		return StudentRefund;
+		StudentRefund studentRefund = modelMapper.map(pageData, StudentRefund.class);
+		studentRefund.setInitRefundApiRequest(stringToBlob(pageData.getInitRefundApiRequest()));
+		studentRefund.setInitRefundApiResponse(stringToBlob(pageData.getInitRefundApiResponse()));
+		studentRefund.setRefundStatusApiRequest(stringToBlob(pageData.getInitRefundApiRequest()));
+		studentRefund.setRefundStatusApiResponse(stringToBlob(pageData.getInitRefundApiResponse()));
+		studentRefund.setRecordInUse(RecordInUseType.Y);
+		return studentRefund;
 	}
 
 	@SneakyThrows
@@ -166,9 +171,14 @@ public class StudentRefundPageHandler implements IPageHandler {
 		return dto;
 	}
 
-	private StudentRefundPageData mapPageData(StudentRefund StudentRefund) {
-		StudentRefundPageData pageData = modelMapper.map(StudentRefund, StudentRefundPageData.class);
-		pageData.setLastUpdate(StudentRefund.getOperationDateTime());
+	@SneakyThrows
+	private StudentRefundPageData mapPageData(StudentRefund studentRefund) {
+		StudentRefundPageData pageData = modelMapper.map(studentRefund, StudentRefundPageData.class);
+		pageData.setInitRefundApiRequest(blobToString(studentRefund.getInitRefundApiRequest()));
+		pageData.setInitRefundApiResponse(blobToString(studentRefund.getInitRefundApiResponse()));
+		pageData.setRefundStatusApiRequest(blobToString(studentRefund.getRefundStatusApiRequest()));
+		pageData.setRefundStatusApiResponse(blobToString(studentRefund.getRefundStatusApiResponse()));
+		pageData.setLastUpdate(studentRefund.getOperationDateTime());
 		return pageData;
 	}
 
@@ -183,10 +193,9 @@ public class StudentRefundPageHandler implements IPageHandler {
 		List<StudentRefundPageData> StudentRefundPageDataList = new ArrayList<StudentRefundPageData>();
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
 			List<StudentRefund> pageDataList = page.getContent();
-			for (StudentRefund StudentRefund : pageDataList) {
-				StudentRefundPageData StudentRefundPageData = modelMapper.map(StudentRefund,
-						StudentRefundPageData.class);
-				StudentRefundPageData.setLastUpdate(StudentRefund.getOperationDateTime());
+			for (StudentRefund studentRefund : pageDataList) {
+				StudentRefundPageData StudentRefundPageData = mapPageData(studentRefund);
+				StudentRefundPageData.setLastUpdate(studentRefund.getOperationDateTime());
 				StudentRefundPageDataList.add(StudentRefundPageData);
 			}
 		}
