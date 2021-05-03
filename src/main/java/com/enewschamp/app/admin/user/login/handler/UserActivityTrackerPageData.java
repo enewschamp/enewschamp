@@ -23,6 +23,6 @@ public class UserActivityTrackerPageData extends PageData {
 	private UserAction actionStatus;
 	private String errorCode;
 	private String errorDescription;
-	private Blob requestData;
-	private Blob errorText;
+	private String requestData;
+	private String errorText;
 }

@@ -87,6 +87,7 @@ public class UserActivityTrackerPageHandler implements IPageHandler {
 		return dto;
 	}
 
+	@SneakyThrows
 	public List<UserActivityTrackerPageData> mapUserActivityTrackerData(Page<UserActivityTracker> page) {
 		List<UserActivityTrackerPageData> userLoginPageDataList = new ArrayList<UserActivityTrackerPageData>();
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
@@ -94,6 +95,8 @@ public class UserActivityTrackerPageHandler implements IPageHandler {
 			for (UserActivityTracker userLogin : pageDataList) {
 				UserActivityTrackerPageData userLoginPageData = modelMapper.map(userLogin,
 						UserActivityTrackerPageData.class);
+				userLoginPageData.setRequestData(blobToString(userLogin.getRequestData()));
+				userLoginPageData.setErrorText(blobToString(userLogin.getErrorText()));
 				userLoginPageData.setLastUpdate(userLogin.getOperationDateTime());
 				userLoginPageDataList.add(userLoginPageData);
 			}
