@@ -42,6 +42,10 @@ public class PublicationMonthySummaryRepositoryCustomImpl extends RepositoryImpl
 		if (!StringUtils.isEmpty(searchRequest.getReadingLevel()))
 			filterPredicates.add(cb.equal(monthlySummaryRoot.get(READING_LEVEL), searchRequest.getReadingLevel()));
 
+		if (!StringUtils.isEmpty(searchRequest.getGenreId()))
+			filterPredicates.add(cb.equal(monthlySummaryRoot.get(GENRE_ID), searchRequest.getGenreId()));
+
+		
 		if (!StringUtils.isEmpty(searchRequest.getYearMonth()))
 			filterPredicates.add(cb.like(monthlySummaryRoot.get(YEAR_MONTH), '%' + searchRequest.getYearMonth() + '%'));
 
