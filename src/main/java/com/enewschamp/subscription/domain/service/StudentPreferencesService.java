@@ -23,11 +23,6 @@ import com.enewschamp.subscription.domain.repository.StudentPreferencesRepositor
 @Service
 public class StudentPreferencesService {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	@Autowired
 	StudentPreferencesRepository repository;
 
@@ -46,6 +41,11 @@ public class StudentPreferencesService {
 
 	public StudentPreferences create(StudentPreferences studentPreferences) {
 		StudentPreferences studentPreferencesEntity = null;
+		Optional<StudentPreferences> existingStudentPreferences = repository
+				.findById(studentPreferences.getStudentId());
+		if (existingStudentPreferences.isPresent()) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
 		try {
 			studentPreferencesEntity = repository.save(studentPreferences);
 		} catch (DataIntegrityViolationException e) {

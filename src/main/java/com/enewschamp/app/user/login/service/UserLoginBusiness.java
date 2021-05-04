@@ -284,5 +284,14 @@ public class UserLoginBusiness {
 				searchRequest);
 		return userActivityTrackerList;
 	}
+	
+	public UserLogin getAdminDeviceLogin(final String deviceId, final String tokenId) {
+		Optional<UserLogin> existingEntity = loginService.repository.getAdminDeviceLogin(deviceId, tokenId);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
+		} else {
+			return null;
+		}
+	}
 
 }

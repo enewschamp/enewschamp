@@ -62,6 +62,9 @@ public class AppSecurityPageHandler implements IPageHandler {
 		case "Reinstate":
 			pageDto = reinstateAppSecurity(pageRequest);
 			break;
+		case "ActiveStatus":
+			pageDto = activateAppSecurityStatus(pageRequest);
+			break;
 		case "List":
 			pageDto = listAppSecurity(pageRequest);
 			break;
@@ -165,6 +168,17 @@ public class AppSecurityPageHandler implements IPageHandler {
 		return pageDto;
 	}
 
+	
+	@SneakyThrows
+	private PageDTO activateAppSecurityStatus(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		AppSecurityPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), AppSecurityPageData.class);
+		AppSecurity AppSecurity = modelMapper.map(pageData, AppSecurity.class);
+		AppSecurity = appSecurityService.activate(AppSecurity);
+		mapAppSecurity(pageRequest, pageDto, AppSecurity);
+		return pageDto;
+	}
+	
 	@SneakyThrows
 	private PageDTO listAppSecurity(PageRequestDTO pageRequest) {
 		Page<AppSecurity> appSecList = appSecurityService.list(

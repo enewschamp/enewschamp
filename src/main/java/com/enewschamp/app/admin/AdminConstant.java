@@ -101,5 +101,6 @@ public interface AdminConstant {
 	public static String SUBSCRIPTION_PERIOD = "subscriptionPeriod";
 	public static String ACTION_TIME = "actionTime";
 	public static String APPROVAL_REQUIRED = "approvalRequired";
+	public static String IMAGE_APPROVAL_REQUIRED = "imageApprovalRequired";
 
 }

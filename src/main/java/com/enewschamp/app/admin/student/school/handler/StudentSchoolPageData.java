@@ -41,5 +41,6 @@ public class StudentSchoolPageData extends PageData {
 	private String schoolNotInTheList;
 	private String section;
 	private String grade;
+	private String approvalRequired;
 
 }

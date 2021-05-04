@@ -19,6 +19,7 @@ import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.subscription.domain.entity.StudentPreferences;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;
 import com.enewschamp.subscription.domain.entity.StudentSubscriptionHistory;
 
@@ -51,6 +52,11 @@ public class StudentSubscriptionService {
 
 	public StudentSubscription create(StudentSubscription studentSubscription) {
 		StudentSubscription studentSubscriptionEntity = null;
+		Optional<StudentSubscription> existingStudentSubscription = repository
+				.findById(studentSubscription.getStudentId());
+		if (existingStudentSubscription.isPresent()) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
 		try {
 			studentSubscriptionEntity = repository.save(studentSubscription);
 		} catch (DataIntegrityViolationException e) {

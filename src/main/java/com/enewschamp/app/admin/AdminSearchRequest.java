@@ -126,4 +126,5 @@ public class AdminSearchRequest {
   	private LocalDate publicationDateTo;
 	private LocalDateTime lastUpdateDateFrom;
 	private LocalDateTime lastUpdateDateTo;
+	private String imageApprovalRequired;
 }

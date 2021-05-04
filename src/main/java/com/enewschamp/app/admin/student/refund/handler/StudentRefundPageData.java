@@ -27,5 +27,7 @@ public class StudentRefundPageData extends PageData {
 	private String initRefundApiResponse;
 	private String refundStatusApiRequest;
 	private String refundStatusApiResponse;
+	private String editionId;
+	private String finalOrderStatus;
 
 }

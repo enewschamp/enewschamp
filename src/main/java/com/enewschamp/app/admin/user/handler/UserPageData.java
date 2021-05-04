@@ -3,11 +3,21 @@ package com.enewschamp.app.admin.user.handler;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.javers.core.metamodel.annotation.DiffIgnore;
+
+import com.enewschamp.app.common.LocalDateCryptoConverter;
 import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
+import com.enewschamp.app.common.StringCryptoConverter;
 import com.enewschamp.domain.common.Gender;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -60,5 +70,6 @@ public class UserPageData extends PageData {
 	@JsonInclude
 	private String imageName;
 	private String imageUpdate;
+	private String forcePasswordChange;
 
 }

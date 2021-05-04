@@ -44,6 +44,10 @@ public class StudentSchoolService {
 
 	public StudentSchool create(StudentSchool studentSchool) {
 		StudentSchool studentSchoolEntity = null;
+		Optional<StudentSchool> existingStudentSchool = repository.findById(studentSchool.getStudentId());
+		if (existingStudentSchool.isPresent()) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
+		}
 		try {
 			studentSchoolEntity = repository.save(studentSchool);
 		} catch (DataIntegrityViolationException e) {

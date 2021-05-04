@@ -116,7 +116,7 @@ public class AppSecurityService {
 	public AppSecurity close(AppSecurity appSecurityEntity) {
 		Long appSecId = appSecurityEntity.getAppSecurityId();
 		AppSecurity existingAppSecurity = get(appSecId);
-		if (existingAppSecurity.getRecordInUse().equals(RecordInUseType.N)) {
+		if (!(existingAppSecurity.getRecordInUse().equals(RecordInUseType.Y))) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingAppSecurity.setRecordInUse(RecordInUseType.N);
@@ -135,6 +135,17 @@ public class AppSecurityService {
 		return appSecurityRepository.save(existingAppSec);
 	}
 
+	public AppSecurity activate(AppSecurity appSecurityEntity) {
+		Long appSecurityId = appSecurityEntity.getAppSecurityId();
+		AppSecurity existingAppSecurity = get(appSecurityId);
+		if (!(existingAppSecurity.getRecordInUse().equals(RecordInUseType.Y))) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingAppSecurity.setIsActive(appSecurityEntity.getIsActive());
+		existingAppSecurity.setOperationDateTime(null);
+		return appSecurityRepository.save(existingAppSecurity);
+	}
+	
 	public Page<AppSecurity> list(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<AppSecurity> appSecList = appSecurityRepositoryCustom.findAll(pageable, null);

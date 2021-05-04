@@ -50,4 +50,8 @@ public interface UserLoginRepository extends JpaRepository<UserLogin, Long> {
 
 	@Query("Select s from UserLogin s where s.userId= :userId and s.userType= :userType")
 	public Optional<UserLogin> getOperatorLogin(@Param("userId") String userId, @Param("userType") UserType userType);
+	
+	@Query("Select s from UserLogin s where s.deviceId= :deviceId and s.tokenId=:tokenId and s.userType= 'A' and s.operationDateTime=(Select max(p.operationDateTime) from UserLogin p where p.deviceId= :deviceId and p.tokenId=:tokenId and p.userType= 'A')")
+	public Optional<UserLogin> getAdminDeviceLogin(@Param("deviceId") String deviceId,
+			@Param("tokenId") String tokenId);
 }

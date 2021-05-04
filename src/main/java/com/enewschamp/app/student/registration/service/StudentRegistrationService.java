@@ -21,17 +21,14 @@ import com.enewschamp.app.student.registration.repository.StudentRegistrationRep
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class StudentRegistrationService {
-
-	@Autowired
-	StudentRegistrationRepository repository;
-
-	@Autowired
-	StudentRegistrationRepositoryCustomImpl repositoryCustom;
-
-	@Autowired
-	ModelMapper modelMapper;
+	private final StudentRegistrationRepository repository;
+	private final StudentRegistrationRepositoryCustomImpl repositoryCustom;
+	private final ModelMapper modelMapper;
 
 	@Autowired
 	@Qualifier("modelPatcher")
@@ -53,7 +50,7 @@ public class StudentRegistrationService {
 	public StudentRegistrationDTO update(StudentRegistration studentRegistration) {
 		Long studentId = studentRegistration.getStudentId();
 		StudentRegistration existingStudentRegistration = get(studentId);
-		if (existingStudentRegistration.getRecordInUse().equals(RecordInUseType.N)) {
+		if (!(existingStudentRegistration.getRecordInUse().equals(RecordInUseType.Y))) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		modelMapper.map(studentRegistration, existingStudentRegistration);
@@ -92,7 +89,7 @@ public class StudentRegistrationService {
 		return repository.getStudentEmailByKey(studentKey);
 	}
 
-	public boolean userExists(String emailId) {
+	public boolean StudentRegistrationExists(String emailId) {
 		boolean exists = false;
 		Optional<StudentRegistration> existingEntity = repository.getStudent(emailId);
 		if (existingEntity.isPresent()) {
@@ -104,14 +101,14 @@ public class StudentRegistrationService {
 	public StudentRegistration updateOne(StudentRegistration studentRegistration) {
 		Long studentId = studentRegistration.getStudentId();
 		StudentRegistration existingStudentRegistration = get(studentId);
-		if(existingStudentRegistration.getRecordInUse().equals(RecordInUseType.N)) {
+		if (!(existingStudentRegistration.getRecordInUse().equals(RecordInUseType.Y))) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		handlePasswords(studentRegistration, existingStudentRegistration);
 		StudentRegistration student = repository.save(existingStudentRegistration);
 		return student;
 	}
-	
+
 	public StudentRegistration read(StudentRegistration studentRegistrationEntity) {
 		Long stakeHolderId = studentRegistrationEntity.getStudentId();
 		StudentRegistration stakeHolder = get(stakeHolderId);
@@ -121,7 +118,7 @@ public class StudentRegistrationService {
 	public StudentRegistration close(StudentRegistration studentRegistrationEntity) {
 		Long stakeHolderId = studentRegistrationEntity.getStudentId();
 		StudentRegistration existingStudentRegistration = get(stakeHolderId);
-		if (existingStudentRegistration.getRecordInUse().equals(RecordInUseType.N)) {
+		if (!(existingStudentRegistration.getRecordInUse().equals(RecordInUseType.Y))) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
 		existingStudentRegistration.setRecordInUse(RecordInUseType.N);
@@ -140,16 +137,57 @@ public class StudentRegistrationService {
 		return repository.save(existingStudentRegistration);
 	}
 
+	public StudentRegistration updateIsActiveStatus(StudentRegistration studentRegistrationEntity) {
+		Long studentId = studentRegistrationEntity.getStudentId();
+		StudentRegistration existingStudentRegistration = get(studentId);
+		if (!(existingStudentRegistration.getRecordInUse().equals(RecordInUseType.Y))) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingStudentRegistration.setIsActive(studentRegistrationEntity.getIsActive());
+		existingStudentRegistration.setOperationDateTime(null);
+		return repository.save(existingStudentRegistration);
+	}
+
+	public StudentRegistration updateIsDeletedStatus(StudentRegistration StudentRegistrationEntity) {
+		Long studentId = StudentRegistrationEntity.getStudentId();
+		StudentRegistration existingStudentRegistration = get(studentId);
+		if (!(existingStudentRegistration.getRecordInUse().equals(RecordInUseType.Y))) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		existingStudentRegistration.setIsDeleted(StudentRegistrationEntity.getIsDeleted());
+		existingStudentRegistration.setOperationDateTime(null);
+		return repository.save(existingStudentRegistration);
+	}
+
+	public StudentRegistration resetPassword(StudentRegistration studentRegistrationEntity) {
+		Long studentId = studentRegistrationEntity.getStudentId();
+		StudentRegistration existingStudentRegistration = get(studentId);
+		if (!(existingStudentRegistration.getRecordInUse().equals(RecordInUseType.Y))) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		String password = existingStudentRegistration.getPassword();
+		String password1 = existingStudentRegistration.getPassword1();
+		existingStudentRegistration.setPassword(studentRegistrationEntity.getPassword());
+		existingStudentRegistration.setPassword1(password);
+		existingStudentRegistration.setPassword2(password1);
+		existingStudentRegistration.setIsAccountLocked("");
+		existingStudentRegistration.setForcePasswordChange("Y");
+		existingStudentRegistration.setOperationDateTime(null);
+		existingStudentRegistration.setIncorrectLoginAttempts(0);
+		return repository.save(existingStudentRegistration);
+	}
+
 	public Page<StudentRegistration> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
 		Page<StudentRegistration> stakeHolderList = repositoryCustom.findAll(pageable, searchRequest);
 		return stakeHolderList;
 	}
-	
-	private void handlePasswords(StudentRegistration studentRegistraton, StudentRegistration existingStudentRegistration) {
-			studentRegistraton.setPassword(existingStudentRegistration.getPassword());
-			studentRegistraton.setPassword1(existingStudentRegistration.getPassword1());
-			studentRegistraton.setPassword2(existingStudentRegistration.getPassword2());
+
+	private void handlePasswords(StudentRegistration studentRegistraton,
+			StudentRegistration existingStudentRegistration) {
+		studentRegistraton.setPassword(existingStudentRegistration.getPassword());
+		studentRegistraton.setPassword1(existingStudentRegistration.getPassword1());
+		studentRegistraton.setPassword2(existingStudentRegistration.getPassword2());
 		modelMapper.map(studentRegistraton, existingStudentRegistration);
 	}
 }

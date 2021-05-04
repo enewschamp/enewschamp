@@ -40,6 +40,10 @@ public class StudentRegistrationRepositoryCustomImpl extends RepositoryImpl
 
 		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
 			filterPredicates.add(cb.equal(studentRegisRoot.get(STUDENT_ID), searchRequest.getStudentId()));
+		
+		if (!StringUtils.isEmpty(searchRequest.getImageApprovalRequired()))
+			filterPredicates.add(cb.equal(studentRegisRoot.get(IMAGE_APPROVAL_REQUIRED), searchRequest.getImageApprovalRequired()));
+
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentRegisRoot.get(CommonConstants.OPERATION_DATE_TIME)));

@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.student.control.repository.StudentControlRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
@@ -90,9 +91,9 @@ public class StudentControlService {
 		return auditService.getEntityAudit(StudentControl);
 	}
 
-	public Page<StudentControl> list(int pageNo, int pageSize) {
+	public Page<StudentControl> list(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
-		Page<StudentControl> studentControlList = repositoryCustom.findAll(pageable, null);
+		Page<StudentControl> studentControlList = repositoryCustom.findAll(pageable, searchRequest);
 		return studentControlList;
 	}
 	

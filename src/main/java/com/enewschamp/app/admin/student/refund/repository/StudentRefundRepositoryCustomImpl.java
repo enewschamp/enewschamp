@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
@@ -36,6 +37,10 @@ public class StudentRefundRepositoryCustomImpl extends RepositoryImpl
 		CriteriaQuery<StudentRefund> criteriaQuery = cb.createQuery(StudentRefund.class);
 		Root<StudentRefund> studentRefundRoot = criteriaQuery.from(StudentRefund.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
+		
+		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
+			filterPredicates.add(cb.equal(studentRefundRoot.get(STUDENT_ID), searchRequest.getStudentId()));
+
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentRefundRoot.get(CommonConstants.OPERATION_DATE_TIME)));

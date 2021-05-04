@@ -35,25 +35,28 @@ public class StudentBadgesRepositoryCustomImpl extends RepositoryImpl
 	public Page<StudentBadges> findAll(Pageable pageable, AdminSearchRequest searchRequest) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<StudentBadges> criteriaQuery = cb.createQuery(StudentBadges.class);
-		Root<StudentBadges> studentachievementRoot = criteriaQuery.from(StudentBadges.class);
+		Root<StudentBadges> studentBadgesRoot = criteriaQuery.from(StudentBadges.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 
-		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get(STUDENT_ID), searchRequest.getStudentId()));
+		if (!StringUtils.isEmpty(searchRequest.getStudentId())) {
+			filterPredicates.add(cb.equal(studentBadgesRoot.get(STUDENT_ID), searchRequest.getStudentId()));
+		}
 
-		if (!StringUtils.isEmpty(searchRequest.getStudentBadgesId()))
+		if (!StringUtils.isEmpty(searchRequest.getStudentBadgesId())) {
 			filterPredicates
-					.add(cb.equal(studentachievementRoot.get(STUDENT_BADGES_ID), searchRequest.getStudentBadgesId()));
+					.add(cb.equal(studentBadgesRoot.get(STUDENT_BADGES_ID), searchRequest.getStudentBadgesId()));
+		}
 
-		if (!StringUtils.isEmpty(searchRequest.getYearMonth()))
-			filterPredicates
-					.add(cb.like(studentachievementRoot.get(YEAR_MONTH), '%' + searchRequest.getYearMonth() + '%'));
+		if (!StringUtils.isEmpty(searchRequest.getYearMonth())) {
+			filterPredicates.add(cb.like(studentBadgesRoot.get(YEAR_MONTH), '%' + searchRequest.getYearMonth() + '%'));
+		}
 
-		if (!StringUtils.isEmpty(searchRequest.getBadgeId()))
-			filterPredicates.add(cb.equal(studentachievementRoot.get(BADGE_ID), searchRequest.getBadgeId()));
+		if (!StringUtils.isEmpty(searchRequest.getBadgeId())) {
+			filterPredicates.add(cb.equal(studentBadgesRoot.get(BADGE_ID), searchRequest.getBadgeId()));
+		}
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
-		criteriaQuery.orderBy(cb.desc(studentachievementRoot.get(CommonConstants.OPERATION_DATE_TIME)));
+		criteriaQuery.orderBy(cb.desc(studentBadgesRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 		// Build query
 		TypedQuery<StudentBadges> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -62,7 +65,7 @@ public class StudentBadgesRepositoryCustomImpl extends RepositoryImpl
 			q.setMaxResults(pageable.getPageSize());
 		}
 		List<StudentBadges> list = q.getResultList();
-		long count = getRecordCount(criteriaQuery, filterPredicates, studentachievementRoot);
+		long count = getRecordCount(criteriaQuery, filterPredicates, studentBadgesRoot);
 		return new PageImpl<>(list, pageable, count);
 	}
 

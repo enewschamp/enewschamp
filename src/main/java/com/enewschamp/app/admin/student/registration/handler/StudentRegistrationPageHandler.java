@@ -35,21 +35,18 @@ import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Component("StudentRegistrationPageHandler")
 @Slf4j
+@RequiredArgsConstructor
 public class StudentRegistrationPageHandler implements IPageHandler {
-	@Autowired
-	private StudentRegistrationService studentRegistrationService;
-
-	@Autowired
-	ModelMapper modelMapper;
-	@Autowired
-	ObjectMapper objectMapper;
-	@Autowired
-	private CommonService commonService;
+	private final StudentRegistrationService studentRegistrationService;
+    private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
+	private final CommonService commonService;
 	private Validator validator;
 
 	@Override
@@ -70,6 +67,15 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 			break;
 		case "Reinstate":
 			pageDto = reinstateStudentRegistration(pageRequest);
+			break;
+		case "ActiveStatus":
+			pageDto = updateIsActiveStatus(pageRequest);
+			break;
+		case "DeleteStatus":
+			pageDto = updateIsDeletedStatus(pageRequest);
+			break;
+		case "ResetPassword":
+			pageDto = resetPassword(pageRequest);
 			break;
 		case "List":
 			pageDto = listStudentRegistration(pageRequest);
@@ -155,6 +161,42 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 		mapStudentRegistration(pageRequest, pageDto, studentRegistration);
 		return pageDto;
 	}
+	
+	@SneakyThrows
+	private PageDTO updateIsActiveStatus(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		StudentRegistrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentRegistrationPageData.class);
+		StudentRegistration StudentRegistration = modelMapper.map(pageData, StudentRegistration.class);
+		StudentRegistration = studentRegistrationService.updateIsActiveStatus(StudentRegistration);
+		mapStudentRegistration(pageRequest, pageDto, StudentRegistration);
+		return pageDto;
+	}
+	
+	
+	@SneakyThrows
+	private PageDTO updateIsDeletedStatus(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		StudentRegistrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentRegistrationPageData.class);
+		StudentRegistration StudentRegistration = modelMapper.map(pageData, StudentRegistration.class);
+		StudentRegistration = studentRegistrationService.updateIsDeletedStatus(StudentRegistration);
+		mapStudentRegistration(pageRequest, pageDto, StudentRegistration);
+		return pageDto;
+	}
+	
+	
+	@SneakyThrows
+	private PageDTO resetPassword(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		StudentRegistrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), StudentRegistrationPageData.class);
+		if(!pageData.getPassword().equals(pageData.getConfirmPassword())) {
+			throw new BusinessException(ErrorCodeConstants.PASSWORD_MISMATCH);
+		}
+		StudentRegistration StudentRegistration = modelMapper.map(pageData, StudentRegistration.class);
+		StudentRegistration = studentRegistrationService.resetPassword(StudentRegistration);
+		mapStudentRegistration(pageRequest, pageDto, StudentRegistration);
+		return pageDto;
+	}
+	
 
 	@SneakyThrows
 	private PageDTO listStudentRegistration(PageRequestDTO pageRequest) {
