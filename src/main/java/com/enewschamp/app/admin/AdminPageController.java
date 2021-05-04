@@ -148,7 +148,7 @@ public class AdminPageController {
 					if (user == null) {
 						throw new BusinessException(ErrorCodeConstants.INVALID_USER_ID, userId);
 					} else {
-						userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.P);
+						userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.A);
 					}
 				} else {
 					UserLogin deviceLogin = userLoginBusiness.getBODeviceLogin(deviceId, loginCredentials);
@@ -170,6 +170,61 @@ public class AdminPageController {
 					} else if (imagePath.toUpperCase().endsWith(".GIF")) {
 						response.setContentType(MediaType.IMAGE_GIF_VALUE);
 					}
+					StreamUtils.copy(imageStream, response.getOutputStream());
+					imageStream.close();
+				}
+			} catch (BusinessException e) {
+				throw new Fault(e);
+			}
+		}
+	}
+
+	@RequestMapping(value = "/admin/audios", method = RequestMethod.GET, produces = MediaType.ALL_VALUE)
+	public void getAudio(HttpServletResponse response, @RequestParam String audioType, @RequestParam String audioPath,
+			@RequestParam String appKey, @RequestParam String appName, @RequestParam String module,
+			@RequestParam String userId, @RequestParam String deviceId, @RequestParam String loginCredentials)
+			throws IOException {
+		if (audioType == null || audioPath == null || appKey == null || appName == null || deviceId == null
+				|| loginCredentials == null || audioType.trim().isEmpty() || audioPath.trim().isEmpty()
+				|| appKey.trim().isEmpty() || appName.trim().isEmpty() || deviceId.trim().isEmpty()
+				|| loginCredentials.trim().isEmpty()) {
+			throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
+		} else {
+			boolean loginCheckFlag = false;
+			String validateLogin = propertiesService.getValue(module, PropertyConstants.VALIDATE_LOGIN);
+			String loginRequired[] = validateLogin.split("\\|");
+			for (int i = 0; i < loginRequired.length; i++) {
+				if (audioType.equalsIgnoreCase(loginRequired[i])) {
+					loginCheckFlag = true;
+					break;
+				}
+			}
+			try {
+				if (loginCheckFlag) {
+					if (userId == null || userId.trim().isEmpty()) {
+						throw new BusinessException(ErrorCodeConstants.MISSING_REQUEST_PARAMS);
+					}
+					;
+					User user = userService.get(userId);
+					if (user == null) {
+						throw new BusinessException(ErrorCodeConstants.INVALID_USER_ID, userId);
+					} else {
+						userLoginBusiness.isUserLoggedIn(deviceId, loginCredentials, userId, UserType.A);
+					}
+				} else {
+					UserLogin deviceLogin = userLoginBusiness.getAdminDeviceLogin(deviceId, loginCredentials);
+					if (deviceLogin == null) {
+						throw new BusinessException(ErrorCodeConstants.UNAUTH_ACCESS);
+					}
+				}
+				if (audioPath.startsWith("/")) {
+					audioPath = audioPath.substring(2, audioPath.length());
+				}
+				String audioFolderPath = propertiesService.getValue(module, "audioRootFolderPath." + audioType);
+				File audioFile = new File(audioFolderPath + audioPath);
+				if (audioFile != null && audioFile.exists()) {
+					InputStream imageStream = new FileInputStream(audioFile);
+					response.setContentType(MediaType.ALL_VALUE);
 					StreamUtils.copy(imageStream, response.getOutputStream());
 					imageStream.close();
 				}

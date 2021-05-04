@@ -277,6 +277,15 @@ public class UserLoginBusiness {
 		}
 	}
 
+	public UserLogin getAdminDeviceLogin(final String deviceId, final String tokenId) {
+		Optional<UserLogin> existingEntity = loginService.repository.getAdminDeviceLogin(deviceId, tokenId);
+		if (existingEntity.isPresent()) {
+			return existingEntity.get();
+		} else {
+			return null;
+		}
+	}
+
 	public Page<UserActivityTracker> listUserActivityTracker(AdminSearchRequest searchRequest, int pageNo,
 			int pageSize) {
 		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
