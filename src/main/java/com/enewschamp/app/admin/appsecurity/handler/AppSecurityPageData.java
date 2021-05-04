@@ -1,13 +1,10 @@
 package com.enewschamp.app.admin.appsecurity.handler;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
-import com.enewschamp.app.common.StringCryptoConverter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
