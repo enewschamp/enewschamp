@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 
 import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import com.enewschamp.app.common.StringCryptoConverter;
 import com.enewschamp.domain.common.BaseEntity;
@@ -126,7 +127,7 @@ public class StudentRegistration extends BaseEntity {
 		// if (operationDateTime == null) {
 		operationDateTime = LocalDateTime.now();
 		// }
-		if (studentKey == null) {
+		if (StringUtils.isEmpty(studentKey)) {
 			studentKey = generateStudentKey();
 		}
 	}

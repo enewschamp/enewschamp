@@ -12,7 +12,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -76,6 +75,9 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 			break;
 		case "ResetPassword":
 			pageDto = resetPassword(pageRequest);
+			break;
+		case "ImageApproval":
+			pageDto = updateImageApproval(pageRequest);
 			break;
 		case "List":
 			pageDto = listStudentRegistration(pageRequest);
@@ -194,6 +196,17 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 		StudentRegistration StudentRegistration = modelMapper.map(pageData, StudentRegistration.class);
 		StudentRegistration = studentRegistrationService.resetPassword(StudentRegistration);
 		mapStudentRegistration(pageRequest, pageDto, StudentRegistration);
+		return pageDto;
+	}
+	
+	@SneakyThrows
+	private PageDTO updateImageApproval(PageRequestDTO pageRequest) {
+		PageDTO pageDto = new PageDTO();
+		StudentRegistrationPageData pageData = objectMapper.readValue(pageRequest.getData().toString(),
+				StudentRegistrationPageData.class);
+		validate(pageData);
+		StudentRegistration studentRegistration = updateImageApproval(pageData, pageData.getStudentId());
+		mapStudentRegistration(pageRequest, pageDto, studentRegistration);
 		return pageDto;
 	}
 	
@@ -338,6 +351,39 @@ public class StudentRegistrationPageHandler implements IPageHandler {
 			}
 		}
 
+		if (updateFlag) {
+			studentRegistration = studentRegistrationService.updateOne(studentRegistration);
+		}
+		return studentRegistration;
+	}
+	
+	private StudentRegistration updateImageApproval(StudentRegistrationPageData studentRegistrationDto, Long studentId) {
+		studentRegistrationDto.setStudentId(studentId);
+		StudentRegistration studentRegistration = studentRegistrationService.get(studentId);
+		if (studentRegistration.getRecordInUse().equals(RecordInUseType.N)) {
+			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
+		}
+		String currentImageName = studentRegistration.getImageName();
+		studentRegistration.setImageApprovalRequired(studentRegistrationDto.getImageApprovalRequired());
+		studentRegistration = studentRegistrationService.updateOne(studentRegistration);
+		boolean updateFlag = false;
+		if ("Y".equalsIgnoreCase(studentRegistrationDto.getImageUpdate())) {
+			String newImageName = studentRegistration.getStudentId() + "_IMG_" + System.currentTimeMillis();
+			String imageType = studentRegistrationDto.getImageTypeExt();
+			boolean saveImageFlag = commonService.saveImages("Admin", "student", imageType, studentRegistrationDto.getImageBase64(),
+					newImageName);
+			if (saveImageFlag) {
+				studentRegistration.setImageName(newImageName + "." + imageType);
+				updateFlag = true;
+			} else {
+				studentRegistration.setImageName(null);
+				updateFlag = true;
+			}
+			if (currentImageName != null && !"".equals(currentImageName)) {
+				commonService.deleteImages("Admin", "student", currentImageName);
+				updateFlag = true;
+			}
+		}
 		if (updateFlag) {
 			studentRegistration = studentRegistrationService.updateOne(studentRegistration);
 		}
