@@ -18,8 +18,8 @@ import lombok.EqualsAndHashCode;
 public class StudentRegistrationPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	private long studentId;
-	@NotNull(message = MessageConstants.EMAIL_ID_NOT_NULL)
-	@NotEmpty(message = MessageConstants.EMAIL_ID_NOT_EMPTY)
+	//@NotNull(message = MessageConstants.EMAIL_ID_NOT_NULL)
+	//@NotEmpty(message = MessageConstants.EMAIL_ID_NOT_EMPTY)
 	private String emailId;
 	private String password;
     private String confirmPassword;
@@ -37,7 +37,7 @@ public class StudentRegistrationPageData extends PageData {
 	private LocalDateTime creationDateTime;
 	private String imageName;
 	private String imageBase64;
-	private String imageTypeExt = "jpg";
+	private String imageTypeExt;
 	private String imageUpdate;
 	private String studentKey;
 	private String photoName;

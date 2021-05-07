@@ -135,13 +135,13 @@ public class AppSecurityService {
 		return appSecurityRepository.save(existingAppSec);
 	}
 
-	public AppSecurity activate(AppSecurity appSecurityEntity) {
+	public AppSecurity appAvailable(AppSecurity appSecurityEntity) {
 		Long appSecurityId = appSecurityEntity.getAppSecurityId();
 		AppSecurity existingAppSecurity = get(appSecurityId);
 		if (!(existingAppSecurity.getRecordInUse().equals(RecordInUseType.Y))) {
 			throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_CLOSED);
 		}
-		existingAppSecurity.setIsActive(appSecurityEntity.getIsActive());
+		existingAppSecurity.setIsAppAvailable(appSecurityEntity.getIsAppAvailable());
 		existingAppSecurity.setOperationDateTime(null);
 		return appSecurityRepository.save(existingAppSecurity);
 	}

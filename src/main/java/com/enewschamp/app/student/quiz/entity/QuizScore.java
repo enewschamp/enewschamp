@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.domain.common.BaseEntity;
@@ -16,7 +17,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "QuizScore")
+@Table(name = "QuizScore",uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "newsArticleQuizId", "studentId" })
+		})
 @EqualsAndHashCode(callSuper = false)
 public class QuizScore extends BaseEntity {
 

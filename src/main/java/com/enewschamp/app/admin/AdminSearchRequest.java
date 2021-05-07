@@ -127,4 +127,5 @@ public class AdminSearchRequest {
 	private LocalDateTime lastUpdateDateFrom;
 	private LocalDateTime lastUpdateDateTo;
 	private String imageApprovalRequired;
+	private String quizAttempted;
 }

@@ -52,8 +52,5 @@ public class AppSecurity extends BaseEntity {
 	@NotNull
 	@Column(name = "compatibleVersions", length = 500)
 	private String compatibleVersions;
-	
-	@Column(name = "isActive", length = 1)
-	private String isActive = "Y";
 
 }
