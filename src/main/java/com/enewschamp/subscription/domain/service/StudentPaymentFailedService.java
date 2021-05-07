@@ -6,36 +6,33 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.enewschamp.app.admin.AdminSearchRequest;
+import com.enewschamp.app.admin.student.payment.failed.repository.StudentPaymentFailedRepositoryCustomImpl;
 import com.enewschamp.app.common.ErrorCodeConstants;
 import com.enewschamp.audit.domain.AuditService;
 import com.enewschamp.problem.BusinessException;
-import com.enewschamp.subscription.domain.entity.StudentPayment;
 import com.enewschamp.subscription.domain.entity.StudentPaymentFailed;
 import com.enewschamp.subscription.domain.entity.StudentPaymentWork;
 import com.enewschamp.subscription.domain.repository.StudentPaymentFailedRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class StudentPaymentFailedService {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	@Autowired
-	StudentPaymentFailedRepository repository;
-
-	@Autowired
-	ModelMapper modelMapper;
-
+	private final StudentPaymentFailedRepository repository;
+	private final StudentPaymentFailedRepositoryCustomImpl repositoryCustom;
+	private final AuditService auditService;
 	@Autowired
 	@Qualifier("modelPatcher")
 	ModelMapper modelMapperForPatch;
 
-	@Autowired
-	AuditService auditService;
+
 
 	public StudentPaymentFailed create(StudentPaymentFailed studentPaymentFailed) {
 		return repository.save(studentPaymentFailed);
@@ -70,4 +67,9 @@ public class StudentPaymentFailedService {
 		return auditService.getEntityAudit(StudentDetails);
 	}
 
+	public Page<StudentPaymentFailed> listStudentPaymentFailed(AdminSearchRequest searchRequest, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of((pageNo - 1), pageSize);
+		Page<StudentPaymentFailed> studentPaymentList = repositoryCustom.findAll(pageable, searchRequest);
+		return studentPaymentList;
+	}
 }

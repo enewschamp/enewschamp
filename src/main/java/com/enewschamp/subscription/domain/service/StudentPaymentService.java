@@ -28,12 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class StudentPaymentService {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
     private final StudentPaymentRepository repository;
 	private final StudentPaymentRepositoryCustomImpl repositoryCustom;
     private final ModelMapper modelMapper;
