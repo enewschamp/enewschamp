@@ -67,7 +67,8 @@ public class StudentPaymentFailedPageHandler implements IPageHandler {
 	private PageDTO listStudentPaymentFailed(PageRequestDTO pageRequest) {
 		AdminSearchRequest searchRequest = objectMapper
 				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
-		Page<StudentPaymentFailed> StudentPaymentFailedList = studentPaymentFailedService.listStudentPaymentFailed(searchRequest,
+		Page<StudentPaymentFailed> StudentPaymentFailedList = studentPaymentFailedService.listStudentPaymentFailed(
+				searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
@@ -97,15 +98,16 @@ public class StudentPaymentFailedPageHandler implements IPageHandler {
 		}
 		return userLoginPageDataList;
 	}
-	
+
 	@SneakyThrows
 	private StudentPaymentFailedPageData mapPageData(StudentPaymentFailed studentPaymentFailed) {
-		StudentPaymentFailedPageData pageData = modelMapper.map(studentPaymentFailed, StudentPaymentFailedPageData.class);
+		StudentPaymentFailedPageData pageData = modelMapper.map(studentPaymentFailed,
+				StudentPaymentFailedPageData.class);
 		pageData.setLastUpdate(studentPaymentFailed.getOperationDateTime());
 		pageData.setTranStatusApiRequest(blobToString(studentPaymentFailed.getTranStatusApiRequest()));
 		pageData.setTranStatusApiResponse(blobToString(studentPaymentFailed.getTranStatusApiResponse()));
-	    pageData.setInitTranApiRequest(blobToString(studentPaymentFailed.getInitTranApiRequest()));
-	    pageData.setInitTranApiResponse(blobToString(studentPaymentFailed.getInitTranApiResponse()));
+		pageData.setInitTranApiRequest(blobToString(studentPaymentFailed.getInitTranApiRequest()));
+		pageData.setInitTranApiResponse(blobToString(studentPaymentFailed.getInitTranApiResponse()));
 		return pageData;
 	}
 
