@@ -122,20 +122,36 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 			StudentRefund studentRefund = (StudentRefund) t.get(9);
 
 			pageData.setStudentRegistration(modelMapper.map(studentRegistration, StudentRegistrationNilDTO.class));
+			pageData.getStudentRegistration().setLastUpdate(studentRegistration.getOperationDateTime());
+			
 			pageData.setStudentSubscription(modelMapper.map(studentSubscription, StudentSubscriptionNilDTO.class));
+			pageData.getStudentSubscription().setLastUpdate(studentSubscription.getOperationDateTime());
+			
 			pageData.setStudentPreferences(modelMapper.map(studentPreference, StudentPreferencesNilDTO.class));
 			mapStudentPreferencesPageData(pageData, studentPreference);
+			
 			pageData.setStudentSchool(modelMapper.map(studentSchool, StudentSchoolNilDTO.class));
+			pageData.getStudentSchool().setLastUpdate(studentSchool.getOperationDateTime());
+			
 			pageData.setStudentDetails(modelMapper.map(studentDetails, StudentDetailsNilDTO.class));
+			pageData.getStudentDetails().setLastUpdate(studentSchool.getOperationDateTime());
+			
 			pageData.setStudentControl(modelMapper.map(studentControl, StudentControlNilDTO.class));
+			pageData.getStudentControl().setLastUpdate(studentControl.getOperationDateTime());
+			
 			pageData.setStudentSubscriptionHistory(
 					modelMapper.map(studentSubscriptionHistory, StudentSubscriptionHistoryNilDTO.class));
+			pageData.getStudentSubscriptionHistory().setLastUpdate(studentSubscriptionHistory.getOperationDateTime());
+			
 			pageData.setStudentPayment(modelMapper.map(studentPayment, StudentPaymentNilDTO.class));
 			mapStudentPaymentPageData(pageData, studentPayment);
+			
 			pageData.setStudentPaymentFailed(modelMapper.map(studentPaymentFailed, StudentPaymentFailedNilDTO.class));
 			mapStudentPaymentFailedPageData(pageData, studentPaymentFailed);
+			
 			pageData.setStudentRefund(modelMapper.map(studentRefund, StudentRefundNilDTO.class));
 			mapStudentRefundPageData(pageData, studentRefund);
+			
 			bulkList.add(pageData);
 		}
 		return new PageImpl<>(bulkList, pageable, count);
@@ -158,6 +174,7 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 					.setChampProfilePic(studentPreference.getChampPermissions().getChampProfilePic());
 			pagedata.getStudentPreferences().setChampSchool(studentPreference.getChampPermissions().getChampSchool());
 		}
+		pagedata.getStudentPreferences().setLastUpdate(studentPreference.getOperationDateTime());
 	}
 
 	private void mapStudentRegistrationPredicate(AdminSearchRequest searchRequest,
@@ -373,7 +390,7 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 		pagedata.getStudentRefund().setRefundStatusApiRequest(blobToString(studentRefund.getRefundStatusApiRequest()));
 		pagedata.getStudentRefund()
 				.setRefundStatusApiResponse(blobToString(studentRefund.getRefundStatusApiResponse()));
-		pagedata.setLastUpdate(studentRefund.getOperationDateTime());
+		pagedata.getStudentRefund().setLastUpdate(studentRefund.getOperationDateTime());
 	}
 
 	@SneakyThrows
@@ -382,7 +399,7 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 		pagedata.getStudentPayment().setInitTranApiResponse(blobToString(studentPayment.getInitTranApiResponse()));
 		pagedata.getStudentPayment().setTranStatusApiRequest((blobToString(studentPayment.getTranStatusApiRequest())));
 		pagedata.getStudentPayment().setTranStatusApiResponse(blobToString(studentPayment.getTranStatusApiResponse()));
-		pagedata.setLastUpdate(studentPayment.getOperationDateTime());
+		pagedata.getStudentPayment().setLastUpdate(studentPayment.getOperationDateTime());
 	}
 
 	@SneakyThrows
@@ -396,7 +413,7 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 				.setTranStatusApiRequest((blobToString(studentPaymentFailed.getTranStatusApiRequest())));
 		pagedata.getStudentPaymentFailed()
 				.setTranStatusApiResponse(blobToString(studentPaymentFailed.getTranStatusApiResponse()));
-		pagedata.setLastUpdate(studentPaymentFailed.getOperationDateTime());
+		pagedata.getStudentPaymentFailed().setLastUpdate(studentPaymentFailed.getOperationDateTime());
 	}
 
 	@SneakyThrows

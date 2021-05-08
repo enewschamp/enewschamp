@@ -9,7 +9,6 @@ import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,7 +40,7 @@ public class BulkStudentRegistrationPageData extends PageData {
 	public String getOperatorId() {
 		return this.operatorId;
 	}
-
+	
 	@JsonIgnore
 	public LocalDateTime getLastUpdate() {
 		return this.lastUpdate;
