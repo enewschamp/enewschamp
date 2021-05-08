@@ -149,4 +149,5 @@ public interface ErrorCodeConstants {
 	public static String UICONTROLS_NOT_FOUND = "UICON_001";
 	public static String UNSUBSCRIBE_NOT_SUCCESSFUL = "SUBSCRIBE_001";
 	public static String PASSWORD_MISMATCH = "PWD_MISMATCH";
+	public static String RECORD_DATA_ISSUE = "REC_DATA_ISSUE";
 }

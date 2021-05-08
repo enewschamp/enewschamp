@@ -1,10 +1,15 @@
 package com.enewschamp.app.admin.student.registration.bulk.handler;
 
+import java.time.LocalDateTime;
+
 import javax.validation.constraints.NotNull;
 
 import com.enewschamp.app.admin.student.school.nonlist.handler.StudentSchoolNilDTO;
 import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
+import com.enewschamp.domain.common.RecordInUseType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,4 +33,22 @@ public class BulkStudentRegistrationPageData extends PageData {
 	private StudentSchoolNilDTO studentSchool;
 	@NotNull(message = MessageConstants.STUDENT_PREFERENCES_NOT_NULL)
 	private StudentPreferencesNilDTO studentPreferences;
+	private StudentSubscriptionHistoryNilDTO studentSubscriptionHistory;
+	private StudentPaymentFailedNilDTO studentPaymentFailed;
+	private StudentRefundNilDTO studentRefund;
+	
+	@JsonIgnore
+	public String getOperatorId() {
+		return this.operatorId;
+	}
+
+	@JsonIgnore
+	public LocalDateTime getLastUpdate() {
+		return this.lastUpdate;
+	}
+	
+	@JsonIgnore
+	public RecordInUseType getRecordInUse() {
+		return this.recordInUse;
+	}
 }

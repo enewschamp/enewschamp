@@ -2,10 +2,6 @@ package com.enewschamp.app.admin.student.registration.handler;
 
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
-import com.enewschamp.app.common.MessageConstants;
 import com.enewschamp.app.common.PageData;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,8 +14,6 @@ import lombok.EqualsAndHashCode;
 public class StudentRegistrationPageData extends PageData {
 	private static final long serialVersionUID = 1L;
 	private long studentId;
-	//@NotNull(message = MessageConstants.EMAIL_ID_NOT_NULL)
-	//@NotEmpty(message = MessageConstants.EMAIL_ID_NOT_EMPTY)
 	private String emailId;
 	private String password;
     private String confirmPassword;
@@ -52,6 +46,16 @@ public class StudentRegistrationPageData extends PageData {
 	@JsonProperty
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	@JsonIgnore
+	public LocalDateTime getCreationDateTime() {
+		return this.creationDateTime;
+	} 
+	
+	@JsonProperty
+	public void setPassword(LocalDateTime creationDateTime) {
+		this.creationDateTime =creationDateTime;
 	}
 
 }

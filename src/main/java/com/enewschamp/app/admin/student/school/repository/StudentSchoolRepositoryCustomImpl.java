@@ -37,12 +37,25 @@ public class StudentSchoolRepositoryCustomImpl extends RepositoryImpl
 		CriteriaQuery<StudentSchool> criteriaQuery = cb.createQuery(StudentSchool.class);
 		Root<StudentSchool> studentSchoolsRoot = criteriaQuery.from(StudentSchool.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
-
-		filterPredicates.add(cb.or(cb.equal(cb.trim(studentSchoolsRoot.get("countryNotInTheList")), "Y"),
-				cb.equal(cb.trim(studentSchoolsRoot.get("stateNotInTheList")), "Y"),
-				cb.equal(cb.trim(studentSchoolsRoot.get("cityNotInTheList")), "Y"),
-				cb.equal(cb.trim(studentSchoolsRoot.get("schoolNotInTheList")), "Y"),
-				cb.equal(cb.trim(studentSchoolsRoot.get("approvalRequired")), "Y")));
+		if (!(searchRequest.getPageName().equals("NotInTheList"))) {
+			if (!StringUtils.isEmpty(searchRequest.getApprovalRequired())) {
+				if (!StringUtils.isEmpty(searchRequest.getStudentId())) {
+					filterPredicates.add(cb.equal(studentSchoolsRoot.get(STUDENT_ID), searchRequest.getStudentId()));
+				}
+				if (searchRequest.getApprovalRequired().equals("Y")) {
+					filterPredicates.add(
+							cb.equal(studentSchoolsRoot.get(APPROVAL_REQUIRED), searchRequest.getApprovalRequired()));
+				} else {
+					filterPredicates.add(cb.notEqual(studentSchoolsRoot.get(APPROVAL_REQUIRED), "Y"));
+				}
+			}
+		} else {
+			filterPredicates.add(cb.or(cb.equal(cb.trim(studentSchoolsRoot.get("countryNotInTheList")), "Y"),
+					cb.equal(cb.trim(studentSchoolsRoot.get("stateNotInTheList")), "Y"),
+					cb.equal(cb.trim(studentSchoolsRoot.get("cityNotInTheList")), "Y"),
+					cb.equal(cb.trim(studentSchoolsRoot.get("schoolNotInTheList")), "Y"),
+					cb.equal(cb.trim(studentSchoolsRoot.get("approvalRequired")), "Y")));
+		}
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentSchoolsRoot.get(CommonConstants.OPERATION_DATE_TIME)));
