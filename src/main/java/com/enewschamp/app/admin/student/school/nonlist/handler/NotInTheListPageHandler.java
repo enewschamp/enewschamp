@@ -77,7 +77,7 @@ public class NotInTheListPageHandler implements IPageHandler {
 			pageDto = updateStudentSchoolNotInTheList(pageRequest);
 			break;
 		case "List":
-			pageDto = studentSchoolPageHandler.listStudentSchool(pageRequest);
+			pageDto = studentSchoolPageHandler.listStudentSchoolNotInTheList(pageRequest);
 			break;
 		default:
 			break;

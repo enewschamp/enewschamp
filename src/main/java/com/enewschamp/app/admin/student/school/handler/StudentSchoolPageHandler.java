@@ -1,5 +1,6 @@
 package com.enewschamp.app.admin.student.school.handler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,8 @@ import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.subscription.domain.entity.StudentSchool;
 import com.enewschamp.subscription.domain.service.StudentSchoolService;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
@@ -146,6 +149,19 @@ public class StudentSchoolPageHandler implements IPageHandler {
 		AdminSearchRequest searchRequest = objectMapper
 				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
 
+		return list(pageRequest, searchRequest);
+	}
+	
+	@SneakyThrows
+	public PageDTO listStudentSchoolNotInTheList(PageRequestDTO pageRequest) {
+		AdminSearchRequest searchRequest = objectMapper
+				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
+		searchRequest.setPageName(pageRequest.getHeader().getPageName());
+		return list(pageRequest, searchRequest);
+	}
+
+	private PageDTO list(PageRequestDTO pageRequest, AdminSearchRequest searchRequest)
+			throws IOException, JsonParseException, JsonMappingException {
 		Page<StudentSchool> studentSchoolList = studentSchoolService.list(searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
