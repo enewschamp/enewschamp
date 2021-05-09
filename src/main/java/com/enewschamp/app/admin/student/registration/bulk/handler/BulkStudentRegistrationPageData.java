@@ -1,6 +1,7 @@
 package com.enewschamp.app.admin.student.registration.bulk.handler;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -32,9 +33,10 @@ public class BulkStudentRegistrationPageData extends PageData {
 	private StudentSchoolNilDTO studentSchool;
 	@NotNull(message = MessageConstants.STUDENT_PREFERENCES_NOT_NULL)
 	private StudentPreferencesNilDTO studentPreferences;
-	private StudentSubscriptionHistoryNilDTO studentSubscriptionHistory;
-	private StudentPaymentFailedNilDTO studentPaymentFailed;
-	private StudentRefundNilDTO studentRefund;
+	private List<StudentPaymentNilDTO> studentPayments;
+	private List<StudentSubscriptionHistoryNilDTO> studentSubscriptionHistories;
+	private List<StudentPaymentFailedNilDTO> studentPaymentFailedList;
+	private List<StudentRefundNilDTO> studentRefunds;
 	
 	@JsonIgnore
 	public String getOperatorId() {

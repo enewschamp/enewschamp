@@ -6,6 +6,7 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -38,15 +39,25 @@ import com.enewschamp.subscription.domain.entity.StudentPreferences;
 import com.enewschamp.subscription.domain.entity.StudentSchool;
 import com.enewschamp.subscription.domain.entity.StudentSubscription;
 import com.enewschamp.subscription.domain.entity.StudentSubscriptionHistory;
+import com.enewschamp.subscription.domain.repository.StudentPaymentFailedRepository;
+import com.enewschamp.subscription.domain.repository.StudentPaymentRepository;
+import com.enewschamp.subscription.domain.service.StudentSubscriptionHistoryRepository;
 import com.enewschamp.user.domain.entity.StudentRefund;
+import com.enewschamp.user.domain.service.StudentRefundRepository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 @Repository
+@RequiredArgsConstructor
 public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl implements AdminConstant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+	private final StudentPaymentRepository paymentRepository;
+	private final StudentPaymentFailedRepository paymentFailedRepository;
+	private final StudentRefundRepository studentRefundRepository;
+	private final StudentSubscriptionHistoryRepository studentSubscriptionHistoryRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -61,11 +72,7 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 		Root<StudentPreferences> studentPreferencesRoot = criteriaQuery.from(StudentPreferences.class);
 		Root<StudentSubscription> studentSubscriptionRoot = criteriaQuery.from(StudentSubscription.class);
 		Root<StudentRegistration> studentRegistrationRoot = criteriaQuery.from(StudentRegistration.class);
-		Root<StudentSubscriptionHistory> studentSubscriptionHistoryRoot = criteriaQuery
-				.from(StudentSubscriptionHistory.class);
-		Root<StudentPayment> studentPaymentRoot = criteriaQuery.from(StudentPayment.class);
-		Root<StudentPaymentFailed> studentPaymentFailedRoot = criteriaQuery.from(StudentPaymentFailed.class);
-		Root<StudentRefund> studentRefundRoot = criteriaQuery.from(StudentRefund.class);
+
 		List<Predicate> filterPredicates = new ArrayList<>();
 		filterPredicates
 				.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentSubscriptionRoot.get(STUDENT_ID)));
@@ -73,12 +80,6 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 		filterPredicates.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentSchoolRoot.get(STUDENT_ID)));
 		filterPredicates.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentDetailsRoot.get(STUDENT_ID)));
 		filterPredicates.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentControlRoot.get(STUDENT_ID)));
-		filterPredicates
-				.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentSubscriptionHistoryRoot.get(STUDENT_ID)));
-		filterPredicates.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentPaymentRoot.get(STUDENT_ID)));
-		filterPredicates
-				.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentPaymentFailedRoot.get(STUDENT_ID)));
-		filterPredicates.add(cb.equal(studentRegistrationRoot.get(STUDENT_ID), studentRefundRoot.get(STUDENT_ID)));
 
 		// Apply the filter Criterias
 		mapStudentRegistrationPredicate(searchRequest, studentRegistrationRoot, cb, filterPredicates);
@@ -87,15 +88,10 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 		mapStudentSchoolPredicate(searchRequest, studentSchoolRoot, cb, filterPredicates);
 		mapStudentPreferencePredicate(searchRequest, studentPreferencesRoot, cb, filterPredicates);
 		mapStudentSubscriptionPredicate(searchRequest, studentSubscriptionRoot, cb, filterPredicates);
-		mapStudentSubscriptionHistoryPredicate(searchRequest, studentSubscriptionHistoryRoot, cb, filterPredicates);
-		mapStudentPaymentPredicate(searchRequest, studentPaymentRoot, cb, filterPredicates);
-		mapStudentPaymentFailedPredicate(searchRequest, studentPaymentFailedRoot, cb, filterPredicates);
-		mapStudentRefundPredicate(searchRequest, studentRefundRoot, cb, filterPredicates);
 
 		criteriaQuery
 				.select(cb.tuple(studentRegistrationRoot, studentControlRoot, studentDetailsRoot, studentSchoolRoot,
-						studentPreferencesRoot, studentSubscriptionRoot, studentSubscriptionHistoryRoot,
-						studentPaymentRoot, studentPaymentFailedRoot, studentRefundRoot))
+						studentPreferencesRoot, studentSubscriptionRoot))
 				.where((Predicate[]) filterPredicates.toArray(new Predicate[0]));
 
 		TypedQuery<Tuple> q = entityManager.createQuery(criteriaQuery);
@@ -110,51 +106,69 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 		List<BulkStudentRegistrationPageData> bulkList = new ArrayList<BulkStudentRegistrationPageData>();
 		for (Tuple t : list) {
 			BulkStudentRegistrationPageData pageData = new BulkStudentRegistrationPageData();
-			StudentRegistration studentRegistration = (StudentRegistration) t.get(0);
-			StudentControl studentControl = (StudentControl) t.get(1);
-			StudentDetails studentDetails = (StudentDetails) t.get(2);
-			StudentSchool studentSchool = (StudentSchool) t.get(3);
-			StudentPreferences studentPreference = (StudentPreferences) t.get(4);
-			StudentSubscription studentSubscription = (StudentSubscription) t.get(5);
-			StudentSubscriptionHistory studentSubscriptionHistory = (StudentSubscriptionHistory) t.get(6);
-			StudentPayment studentPayment = (StudentPayment) t.get(7);
-			StudentPaymentFailed studentPaymentFailed = (StudentPaymentFailed) t.get(8);
-			StudentRefund studentRefund = (StudentRefund) t.get(9);
-
-			pageData.setStudentRegistration(modelMapper.map(studentRegistration, StudentRegistrationNilDTO.class));
-			pageData.getStudentRegistration().setLastUpdate(studentRegistration.getOperationDateTime());
-			
-			pageData.setStudentSubscription(modelMapper.map(studentSubscription, StudentSubscriptionNilDTO.class));
-			pageData.getStudentSubscription().setLastUpdate(studentSubscription.getOperationDateTime());
-			
-			pageData.setStudentPreferences(modelMapper.map(studentPreference, StudentPreferencesNilDTO.class));
-			mapStudentPreferencesPageData(pageData, studentPreference);
-			
-			pageData.setStudentSchool(modelMapper.map(studentSchool, StudentSchoolNilDTO.class));
-			pageData.getStudentSchool().setLastUpdate(studentSchool.getOperationDateTime());
-			
-			pageData.setStudentDetails(modelMapper.map(studentDetails, StudentDetailsNilDTO.class));
-			pageData.getStudentDetails().setLastUpdate(studentSchool.getOperationDateTime());
-			
-			pageData.setStudentControl(modelMapper.map(studentControl, StudentControlNilDTO.class));
-			pageData.getStudentControl().setLastUpdate(studentControl.getOperationDateTime());
-			
-			pageData.setStudentSubscriptionHistory(
-					modelMapper.map(studentSubscriptionHistory, StudentSubscriptionHistoryNilDTO.class));
-			pageData.getStudentSubscriptionHistory().setLastUpdate(studentSubscriptionHistory.getOperationDateTime());
-			
-			pageData.setStudentPayment(modelMapper.map(studentPayment, StudentPaymentNilDTO.class));
-			mapStudentPaymentPageData(pageData, studentPayment);
-			
-			pageData.setStudentPaymentFailed(modelMapper.map(studentPaymentFailed, StudentPaymentFailedNilDTO.class));
-			mapStudentPaymentFailedPageData(pageData, studentPaymentFailed);
-			
-			pageData.setStudentRefund(modelMapper.map(studentRefund, StudentRefundNilDTO.class));
-			mapStudentRefundPageData(pageData, studentRefund);
-			
+			mapStudentData(t, pageData);
 			bulkList.add(pageData);
 		}
 		return new PageImpl<>(bulkList, pageable, count);
+	}
+
+	private void mapStudentData(Tuple t, BulkStudentRegistrationPageData pageData) {
+		StudentRegistration studentRegistration = (StudentRegistration) t.get(0);
+		StudentControl studentControl = (StudentControl) t.get(1);
+		StudentDetails studentDetails = (StudentDetails) t.get(2);
+		StudentSchool studentSchool = (StudentSchool) t.get(3);
+		StudentPreferences studentPreference = (StudentPreferences) t.get(4);
+		StudentSubscription studentSubscription = (StudentSubscription) t.get(5);
+
+		pageData.setStudentRegistration(modelMapper.map(studentRegistration, StudentRegistrationNilDTO.class));
+		pageData.getStudentRegistration().setLastUpdate(studentRegistration.getOperationDateTime());
+
+		pageData.setStudentSubscription(modelMapper.map(studentSubscription, StudentSubscriptionNilDTO.class));
+		pageData.getStudentSubscription().setLastUpdate(studentSubscription.getOperationDateTime());
+
+		pageData.setStudentPreferences(modelMapper.map(studentPreference, StudentPreferencesNilDTO.class));
+		mapStudentPreferencesPageData(pageData, studentPreference);
+
+		pageData.setStudentSchool(modelMapper.map(studentSchool, StudentSchoolNilDTO.class));
+		pageData.getStudentSchool().setLastUpdate(studentSchool.getOperationDateTime());
+
+		pageData.setStudentDetails(modelMapper.map(studentDetails, StudentDetailsNilDTO.class));
+		pageData.getStudentDetails().setLastUpdate(studentSchool.getOperationDateTime());
+
+		pageData.setStudentControl(modelMapper.map(studentControl, StudentControlNilDTO.class));
+		pageData.getStudentControl().setLastUpdate(studentControl.getOperationDateTime());
+
+		mapStudentAcitvities(pageData, studentRegistration, studentSubscription);
+	}
+
+	private void mapStudentAcitvities(BulkStudentRegistrationPageData pageData, StudentRegistration studentRegistration,
+			StudentSubscription studentSubscription) {
+		List<StudentPayment> studentPayments = paymentRepository
+				.getAllByStudentIdAndEdition(studentRegistration.getStudentId(), studentSubscription.getEditionId());
+		List<StudentPaymentNilDTO> studentPaymentDtos = studentPayments.stream()
+				.map(studentPayment -> mapStudentPayment(studentPayment)).collect(Collectors.toList());
+
+		List<StudentPaymentFailed> studentPaymentFailedList = paymentFailedRepository
+				.getAllByStudentIdAndEdition(studentRegistration.getStudentId(), studentSubscription.getEditionId());
+		List<StudentPaymentFailedNilDTO> studentPaymentFailedDtos = studentPaymentFailedList.stream()
+				.map(studentPaymentFailed -> mapStudentPaymentFailed(studentPaymentFailed))
+				.collect(Collectors.toList());
+
+		List<StudentRefund> studentRefundList = studentRefundRepository
+				.getAllByStudentIdAndEdition(studentRegistration.getStudentId(), studentSubscription.getEditionId());
+		List<StudentRefundNilDTO> studentRefundDtos = studentRefundList.stream()
+				.map(studentRefund -> mapStudentRefund(studentRefund)).collect(Collectors.toList());
+
+		List<StudentSubscriptionHistory> studentSubscriptionHistoryList = studentSubscriptionHistoryRepository
+				.getAllByStudentIdAndEdition(studentRegistration.getStudentId(), studentSubscription.getEditionId());
+		List<StudentSubscriptionHistoryNilDTO> studentSubscriptionHistoryDtos = studentSubscriptionHistoryList.stream()
+				.map(studentSubscriptionHistory -> mapStudentPaymentSubscriptionHistory(studentSubscriptionHistory))
+				.collect(Collectors.toList());
+
+		pageData.setStudentPayments(studentPaymentDtos);
+		pageData.setStudentPaymentFailedList(studentPaymentFailedDtos);
+		pageData.setStudentRefunds(studentRefundDtos);
+		pageData.setStudentSubscriptionHistories(studentSubscriptionHistoryDtos);
 	}
 
 	private void mapStudentPreferencesPageData(BulkStudentRegistrationPageData pagedata,
@@ -357,64 +371,48 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 
 	}
 
-	private void mapStudentSubscriptionHistoryPredicate(AdminSearchRequest searchRequest,
-			Root<StudentSubscriptionHistory> studentSubscriptionHistoryRoot, CriteriaBuilder cb,
-			List<Predicate> filterPredicates) {
-		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates
-					.add(cb.equal(studentSubscriptionHistoryRoot.get(STUDENT_ID), searchRequest.getStudentId()));
-	}
-
-	private void mapStudentPaymentPredicate(AdminSearchRequest searchRequest, Root<StudentPayment> studentPaymentRoot,
-			CriteriaBuilder cb, List<Predicate> filterPredicates) {
-		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentPaymentRoot.get(STUDENT_ID), searchRequest.getStudentId()));
-	}
-
-	private void mapStudentPaymentFailedPredicate(AdminSearchRequest searchRequest,
-			Root<StudentPaymentFailed> studentPaymentFailedRoot, CriteriaBuilder cb, List<Predicate> filterPredicates) {
-		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentPaymentFailedRoot.get(STUDENT_ID), searchRequest.getStudentId()));
-	}
-
-	private void mapStudentRefundPredicate(AdminSearchRequest searchRequest, Root<StudentRefund> studentRefundRoot,
-			CriteriaBuilder cb, List<Predicate> filterPredicates) {
-		if (!StringUtils.isEmpty(searchRequest.getStudentId()))
-			filterPredicates.add(cb.equal(studentRefundRoot.get(STUDENT_ID), searchRequest.getStudentId()));
+	@SneakyThrows
+	private StudentPaymentNilDTO mapStudentPayment(StudentPayment studentPayment) {
+		StudentPaymentNilDTO studentPaymentDto = modelMapper.map(studentPayment, StudentPaymentNilDTO.class);
+		studentPaymentDto.setInitTranApiRequest(blobToString(studentPayment.getInitTranApiRequest()));
+		studentPaymentDto.setInitTranApiResponse(blobToString(studentPayment.getInitTranApiResponse()));
+		studentPaymentDto.setTranStatusApiRequest((blobToString(studentPayment.getTranStatusApiRequest())));
+		studentPaymentDto.setTranStatusApiResponse(blobToString(studentPayment.getTranStatusApiResponse()));
+		studentPaymentDto.setLastUpdate(studentPayment.getOperationDateTime());
+		return studentPaymentDto;
 	}
 
 	@SneakyThrows
-	private void mapStudentRefundPageData(BulkStudentRegistrationPageData pagedata, StudentRefund studentRefund) {
-		pagedata.getStudentRefund().setInitRefundApiRequest(blobToString(studentRefund.getInitRefundApiRequest()));
-		pagedata.getStudentRefund().setInitRefundApiResponse(blobToString(studentRefund.getInitRefundApiResponse()));
-		pagedata.getStudentRefund().setRefundStatusApiRequest(blobToString(studentRefund.getRefundStatusApiRequest()));
-		pagedata.getStudentRefund()
-				.setRefundStatusApiResponse(blobToString(studentRefund.getRefundStatusApiResponse()));
-		pagedata.getStudentRefund().setLastUpdate(studentRefund.getOperationDateTime());
+	private StudentRefundNilDTO mapStudentRefund(StudentRefund studentRefund) {
+		StudentRefundNilDTO studentRefundDto = modelMapper.map(studentRefund, StudentRefundNilDTO.class);
+		studentRefundDto.setInitRefundApiRequest(blobToString(studentRefund.getInitRefundApiRequest()));
+		studentRefundDto.setInitRefundApiResponse(blobToString(studentRefund.getInitRefundApiResponse()));
+		studentRefundDto.setRefundStatusApiRequest(blobToString(studentRefund.getRefundStatusApiRequest()));
+		studentRefundDto.setRefundStatusApiResponse(blobToString(studentRefund.getRefundStatusApiResponse()));
+		studentRefundDto.setLastUpdate(studentRefund.getOperationDateTime());
+		return studentRefundDto;
 	}
 
 	@SneakyThrows
-	private void mapStudentPaymentPageData(BulkStudentRegistrationPageData pagedata, StudentPayment studentPayment) {
-		pagedata.getStudentPayment().setInitTranApiRequest(blobToString(studentPayment.getInitTranApiRequest()));
-		pagedata.getStudentPayment().setInitTranApiResponse(blobToString(studentPayment.getInitTranApiResponse()));
-		pagedata.getStudentPayment().setTranStatusApiRequest((blobToString(studentPayment.getTranStatusApiRequest())));
-		pagedata.getStudentPayment().setTranStatusApiResponse(blobToString(studentPayment.getTranStatusApiResponse()));
-		pagedata.getStudentPayment().setLastUpdate(studentPayment.getOperationDateTime());
+	private StudentPaymentFailedNilDTO mapStudentPaymentFailed(StudentPaymentFailed studentPaymentFailed) {
+		StudentPaymentFailedNilDTO studentPaymentFailedDto = modelMapper.map(studentPaymentFailed,
+				StudentPaymentFailedNilDTO.class);
+		studentPaymentFailedDto.setInitTranApiRequest(blobToString(studentPaymentFailed.getInitTranApiRequest()));
+		studentPaymentFailedDto.setInitTranApiResponse(blobToString(studentPaymentFailed.getInitTranApiResponse()));
+		studentPaymentFailedDto.setTranStatusApiRequest((blobToString(studentPaymentFailed.getTranStatusApiRequest())));
+		studentPaymentFailedDto.setTranStatusApiResponse(blobToString(studentPaymentFailed.getTranStatusApiResponse()));
+		studentPaymentFailedDto.setLastUpdate(studentPaymentFailed.getOperationDateTime());
+		return studentPaymentFailedDto;
 	}
 
 	@SneakyThrows
-	private void mapStudentPaymentFailedPageData(BulkStudentRegistrationPageData pagedata,
-			StudentPaymentFailed studentPaymentFailed) {
-		pagedata.getStudentPaymentFailed()
-				.setInitTranApiRequest(blobToString(studentPaymentFailed.getInitTranApiRequest()));
-		pagedata.getStudentPaymentFailed()
-				.setInitTranApiResponse(blobToString(studentPaymentFailed.getInitTranApiResponse()));
-		pagedata.getStudentPaymentFailed()
-				.setTranStatusApiRequest((blobToString(studentPaymentFailed.getTranStatusApiRequest())));
-		pagedata.getStudentPaymentFailed()
-				.setTranStatusApiResponse(blobToString(studentPaymentFailed.getTranStatusApiResponse()));
-		pagedata.getStudentPaymentFailed().setLastUpdate(studentPaymentFailed.getOperationDateTime());
+	private StudentSubscriptionHistoryNilDTO mapStudentPaymentSubscriptionHistory(StudentSubscriptionHistory studentSubscriptionHistory) {
+		StudentSubscriptionHistoryNilDTO studentSubsHistoryNilDto = modelMapper.map(studentSubscriptionHistory,
+				StudentSubscriptionHistoryNilDTO.class);
+		studentSubsHistoryNilDto.setLastUpdate(studentSubscriptionHistory.getOperationDateTime());
+		return studentSubsHistoryNilDto;
 	}
+	
 
 	@SneakyThrows
 	private String blobToString(Blob data) throws SQLException, IOException {

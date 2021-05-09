@@ -11,7 +11,7 @@ import com.enewschamp.subscription.domain.entity.StudentPayment;
 import com.enewschamp.user.domain.entity.StudentRefund;
 
 @JaversSpringDataAuditable
-interface StudentRefundRepository extends JpaRepository<StudentRefund, Long> {
+public interface StudentRefundRepository extends JpaRepository<StudentRefund, Long> {
 
 	@Query("Select s from StudentRefund s where s.paytmStatus ='PENDING' order by s.operationDateTime desc")
 	public List<StudentRefund> getPendingRefundList();
