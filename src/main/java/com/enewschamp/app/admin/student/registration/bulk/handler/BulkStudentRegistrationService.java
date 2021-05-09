@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.handler.ListPageData;
+import com.enewschamp.app.admin.student.payment.handler.StudentPaymentPageData;
 import com.enewschamp.app.admin.student.registration.handler.StudentRegistrationPageData;
 import com.enewschamp.app.admin.student.school.nonlist.handler.StudentSchoolNilDTO;
 import com.enewschamp.app.common.CommonConstants;
@@ -32,6 +33,7 @@ import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
 import com.enewschamp.domain.common.RecordInUseType;
 import com.enewschamp.problem.BusinessException;
+import com.enewschamp.subscription.domain.entity.ChampPermissions;
 import com.enewschamp.subscription.domain.entity.StudentControl;
 import com.enewschamp.subscription.domain.entity.StudentDetails;
 import com.enewschamp.subscription.domain.entity.StudentPayment;
@@ -163,8 +165,7 @@ public class BulkStudentRegistrationService implements IPageHandler {
 		studentSubscriptionDTO.setLastUpdate(studentSubscription.getOperationDateTime());
 		page.setStudentSubscription(studentSubscriptionDTO);
 
-		StudentPaymentNilDTO studentPaymentDTO = modelMapper.map(studentPayment, StudentPaymentNilDTO.class);
-		studentPaymentDTO.setLastUpdate(studentPayment.getOperationDateTime());
+		StudentPaymentNilDTO studentPaymentDTO = mapStudentPaymentPageData(studentPayment);
 		page.setStudentPayment(studentPaymentDTO);
 
 		StudentDetailsNilDTO studentDetailsDTO = modelMapper.map(studentDetails, StudentDetailsNilDTO.class);
@@ -175,9 +176,7 @@ public class BulkStudentRegistrationService implements IPageHandler {
 		studentSchoolDto.setLastUpdate(studentSchool.getOperationDateTime());
 		page.setStudentSchool(studentSchoolDto);
 
-		StudentPreferencesNilDTO studentPreferencesDTO = modelMapper.map(studentDetails,
-				StudentPreferencesNilDTO.class);
-		studentPreferencesDTO.setLastUpdate(studentDetails.getOperationDateTime());
+		StudentPreferencesNilDTO studentPreferencesDTO = mapStudentPreferencePageData(studentPreferences);
 		page.setStudentPreferences(studentPreferencesDTO);
 		return page;
 	}
@@ -218,10 +217,7 @@ public class BulkStudentRegistrationService implements IPageHandler {
 
 	private StudentPayment createStudentPayment(BulkStudentRegistrationPageData pageData, PageRequestDTO pageRequest,
 			long studentId) {
-		StudentPayment studentPayment = modelMapper.map(pageData.getStudentPayment(), StudentPayment.class);
-		studentPayment.setOperatorId(pageRequest.getHeader().getUserId());
-		studentPayment.setRecordInUse(RecordInUseType.Y);
-		studentPayment.setStudentId(studentId);
+		StudentPayment studentPayment = mapStudentPaymentData(pageRequest, pageData.getStudentPayment());
 		studentPayment = studentPaymentService.create(studentPayment);
 		return studentPayment;
 	}
@@ -253,8 +249,8 @@ public class BulkStudentRegistrationService implements IPageHandler {
 		studentPreferences.setOperatorId(pageRequest.getHeader().getUserId());
 		studentPreferences.setRecordInUse(RecordInUseType.Y);
 		studentPreferences.setStudentId(studentId);
-		StudentPreferenceComm commsOverEmail = buildCommsOverEmail(pageData);
-		studentPreferences.setCommsOverEmail(commsOverEmail);
+		studentPreferences.setCommsOverEmail(buildCommsOverEmail(pageData));
+		studentPreferences.setChampPermissions(buildChampPermission(pageData));
 		studentPreferences.setFeatureProfileInChamps(pageData.getStudentPreferences().getFeatureProfileInChamps());
 		studentPreferences = studentPreferencesService.create(studentPreferences);
 		return studentPreferences;
@@ -267,6 +263,14 @@ public class BulkStudentRegistrationService implements IPageHandler {
 		commsOverEmail.setDailyPublication(pageData.getStudentPreferences().getDailyPublication());
 		commsOverEmail.setScoresProgressReports(pageData.getStudentPreferences().getScoresProgressReports());
 		return commsOverEmail;
+	}
+	
+	private ChampPermissions buildChampPermission(BulkStudentRegistrationPageData pageData) {
+		ChampPermissions champPermissions = new ChampPermissions();
+		champPermissions.setChampCity(pageData.getStudentPreferences().getChampCity());
+		champPermissions.setChampProfilePic(pageData.getStudentPreferences().getChampProfilePic());
+		champPermissions.setChampSchool(pageData.getStudentPreferences().getChampSchool());
+		return champPermissions;
 	}
 
 	private StudentRegistration saveImage(StudentRegistrationPageData studentRegistrationDto, String userId) {
@@ -304,6 +308,44 @@ public class BulkStudentRegistrationService implements IPageHandler {
 			studentRegistration = studentRegistrationService.updateOne(studentRegistration);
 		}
 		return studentRegistration;
+	}
+	
+	@SneakyThrows
+	private StudentPaymentNilDTO mapStudentPaymentPageData(StudentPayment studentPayment) {
+		StudentPaymentNilDTO pageData = modelMapper.map(studentPayment, StudentPaymentNilDTO.class);
+		pageData.setLastUpdate(studentPayment.getOperationDateTime());
+		pageData.setTranStatusApiRequest(blobToString(studentPayment.getTranStatusApiRequest()));
+		pageData.setTranStatusApiResponse(blobToString(studentPayment.getTranStatusApiResponse()));
+	    pageData.setInitTranApiRequest(blobToString(studentPayment.getInitTranApiRequest()));
+	    pageData.setInitTranApiResponse(blobToString(studentPayment.getInitTranApiResponse()));
+		return pageData;
+	}
+	
+	@SneakyThrows
+	private StudentPayment mapStudentPaymentData(PageRequestDTO pageRequest, StudentPaymentNilDTO studentPaymentDto) {
+		StudentPayment studentPayment = modelMapper.map(studentPaymentDto, StudentPayment.class);
+		studentPayment.setOperatorId(pageRequest.getHeader().getUserId());
+		studentPayment.setRecordInUse(RecordInUseType.Y);
+		studentPayment.setTranStatusApiRequest(stringToBlob(studentPaymentDto.getTranStatusApiRequest()));
+		studentPayment.setTranStatusApiResponse(stringToBlob(studentPaymentDto.getTranStatusApiRequest()));
+		studentPayment.setInitTranApiRequest(stringToBlob(studentPaymentDto.getInitTranApiRequest()));
+		studentPayment.setInitTranApiResponse(stringToBlob(studentPaymentDto.getInitTranApiResponse()));
+		studentPayment.setRecordInUse(RecordInUseType.Y);
+		return studentPayment;
+	}
+	
+	@SneakyThrows
+	private StudentPreferencesNilDTO mapStudentPreferencePageData(StudentPreferences studentPreferences) {
+		StudentPreferencesNilDTO pageData = modelMapper.map(studentPreferences, StudentPreferencesNilDTO.class);
+		pageData.setLastUpdate(studentPreferences.getOperationDateTime());
+		pageData.setChampCity(studentPreferences.getChampPermissions().getChampCity());
+		pageData.setChampProfilePic(studentPreferences.getChampPermissions().getChampProfilePic());
+		pageData.setChampSchool(studentPreferences.getChampPermissions().getChampSchool());
+		pageData.setCommsEmailId(studentPreferences.getCommsOverEmail().getCommsEmailId());
+		pageData.setAlertsNotifications(studentPreferences.getCommsOverEmail().getAlertsNotifications());
+		pageData.setDailyPublication(studentPreferences.getCommsOverEmail().getDailyPublication());
+		pageData.setScoresProgressReports(studentPreferences.getCommsOverEmail().getScoresProgressReports());
+		return pageData;
 	}
 
 	@Override

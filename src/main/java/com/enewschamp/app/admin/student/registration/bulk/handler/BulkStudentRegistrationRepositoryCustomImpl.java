@@ -29,6 +29,7 @@ import org.springframework.util.StringUtils;
 import com.enewschamp.app.admin.AdminConstant;
 import com.enewschamp.app.admin.AdminSearchRequest;
 import com.enewschamp.app.admin.student.school.nonlist.handler.StudentSchoolNilDTO;
+import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.student.registration.entity.StudentRegistration;
 import com.enewschamp.domain.service.RepositoryImpl;
 import com.enewschamp.subscription.domain.entity.StudentControl;
@@ -93,6 +94,7 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 				.select(cb.tuple(studentRegistrationRoot, studentControlRoot, studentDetailsRoot, studentSchoolRoot,
 						studentPreferencesRoot, studentSubscriptionRoot))
 				.where((Predicate[]) filterPredicates.toArray(new Predicate[0]));
+		criteriaQuery.orderBy(cb.desc(studentRegistrationRoot.get(CommonConstants.OPERATION_DATE_TIME)));
 
 		TypedQuery<Tuple> q = entityManager.createQuery(criteriaQuery);
 		if (pageable.getPageSize() > 0) {
@@ -166,7 +168,7 @@ public class BulkStudentRegistrationRepositoryCustomImpl extends RepositoryImpl 
 				.collect(Collectors.toList());
 
 		pageData.setStudentPayments(studentPaymentDtos);
-		pageData.setStudentPaymentFailedList(studentPaymentFailedDtos);
+		pageData.setStudentPaymentFailures(studentPaymentFailedDtos);
 		pageData.setStudentRefunds(studentRefundDtos);
 		pageData.setStudentSubscriptionHistories(studentSubscriptionHistoryDtos);
 	}

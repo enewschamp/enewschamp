@@ -35,7 +35,7 @@ public class BulkStudentRegistrationPageData extends PageData {
 	private StudentPreferencesNilDTO studentPreferences;
 	private List<StudentPaymentNilDTO> studentPayments;
 	private List<StudentSubscriptionHistoryNilDTO> studentSubscriptionHistories;
-	private List<StudentPaymentFailedNilDTO> studentPaymentFailedList;
+	private List<StudentPaymentFailedNilDTO> studentPaymentFailures;
 	private List<StudentRefundNilDTO> studentRefunds;
 	
 	@JsonIgnore
