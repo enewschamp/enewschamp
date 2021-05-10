@@ -38,8 +38,8 @@ public class StudentRegistration extends BaseEntity {
 	private static final long serialVersionUID = -7063853831579952336L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_registration_id_generator")
-	@SequenceGenerator(name = "student_registration_generator", sequenceName = "student_registration_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_id_generator")
+	@SequenceGenerator(name = "student_id_generator", sequenceName = "student_id_seq", allocationSize = 1)
 	@Column(name = "studentId", updatable = false, nullable = false)
 	private Long studentId;
 

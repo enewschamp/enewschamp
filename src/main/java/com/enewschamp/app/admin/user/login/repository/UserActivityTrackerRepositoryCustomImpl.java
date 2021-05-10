@@ -39,7 +39,7 @@ public class UserActivityTrackerRepositoryCustomImpl extends RepositoryImpl
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getUserId()))
-			filterPredicates.add(cb.like(userActivityTrackerRoot.get(USER_ID), "%" + searchRequest.getUserId() + "%"));
+			filterPredicates.add(cb.equal(userActivityTrackerRoot.get(USER_ID), searchRequest.getUserId()));
 
 		if (!StringUtils.isEmpty(searchRequest.getDeviceId()))
 			filterPredicates

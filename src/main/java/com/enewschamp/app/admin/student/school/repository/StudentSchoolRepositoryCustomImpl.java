@@ -42,11 +42,13 @@ public class StudentSchoolRepositoryCustomImpl extends RepositoryImpl
 			if (!StringUtils.isEmpty(searchRequest.getStudentId())) {
 				filterPredicates.add(cb.equal(studentSchoolsRoot.get(STUDENT_ID), searchRequest.getStudentId()));
 			}
+			if(!StringUtils.isEmpty(searchRequest.getApprovalRequired())) {
 			if (searchRequest.getApprovalRequired()!= null && searchRequest.getApprovalRequired().equals("Y")) {
 				filterPredicates
 						.add(cb.equal(studentSchoolsRoot.get(APPROVAL_REQUIRED), searchRequest.getApprovalRequired()));
 			} else {
 				filterPredicates.add(cb.notEqual(studentSchoolsRoot.get(APPROVAL_REQUIRED), "Y"));
+			}
 			}
 
 		} else {

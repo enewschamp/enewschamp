@@ -48,9 +48,9 @@ public class BulkStudentRegistrationPageHandler implements IPageHandler {
 				if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
 					throw new BusinessException(ErrorCodeConstants.RECORD_ALREADY_EXIST);
 				}
-				if(e.getCause().getCause() instanceof javax.validation.ConstraintViolationException) {
-					throw new BusinessException(ErrorCodeConstants.RECORD_DATA_ISSUE);
-				}
+//				if(e.getCause().getCause() instanceof javax.validation.ConstraintViolationException) {
+//					throw new BusinessException(ErrorCodeConstants.RECORD_DATA_ISSUE);
+//				}
 			}
 			break;
 		case "List":

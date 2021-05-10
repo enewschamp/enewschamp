@@ -38,7 +38,7 @@ public class UserLoginRepositoryCustomImpl extends RepositoryImpl implements IGe
 		List<Predicate> filterPredicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(searchRequest.getUserId())) {
-			filterPredicates.add(cb.like(userLoginRoot.get(USER_ID), "%" + searchRequest.getUserId() + "%"));
+			filterPredicates.add(cb.equal(userLoginRoot.get(USER_ID),  searchRequest.getUserId()));
 		}
 		
 		if (!StringUtils.isEmpty(searchRequest.getLoginFlag()))
