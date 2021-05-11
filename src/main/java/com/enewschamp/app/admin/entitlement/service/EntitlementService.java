@@ -98,8 +98,8 @@ public class EntitlementService {
 		return entitlementList;
 	}
 
-	public Boolean isValidUser(String userId, String role) {
-		Optional<Entitlement> entitlement = repository.findByUserIdAndRole(userId, role);
+	public Boolean isValidUser(String userId, String role, String pageName, String action) {
+		Optional<Entitlement> entitlement = repository.findByUserIdAndRoleAndPageNameAndAction(userId, role, pageName, action);
 		if (entitlement.isPresent())
 			return true;
 		else

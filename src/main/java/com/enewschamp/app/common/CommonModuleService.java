@@ -133,7 +133,7 @@ public class CommonModuleService {
 	}
 
 	public void doEntitlementCheck(HeaderDTO pageData) {
-		Boolean validEntitlement = entitlementService.isValidUser(pageData.getUserId(), pageData.getModule());
+		Boolean validEntitlement = entitlementService.isValidUser(pageData.getUserId(), pageData.getModule(), pageData.getPageName(), pageData.getAction());
 		if (validEntitlement) {
 			userRoleService.isValidRole(pageData.getUserId(), pageData.getModule());
 		}

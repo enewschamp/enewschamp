@@ -54,7 +54,11 @@ public class StudentActivityRepositoryCustomImpl extends RepositoryImpl
 			filterPredicates.add(cb.equal(studentActivityRoot.get(REACTION), searchRequest.getReaction()));
 
 		if (!StringUtils.isEmpty(searchRequest.getSaved()))
-			filterPredicates.add(cb.equal(studentActivityRoot.get(SAVED), searchRequest.getSaved()));
+			if (searchRequest.getSaved().equals("Y")) {
+				filterPredicates.add(cb.equal(studentActivityRoot.get(SAVED), searchRequest.getSaved()));
+			} else {
+				filterPredicates.add(cb.notEqual(studentActivityRoot.get(SAVED), "Y"));
+			}
 
 		if (!StringUtils.isEmpty(searchRequest.getOpinionPresent()) && searchRequest.getOpinionPresent().equals("Y")) {
 			filterPredicates.add(cb.and(cb.isNotNull(studentActivityRoot.get(OPINIOIN)),
@@ -68,18 +72,18 @@ public class StudentActivityRepositoryCustomImpl extends RepositoryImpl
 		if (!StringUtils.isEmpty(searchRequest.getQuizScore()))
 			filterPredicates.add(cb.equal(studentActivityRoot.get(QUIZ_SCORE), searchRequest.getQuizScore()));
 
-		if (!StringUtils.isEmpty(searchRequest.getLastUpdateDateFrom()) && !StringUtils.isEmpty(searchRequest.getLastUpdateDateTo()))
+		if (!StringUtils.isEmpty(searchRequest.getLastUpdateDateFrom())
+				&& !StringUtils.isEmpty(searchRequest.getLastUpdateDateTo()))
 			filterPredicates.add(cb.between(studentActivityRoot.get(CommonConstants.OPERATION_DATE_TIME),
 					searchRequest.getLastUpdateDateFrom(), searchRequest.getLastUpdateDateTo()));
-		
+
 		if (!StringUtils.isEmpty(searchRequest.getQuizAttempted()) && searchRequest.getQuizAttempted().equals("Y"))
 			filterPredicates.add(cb.and(cb.isNotNull(studentActivityRoot.get(QUIZ_SCORE)),
 					cb.notEqual(cb.trim(studentActivityRoot.get(QUIZ_SCORE)), "")));
-		
+
 		if (!StringUtils.isEmpty(searchRequest.getQuizAttempted()) && searchRequest.getQuizAttempted().equals("N"))
 			filterPredicates.add(cb.or(cb.isNull(studentActivityRoot.get(QUIZ_SCORE)),
 					cb.equal(cb.trim(studentActivityRoot.get(QUIZ_SCORE)), "")));
-
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(studentActivityRoot.get(CommonConstants.OPERATION_DATE_TIME)));

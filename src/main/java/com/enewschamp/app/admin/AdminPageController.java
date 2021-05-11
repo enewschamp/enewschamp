@@ -74,7 +74,7 @@ public class AdminPageController {
 			String operation = pageRequest.getHeader().getOperation();
 			String editionId = pageRequest.getHeader().getEditionId();
 			commonModuleService.validateHeaders(pageRequest.getHeader(), module);
-		//	 commonModuleService.doEntitlementCheck(pageRequest.getHeader());
+	     	//commonModuleService.doEntitlementCheck(pageRequest.getHeader());
 			UserActivityTracker userActivityTracker = commonModuleService.validateUser(pageRequest, module, pageName,
 					actionName, loginCredentials, userId, deviceId, operation, editionId, UserType.A,
 					PropertyConstants.ADMIN_MODULE_NAME);

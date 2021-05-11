@@ -5,41 +5,39 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.enewschamp.app.admin.AdminSearchRequest;
-import com.enewschamp.app.admin.article.daily.ArticlePublicationDaily;
 import com.enewschamp.app.admin.handler.ListPageData;
+import com.enewschamp.app.champs.entity.Champ;
 import com.enewschamp.app.common.CommonConstants;
 import com.enewschamp.app.common.PageDTO;
 import com.enewschamp.app.common.PageData;
 import com.enewschamp.app.common.PageRequestDTO;
 import com.enewschamp.app.common.PageStatus;
 import com.enewschamp.app.fw.page.navigation.dto.PageNavigatorDTO;
+import com.enewschamp.app.student.service.StudentChampService;
 import com.enewschamp.domain.common.IPageHandler;
 import com.enewschamp.domain.common.PageNavigationContext;
-import com.enewschamp.publication.domain.service.PublicationDailySummaryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
-@Component("ChampsPageHandler1")
-public class ChampsPageHandler implements IPageHandler {
-	@Autowired
-	private PublicationDailySummaryService dailySummaryService;
-	@Autowired
-	ModelMapper modelMapper;
-	@Autowired
-	ObjectMapper objectMapper;
+@Component("StudentChampsPageHandler")
+@RequiredArgsConstructor
+public class StudentChampsPageHandler implements IPageHandler {
+	private final StudentChampService studentChampService;
+	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 
 	@Override
 	public PageDTO handleAction(PageRequestDTO pageRequest) {
 		PageDTO pageDto = null;
 		switch (pageRequest.getHeader().getAction()) {
 		case "List":
-			pageDto = listPublicationDailySummary(pageRequest);
+			pageDto = listStudentChamp(pageRequest);
 			break;
 		default:
 			break;
@@ -66,14 +64,14 @@ public class ChampsPageHandler implements IPageHandler {
 	}
 
 	@SneakyThrows
-	private PageDTO listPublicationDailySummary(PageRequestDTO pageRequest) {
+	private PageDTO listStudentChamp(PageRequestDTO pageRequest) {
 		AdminSearchRequest searchRequest = objectMapper
 				.readValue(pageRequest.getData().get(CommonConstants.FILTER).toString(), AdminSearchRequest.class);
-		Page<ArticlePublicationDaily> dailySummaryList = dailySummaryService.listPublicationDailySummary(searchRequest,
+		Page<Champ> dailySummaryList = studentChampService.listStudentChamps(searchRequest,
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_NO).asInt(),
 				pageRequest.getData().get(CommonConstants.PAGINATION).get(CommonConstants.PAGE_SIZE).asInt());
 
-		List<PublicationDailySummaryPageData> list = mapPublicationDailySummaryData(dailySummaryList);
+		List<StudentChampsPageData> list = mapPublicationDailySummaryData(dailySummaryList);
 		List<PageData> variable = list.stream().map(e -> (PageData) e).collect(Collectors.toList());
 		PageDTO dto = new PageDTO();
 		ListPageData pageData = objectMapper.readValue(pageRequest.getData().toString(), ListPageData.class);
@@ -87,13 +85,13 @@ public class ChampsPageHandler implements IPageHandler {
 		return dto;
 	}
 
-	public List<PublicationDailySummaryPageData> mapPublicationDailySummaryData(Page<ArticlePublicationDaily> page) {
-		List<PublicationDailySummaryPageData> dailySummaryPageDataList = new ArrayList<PublicationDailySummaryPageData>();
+	public List<StudentChampsPageData> mapPublicationDailySummaryData(Page<Champ> page) {
+		List<StudentChampsPageData> dailySummaryPageDataList = new ArrayList<StudentChampsPageData>();
 		if (page != null && page.getContent() != null && page.getContent().size() > 0) {
-			List<ArticlePublicationDaily> pageDataList = page.getContent();
-			for (ArticlePublicationDaily userLogin : pageDataList) {
-				PublicationDailySummaryPageData userLoginPageData = modelMapper.map(userLogin,
-						PublicationDailySummaryPageData.class);
+			List<Champ> pageDataList = page.getContent();
+			for (Champ userLogin : pageDataList) {
+				StudentChampsPageData userLoginPageData = modelMapper.map(userLogin,
+						StudentChampsPageData.class);
 				// userLoginPageData.setLastUpdate(userLogin.getOperationDateTime());
 				dailySummaryPageDataList.add(userLoginPageData);
 			}

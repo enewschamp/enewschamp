@@ -40,4 +40,7 @@ public class Entitlement extends BaseEntity {
 	@NotNull
 	@Column(name = "userId", length = 20)
 	private String userId;
+	
+	@Column(name = "action", length = 50)
+	private String action;
 }

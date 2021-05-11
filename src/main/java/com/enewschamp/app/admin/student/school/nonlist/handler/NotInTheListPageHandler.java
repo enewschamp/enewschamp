@@ -98,11 +98,19 @@ public class NotInTheListPageHandler implements IPageHandler {
 	public PageDTO performUpdation(StudentSchoolNotInTheListPageData pageData, PageRequestDTO pageRequest) {
 		PageDTO dto = new PageDTO();
 		try {
-			State state = createState(pageData, pageRequest);
-			City city = createCity(pageData, pageRequest);
-			School school = createSchool(pageData, pageRequest);
-			StudentSchool studentSchool = updateStudentSchool(city.getNameId(), state.getNameId(),
-					school.getSchoolId(), pageData);
+			State state = null;
+			City city = null;
+			School school = null;
+			if (pageData.getState() != null) {
+				state = createState(pageData, pageRequest);
+			}
+			if (pageData.getCity() != null) {
+				city = createCity(pageData, pageRequest);
+			}
+			if (pageData.getSchool() != null) {
+				school = createSchool(pageData, pageRequest);
+			}
+			StudentSchool studentSchool = updateStudentSchool(city, state, school, pageData);
 			StudentSchoolNotInTheListPageData data = buildPageData(state, city, school, studentSchool, pageData);
 			dto.setHeader(pageRequest.getHeader());
 			dto.setData(data);
@@ -173,17 +181,23 @@ public class NotInTheListPageHandler implements IPageHandler {
 		return school;
 	}
 
-	private StudentSchool updateStudentSchool(String cityName, String stateName, Long schoolId,
+	private StudentSchool updateStudentSchool(City city, State state, School school,
 			StudentSchoolNotInTheListPageData pageData) {
 		StudentSchool existingStuSchool = studentSchoolService.get(pageData.getStudentSchool().getStudentId());
 		if (existingStuSchool != null) {
 			StudentSchool studentSchool = modelMapper.map(pageData.getStudentSchool(), StudentSchool.class);
-			studentSchool.setCity(String.valueOf(cityName));
-			studentSchool.setCityNotInTheList("N");
-			studentSchool.setState(stateName);
-			studentSchool.setStateNotInTheList("N");
-			studentSchool.setSchool(String.valueOf(schoolId));
-			studentSchool.setSchoolNotInTheList("N");
+			if (city != null) {
+				studentSchool.setCity(String.valueOf(city.getNameId()));
+				studentSchool.setCityNotInTheList("N");
+			}
+			if (state != null) {
+				studentSchool.setState(state.getNameId());
+				studentSchool.setStateNotInTheList("N");
+			}
+			if (school != null) {
+				studentSchool.setSchool(String.valueOf(school.getSchoolId()));
+				studentSchool.setSchoolNotInTheList("N");
+			}
 			studentSchool.setRecordInUse(RecordInUseType.Y);
 			studentSchool.setOperatorId(pageData.getOperatorId());
 			studentSchool.setOperationDateTime(LocalDateTime.now());

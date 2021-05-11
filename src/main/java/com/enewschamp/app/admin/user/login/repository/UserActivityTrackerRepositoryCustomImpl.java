@@ -38,21 +38,25 @@ public class UserActivityTrackerRepositoryCustomImpl extends RepositoryImpl
 		Root<UserActivityTracker> userActivityTrackerRoot = criteriaQuery.from(UserActivityTracker.class);
 		List<Predicate> filterPredicates = new ArrayList<>();
 
-		if (!StringUtils.isEmpty(searchRequest.getUserId()))
+		if (!StringUtils.isEmpty(searchRequest.getUserId())) {
 			filterPredicates.add(cb.equal(userActivityTrackerRoot.get(USER_ID), searchRequest.getUserId()));
+		}
 
-		if (!StringUtils.isEmpty(searchRequest.getDeviceId()))
+		if (!StringUtils.isEmpty(searchRequest.getDeviceId())) {
 			filterPredicates
 					.add(cb.like(userActivityTrackerRoot.get(DEVICE_ID), "%" + searchRequest.getDeviceId() + "%"));
+		}
 
-		if (!StringUtils.isEmpty(searchRequest.getActionPerformed()))
+		if (!StringUtils.isEmpty(searchRequest.getActionPerformed())) {
 			filterPredicates.add(cb.like(userActivityTrackerRoot.get(ACTION_PERFORMED),
 					"%" + searchRequest.getActionPerformed() + "%"));
+		}
 
 		if (!StringUtils.isEmpty(searchRequest.getActionDateFrom())
-				&& !StringUtils.isEmpty(searchRequest.getActionDateTo()))
+				&& !StringUtils.isEmpty(searchRequest.getActionDateTo())) {
 			filterPredicates.add(cb.between(userActivityTrackerRoot.get(ACTION_TIME), searchRequest.getActionDateFrom(),
 					searchRequest.getActionDateTo()));
+		}
 
 		criteriaQuery.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
 		criteriaQuery.orderBy(cb.desc(userActivityTrackerRoot.get(CommonConstants.OPERATION_DATE_TIME)));
