@@ -125,17 +125,23 @@ public class NotInTheListPageHandler implements IPageHandler {
 			StudentSchool studentSchool, StudentSchoolNotInTheListPageData pageData) {
 		StudentSchoolNotInTheListPageData page = new StudentSchoolNotInTheListPageData();
 
-		StateNilDTO stateDto = modelMapper.map(state, StateNilDTO.class);
-		stateDto.setLastUpdate(state.getOperationDateTime());
-		page.setState(stateDto);
+		if (state != null) {
+			StateNilDTO stateDto = modelMapper.map(state, StateNilDTO.class);
+			stateDto.setLastUpdate(state.getOperationDateTime());
+			page.setState(stateDto);
+		}
 
-		CityNilDTO cityDto = modelMapper.map(city, CityNilDTO.class);
-		cityDto.setLastUpdate(city.getOperationDateTime());
-		page.setCity(cityDto);
+		if (city != null) {
+			CityNilDTO cityDto = modelMapper.map(city, CityNilDTO.class);
+			cityDto.setLastUpdate(city.getOperationDateTime());
+			page.setCity(cityDto);
+		}
 
-		SchoolNilDTO schoolDto = modelMapper.map(school, SchoolNilDTO.class);
-		schoolDto.setLastUpdate(school.getOperationDateTime());
-		page.setSchool(schoolDto);
+		if (school != null) {
+			SchoolNilDTO schoolDto = modelMapper.map(school, SchoolNilDTO.class);
+			schoolDto.setLastUpdate(school.getOperationDateTime());
+			page.setSchool(schoolDto);
+		}
 
 		StudentSchoolNilDTO studentSchoolDto = modelMapper.map(studentSchool, StudentSchoolNilDTO.class);
 		studentSchoolDto.setLastUpdate(studentSchool.getOperationDateTime());
@@ -202,8 +208,7 @@ public class NotInTheListPageHandler implements IPageHandler {
 			studentSchool.setOperatorId(pageData.getOperatorId());
 			studentSchool.setOperationDateTime(LocalDateTime.now());
 			studentSchool.setApprovalRequired("N");
-			Object existingStuSchool1 = studentSchoolService.update(studentSchool);
-			System.out.println(existingStuSchool1);
+			existingStuSchool = studentSchoolService.update(studentSchool);
 		}
 		return existingStuSchool;
 	}
